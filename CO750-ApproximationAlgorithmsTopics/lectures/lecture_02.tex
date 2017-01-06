@@ -1,0 +1,181 @@
+\documentclass[letterpaper,12pt,oneside,onecolumn]{article}
+\usepackage[margin=1in, bottom=1in, top=1in]{geometry} %1 inch margins
+\usepackage{amsmath, amssymb, amstext}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{theorem}
+\usepackage{tikz}
+\usepackage{tkz-berge}
+
+%Macros
+\newcommand{\A}{\mathbb{A}} \newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}} \newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\U}{\mathbb{U}}
+ 
+ 
+\newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}} \newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}} \newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}} \newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}} \newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}} \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}} \newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}} \newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}} \newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}} \newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}} \newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofof}[1]{{\bf Proof of #1:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofofnobox}[1]{{\bf#1:  }}{}\newenvironment{example}{{\bf Example:  }}{\hfill\rule{2mm}{2mm}}
+
+%\renewcommand{\thesection}{\lecnum.\arabic{section}}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}[fact]{Lemma}
+\newtheorem{theorem}[fact]{Theorem}
+\newtheorem{definition}[fact]{Definition}
+\newtheorem{corollary}[fact]{Corollary}
+\newtheorem{proposition}[fact]{Proposition}
+\newtheorem{claim}[fact]{Claim}
+\newtheorem{exercise}[fact]{Exercise}
+\newtheorem{note}[fact]{Note}
+\newtheorem{conjecture}[fact]{Conjecture}
+
+\newcommand{\size}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
+
+%END MACROS
+%Page style
+\pagestyle{fancy}
+
+\listfiles
+
+\raggedbottom
+
+\lhead{2017-01-05}
+\rhead{William Justin Toth CO750-Approximation Algorithms Lecture 2} %CHANGE n to ASSIGNMENT NUMBER ijk TO COURSE CODE
+\renewcommand{\headrulewidth}{1pt} %heading underlined
+%\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
+
+\begin{document}
+\paragraph{}
+A natural idea when it comes to constructing feasible solutions for algorithmic problems is by making greedy choices. That is, by making at each iteration a choice which appears locally to be the best possible choice. In this lecture we will study some problems for which we can construct greedy approximation algorithms.
+\section{Set Cover}
+\paragraph{}
+In the Set Cover problem (SC) we are given a set of elements $\U = \{e_1, \dots, e_n\}$ and a collection of sets $S_1, \dots, S_m \subseteq \U$ with costs $c(S_i)$ for $i \in [1,m] \cap \Z$. We are to find a sub-collection of sets of minimum cost covering $\U$. More formally $opt$ is equal to
+$$\min_{I \subseteq \{1,\dots,m\}} \{ \sum_{i \in I} c(S_i) : \bigcup_{i \in I} S_i = \U \}.$$
+\paragraph{}
+Consider the following greedy algorithm for SC:
+\begin{enumerate}
+\item Set $I = \emptyset$
+\item While $\bigcup_{i \in I} S_i \neq \U$
+	\begin{enumerate}
+	\item Compute $$price(S_i) = \frac{c(S_i)}{|S_i \backslash \cup_{j\in I} S_j|}$$ for all $i \in [1,m]\cap \Z$
+	\item Let $S_{i^*}$ be the set of minimum price.
+	\item Set $I = I \cup \{i^*\}$
+	\end{enumerate}
+\item Return $I$.
+\end{enumerate}
+\begin{theorem}
+The greedy algorithm for SC is an $O(\log n)$-approximation algorithm (recall $n = |\U|$).
+\end{theorem}
+\begin{proof}
+Reindex the elements of $\U$ in the order they are covered by the greedy algorithm. So then $e_1$ is the first element covered by the greedy algorithm, and $e_n$ is the last. We say $S_i$ newly covers $e_j$ if $S_i$ is the first set taken by the greedy algorithm for which $e_j \in S_i$. Fix $price(S_i)$ as computed when taken by the greedy algorithm, and define
+$$price(e_j) = price(S_i)$$
+where $e_j$ is newly coved by $S_i$.
+\paragraph{}
+Let $N(i)$ be the number of elements newly covered by $S_i$. Observe that the fixed $price(S_i) = \frac{c(S_i)}{N(i)}$. Now we have that
+$$c(I) = \sum_{i \in I} c(S_i) = \sum_{i \in I} price(S_i)N(i) = \sum_{j=1}^n price(e_j).$$
+\paragraph{Claim 1}
+Let $a_1, \dots, a_\ell$ and $b_1, \dots, b_\ell$ be positive integers. Then $$\min_{i = 1,\dots,\ell} \frac{a_i}{b_i} \leq \frac{\sum_{i=1}^\ell a_i}{\sum_{i=1}^\ell b_i}.$$
+\paragraph{Proof of Claim 1}
+Let $\frac{a_k}{b_k} = \min_{i = 1,\dots,\ell} \frac{a_i}{b_i}$. Then
+$$ \frac{\sum_{i=1}^\ell a_i}{\sum_{i=1}^\ell b_i} = \frac{\sum_{i\neq k} a_i}{\sum_{i=1}^\ell b_i} + \frac{a_k}{\sum_{i=1}^\ell b_i} \geq \frac{a_k}{\sum_{i=1}^\ell b_i} \geq \frac{a_k}{b_k}.$$
+\paragraph{Claim 2}
+The inequality $price(e_j) \leq \frac{opt}{n-j+1}$ for any $j \in [1,n]\cap \Z$.
+\paragraph{Proof of Claim 2}
+Consider the iteration where $e_j$ is covered. At the beginning of this iteration there are at least $n-j+1$ elements uncovered. At the cost of $opt$ they can all be covered. Let $I^*$ be the indices of the subsets of the optimal solution covering $e_j, \dots, e_n$. Then:
+$$price(e_j) \leq \min_{i \in I^*} \{ price(S_i)\} \leq \frac{ \sum_{i \in I^*} c(S_i)}{\sum_{i \in I^*} N(i)} \leq \frac{opt}{n-j+1}$$
+with the second inequality following from Claim $1$.
+\paragraph{Finishing Main Result}
+We have the following
+$$c(I) \leq \sum_{j=1}^n price(e_j) \leq \sum_{j=1}^n \frac{opt}{n-j+1} = \sum_{j=1}^n \frac{opt}{j} = H_n \cdot opt = O(\log n) opt$$
+where $H_n = 1 + \frac{1}{2} + \dots + \frac{1}{n}$ is the harmonic series.
+\end{proof}
+\paragraph{}
+Is this analysis tight? The answer is yes. Consider the following example. Let $\U = \{e_1, e_2, \dots, e_n\}$ and let $S_i = \{e_i\}$ for $i = 1 \dots n$ and let $S_{n+1} = \U$. Set $c(S_i) = \frac{1}{i}$ for $i = 1 \dots n$ and set $c(S_{n+1}) = 1 + \epsilon$ for some $\epsilon > 0$. Then the greedy algorithm will choose the sets $S_n, S_{n-1}, \dots, S_1$ in that order with cost $H_n$, while $S_{n+1}$ covers $\U$ and is the optimal solution for appropriate $\epsilon$ with $c(\sum_{i=1}^n S_i) = H_n \leq O(\log n) (1+\epsilon)$.
+\paragraph{}
+In fact, this is the best approximation factor we can obtain (Feige '98) unless $P = NP$. Later we will see a method of proving such a hardness result.
+\section{k-Center}
+\paragraph{}
+In the $k$-Center problem we are given a graph $G = (V,E)$ with edge ``lengths" $l_e \geq 0$ for all $e \in E$. We are also given a number $k \in \N$. We are to find $k$ centers $F \subseteq V$ that minimize the maximum distance from any $u \in V$ to the nearest center. Formally  for all $u,v \in V$ we let $\ell(u,v) := $ length of a shortest $uv$-path. For $F \subseteq V$, $v \in V$ let $\ell (u,F) = \min_{v \in F} \ell(u,v)$. Our optimal value is given as
+$$ opt = \min_{F \subseteq V} \max_{v \in V} \ell (v,F).$$
+\paragraph{}
+Consider the following greedy algorithm for $k$-Center:
+\begin{enumerate}
+\item Pick $i \in V$ arbitrarily. Set $F = \{i\}$.
+\item While $|F| < k$ do:
+	\begin{enumerate}
+	\item Let $j = argmax_{j \in V} \ell(j,F)$
+	\item Set $F:= F \cup \{j\}$
+	\end{enumerate}
+\item Return $F$.
+\end{enumerate}
+\begin{theorem}
+The greedy algorithm for $k$-Center is a $2$-approximation algorithm.
+\end{theorem}
+\begin{proof}
+Let $F^* = \{u_1^*, \dots, u_k^*\}$ be the optimal solution. Partition the vertices of $V$ as $V_1^*, \dots, V_k^*$ where $V_i^*$ contains the vertices of $V$ closest to $u_i^*$ versus any $u_j^*$ for $j \neq i$. We delineate two cases:
+\begin{enumerate}
+\item $F$ contains two vertices $w,z$ from some $V_i^*$
+\item $F$ contains one vertex $f_i$ from each $V_i^*$.
+\end{enumerate}
+\paragraph{Case 1}
+By our greedy choice $$\max_{v \in V} \ell(v,F) \leq \ell (w,z).$$
+Hence by shortest path we observe:
+ $$\max_{v \in V} \ell(v,F) \leq \ell (w,z) \leq \ell(w, u_i^*) + \ell(u_i^*, f_i) \leq 2opt.$$
+\paragraph{Case 2}
+By shortest path, for all $v \in V_i$,
+$$\ell(v,f_i) \leq \ell(v,u_i^*) + \ell(u_i^*,f_i) \leq 2opt.$$
+Hence
+$$\max_{v \in V} \ell(v,F) \leq 2opt.$$
+\end{proof}
+\paragraph{}
+As usual at this point we ask ourselves if our analysis is tight. The answer is again yes, but instead of constructing a worst case example, this time we will demonstrate something stronger: that our algorithm is the best possible unless $P = NP$.
+\begin{theorem}
+Unless $P=NP$, for all $\epsilon > 0$ there does not exist a $(2-\epsilon)$-approximation algorithm for $k$-Center. 
+\end{theorem}
+\paragraph{}
+To prove this theorem we will perform a gap-producing reduction from Dominating Set (which is $NP$-complete). The general strategy for such a reduction given some problem $A$ is as follows:
+\begin{enumerate}
+\item Take $NP$-complete problem $B$
+\item Decide on a constant $a$, and factor $\alpha$ for which $opt$, the optimal value for $A$, does not lie in $(a, \alpha a]$.
+\item Give a polynomial time reduction from $B$ to $A$ such that
+\begin{enumerate}
+\item A yes instance of $B$ is mapped to instances of $A$ with $opt \leq a$
+\item A no instance of $B$ is mapped to instances of $A$ with $opt > \alpha a$.
+\end{enumerate}
+\end{enumerate}
+Then there can be no $\alpha$-approximation algorithm for $A$, as otherwise we could use it to decide $B$. We will see how this plays out more concretely in the proof of our above theorem.\\ \\
+\begin{proof}
+The Dominating Set problem gives a graph $G = (V,E)$ and a number $k$, and asks one to decide if $\exists U \subseteq V$ with $|U| \leq k$ such that $\forall v \in V\backslash U$, $\exists u \in U$, $uv \in E$. Consider an instance of Dominating Set, $(G,k)$. Construct an instance of $k$-Center $(G', \ell)$ by setting $G' = G$ and $\ell_e =1$ for all $e \in E$. Observe that there exists a dominating set of size $k$ on $G$ if and only if there exists a $k$-Center solution on $G'$ of cost $1$. Therefore if we have a $(2-\epsilon)$-approximation algorithm for $k$-Center, say $\cA$ we could run $\cA$ on $G'$ and consider the returned value $c$. If $c < 2$ then $opt \leq 1$ since our optimal values are integral by construction. Thus our $G$ is a yes instance of Dominating Set. If $c \geq 2$ then $G$ is a no instance of Dominating Set. Observe that $c \leq (2-\epsilon) opt$ and thus
+$$2 \leq (2-\epsilon)opt$$
+which implies $opt$ is greater than $1$. Note that our proof is analogous with the general strategy when $a = 1$ and $\alpha = 2-\epsilon$.
+\end{proof}
+\paragraph{}
+We conclude by observing that if $\alpha = 1$ our gap-producing reductions reduce to standard $NP$-completeness reductions.
+\end{document}
