@@ -104,4 +104,50 @@ Due to the previous lemma we may assume our input (ST) instances is a metric gra
 \begin{theorem}
 The above algorithm is a $2$-approximation for (ST).
 \end{theorem}
+\begin{proof}
+Let $T^*$ be an optimal solution to a problem instance of (ST). Create an Eulerian multigraph from $T^*$ by replacing each edge with two parallel edges. The cost of this multigraph is is at most $2d(T^*)$. Since this multigraph is Eulerian there exists an Eulerian tour $P$. Let $r \in R$. Traverse $P$ starting at $r$ and shortcut it to obtain a Hamiltonian cycle $C$ on $G[R]$. To be more precise order the vertices of $R$ as $r_1, \dots, r_{|R|}$ in the order they are traversed starting from $r$ along $P$. Form cycle $C$ by taking $C = \{r_1r_2, \dots, r_{|R|-1}r_{|R|}\}$. By the triangle inequality $d(C) \leq d(P) \leq 2d(T^*)$. Further by removing any edge of $C$ we can obtain a spanning tree on $G[R]$, hence $d(\bar{T}) \leq d(C)$.
+Thus we have
+$$d(\bar{T}) \leq d(C) \leq 2d(T^*).$$
+Since computing Minimum Spanning Trees can be done in polynomial time, this completes our result.
+\end{proof}
+\paragraph{}
+To see the analysis is tight consider the graph $K_{n+1}$. Label a vertex $v$ and set $d(v,w) = 1$ for all $w \in V\backslash\{v\}$. Set $d(w,u) = 2$ for all $u,w \in V\backslash\{v\}$. It is not hard to verify this is a metric graph. Set $R = V\backslash\{v\}$. Then a minimum spanning tree on $G[R]$ has cost $2(n-1)$ while an optimal solution to (ST) has cost $n$. Hence the approximation ratio $\alpha$ is
+$$\alpha = \frac{2(n-1)}{2n} = 2 - \frac{1}{n}.$$
+QUESTION: Why is this a ``tight" example?
+\paragraph{}
+For several optimization problems, optimizing on $G$ or $G^M$ is equivalent.
+\paragraph{}
+A {\it tree metric} $(V,d^T)$ is a metric that arises from a weighted tree $T$. Many optimization problems are easy on trees. For example minimum Steiner Tree is very easy, taking only the nodes needed to connect the terminals. So then, given a generic metric $(V,d)$ can we find a tree metric $(V,d^T)$ such that
+$$d(u,v) \leq d^T(u,v) \leq \alpha d(u,v)$$
+for any $u,v \in V$ for some small {\it distortion factor} $\alpha$?
+\paragraph{}
+Some bad news: For a metric arising from an $n$-cycle (simplest imaginable example), any tree-metric must have distortion $\Omega(n)$. This is easy to see for spanning tree distance (any removed edge has their distance increase from $1$ to $n-1$ in unit-weighted case), but the observation holds in general. So then, what if we take a spanning tree randomly? In other words, do the following:
+\begin{enumerate}
+\item Take uniformly at random one edge from the cycle
+\item Output tree $T$ obtained by deleting chosen edge.
+\end{enumerate}
+We will now attempt to bound $E[d^T(u,v)]$. Let $u,v \in V$ and assume $d(u,v) = k$. Then (consider $k$ out of $n$ edges break shortest path, $n-k$ don't)
+$$E[d^T(u,v)] = \frac{k}{n}(n-k) + (1-\frac{k}{n})k \leq 2k$$
+and our expected distortion factor is thus $\alpha = 2$.
+\begin{theorem}
+Given any metric $(V,d)$ one can randomly find a tree $T$ such that
+\begin{enumerate}
+\item $d(u,v) \leq d^T(u,v)$ for all $u,v\in V$
+\item $E[d^T(u,v)] \leq O(\log n) d(u,v)$ for all $u,v\in V$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+We may assume $\max_{u,v \in V} d(u,v) = 2^\delta$ for some $\delta \in \N$ and $d(u,v) > 1$ for all $u,v\in V$. Let $\cA$ be the algorithm given by
+\begin{enumerate}
+\item Choose randomly a permutation $\pi$ of $V$.
+\item Choose $\beta \in [0,1]$ uniformly at random.
+\item Set $D_\delta = \{V\}$.
+\item For $i = \delta -1$ to $0$ do:
+\begin{enumerate}
+\item Assign every node to the first node according to $\pi$ that has distance at most $2^\beta \cdot 2^{i-1}$.
+\item All nodes assigned to the same node that are currently in the same cluster will form a new cluster in $D_i$.
+\end{enumerate}
+\end{enumerate}
+(TO BE CONTINUED)
+\end{proof}
 \end{document}
