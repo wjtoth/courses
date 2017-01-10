@@ -83,5 +83,25 @@ A function $d : V \times V \rightarrow \R_+$ is a {\it metric} if
 \item $d(u,v) = d(v,u)$ for all $u,v \in V$
 \item $d(u,v) \leq d(u,z) + d(z,v)$ for all $u,v,z \in V$.
 \end{enumerate}
-An edge weighted graph is called a {\it metric graph} if its weight function induces a metric on the edges.
+An edge weighted graph is called a {\it metric graph} if its weight function induces a metric on $V \times V$. A metric graph is necessarily complete in order to make sense.
+\paragraph{}
+Let $G=(V,E)$ be a graph. Let $c : E \rightarrow \R_+$ be a weight function. The {\it metric arising from} $G$ is the function $d$ defined on $V \times V$ where
+$$d(u,v) := \text{ the length of a shortest path from } u \text{ to } v \text{ on } G \text{ according to } c.$$ Given $(G,c)$ we can construct the {\it metric completion} of $G$. That is, a complete graph $G^M := (V, E^M)$ with edge cost $d(u,v)  = $ length of shortest $uv$-path in $G$.
+\begin{lemma}
+There exists a Steiner Tree $T$ connecting $R\subseteq V$ of optimal cost $z$ if and only if there exists a Steiner Tree $\bar{T}$ connecting $R$ on $G^M$ of optimal cost $z$. Furthermore there is a polynomial time map between $T$ and $\bar{T}$.
+\end{lemma}
+\begin{proof}
+First we observe that the cost of the path between any two vertices $u,v$ in $T$ is at most the cost of the shortest $uv$-path in $G$, as otherwise we could replace the $uv$-path in $T$ with the shortest $uv$-path in $G$, and break cycles arbitrarily to obtain a new tree $T'$ of strictly lower cost than $T$. Hence the distance between any two vertices in $T$ is a shortest path distance. Thus by definition of $G^M$, both $T$ and $\bar{T}$ have same optimal cost.
+\paragraph{}
+To map from $\bar{T}$ to $T$ replace each edge that is not an edge of $G$ with a shortest path in $G$ (reverse this operation to go from $T$ to $\bar{T}$). If cycles form, break them arbitrarily.
+\end{proof}
+\paragraph{}
+Due to the previous lemma we may assume our input (ST) instances is a metric graph. Consider the following algorithm for (ST) given a metric graph $G$, weights $d$, and terminals $R \subseteq V(G)$.
+\begin{enumerate}
+\item Find a Minimum Spanning Tree $\bar{T}$ on $G[R]$
+\item Return $\bar{T}$.
+\end{enumerate}
+\begin{theorem}
+The above algorithm is a $2$-approximation for (ST).
+\end{theorem}
 \end{document}
