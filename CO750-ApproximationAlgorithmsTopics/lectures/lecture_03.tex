@@ -147,7 +147,8 @@ We may assume $\max_{u,v \in V} d(u,v) = 2^\delta$ for some $\delta \in \N$ and 
 \item Assign every node to the first node according to $\pi$ that has distance at most $2^\beta \cdot 2^{i-1}$.
 \item All nodes assigned to the same node that are currently in the same cluster will form a new cluster in $D_i$.
 \end{enumerate}
+\item Return tree $T$ where $V(T) = \{s \in D_i : \forall i = 0, \dots, \delta\}$ and $E(T) = \{s_is_{i-1}  \in D_{i}\times D_{i-1}: s_{i-1} \subseteq s_i, \forall i = 0,\dots,\delta\}$, and $d(s_is_{i-1}) = 2^i$.
 \end{enumerate}
-(TO BE CONTINUED)
+We complete the proof in the next lecture.
 \end{proof}
 \end{document}
