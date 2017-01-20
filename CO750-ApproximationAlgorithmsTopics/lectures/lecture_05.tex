@@ -1,0 +1,122 @@
+\documentclass[letterpaper,12pt,oneside,onecolumn]{article}
+\usepackage[margin=1in, bottom=1in, top=1in]{geometry} %1 inch margins
+\usepackage{amsmath, amssymb, amstext}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{theorem}
+\usepackage{tikz}
+\usepackage{tkz-berge}
+
+%Macros
+\newcommand{\A}{\mathbb{A}} \newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}} \newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+ 
+ 
+\newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}} \newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}} \newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}} \newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}} \newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}} \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}} \newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}} \newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}} \newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}} \newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}} \newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofof}[1]{{\bf Proof of #1:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofofnobox}[1]{{\bf#1:  }}{}\newenvironment{example}{{\bf Example:  }}{\hfill\rule{2mm}{2mm}}
+
+%\renewcommand{\thesection}{\lecnum.\arabic{section}}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}[fact]{Lemma}
+\newtheorem{theorem}[fact]{Theorem}
+\newtheorem{definition}[fact]{Definition}
+\newtheorem{corollary}[fact]{Corollary}
+\newtheorem{proposition}[fact]{Proposition}
+\newtheorem{claim}[fact]{Claim}
+\newtheorem{exercise}[fact]{Exercise}
+\newtheorem{note}[fact]{Note}
+\newtheorem{conjecture}[fact]{Conjecture}
+
+\newcommand{\size}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
+
+%END MACROS
+%Page style
+\pagestyle{fancy}
+
+\listfiles
+
+\raggedbottom
+
+\lhead{2017-01-19}
+\rhead{William Justin Toth CO750-Approximation Algorithms Lecture 5} %CHANGE n to ASSIGNMENT NUMBER ijk TO COURSE CODE
+\renewcommand{\headrulewidth}{1pt} %heading underlined
+%\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
+
+\begin{document}
+\paragraph{}
+Before moving on to the next topic, we just want to mention an important theorem that results from the theory built in the previous lectures. It tells us that we can have deterministic approximation algorithms that give just as good bounds as the randomized ones studied previously.
+\begin{theorem}
+Let $G=(V,E)$ be a graph. Let $d: E \rightarrow \R_+$ be a metric function. Let $\lambda^*_{uv} \geq 0$ be coefficients for all $(u,v) \in V\times V$. There exists a polynomial time algorithm which constructs a weighted tree $T=(V,E)$ such that $d^T(u,v) \geq d(u,v)$ for all $u,v\in V$ and $$\sum_{u,v} \lambda^*_{uv}d^T(u,v) \leq O(\log n) \sum_{u.v} \lambda^*_{uv} d(u,v).$$
+\end{theorem}
+\begin{proof}
+Omitted. May be in a talk at the end of course via some students project. Involves derandomization via the method of conditional expectation.
+\end{proof}
+\section{Primal - Dual Methods}
+\paragraph{}
+Primal-Dual methods are a common paradigm in algorithm design. We will begin by showing how they are used to given exact algorithms, and then explain relaxed complementary slackness which allows us to extend the paradigm to give approximation algorithms.
+\paragraph{}
+Consider the {\it Arborescence Problem} (ARB). In this problem we are given a directed graph $D= (V,E)$, cost function $c: E \rightarrow \R_+$, and a root vertex $r \in V$. We are to find an arborescence $T$ rooted at $r$ which spans $V$ and minimizes $\sum_{e\in E(T)} c_e$.
+\paragraph{}
+As the name of this method might suggest we will used integrally the linear programming relaxation of this problem:
+\begin{align*}
+\min \sum_{e \in E} c_e x_e  &\ \\
+\text{s.t.} \sum_{e \in \delta^+(S)} x_e &\geq 1 &\forall S \subseteq V\backslash\{r\} \\
+x_e &\geq 0 &\forall e \in E,
+\end{align*}
+and its dual program:
+\begin{align*}
+\max \sum_{S \subseteq V\backslash\{r\}} y_S &\ \\
+\text{s.t.} \sum_{S : e \in \delta^+(S)} y_S &\leq c_e &\forall e \in E \\
+y_S &\geq 0 &\forall S \subseteq V\backslash \{r\}.
+\end{align*}
+Here $\delta^+(S) = \{(u,v) \in E : u \in S, v\not\in S\}$ denotes set of arcs outgoing from $S$.
+\paragraph{}
+Our primal-dual algorithm for (ARB) operates as follows (start by setting $x=0$, $y=0$, for implementation track only non-negative $y$ to avoid exponential runtime): 
+\begin{enumerate}
+\item While $x$ is not feasible for the primal:
+	\begin{enumerate}
+	\item Increase $y_S$ uniformly for all ``strongly connected components" (with respect to $x$) $S$ where $x(\delta^+(S)) = 0$ until some constraints for an edge $e$ becomes tight.
+	\item Set $x_e=1$ for tight edge $e$ in previous step.
+	\end{enumerate}
+\item Deletion Step: Consider each edge $e$ where $x_e = 1$ in reverse order from the order they were set to $1$ and set $x_e = 0$ as long as this does not cause the resulting $x$ to become infeasible.
+\item Return $x$.
+\end{enumerate}
+\begin{theorem}
+The previous algorithm is an exact polynomial time algorithm for (ARB).
+\end{theorem}
+\begin{proof}
+When the algorithm terminates we have that if $x_e > 0$ then $x_e = 1$  and so the dual constraint is tight, that is:
+$$\sum_{S : e\in\delta^+(S)} y_S = c_e.$
+This is immediate from our construction of $x$. Hence the primal complementary slackness conditions hold.
+\paragraph{}
+For the dual complementary slackness conditions, suppose there exists $S$ such that $y_S > 0$, yet $\sum_{e\in \delta^+(S)} x_e \geq 2$. Let $e, \bar{e} \in \delta^+(S)$ and suppose without loss of generality that $\bar{e}$ was added before $e$ by the algorithm. Since we did not delete $e$, there exists a node $v \in S$ that uses $e$ to reach $r$. But since $S$ is strongly connected, no nodes in $S$ need $\bar{e}$ to reach $r$ (they can go $v$ then eventually through $e$), so we could have deleted $\bar{e}$ in the Deletion Step. A contradiction.
+\end{proof}
+\end{document}
