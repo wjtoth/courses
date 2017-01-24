@@ -179,6 +179,26 @@ Let $S$ be a minimal violated set with $f(S) = 1$. If $(V,S)$ contains some conn
 Our algorithm above is a $2$-approximation algorithm for (GND) when $f$ is a $01$-proper function.
 \end{theorem}
 \begin{proof}
-To follow in next lecture.
+Polynomial run time follows from our lemma, because it allows us to find minimal violated cuts in polynomial time by checking the value of $f$ on connected components.
+\paragraph{}
+For the relaxed complementary slackness conditions observe that if $e \in F$ then $\sum_{S : e \in \delta(S)} y_S = c_e$ by construction.  It remains to show that for $y_S > 0$ we have $\sum_{e\in\delta(S)}  x_e = |\delta(S) \cap F| \leq 2$. We will show that this bound holds on average. That is that
+$$ \sum_{e \in F} c_e = \sum_{e \in F} (\sum_{S : e \in \delta(S)} y_S) = (a) = \sum_S |\delta_F(S)| y_S \leq 2 \sum_S y_S = (b) $$
+Let $\Delta_i$ be the amount by which all minimum violated sets get increased in iteration $i$. Call such sets ACTIVE in iteration $i$ (denoted $A(i)$). Then
+$$(a) = \sum_i \sum_{S \in A(i)} |\delta_F(S)| \Delta_i \quad (b) = \sum_i \sum_{S\in A(i)} \Delta_i.$$
+We will show that for every iteration $i$, $\sum_i |\delta_F(S)| \leq 2 \cdot |A(i)|.$
+\paragraph{}
+So fix some $i$. Consider $(V,F)$ (which is a forest as cycles can be removed in Deletion Step), and contract all sets $S$ in $A(i)$ into one node. Call the resulting graph $H$.
+\paragraph{Claim 1}
+$H$ is a forest.
+\paragraph{Proof of Claim 1}
+Suppose the contraction of one set $S$ creates a cycle. But then in the reverse deletion step, one the two edges in $\delta_F(S)$ could be removed without violating feasibility, a contradiction. $\blacksquare$
+\paragraph{Claim 2}
+All leaves of $H$ correspond to active nodes.
+\paragraph{Proof of Claim 2}
+Let $c$ be a node of a component $\bar{H}$ of $H$. Suppose $f(c) = 0$. Note that $f(\bar{H}) = 0$ by our previous lemma. By symmetry $f(V\backslash \bar{H}) = 0$. By maximality $f((V\backslash \bar{H})\cup \{c\}) = 0$. By symmetry $f(\bar{H}\backslash \{c\}) = 0$. This implies that the edge connecting $c$ to $\bar{H}$ could have been removed in the deletion step, a contradiction.$\blacksquare$
+\paragraph{}
+Now our claims imply the following. Let $W$ be the set of shrunk nodes in $H$, and $\bar{W}$ the remains nodes. Discard isolated nodes in $H$. Then
+$$\sum_{v\in W} d_H(v) + \sum_{v\in\bar{W}}d_H(v) \leq 2|W \cup \bar{W}|$$
+since $H$ is a forest. But then $\sum_{v\in W} |\delta_H(v)| \leq 2|W|$, which is exactly equivalent to that which we set out to show. 
 \end{proof}
 \end{document}
