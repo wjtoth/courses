@@ -72,37 +72,47 @@
 
 \begin{document}
 \section*{Notation}
-\paragraph{}
-$G=(A\cup B, E)$ will denote a bipartite graph with vertex partitions $A$ and $B$. The vertex set of $G$ is denoted $V(G)$, and the edge set $E(G)$.
-\paragraph{}
-$\delta(v) = \{e \in E(G) : v \in e\}$ for all $v \in V(G)$.
-\paragraph{}
-$N(v) = \{w \in V(G): vw \in E(G)\}$ for all $V\in V(G)$.
-\paragraph{}
-$>_v$ denotes the strict total preference order of $v$ over $N(v)$. By convention $v$ prefers being matched to unmatched.
-\paragraph{}
-$\delta^{>w}(v) = \{vu \in \delta(v) : u >_v w\}$ for all $v,w \in V(G)$.
-\paragraph{}
-$N_{max}(v) = w$ if and only if $w \geq_v u$ for all $u \in N(v)$. Similarly $N_{min}(v) = w$ if and only if $w \leq_v u$ for all $u \in N(v)$.
-\paragraph{}
-Commonly $M \subseteq E$ such that $|\delta(v) \cap M| \leq 1$ for all $v \in V$ denotes a matching, and $M(v) = w $ if and only if $vw \in M$. For matchings $M_1$ and $M_2$, $M_1 \Delta M_2 = (M_1 \cup M_2) \backslash (M_1 \cap M_2)$ denotes their symmetric difference
-\paragraph{}
-$P(G)$ denotes the set of $x \in \R^{E(G)}$ satisfying
+$\mathbf{G=(A\cup B, E)}$ will denote a bipartite graph with vertex partitions $A$ and $B$. The vertex set of $G$ is denoted $\mathbf{V(G)}$, and the edge set $\mathbf{E(G)}$.
+\\
+$\mathbf{\delta(v)} = \{e \in E(G) : v \in e\}$ for all $v \in V(G)$.
+\\
+$\mathbf{N(v)} = \{w \in V(G): vw \in E(G)\}$ for all $V\in V(G)$.
+\\
+$\mathbf{>_v}$ denotes the strict total preference order of $v$ over $N(v)$. By convention $v$ prefers being matched to unmatched.
+\\
+$\mathbf{\delta^{>w}(v)} = \{vu \in \delta(v) : u >_v w\}$ for all $v,w \in V(G)$.
+\\
+$\mathbf{N_{max}(v)} = w$ if and only if $w \geq_v u$ for all $u \in N(v)$. Similarly $\mathbf{N_{min}(v)} = w$ if and only if $w \leq_v u$ for all $u \in N(v)$.
+\\
+Commonly $\mathbf{M} \subseteq E$ such that $|\delta(v) \cap M| \leq 1$ for all $v \in V$ denotes a matching, and $\mathbf{M(v)} = w $ if and only if $vw \in M$. 
+\\
+For matchings $M_1$ and $M_2$, $\mathbf{M_1 \Delta M_2} = (M_1 \cup M_2) \backslash (M_1 \cap M_2)$ denotes their symmetric difference
+\\
+$\mathbf{P(G)}$ denotes the set of $x \in \R^{E(G)}$ satisfying
 \begin{align*}
  x(\delta(v)) &\leq 1 &\forall v \in V(G) \numberthis \\
 x(\delta^{>b}(a)) + x(\delta^{>a}(b)) + x_{ab} &\geq 1 &\forall ab \in E(G) \numberthis \\
 x &\geq 0\numberthis.
 \end{align*}
-Where $x(M) = \sum_{e \in M} x_e$ for $M \subseteq E(G)$ and $x \in \R^{E(G)}$.
-\paragraph{}
-We let $\chi(M) \in \{0,1\}^{E(G)}$ be the characteristic vector of $M$, defined by $\chi(M)_e = 1$ if $e\in M$ and $\chi(M)_e = 0$ otherwise.
-\paragraph{}
-For $x \in P(G)$ we let $V_x$ denote the set of vertices corresponding to constraints of the form $(1)$ satisfied at equality by $x$. Similarly $E_x$ denotes the set of constraints of the form $(2)$ satisfied at equality by $x$.
+Where $\mathbf{x(M) }= \sum_{e \in M} x_e$ for $M \subseteq E(G)$ and $x \in \R^{E(G)}$.
+\\
+We let $\mathbf{\chi(M)} \in \{0,1\}^{E(G)}$ be the characteristic vector of $M$, defined by $\chi(M)_e = 1$ if $e\in M$ and $\chi(M)_e = 0$ otherwise.
+\\
+For $x \in P(G)$ we let $\mathbf{V_x}$ denote a set of vertices corresponding to constraints of the form $(1)$ satisfied at equality by $x$.
+\\Similarly $\mathbf{E_x}$ denotes a set of constraints of the form $(2)$ satisfied at equality by $x$.
+\\Together $|E_x| + |V_x| = |E|$ and the constraints corresponding to $E_x$ and $V_x$ are linearly independent.
 \section*{Outline (of proof $P(G)$ is integral)}
 \begin{enumerate}
 \item Show there exists $e \in E$ for which $x_e \in \{0,1\}$ where $x$ is an extreme point of $P(G)$.
-\item Proceed by induction on $|E(G)|$
-\item Case $x_e = 0$ using some Stable Matching basics and geometry of polytopes.
-\item Case $x_e = 1$ reducing to case $x_e = 0$ or simply induction.
+\begin{enumerate}
+\item Contradict that number of variables $|E| = |E_x| + |V_x|$ for appropriately chosen $E_x,V_x$ when $0 < x < 1$.
+\end{enumerate}
+\item Proceed by induction on $|E(G)|$: for graphs $G'$ with $|E(G')| < |E(G)|$, $P(G')$ has integral extreme points.
+\item Case $x_{ab} = 0$
+\begin{enumerate}
+\item If $x' = x\mid_{E-ab}$ is an extreme point of $P(G-ab)$ then done. 
+\item Otherwise: (Hard Case, if there's time) using Stable Matchings, and Geometry.
+ \end{enumerate}
+\item Case $x_{ab} = 1$ reducing to case $x_{ab} = 0$ or simply induction if no $0$ variables.
 \end{enumerate}
 \end{document}
