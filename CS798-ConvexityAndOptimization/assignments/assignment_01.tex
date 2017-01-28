@@ -71,6 +71,69 @@
 %\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
 
 \begin{document}
+%Q1%
 \section{}
-
+\paragraph{}
+Let $q > p > 0$ and let $x_1, \dots, x_n \in \R_{>0}$. Let $f : \R_{>0} \rightarrow \R_{>0}$ be the function given by $f(x) = x^\frac{q}{p}$. We claim that $f$ is convex. To see this we will use the second order condition ($f'' \geq 0$). We have by calculus that
+$$f' (x)= \frac{q}{p} x^{\frac{q}{p}-1}$$
+and thus 
+$$f''(x) = \frac{q}{p}(\frac{q}{p} -1) x^{\frac{q}{p} - 2}.$$
+Now since $q > p$, we have $\frac{q}{p} > 1$. So then $\frac{q}{p} - 1$ is non-negative, and further $x^{\frac{q}{p} - 2} > 0$ since $x >0$. Hence $f''(x) \geq 0$ on the domain of $f$. Therefore by the second order condition, $f$ is convex.
+\paragraph{}
+Now observe by convexity that
+$$f(\frac{1}{n}\sum_{i=1}^n x_i^p) \leq \frac{1}{n} \sum_{i=1}^n f(x_i^p) = \frac{1}{n} \sum_{i=1}^n x_i^q.$$
+On the other hand, by applying $f$ directly we see that
+$$f(\frac{1}{n}\sum_{i=1}^n x_i^p) = \frac{1}{n}^\frac{q}{p}(\sum_{i=1}^n x_i^p)^\frac{q}{p}.$$
+Combining the previous two expressions yields the inequality
+$$\frac{1}{n}^\frac{q}{p}(\sum_{i=1}^n x_i^p)^\frac{q}{p} \leq \frac{1}{n} \sum_{i=1}^n x_i^q.$$
+By raising both sides to the exponent $\frac{1}{q}$ (which preserves order) we obtain that
+$$(\frac{1}{n}\sum_{i=1}^n x_i^p)^\frac{1}{p} \leq (\frac{1}{n} \sum_{i=1}^n x_i^q)^\frac{1}{q}$$
+as desired. $\blacksquare$
+\section{}
+%Pa
+\subsection{a}
+\paragraph{}
+Consider the function
+$$f(x) = (\sum_{i=1}^n x_i^p)^\frac{1}{p}$$
+with $\text{dom} f = \R^n_{>0}$. We will compute the Hessian matrix. First observe that
+$$\frac{\partial f}{\partial x_i} f = x_i^{p-1}(\sum_{i=1}^n x_i^p)^\frac{1-p}{p}$$
+for $i = 1, \dots, n$. Now for $j = 1, \dots, n$
+\begin{align*}
+\frac{\partial f}{\partial x_j}\frac{\partial f}{\partial x_i} f &= \frac{\partial f}{\partial x_j}   x_i^{p-1}(\sum_{i=1}^n x_i^p)^\frac{1-p}{p} \\
+&= \begin{cases}
+0, &\text{ if } i=j \\
+(p-1)x_i^{p-1}(\sum_{i=1}^n x_i^p)^\frac{1-p}{p}[1- \frac{x_i^{p-1}}{\sum_{i=1}^n x_i^p}], &\text{if } i \neq j.
+\end{cases}
+\end{align*}
+Observe that if $p \geq 1$ each factor in the second case is non-negative when $x \in \R^n_{>0}$. Hence $\frac{\partial f}{\partial x_i} f  \geq 0$ for all $x \in \text{dom f}$ for all $i,j = 1, \dots, n$. Thus each entry of the Hessian is non-negative, and so the Hessian is PSD. Thus by the second order condition $f$ is convex.
+\paragraph{}
+Now when $p < 1$, by a similar calculation we observe
+$$\frac{\partial f}{\partial x_i} -f = \begin{cases}
+0, &\text{ if } i=j \\
+(1-p)x_i^{p-1}(\sum_{i=1}^n x_i^p)^\frac{1-p}{p}[1- \frac{x_i^{p-1}}{\sum_{i=1}^n x_i^p}], &\text{if } i \neq j.
+\end{cases}$$
+Again each factor is non-negative, and hence $-f$ is convex by the second order condition. Therefore $f$ is concave. $\blacksquare$
+\paragraph{}
+Next we show that
+$$||x||_p = (\sum_{i=1}^n |x_i|^p)^\frac{1}{p}$$
+is a norm for $p\geq 1$. It is easy to see that $||x||_p$ is non-negative since it is a sum of absolute values. Similarly if any $x_i > 0$ then $||x||_p > 0$, so $||x||_p = 0$ if and only if $x = 0$. Now consider some scalar $\alpha$. We have
+$$||\alpha x||_p = (\sum_{i=1}^n |\alpha x_i|^p)^\frac{1}{p} = (\sum_{i=1}^n |\alpha|^p|\cdot |x_i|^p)^\frac{1}{p} = |\alpha|(\sum_{i=1}^n |x_i|^p)^\frac{1}{p} = |\alpha|\cdot ||x||_p.$$
+\paragraph{}
+Lastly it remains to verify the triangle inequality. Let $x, y \in \R^n$. If either $x$ or $y$ is $0$, say without loss of generality $y=0$, then 
+$$||x + y||_p = ||x||_p + 0 = ||x||_p + ||y||_p$$
+immediately. So we may assume $x$ and $y$ are non-zero. Thus it suffices to prove
+$$f(x+y) \leq f(x) + f(y).$$
+To show this we exploit convexity of $f$ as follows
+$$f(x+y) = f(\frac{1}{2}(2x+2y)) \leq \frac{1}{2}(f(2x) + f(2y)) = \frac{1}{2} ((2^p\sum_{i=1}^n x^p)^\frac{1}{p} +(2^p\sum_{i=1}^n y^p)^\frac{1}{p}) = f(x) + f(y).$$
+Therefore $||x + y||_p \leq ||x||_p + ||y||_p$, and hence $||x||_p$ is a norm. $\blacksquare$
+\paragraph{}
+Finally we give a counter-example showing $||x||_p$ is not a norm when $0 < p < 1$. Consider $p =\frac{1}{2}$ and $e_1, e_2 \in \R^2$ the standard basis vectors of $\R^2$. We prove $||x||_p$ violates the triangle inequality. Observe
+$$||e_1 + e_2 ||_p = (1 + 1)^2 = 4$$
+while 
+$$||e_1|| = (1+0)^2 = 1 = ||e_2||$$
+hence 
+$$||e_1 + e_2||  = 4 < 2 = ||e_1|| + ||e_2||.$$
+Thus the triangle inequality is violated, and so $||x||_p$ is not a norm.
+%Pb
+\subsection{b}
 \end{document}

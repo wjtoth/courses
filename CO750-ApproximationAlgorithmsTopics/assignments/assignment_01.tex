@@ -72,5 +72,26 @@
 
 \begin{document}
 \section{}
-
+\paragraph{}
+Let $E$ be the edge set of a graph $G$. Let $\cS$ be the collection of all sets $S \subseteq E$ that are matchings of $G$. Let $w: E \rightarrow \R_+$ be a weight function on the edges. For a subset $\bar{E} \subseteq E$ we denote by $G[\bar{E}]$ the subgraph of $G$ induced by the edges in $\bar{E}$.
+\subsection{a}
+\paragraph{}
+Let $\bar{E} \subseteq E$. Suppose that $M \subseteq \bar{E}$ is an inclusion-wise maximal matching of $G[\bar{E}]$. Let $\bar{M}$ be a matching of $G[\bar{E}]$. Let $f : M \rightarrow \{ \{e_1,e_2\} | e_1, e_2 \in \bar{M}\}$ be defined by
+$$ f(uv) = \{e_1, e_2\}$$
+where $e_1 \in \bar{M}$ covers $u$ and $e_2 \in \bar{M}$ covers $v$, for each $uv \in M$.
+\paragraph{}
+We claim that for all $uv \in \bar{M}$, there exists $P \in Im(f)$ (where $Im(f)$ denotes the image of $f$) such that $uv \in P$. To see this suppose for a contradiction that there exists some $uv \in \bar{M}$ where each $P \in Im(f)$ does not contain $uv$. Then by the definition of $f$, neither $u$ nor $v$ are covered by $M$. But this violates that $M$ is inclusion-wise maximal since $uv \not\in M$ and $M \cup \{uv\}$ is a matching. Hence the claim holds.
+\paragraph{}
+From the previous claim we observe $|\bar{M}| \leq | \cup_{P \in Im(f)} P|$. But this yields a string of inequalities which complete the proof:
+\begin{align*}
+|\bar{M}| &\leq |\cup_{P \in Im(f)} P| \\
+&\leq \sum_{P \in Im(f)} |P| \\
+&\leq \sum_{P \in Im(f)} 2 \\
+&\leq 2|Im(f)| \\
+&\leq 2|M|. 
+\end{align*}
+With the last inequality following since $M$ is the domain of $f$. Hence we have $|M| \geq \frac{1}{2}|\bar{M}|$ as desired. $\blacksquare$
+\subsection{b}
+\paragraph{}
+Let $e$
 \end{document}
