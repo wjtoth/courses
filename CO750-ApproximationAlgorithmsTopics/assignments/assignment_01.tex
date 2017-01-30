@@ -71,9 +71,11 @@
 %\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
 
 \begin{document}
+%Q1
 \section{}
 \paragraph{}
 Let $E$ be the edge set of a graph $G$. Let $\cS$ be the collection of all sets $S \subseteq E$ that are matchings of $G$. Let $w: E \rightarrow \R_+$ be a weight function on the edges. For a subset $\bar{E} \subseteq E$ we denote by $G[\bar{E}]$ the subgraph of $G$ induced by the edges in $\bar{E}$.
+	%Pa
 \subsection{a}
 \paragraph{}
 Let $\bar{E} \subseteq E$. Suppose that $M \subseteq \bar{E}$ is an inclusion-wise maximal matching of $G[\bar{E}]$. Let $\bar{M}$ be a matching of $G[\bar{E}]$. Let $f : M \rightarrow \{ \{e_1,e_2\} | e_1, e_2 \in \bar{M}\}$ be defined by
@@ -91,7 +93,69 @@ From the previous claim we observe $|\bar{M}| \leq | \cup_{P \in Im(f)} P|$. But
 &\leq 2|M|. 
 \end{align*}
 With the last inequality following since $M$ is the domain of $f$. Hence we have $|M| \geq \frac{1}{2}|\bar{M}|$ as desired. $\blacksquare$
+	%Pb
 \subsection{b}
 \paragraph{}
 Let $e$
+
+%Q2
+\section{}
+
+%Q3
+\section{}
+\paragraph{}
+Let $G = (V,E)$ be a graph. For any $S, T \subseteq V$ we denote by $E(S,T)$ the set of edges between $S$ and $T$. Formally $E(S,T) = \{\{s,t\} \in E: s \in S, t \in T\}$.
+%Pa
+\subsection{a}
+
+%Pb
+\subsection{b}
+\paragraph{}
+Our goal is to find a maximum $k$-Cut of $G$. That is, we seek to find a partition of $V$ into $V_1, \dots, V_k$ maximizing
+$$\sum_{i=1}^k \sum_{j = 1}^{i-1} |E(V_i, V_j)| := c(\{V_1, \dots, V_k\}).$$
+Intuitively we are maximizing the edges between the selected cuts. Let $\cB$ denote the $2$-approximation algorithm for max cut given in problem $3a$. Consider the following algorithm, which we will denote by $\cA$:
+\begin{enumerate}
+\item Set $V_1 = S$ and $V_2 = V\backslash S$ where $S$ is the cut returned by $\cB$ when run on $G$.
+\item Set $V_i = \emptyset$ for $i = 3, \dots, k$.
+\item For $i = 2, \dots, k-1$
+\begin{enumerate}
+\item For $j = 1, \dots, i$ set $S_j$ to the cut returned by $\cB$ when run on $G[V_j]$.
+\item Set $j^* = \text{argmax}_{j=1,\dots, i} \{|E(S_j, V_j\backslash S_j)|\}$.
+\item Set $V_{i+1} = S_{j^*}$ and set $V_{j^*} = V_{j^*} \backslash S_{j^*}$.
+\end{enumerate}
+\item Return $V_1, \dots, V_k$.
+\end{enumerate}
+The idea behind the operation of $\cA$ is to start with a $2$-cut of $G$, and in every successive iteration take the current partition and $2$-cut one of the parts in an approximately optimal way until we reach a $k$-cut.
+\begin{lemma}\label{lemma:3b1}
+Let $\cO = \{V^*_1, \dots, V^*_k\}$. Consider an arbitrary iteration $i = 1, \dots, k-1$ (iteration $1$ is original $2$-cut). Let $\cS = \{V_1, \dots, V_{i+1}\}$ be the set of partitions chosen so far by $\cA$. Suppose that at the end of iteration $i$, the algorithm has split $V_j$ into $V_j'$ and $V_{i+1}$. That is the solution after iteration $i$ is
+$$\cS' = \cS \backslash V_j \cup \{V_j', V_{i+1}\}.$$
+Then 
+$$2k(c(\cS') - c(\cS)) \geq c(\cO) - c(\cS).$$
+\end{lemma}
+\begin{proof}
+The difference between $c(\cS')$ and $c(\cS)$ is precisely $|E(V_j', V_{i+1})|$ (the number of edges gained by splitting $V_j$). Further the difference $c(\cO) - c(\cS)$ is upper-bounded by the edges counted in $c(\cO)$ that are not counted in $c(\cS)$. Call such edges $E'$.  The edges $E'$ are necessarily internal to a part of $\cS$ (that is, both endpoints lie in some $V_k \in \cS$). Otherwise they are counted in $c(\cS)$ since their endpoints lie in distinct parts of $\cS$. Thus if we consider the $k$-cut induced by $\cO$ on $G[E']$ it consists of at most $k$ splits ($2$-cuts) of parts $V_k \in \cS$.
+\paragraph{}
+Let $V'_k$ denote the best possible $2$-cut of $V_k \in \cS$ for all $k = 1, \dots, i$. Now let $$k^* = \text{argmax}_{k=1,\dots,i}  \{|E(V'_k, V_k \backslash V'_k)|\}.$$ We have
+$$ |E'| \leq k |E(V'_{k^*}, V_k \backslash V'_{k^*})|$$
+by our previous discussion, since $E'$ edges are formed by a $k$-cut on edges internal to parts of $\cS$, and  $|E(V'_{k^*}, V_k \backslash V'_{k^*}|$ is largest $2$-cut to be formed by edges internal to a part of $\cS$. Now the cut found by our algorithm $\cA$ in this iteration in step $3(c)$ is a $2$-approximation of the best possible split cut. That is,
+$$|E(V'_{k^*}, V_k \backslash V'_{k^*})| \leq 2|E(V_j', V_{i+1})| .$$
+Hence, combining these inequalities, we see that
+$$|E'| \leq 2k |E(V_j', V_{i+1})|.$$
+Therefore $2k(c(\cS') - c(\cS)) \geq c(\cO) - c(\cS)$ as desired.
+\end{proof}
+\paragraph{}
+Using the previous lemma, we can demonstrate that $\cA$ is a $\alpha := 1-(1-\frac{1}{2k})^k$-approximation algorithm for the max $k$-cut problem.
+\paragraph{Main Proof}
+Since $\cB$ can be run in polynomial time, and $k$ is at most $|V|$, it is clear that $\cA$ runs in polynomial time. At termination the algorithm returns a partition of $V$ into $k$ parts so it returns a feasible solution.
+\paragraph{} 
+Now to see the approximation factor holds let $\cS^i$ denote the solution maintained by $\cA$ at the end of iteration $i$. Then the returned solution is $\cS^{k-1}$. Let $\cO$ be an optimal solution. Observe from Lemma \ref{lemma:3b1} that $c(\cS^{i}) \geq \frac{1}{2k} c(\cO) + (1- \frac{1}{2k})c(S^{i-1})$. We will apply this inequality inductively to achieve the bound:
+\begin{align*}
+c(\cS^{k-1} &\geq \frac{1}{2k} c(\cO) + (1- \frac{1}{2k})c(S^{k-2}) \\
+		&\geq \frac{1}{2k} c(\cO) + (1- \frac{1}{2k})(\frac{1}{2k} c(\cO) + (1- \frac{1}{2k})c(S^{k-3})) \\
+		&\geq \frac{1}{2k} c(\cO) + (1- \frac{1}{2k})(1 + (1-\frac{1}{2k}) + (1-\frac{1}{2k})^2 + \dots + (1-\frac{1}{2k})^{k-1}) \\
+		&= \frac{c(\cO)}{2k} \cdot \frac{1-(1-\frac{1}{2k})^k}{1-(1-\frac{1}{2k})} \\
+		&=\frac{c(\cO)}{2k} \cdot \frac{1-(1-\frac{1}{2k})^k}{\frac{1}{2k}}\\
+		&= 1-(1-\frac{1}{2k})^kc(\cO).
+\end{align*}
+Thus the approximation factor holds as desired. $\blacksquare$
 \end{document}
