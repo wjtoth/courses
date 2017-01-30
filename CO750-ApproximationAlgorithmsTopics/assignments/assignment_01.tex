@@ -107,7 +107,32 @@ Let $e$
 Let $G = (V,E)$ be a graph. For any $S, T \subseteq V$ we denote by $E(S,T)$ the set of edges between $S$ and $T$. Formally $E(S,T) = \{\{s,t\} \in E: s \in S, t \in T\}$.
 %Pa
 \subsection{a}
-
+\paragraph{}
+The fact that the Greedy Algorithm runs in polynomial time is obvious. $|E(v,S)|$ can be computed in $O(|E|)$ time and the while loop runs for $O(|V|)$ iterations. Further it clearly returns a cut. It remains to verify the approximation factor of $\frac{1}{2}$ holds.
+\paragraph{}
+We show that the approximation factor is maintained throughout operation of the algorithm on the graph $G[V\backslash \bar{V}]$ induced by vertices considered so far. After the first iteration only one vertex has been considered and the approximation factor holds trivially on the graph induced by that one vertex. Now for induction let $V' = V \backslash \bar{V}$ be the set of vertices considered so far by the Greedy Algorithm, and at the start of the next iteration the vertex $v \in V$ is being considered. Let $S \subseteq V$ be the cut set considered so far, and let $S^*$ be the optimal cut set on $G[V']$. Let $\bar{S} = V'\backslash S$ and $\bar{S^*} = V' \backslash S^*$. We may assume without loss of generality that the Greedy Algorithm puts $v \in S$ and the optimal solution puts $v \in S^*$ after this iteration (if this does not hold simply relabel $S$ with $\bar{S}$ below, or $S^*$ with $\bar{S^*}$ with respect to which assumption does not hold). 
+\paragraph{}
+So after this iteration the optimal solution has value
+$$|E(S^* \cup \{v\}, \bar{S^*})| =  \sum_{u \in S^* \cup \{v\}} |E(u, \bar{S^*})| = |E(v,\bar{S^*})| + \sum_{u \in S^*} |E(u, \bar{S^*})| \leq |E(v,\bar{S^*})| + 2\sum_{u \in S} |E(u, \bar{S})|$$
+with the inequality following by induction. Hence the approximation factor will hold as desired provided that
+$$|E(v,\bar{S^*})| \leq 2|E(v,\bar{S})|.$$
+Suppose for a contradiction that
+$$|E(v,\bar{S^*})| > 2|E(v,\bar{S})|.$$
+We observe that
+$$|E(v, \bar{S^*})| = |E(v,\bar{S^*}\backslash S)| + |E(v, \bar{S^*}\cap S)| \leq  |E(v, \bar{S})| + |E(v, S)|.$$
+The inequality follows since $\bar{S^*}\backslash S \subseteq V' \backslash S = \bar{S}$, and $\bar{S^*} \cap S \subseteq S$. Combining this inequality with the contradiction assumption we see
+$$2|E(v,\bar{S})| <|E(v, \bar{S})| + |E(v, S)|$$
+and subtracting $|E(v, \bar{S})|$ from both sides yields
+$$ |E(v,\bar{S})| < |E(v,S)|.$$
+This contradicts our Greedy choice $v \in S$ since such choice implies
+$$ |E(v,\bar{S})| \geq |E(v,S)|.$$
+Hence we have
+$$|E(v,\bar{S^*})| \leq 2|E(v,\bar{S})|.$$
+Thus after this iteration the optimal solution has value:
+$$|E(S^* \cup \{v\}, \bar{S^*})|  \leq |E(v,\bar{S^*})| + 2\sum_{u \in S} |E(u, \bar{S})| \leq 2|E(v,\bar{S})| + 2\sum_{u \in S} |E(u, \bar{S})| = 2 |E(S \cup \{v\}, \bar{S})|.$$
+Therefore $|E(S \cup \{v\}, \bar{S})| \geq \frac{1}{2} |E(S^* \cup \{v\}, \bar{S^*})|$ as desired. 
+\paragraph{}
+Now we observe that, from the invariant we just demonstrated, upon termination of the algorithm the approximation factor holds for the greedy solution versus the optimal solution on $G[V \backslash \emptyset] = G$, and hence the Greedy Algorithm is $\frac{1}{2}$-approximation algorithm.$\blacksquare$
 %Pb
 \subsection{b}
 \paragraph{}
