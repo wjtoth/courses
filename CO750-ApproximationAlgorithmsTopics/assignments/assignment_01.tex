@@ -261,4 +261,10 @@ c(\cS^{k-1} &\geq \frac{1}{2k} c(\cO) + (1- \frac{1}{2k})c(S^{k-2}) \\
 		&= 1-(1-\frac{1}{2k})^kc(\cO).
 \end{align*}
 Thus the approximation factor holds as desired. $\blacksquare$
+%Q4
+\section{}
+\paragraph{}
+Let $G = (V,E)$ be a graph with edge costs $c: E \rightarrow \R_+$. Let $r \in V$ be a root vertex. Let $R \subseteq V \backslash \{r\}$ be a set of terminals. Let $d_v \in \{2^0, 2^1, \dots, 2^\delta\}$ denote the demand of $v$ for each $v \in R$. We assume we have an $O(1)$-approximation algorithm for the Steiner Tree problem. Then each iteration of step $2$ of the given algorithm runs in polynomial time using the assumed approximation algorithm. There are $\delta+1$ iterations of step $2$ which is $O(\log \max_v d_v)$ and hence polynomial in the number of bits needed to specify the input to the problem. Thus the entirety of step $2$ runs in polynomial time and hence the given algorithm runs in polynomial time. It is clear the tree returned spans $R \cup \{r\}$ since the partial solution at each iteration $i$ spans $R_\delta \cup \dots \cupR_i \cup \{r\}$. Further at each iteration $i$ the paths in the final solution connecting $v \in R_i$ to $r$ are assigned costs $2^i$ on their edges and hence a feasible flow of value $d_v$ from $r$ to $v$ is possible. Thus the algorithm returns a feasible solution in polynomial time.
+\paragraph{}
+It remains to verify the approximation factor of $O(1)$. We do so by induction on the number of iterations the algorithm needs to run to return a solution.
 \end{document}
