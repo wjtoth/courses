@@ -136,4 +136,24 @@ $$||e_1 + e_2||  = 4 < 2 = ||e_1|| + ||e_2||.$$
 Thus the triangle inequality is violated, and so $||x||_p$ is not a norm.
 %Pb
 \subsection{b}
+\paragraph{}
+Let $n \in \N$ and consider the function $f: S^n_{++} \rightarrow \R$ given by
+$$f(x) = (\det X)^\frac{1}{n}.$$
+We will demonstrate that $f$ is concave. It suffices to show that the function 
+$$g(t) = (\det (Z + t V))^\frac{1}{n} $$
+is concave for arbitrary $Z \in S^n_{++}$ and $V \in S^n$. Note that $g$ is the restriction of $f$ to some arbitrary line. The domain of $g$ is $\{t \in \R: Z + tV \in S^n_{++}\}$.
+\paragraph{}
+Since $Z \in S^n_{++}$ we can decompose $Z$ as $Z=Z^\frac{1}{2}Z^\frac{1}{2}$ with $Z^\frac{1}{2}$ non-singular. Let $\lambda_1, \dots, \lambda_n$ denote the eigenvalues of $Z^\frac{-1}{2}VZ^\frac{-1}{2}$. Then we observe that
+$$g(t) = (\det(Z+tV))^\frac{1}{n} = (\det(Z^\frac{1}{2}(I + tZ^\frac{-1}{2}VZ^\frac{-1}{2})Z^\frac{1}{2}))^\frac{1}{n}.$$
+Using that $\det(\cdot)$ distributes over matrix products and that $\det(A)$ is equal to the product of the eigenvalues of $A$ we have
+$$g(t) = \det(Z^\frac{1}{2})^\frac{2}{n}\det(1 + tZ^\frac{-1}{2}VZ^\frac{-1}{2}) = \det(Z^\frac{1}{2})^\frac{2}{n}(\Pi_{i=1}^n 1+t\lambda_i)^\frac{1}{n}.$$
+Now we will show that $g$ is a composition of affine and concave functions, and hence that $g$ is concave. Let $h : \R \rightarrow \R^n$ be the affine function given by
+$$h(t)_i = 1+t\lambda_i$$
+for $i = 1\dots n$. Let $ y : \R^n \rightarrow \R$ be the geometric mean function
+$$y(x) = (\Pi_{i=1}^n x_i)^\frac{1}{n}.$$
+We know from the notes that $y$ is concave. Finally, let $z: \R\rightarrow \R$ be the affine (linear actually) function given by
+$$z(x) = \det(Z^\frac{1}{2})^\frac{2}{n}$$
+Then we see that
+$$g(t) = z\circ y\circ h(t).$$
+Thus $g$ is a composition of affine functions with a concave function and hence $g$ is concave.$\blacksquare$
 \end{document}
