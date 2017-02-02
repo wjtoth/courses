@@ -271,5 +271,24 @@ It remains to verify the approximation factor of $O(1)$. We do so by induction o
 Suppose that $\delta > 0$ and for any problem instance with maximum demand $2^{\alpha}$ with $0 \leq \alpha < \delta$ the algorithm returns an $O(1)$ approximate solution. We will describe solutions by an ordered pair $(T, x)$ where $T$ is a tree and $x : T \rightarrow \R_+$ maps edges of $T$ with their corresponding capacity. Then the objective function, which we denote by $f$, in our problem maps feasible solutions $(T,x)$ as follows:
 $$f(T,x) = \sum_{e \in T} c_e x_e.$$
 \paragraph{}
-Let $(T,x)$ be the solution returned by running our algorithm, and let $(T^*, x^*)$ be the optimal solution. Let $T_{\delta}$ be the $O(1)$-approximate Steiner Tree connecting $R_\delta \cup \{r\}$ in the first iteration (iteration $\delta$) of our algorithm. Let $\bar{T}$ denote the solution returned by our algorithm running on the residual problem with input graph $G_{\delta-1}$	
+Let $(T,x)$ be the solution returned by running our algorithm, and let $(T^*, x^*)$ be the optimal solution. Let $T_{\delta}$ be the $O(1)$-approximate Steiner Tree connecting $R_\delta \cup \{r\}$ in the first iteration (iteration $\delta$) of our algorithm. Let $(\bar{T}, x)$ denote the solution returned by our algorithm running on the residual problem with input graph $G_{\delta-1}$ (the resulting graph after contracting $T_{\delta}$ into $r$). Then $T = T_\delta \cup \bar{T}$ and 
+$$f(T,x) = f(T_\delta, x) + f(\bar{T},x).$$
+If we let $(\bar{T}^*, \bar{x}^*)$ denote the optimal solution for the residual problem with graph $G_{\delta - 1}$ then by our inductive hypothesis
+$$f(T,x) \leq f(T_\delta,x) + O(1)f(\bar{T}^*, \bar{x}^*).$$
+Now we observe that $T^*$ contains a Steiner Tree $T'$ with terminals $R_\delta \cup \{r\}$. Since $T_\delta$ is an $O(1)$-approximate optimal Steiner tree with terminals $R_\delta \cup \{r\}$ we have $c(T_\delta) \leq O(1) c(T')$. Since $T'$ necessarily installs capacities $2^\delta$ on all of its edges, $x_e^* = 2^\delta$ for all $e \in T'$. To see that a capacity of $2^\delta$ is necessary, suppose some edge $e$ in $T'$ has $x^*_e < 2^\delta$. Since $T'$ is a Steiner Tree, some terminal $v \in R_\delta$ uses $e$ on its unique path to $r$. But then an $rv$-flow along this path has value at most $x^*_e < 2^\delta$ contradicting feasibility of $(T^*, x^*)$. Thus $x_e^* = 2^\delta$ for all $e \in T'$. Hence we have
+$$f(T_\delta, x) = \sum_{e \in T_\delta} c_e x_e = 2^\delta c(T_\delta) \leq O(1)2^\delta c(T') = O(1)f(T', x^*) \leq O(1) f(T^*, x^*).$$
+Thus we see that
+$$f(T,x) \leq O(1) f(T^*,x^*) + O(1) f(\bar{T}^*, \bar{x}^*).$$
+Now consider the graph that results from contracting all edges of $T_\delta \cap T^*$ into $r$ in the tree $T^*$. If any cycles form then do the following: while there still exists a cycle $C$ take the edge $e = \text{argmin}_{e\in C} x^*_e$ and remove it. Call the resulting graph $S^*$. 
+\paragraph{}
+We claim that $(S^*, x^*)$ is feasible for the residual problem on $G_{\delta-1}$. Indeed $S^*$ is a tree since we trimmed one edge from all cycles. Since trimming cycles preserves connectivity, and we contracted edges into $r$, all $rv$-paths in $T^*$ are preserved in $S^*$. Hence for all $v \in R\backslash R_\delta$ there exists an $rv$-path in $S^*$. Now we claim that the capacities on any $rv$-path still admit feasible flows after converting from $T^*$ to $S^*$. Observe that contraction will not decrease the minimum capacity. Further observe that deleted edges had minimum capacity on a cycle, so any flow that used a deleted edge $uv$ could send the same flow through the $uv$-path remaining from the cycle $uv$ was deleted from. Hence the flows on $S^*$ under capacities $x^*$ can still meet all demands in $R\backslash R_\delta$. Therefore $(S^*,x^*)$ (with $x^*$ restricted to $E(G_{\delta-1})$) is feasible for $G_{\delta -1}$. Hence, since $(\bar{T}^*, \bar{x}^*)$ is optimal for $G_{\delta -1}$:
+$$f(\bar{T}^*, \bar{x}^*) \leq f(S^*, x^*) \leq f(T^*, x^*).$$
+Therefore
+\begin{align*}
+f(T,x) &\leq O(1)f(T^*,x^*) + O(1)f(\bar{T}^*,\bar{x}^*) \\
+&\leq O(1)f(T^*,x^*) + O(1)f(T^*,x^*) \\
+&= 2O(1)f(T^*,x^*)\\
+&= O(1)f(T^*,x^*).
+\end{align*}
+So the approximation factor $O(1)$ holds in the inductive case. Thus the algorithm given is a $O(1)$-approximation algorithm.$\blacksquare$
 \end{document}
