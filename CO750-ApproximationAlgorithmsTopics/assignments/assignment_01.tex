@@ -291,4 +291,26 @@ f(T,x) &\leq O(1)f(T^*,x^*) + O(1)f(\bar{T}^*,\bar{x}^*) \\
 &= O(1)f(T^*,x^*).
 \end{align*}
 So the approximation factor $O(1)$ holds in the inductive case. Thus the algorithm given is a $O(1)$-approximation algorithm.$\blacksquare$
+
+%Q5
+\section{}
+\paragraph{}
+Let $G=(V,E)$ be a metric graph with edge lengths $d: E \rightarrow \N_+$ and let $f : 2^V \rightarrow \N_+$  be a a function satisfying:
+\begin{enumerate}
+\item (Symmetric) $f(S) = f(V\backslash S)$ for all $S \subseteq V$
+\item (Subadditive) $f(A \cup B) = f(A) + f(B)$ for all $A,B \subseteq V$.
+\end{enumerate}
+Consider the following integer program, to be labelled $IP$:
+\begin{align*}
+\text{min} \sum_{e \in E} d(e) x_e\\
+\text{s.t.} \sum_{e\in \delta(S)} x_e &\geq f(S) &\forall S \subseteq V \\
+x &\geq 0, \text{ integer}.
+\end{align*}
+\paragraph{Solving $IP$ of Trees}
+We first observe that this $IP$ is easy to solve on trees. Indeed let $T$ be a tree, and for every $e \in E(T)$ let $S^e$ denote the set of vertices in one of the two connected components of $T-e$. By definition, $\delta(S^e) = \{e\}$. We define the following algorithm $\cA$ to solve $IP$ on a tree $T$:
+\begin{enumerate}
+\item For all $e \in E(T)$ set $x_e = f(S^e)$.
+\item Return $x$.
+\end{enumerate}
+To see that $\cA$ solves $IP$ on trees, we will show that $(1)$ the solution returned is feasible, and $(2)$ that every feasible $x$ has necessarily $x_e \geq f(S^e)$, implying that the $x$ returned by $\cA$ is optimal.  Let $x$ be the solution returned by $\cA$. To see $(1)$, it is immediate from the definition of $f$ that $x \geq 0$. It remains to verify the cut inequalities. Let $S \subseteq V$. Enumerate $\delta(S)$ as $\delta(S) = \{e_1, \dots, e_k \}$.
 \end{document}
