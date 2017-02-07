@@ -312,5 +312,9 @@ We first observe that this $IP$ is easy to solve on trees. Indeed let $T$ be a t
 \item For all $e \in E(T)$ set $x_e = f(S^e)$.
 \item Return $x$.
 \end{enumerate}
-To see that $\cA$ solves $IP$ on trees, we will show that $(1)$ the solution returned is feasible, and $(2)$ that every feasible $x$ has necessarily $x_e \geq f(S^e)$, implying that the $x$ returned by $\cA$ is optimal.  Let $x$ be the solution returned by $\cA$. To see $(1)$, it is immediate from the definition of $f$ that $x \geq 0$. It remains to verify the cut inequalities. Let $S \subseteq V$. Enumerate $\delta(S)$ as $\delta(S) = \{e_1, \dots, e_k \}$.
+To see that $\cA$ solves $IP$ on trees, we will show that $(1)$ the solution returned is feasible, and $(2)$ that every feasible $x$ has necessarily $x_e \geq f(S^e)$, implying that the $x$ returned by $\cA$ is optimal.  Let $x$ be the solution returned by $\cA$. 
+\paragraph{}
+To see $(1)$, it is immediate from the definition of $f$ that $x \geq 0$. It remains to verify the cut inequalities. Let $S \subseteq V$. Enumerate $\delta(S)$ as $\delta(S) = \{e_1, \dots, e_k \}$. For each $i = 1, \dots, k$ define
+$$S_i = \{ v \in S : v \text{ can reach an endpoint of } e_i \text{ via a path internal to } S\}.$$
+Since $T$ is connected, each node $v \in S$ can reach each node in $V \backslash S$, and must use an edge $e_i \in \delta(S)$ to do so. The vertex $v$ is assigned to $S_i$ where $e_i$ is the first edge in $\delta(S)$ on any such path across the cut. Hence $S = \cup_i S_i.$ Further $S_i \subseteq S^{e_i}$ or $S_i \subseteq V\backslash S^{e_i}$. To see this, observe that if it were to fail then there would exist $u, v \in S_i$ with $u \in S^{e_i}$ and $v \in V\backslash S^{e_i}$. But then $u$ and $v$ are connected internally within $S$ (since they both can internally reach an endpoint of $e_i$) and so removing $e_i$ does not separate them, violating that $u \in S^{e_i}$ and $v \in V\backslash S^{e_i}$. Thus
 \end{document}
