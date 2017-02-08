@@ -323,7 +323,7 @@ So we have $$S = \bigcup_{i=1}^\ell S_i = \bigcup_{i=1}^\ell \bigcap_{e_j \in D(
 f(S) &\leq \sum_{i=1}^\ell f(\bigcap_{e_j \in D(S_i)}S^{e_j}_{u_j}) &\text{by subadditivity} \\
 &= \sum_{i=1}^\ell f(V\backslash \bigcap_{e_j \in D(S_i)} S^{e_j}_{u_j}) &\text{by symmetry} \\
 &= \sum_{i=1}^\ell f(\bigcup_{e_j\in D(S_i)} V\backslash S^{e_j}_{u_j}). \\
-&\leq \sum_{i=1}^\ell \sum_{e_j \in D(S_i)} f(V\backslash S^{e_j}_{u_j}) &\text{by subadditivity} \\
+&\leq \sum_{i=1}^\ell \sum_{e_j \in D(S_i)} f(V\backslash S^{e_j}_{u_j}) &\text{by subadditivity} \\ t
 &= \sum_{i=1}^\ell \sum_{e_j \in D(S_i)} f(S^{e_j}_{u_j}) &\text{by symmetry} \\
 &= \sum_{e_j \in \delta(S)} f(S^{e_j}_{u_j}) \\
 &= \sum_{e_j \i \delta(S)} x_{e_j}.
@@ -332,22 +332,118 @@ Hence $x$ satisfies the cut constraint for $S$. Therefore $x$ is feasible and $(
 \paragraph{}
 Now to demonstrate $(2)$, let $uv \in E(T)$. Consider the cut $S^{uv}_u$. We have $\delta(S^{uv}_u) = \{uv\}$ and hence by the cut constraint for $S^{uv}_u$, all feasible $x$ satisfy
 $$x_{uv} \geq f(S^{uv}_u).$$
-Now the $x$ we construct is tight for all the above, and since $d \geq 0$ we can do no better without violating feasibility. Thus $(2)$ holds and our $x$ is optimal. So we conclude that we can solve $IP$ on trees easily.
+Now the $x$ we construct is tight for all the above, and since $d \geq 0$ we can do no better without violating feasibility. Thus $(2)$ holds and our $x$ is optimal. So we conclude that we can solve $IP$ on trees easily. Further this proof shows that $x$ is optimal for the linear programming relaxation of $IP$ on $T$, and since $x$ is integral this implies the equivalence of the linear programming relaxation and the integer program itself on $T$.
 \paragraph{Integrality Gap for $IP$}
 We now give an algorithm that produces an integral solution to $IP$ for a general metric graph $G$ which approximates the optimal $LP$-relaxation of $IP$ within a factor of $O(\log n)$. Our algorithm will use the following theorem from class:
 \begin{theorem} \label{th:metric-tree}
-Let $G=(V,E)$ be a graph. Let $d: E \rightarrow \R_+$ be a metric function. Let $\lambda^*_{uv} \geq 0$ be coefficients for all $(u,v) \in V\times V$. There exists a polynomial time algorithm which constructs a weighted tree $T=(V,E)$ such that $d^T(u,v) \geq d(u,v)$ for all $u,v\in V$ and $$\sum_{u,v} \lambda^*_{uv}d^T(u,v) \leq O(\log n) \sum_{u.v} \lambda^*_{uv} d(u,v).$$
+Let $G=(V,E)$ be a graph. Let $d: E \rightarrow \R_+$ be a metric function. Let $\lambda^*_{uv} \geq 0$ be coefficients for all $(u,v) \in V\times V$. There exists a polynomial time algorithm which constructs a weighted tree $T$ on $V$ such that $d^T(u,v) \geq d(u,v)$ for all $u,v\in V$ and $$\sum_{u,v} \lambda^*_{uv}d^T(u,v) \leq O(\log n) \sum_{u.v} \lambda^*_{uv} d(u,v).$$
 \end{theorem}
 Consider the algorithm $\cB$:
 \begin{enumerate}
 \item Let $x^*$ be the optimal solution to the linear programming relaxation.
 \item Use Theorem \ref{th:metric-tree} with $\lambda^* = x^*$ to obtain a weighted tree $T$.
-\item Solve $IP$ on $T$ as discussed above and return the solution $\bar{x}$.
+\item Solve $IP$ (equivalently its $LP$ relaxation) on $T$ as discussed above and return the solution $\bar{x}$.
 \end{enumerate}
 \paragraph{}
 We claim that the solution $\bar{x}$ returned by $\cB$ is feasible for $IP$. To see this, observe that completing $T$ to the graph $G$ does not remove any edges across any cut set $S$, hence the bound $\sum_{e \in \delta(S)} \bar{x}_e \geq f(S)$ still holds, since additional edges contribute non-negative amounts to $\sum_{e \in \delta(S)}$. This implies that $\bar{x}$ is feasible for $IP$ on $G$.
 \paragraph{}
 Now we analyze the cost. We see that
 $$\sum_{u,v \in V} d(u,v) \bar{x}_{uv} \leq \sum_{u,v \in V} d^T(u,v) \bar{x}_{uv}$$
-from Theorem \ref{th:metric-tree}.
+from Theorem \ref{th:metric-tree}. Now we convert $x^*$, the optimal solution for the linear programming relaxation of $IP$ on $G$, to a feasible solution on $T$. We will call such a solution $x'$. Our transformation will  preserve that $\sum_{u,v \in V} d^T(u,v) x^*_{uv} = \sum_{u,v \in V} d^T(u,v) x'_{uv}$. 
+\begin{enumerate}
+\item Begin with $x'_{uv} = x^*_{uv}$ for all $uv \in E(T)$.
+\item Now for all $u,v \in V$ such that $uv \not\in E(T)$ do:
+\begin{enumerate}
+\item Let $P$ be the $uv$-path in $T$.
+\item For each $e \in P$ add $x^*_{uv}$ to the current value of $x'_e$.
+\end{enumerate}
+\end{enumerate}
+First we show that $x'$ is feasible on $T$. Let $\delta_G(S)$ denote $\delta(S)$ with respect to $G$ and similarly define $\delta_T(S)$ as $\delta(S)$ with respect to $T$. Let $P_{uv}$ denote the $uv$-path in $T$. Then for any cut set $S$ we have
+$$f(S) \leq \sum_{e \in \delta_G(S)} x^*_e = \sum_{e\in \delta_T(S)} x^*_e + \sum_{e \in \delta_G(S)\backslash \delta_T(S)} x^*_e \leq \sum_{e \in \delta_T(S)} x'_e.$$
+The second inequality follows from the observation that for every edge $e \in \delta_G(S) \backslash \delta_T(S)$ there exists some $e' \in P_{e} \cap \delta_T(S)$ and $$x'_{e'} = x^*_e + \sum_{uv \in E(G) \backslash E(T) : e' \in P_{uv}} x^*_{uv}.$$
+The fact that $\sum_{u,v \in V} d^T(u,v) x^*_{uv} = \sum_{u,v \in V} d^T(u,v) x'_{uv}$ is immediate from the definitions:
+\begin{align*}
+\sum_{u,v \in V} d^T(u,v) x^*_{uv} &= \sum_{uv \in E(T)} d^T(u,v)x^*_{uv} + \sum_{e \in E(G) \backslash E(T)} \sum_{uv \in P_{e}} d^T(u,v) x^*_{e}\\
+&= \sum_{uv \in E(T)} d^T(u,v)( x^*_{uv} + \sum_{e \in E(G)\backslash E(T): uv \in P_{e}} x^*{e}) \\
+&= \sum_{uv \in E(T)} d^T(u,v) x'_{uv} \\
+&= \sum_{u,v \in V} d^T(u,v) x'_{uv}.
+\end{align*}
+More intuitively, the distance between two vertices $u,v$ in $T$ is the sum of the distances on the edges in the path that joins them. Thus if we transfer the allocation $x^*_{u,v}$ to each edge in $P_{uv}$ we lose nothing in the objection function as $d^T(u,v) x^*_{u,v} = \sum_{ab \in P_{uv}} d^T(a,b) x^*_{uv}$.
+\paragraph{}
+Now we have that $x'$ is feasible on $T$, so by the optimality of $\bar{x}$ on $T$ we have
+$$\sum_{u,v \in V} d^T(u,v) \bar{x}_{uv} \leq \sum_{u,v \in V} d^T(u,v) x'_{uv} = \sum_{u,v \in V} d^T(u,v) x^*_{uv}.$$
+Thus combining inequalities we see that
+$$\sum_{u,v \in V} d(u,v) \bar{x}_{uv} \leq \sum_{u,v \in V} d^T(u,v) x^*_{uv}.$$
+Now by Theorem \ref{th:metric-tree} and our choice of $\lambda^* =x^*$ we see that 
+$$\sum_{u,v \in V} d^T(u,v) x^*_{uv} \leq O(\log n) \sum_{u,v \in V} d(u,v) x^*_{uv}$$
+and hence
+$$\sum_{u,v \in V} d(u,v) \bar{x}_{uv} \leq O(\log n) \sum_{u,v \in V} d(u,v) x^*_{uv}.$$
+Now since $\bar{x}$ is feasible for the $IP$ on $G$, this inequality tell us that the ratio of the optimal value of $IP$ to the the optimal value of its linear programming relaxation is bounded above by $O(\log n)$. That is, the integrality gap of $IP$ is $O(\log n)$. $\blacksquare$
+
+%Q^6
+\section{}
+%Pa
+\subsection{}
+\paragraph{}
+We want to show the following theorem:
+\begin{theorem}
+Let $G = (V,E)$ be a metric graph with edge lengths $d:E\rightarrow \R_+$ and $W \subset V$. One can randomly find a tree $T$ such that
+\begin{enumerate}
+\item $d(u,v) \leq d^T(u,v)$ for all $u,v\in V$
+\item $E[d^T(u,v)] \leq O(\log n) d(u,v)$ for all $u,v\in V$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+We may assume $\max_{u,v \in V} d(u,v) = 2^\delta$ for some $\delta \in \N$ and $d(u,v) > 1$ for all $u,v\in V$. Construct a tree $T$ by:
+\begin{enumerate}
+\item Choose randomly a permutation $\pi$ of $V$.
+\item Choose $\beta \in [0,1]$ uniformly at random.
+\item Set $D_\delta = \{V\}$.
+\item For $i = \delta -1$ to $0$ do:
+\begin{enumerate}
+\item Assign every node to the first node according to $\pi$ that has distance at most $2^\beta \cdot 2^{i-1}$.
+\item All nodes assigned to the same node that are currently in the same cluster will form a new cluster in $D_i$.
+\end{enumerate}
+\item Return tree $T$ where $V(T) = \{s \in D_i : \forall i = 0, \dots, \delta\}$ and $E(T) = \{s_is_{i-1}  \in D_{i}\times D_{i-1}: s_{i-1} \subseteq s_i, \forall i = 0,\dots,\delta\}$, and $d(s_is_{i-1}) = 2^i$.
+\end{enumerate}
+Note that the clusters of $D_0$ are singletons because the bound on the maximum distance is $2^\beta 2^0 \leq 1$. Hence the clusters of $D_0$ can be identified with nodes in $V$. 
+\paragraph{Proof of 1.}
+Suppose $u,v$ are in the same cluster at level $D_i$ and are separated at level $D_{i-1}$. Let $w$ be the node identified with $u$ and $v$'s cluster $S_w$ at level $D_i$. Then $d(u,v) \leq d(u,w) + d(w,v) \leq 2^\beta 2^{i-1} + 2^\beta 2^{i-1} \leq 2^{i+1}$. On the other hand $d^T(u, S_w) \geq 2^i$ and $d^T(S_w, v) \geq 2^i$ so $d^T(u,v) \geq 2^i + 2^i = 2^{i+1}$. This proves part $1.$ of the theorem.
+\paragraph{Proof of 2.}
+Observe that if $u,v$ are separated first at level $D_i$ then $d^T(u,v) \leq 2^{i+2}$. Let $S_i$ be the cluster in $D_i$ containing $u,v$. Let $S^u_{i-1}$ be descended cluster of $S_i$ from which $u$ descends and similarly define $S^v_{i-1}$. Then 
+\begin{align*}
+d^T(u,v) &= d^T(S_i, S^u_{i-1}) + d^T(S_, S^u_{i-1}) + d^T(S^u_{i-1}, u) + d^T(S^v_{i-1}, v)\\
+&= 2^i + 2^i +  d^T(S^u_{i-1}, u) + d^T(S^v_{i-1}, v) \\
+&\leq 2^i + 2^i + 2\sum_{j = 1}^{i-1} 2^j \\
+&= 2^{i+1} + 2^{i+1} \\
+&= 2^{i+2}.
+\end{align*}
+Now we way that node $c$ {\it settles} $(u,v)$ at level $D_i$ if $c$ is the first node with respect to $\pi$ to which one of $u$ or $v$ gets assigned at level $D_i$. We say that node $c$ {\it cuts} $(u,v)$ at level $D_i$ if exactly one of $u,v$ is at distance at most $2^\beta 2^i$ from $c$. If $u,v$ are separated at level $D_i$ then there exists some $c$ which both settles and cuts $u,v$ at level $D_i$.
+\paragraph{}
+Note that $$E[d^T(u,v)] \leq \sum_{i=0}^{\delta - 1} \sum_{c \in V} Pr [ \text{$c$ settles (A) and cuts (B) $u,v$ at $D_i$}] 2^{i+2}.$$ The bound simply follows from our observation, and the prior definitions. Recall that $Pr[A \cap B] = P[A\mid B] Pr[B]$.
+\paragraph{}
+We first analyze $Pr[B]$. Without loss we may assume $d(c,u) \leq d(c,v)$. For $c$ to cut $u,v$ we need $d(c,u) \leq 2^\beta 2^{i-1} < d(c,v)$ by definition. Thus
+$$Pr[B] = \frac{| [2^{i-1},2^i] \cap [d(c,u),d(c,v)]|}{|[2^{i-1},2^i]|} = \frac{| [2^{i-1},2^i] \cap [d(c,u),d(c,v)]|}{2^{i-1}}$$.
+Now we need $Pr[A \mid B]$. Let us order the nodes of $V$ according to their distance to $u,v$. That is, $V = \{c_1, \dots, c_n\}$ where $\min\{d(c_i, v), d(c_i, u)\} \leq \min \{d(c_{i+1}, v), d(c_{i+1}, u)\}$ for all $i$. If $c= c_k$ then the probability that $c$ comes before $c_1, \dots, c_{k-1}$ in $\pi$ is at most $\frac{1}{k}$. In order for $c$ (given that $c$ cuts $u,v$) to settle $u,v$ at least that has to happen. Hence
+$$Pr[A \mid B] \leq \frac{1}{k}.$$
+\paragraph{}
+Putting it all together we obtain the following expectation:
+\begin{align*}
+E[d^T(u,v)] &\leq \sum_{i=0}^{\delta -1} \sum_{k=1}^n Pr [A \mid B]Pr[B] 2^{i+2} \\
+&\leq \sum_{k=1}^n \frac{1}{k} \sum_{i=0}^{\delta -1 }  2^{i+2}\frac{| [2^{i-1},2^i] \cap [d(c,u),d(c,v)]|}{2^{i-1}} \\
+&= 8 \sum_{k=1}^n \frac{1}{k} \sum_{i=0}^{\delta -1 }  | [2^{i-1},2^i] \cap [d(c,u),d(c,v)]| \\
+&\leq 8 d(u,v) \sum_{k=1}^n \frac{1}{k} \\
+&= 8 H_n d(u,v) \\
+&= O(log n) d(u,v).
+\end{align*}
+Thus the second claim and therefore the theorem holds.
+\end{proof}
+\begin{theorem}
+There exists a tree $T' = (V,F)$ such that $d^T(u,v) \leq d^{T'}(u,v) \leq 4 d^T(u,v).$
+\end{theorem}
+\begin{proof}
+Pick $v \in V$ with a parent $w \not \in V$ and contract edge $vw$ in $T$. Repeat until all nodes of $T$ are in $V$. Multiply by $4$ the weights on all remaining edges. Call the resulting tree $T'$. Note that clearly $d^{T'}(u,v) \leq 4d^T(u,v)$ as contracting only shortens the distances. Furthermore, in the worst case $d^{T'}(u,v) = 2^i \cdot 4$ if contraction results in contracting $u$ and $v$ right up to the cluster where they were separated (that is, contracting preserves the largest edge distance on the $uv$-path in $T$). But 
+$$2^i \cdot 4 = 2^i + 2^i + 2^i + 2^i \geq d(S^u_{i-1}, S_i) + d(S^v_{i-1}, S_i) +  d(S^u_{i-1}, u) + d(S^v_{i-1}, v) = d^T(u,v).$$
+Hence the theorem holds.
+\end{proof}
 \end{document}
