@@ -449,12 +449,11 @@ Thus the second claim and therefore the theorem holds.
 
 %Pb
 \subsection{b}
-\begin{theorem}
-There exists a tree $T' = (V,F)$ such that $d^T(u,v) \leq d^{T'}(u,v) \leq 4 d^T(u,v).$
-\end{theorem}
-\begin{proof}
-Pick $v \in V$ with a parent $w \not \in V$ and contract edge $vw$ in $T$. Repeat until all nodes of $T$ are in $V$. Multiply by $4$ the weights on all remaining edges. Call the resulting tree $T'$. Note that clearly $d^{T'}(u,v) \leq 4d^T(u,v)$ as contracting only shortens the distances. Furthermore, in the worst case $d^{T'}(u,v) = 2^i \cdot 4$ if contraction results in contracting $u$ and $v$ right up to the cluster where they were separated (that is, contracting preserves the largest edge distance on the $uv$-path in $T$). But 
-$$2^i \cdot 4 = 2^i + 2^i + 2^i + 2^i \geq d(S^u_{i-1}, S_i) + d(S^v_{i-1}, S_i) +  d(S^u_{i-1}, u) + d(S^v_{i-1}, v) = d^T(u,v).$$
-Hence the theorem holds.
-\end{proof}
+
+\paragraph{}
+Let $G = (V,E)$ be a metric graph with edge costs $c:E \rightarrow \R_+$ and requirements $r(u,v) \in \N$ for all $u,v \in V$. Consider the following algorithm, $\cA$, for the Generalized Steiner Network (GSN) problem:
+\begin{enumerate}
+
+\end{enumerate}
+
 \end{document}
