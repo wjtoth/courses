@@ -383,48 +383,56 @@ Now since $\bar{x}$ is feasible for the $IP$ on $G$, this inequality tell us tha
 %Q^6
 \section{}
 %Pa
-\subsection{}
+\subsection{a}
 \paragraph{}
 We want to show the following theorem:
 \begin{theorem}
 Let $G = (V,E)$ be a metric graph with edge lengths $d:E\rightarrow \R_+$ and $W \subset V$. One can randomly find a tree $T$ such that
 \begin{enumerate}
-\item $d(u,v) \leq d^T(u,v)$ for all $u,v\in V$
+\item $d(u,v) \leq d^T(u,v)$ for all $u,v\in W$
 \item $E[d^T(u,v)] \leq O(\log n) d(u,v)$ for all $u,v\in V$.
 \end{enumerate}
 \end{theorem}
 \begin{proof}
 We may assume $\max_{u,v \in V} d(u,v) = 2^\delta$ for some $\delta \in \N$ and $d(u,v) > 1$ for all $u,v\in V$. Construct a tree $T$ by:
 \begin{enumerate}
-\item Choose randomly a permutation $\pi$ of $V$.
+\item Choose randomly a permutation $\pi$ of $W$.
 \item Choose $\beta \in [0,1]$ uniformly at random.
 \item Set $D_\delta = \{V\}$.
 \item For $i = \delta -1$ to $0$ do:
 \begin{enumerate}
 \item Assign every node to the first node according to $\pi$ that has distance at most $2^\beta \cdot 2^{i-1}$.
+\item For each node such that its distance from each vertex in $W$ is greater that $2^\beta \cdot 2^{i-1}$ assign it its own cluster.
 \item All nodes assigned to the same node that are currently in the same cluster will form a new cluster in $D_i$.
+\item Add a node to $T$ for each new cluster in $D_i$ and add edges to $T$ from each such node to the parent node in $T$ corresponding to their common cluster in $D_{i+1}$.
+\item For the clusters formed in Step $(b)$ assign distance $0$ to the new edge in $T$. For all others (ie those from $(a)$) assign distance $2^{i+1}$.
 \end{enumerate}
-\item Return tree $T$ where $V(T) = \{s \in D_i : \forall i = 0, \dots, \delta\}$ and $E(T) = \{s_is_{i-1}  \in D_{i}\times D_{i-1}: s_{i-1} \subseteq s_i, \forall i = 0,\dots,\delta\}$, and $d(s_is_{i-1}) = 2^i$.
+\item Return tree $T$.
 \end{enumerate}
-Note that the clusters of $D_0$ are singletons because the bound on the maximum distance is $2^\beta 2^0 \leq 1$. Hence the clusters of $D_0$ can be identified with nodes in $V$. 
+Note that the clusters of $D_0$ are singletons because the bound on the maximum distance is $2^\beta 2^0 \leq 1$. Hence all nodes of $V$ are invariably separated at some level by the end of operation of the algorithm.
 \paragraph{Proof of 1.}
-Suppose $u,v$ are in the same cluster at level $D_i$ and are separated at level $D_{i-1}$. Let $w$ be the node identified with $u$ and $v$'s cluster $S_w$ at level $D_i$. Then $d(u,v) \leq d(u,w) + d(w,v) \leq 2^\beta 2^{i-1} + 2^\beta 2^{i-1} \leq 2^{i+1}$. On the other hand $d^T(u, S_w) \geq 2^i$ and $d^T(S_w, v) \geq 2^i$ so $d^T(u,v) \geq 2^i + 2^i = 2^{i+1}$. This proves part $1.$ of the theorem.
+Suppose $u,v \in W$ are in the same cluster at level $D_i$ and are separated at level $D_{i-1}$. Let $w$ be the node identified with $u$ and $v$'s cluster $S_w$ at level $D_i$. Then
+$$d(u,v) \leq d(u,w) + d(w,v) \leq 2^\beta 2^{i-1} + 2^\beta 2^{i-1} \leq 2^{i+1}.$$ The first inequality follows from the triangle inequality. The second inequality follows since the distance from $u$ (similarly $v$) to the next node on the $uw$-path is $2^{i-1}$ and the distance of the rest of the path is at most $\sum_{k=0}^{i-2} 2^k \leq 2^{i-1}$. On the other hand $d^T(u, S_w) \geq 2^i$ and $d^T(S_w, v) \geq 2^i$ so $d^T(u,v) = d^T(u, S_w) + d^T(S_w, v) \geq 2^i + 2^i = 2^{i+1}$. This proves part $1.$ of the theorem.
 \paragraph{Proof of 2.}
 Observe that if $u,v$ are separated first at level $D_i$ then $d^T(u,v) \leq 2^{i+2}$. Let $S_i$ be the cluster in $D_i$ containing $u,v$. Let $S^u_{i-1}$ be descended cluster of $S_i$ from which $u$ descends and similarly define $S^v_{i-1}$. Then 
 \begin{align*}
 d^T(u,v) &= d^T(S_i, S^u_{i-1}) + d^T(S_, S^u_{i-1}) + d^T(S^u_{i-1}, u) + d^T(S^v_{i-1}, v)\\
-&= 2^i + 2^i +  d^T(S^u_{i-1}, u) + d^T(S^v_{i-1}, v) \\
+&\leq \max\{2^i,0\} + \max\{2^i,0\} +  d^T(S^u_{i-1}, u) + d^T(S^v_{i-1}, v) \\
 &\leq 2^i + 2^i + 2\sum_{j = 1}^{i-1} 2^j \\
 &= 2^{i+1} + 2^{i+1} \\
 &= 2^{i+2}.
 \end{align*}
-Now we way that node $c$ {\it settles} $(u,v)$ at level $D_i$ if $c$ is the first node with respect to $\pi$ to which one of $u$ or $v$ gets assigned at level $D_i$. We say that node $c$ {\it cuts} $(u,v)$ at level $D_i$ if exactly one of $u,v$ is at distance at most $2^\beta 2^i$ from $c$. If $u,v$ are separated at level $D_i$ then there exists some $c$ which both settles and cuts $u,v$ at level $D_i$.
+Now we say that node $c$ {\it settles} $(u,v)$ at level $D_i$ if $c$ is the first node with respect to $\pi$ to which one of $u$ or $v$ gets assigned at level $D_i$. We say that node $c$ {\it cuts} $(u,v)$ at level $D_i$ if exactly one of $u,v$ is at distance at most $2^\beta 2^i$ from $c$. If $u,v$ are separated at level $D_i$ then either there exists some $c \in W$ which both settles and cuts $u,v$ at level $D_i$ (in which case they were separated by Step $4(a)$), or every $c \in W$ does not settle $u,v$ (in which case they were separated by Step $4(b)$).
 \paragraph{}
-Note that $$E[d^T(u,v)] \leq \sum_{i=0}^{\delta - 1} \sum_{c \in V} Pr [ \text{$c$ settles (A) and cuts (B) $u,v$ at $D_i$}] 2^{i+2}.$$ The bound simply follows from our observation, and the prior definitions. Recall that $Pr[A \cap B] = P[A\mid B] Pr[B]$.
+Note that in the first case the distance between $u$ and $v$ is at most $2^{i+2}$ by our previous observation. In the second case both $u$ and $v$ were assigned their own cluster in $D_i$ and given distance $0$ to their common ancestor. Hence $d^T(u,v) = 0$ in this second case. So we have the following bound on $E[d^T(u,v)]$:
+ \begin{align*}E[d^T(u,v)] &\leq \sum_{i=0}^{\delta - 1} (\sum_{c \in W} Pr [ \text{$c$ settles $u,v$ and  $c$ cuts $u,v$ at $D_i$}] 2^{i+2} + Pr[\text{all $c \in W$ do not settle $u,v$}]\cdot 0) \\&= \sum_{i=0}^{\delta - 1} \sum_{c \in W} Pr [ \text{$c$ settles $u,v$ and  $c$ cuts $u,v$ at $D_i$}] 2^{i+2}.
+ \end{align*}
+ For $c \in W$, $u,v \in V$, and level $D_i$,  let $A$ be the event that $c$ settles $u,v$ and let $B$ be the event that $c$ cuts $u,v$ at $D_i$. We are interested in $Pr[A \cap B]$, or equivalently, $Pr[A \mid B] \cdot Pr[B]$.
+ \paragraph{}
+We first analyze $Pr[B]$. Without loss we may assume $d(c,u) \leq d(c,v)$. For $c$ to cut $u,v$ we need $d(c,u) \leq 2^\beta 2^{i-1} < d(c,v)$ by definition.  Since we sample $2^\beta$ uniformly at random, the probability of this happening is simply $\frac{1}{2^{i-1}}$ times the length of the interval intersecting $[2^{i-1},2^i]$ with $[d(c,u), d(c,v)]$. More formally:
+$$Pr[B] = \frac{| [2^{i-1},2^i] \cap [d(c,u),d(c,v)]|}{|[2^{i-1},2^i]|} = \frac{| [2^{i-1},2^i] \cap [d(c,u),d(c,v)]|}{2^{i-1}}.$$
 \paragraph{}
-We first analyze $Pr[B]$. Without loss we may assume $d(c,u) \leq d(c,v)$. For $c$ to cut $u,v$ we need $d(c,u) \leq 2^\beta 2^{i-1} < d(c,v)$ by definition. Thus
-$$Pr[B] = \frac{| [2^{i-1},2^i] \cap [d(c,u),d(c,v)]|}{|[2^{i-1},2^i]|} = \frac{| [2^{i-1},2^i] \cap [d(c,u),d(c,v)]|}{2^{i-1}}$$.
-Now we need $Pr[A \mid B]$. Let us order the nodes of $V$ according to their distance to $u,v$. That is, $V = \{c_1, \dots, c_n\}$ where $\min\{d(c_i, v), d(c_i, u)\} \leq \min \{d(c_{i+1}, v), d(c_{i+1}, u)\}$ for all $i$. If $c= c_k$ then the probability that $c$ comes before $c_1, \dots, c_{k-1}$ in $\pi$ is at most $\frac{1}{k}$. In order for $c$ (given that $c$ cuts $u,v$) to settle $u,v$ at least that has to happen. Hence
+Now we need $Pr[A \mid B]$. Let us order the nodes of $W$ according to their distance to $u,v$. That is, $W = \{c_1, \dots, c_n\}$ where $\min\{d(c_i, v), d(c_i, u)\} \leq \min \{d(c_{i+1}, v), d(c_{i+1}, u)\}$ for all $i$. If $c= c_k$ then the probability that $c$ comes before $c_1, \dots, c_{k-1}$ in $\pi$ is at most $\frac{1}{k}$. In order for $c$ (given that $c$ cuts $u,v$) to settle $u,v$ at least that has to happen. Hence
 $$Pr[A \mid B] \leq \frac{1}{k}.$$
 \paragraph{}
 Putting it all together we obtain the following expectation:
@@ -438,6 +446,9 @@ E[d^T(u,v)] &\leq \sum_{i=0}^{\delta -1} \sum_{k=1}^n Pr [A \mid B]Pr[B] 2^{i+2}
 \end{align*}
 Thus the second claim and therefore the theorem holds.
 \end{proof}
+
+%Pb
+\subsection{b}
 \begin{theorem}
 There exists a tree $T' = (V,F)$ such that $d^T(u,v) \leq d^{T'}(u,v) \leq 4 d^T(u,v).$
 \end{theorem}
