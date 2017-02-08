@@ -333,7 +333,7 @@ Hence $x$ satisfies the cut constraint for $S$. Therefore $x$ is feasible and $(
 Now to demonstrate $(2)$, let $uv \in E(T)$. Consider the cut $S^{uv}_u$. We have $\delta(S^{uv}_u) = \{uv\}$ and hence by the cut constraint for $S^{uv}_u$, all feasible $x$ satisfy
 $$x_{uv} \geq f(S^{uv}_u).$$
 Now the $x$ we construct is tight for all the above, and since $d \geq 0$ we can do no better without violating feasibility. Thus $(2)$ holds and our $x$ is optimal. So we conclude that we can solve $IP$ on trees easily.
-\paragraph{An Approximation Algorithm for $IP$}
+\paragraph{Integrality Gap for $IP$}
 We now give an algorithm that produces an integral solution to $IP$ for a general metric graph $G$ which approximates the optimal $LP$-relaxation of $IP$ within a factor of $O(\log n)$. Our algorithm will use the following theorem from class:
 \begin{theorem} \label{th:metric-tree}
 Let $G=(V,E)$ be a graph. Let $d: E \rightarrow \R_+$ be a metric function. Let $\lambda^*_{uv} \geq 0$ be coefficients for all $(u,v) \in V\times V$. There exists a polynomial time algorithm which constructs a weighted tree $T=(V,E)$ such that $d^T(u,v) \geq d(u,v)$ for all $u,v\in V$ and $$\sum_{u,v} \lambda^*_{uv}d^T(u,v) \leq O(\log n) \sum_{u.v} \lambda^*_{uv} d(u,v).$$
@@ -344,5 +344,10 @@ Consider the algorithm $\cB$:
 \item Use Theorem \ref{th:metric-tree} with $\lambda^* = x^*$ to obtain a weighted tree $T$.
 \item Solve $IP$ on $T$ as discussed above and return the solution $\bar{x}$.
 \end{enumerate}
-
+\paragraph{}
+We claim that the solution $\bar{x}$ returned by $\cB$ is feasible for $IP$. To see this, observe that completing $T$ to the graph $G$ does not remove any edges across any cut set $S$, hence the bound $\sum_{e \in \delta(S)} \bar{x}_e \geq f(S)$ still holds, since additional edges contribute non-negative amounts to $\sum_{e \in \delta(S)}$. This implies that $\bar{x}$ is feasible for $IP$ on $G$.
+\paragraph{}
+Now we analyze the cost. We see that
+$$\sum_{u,v \in V} d(u,v) \bar{x}_{uv} \leq \sum_{u,v \in V} d^T(u,v) \bar{x}_{uv}$$
+from Theorem \ref{th:metric-tree}.
 \end{document}
