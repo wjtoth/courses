@@ -452,17 +452,19 @@ Thus the second claim and therefore the theorem holds.
 \paragraph{}
 Let $G = (V,E)$ be a metric graph with edge costs $c:E \rightarrow \R_+$ and requirements $r(u,v) \in \N$ for all $u,v \in V$. We wish to operate on a tree with the same vertex set at $G$. The following theorem will let us do so.
 \begin{theorem}
-Let $T$ be a tree obtained by Theorem \ref{th:tree-metric}. Then there exists a tree $T' = (V,F)$ such that $d^T(u,v) \leq d^{T'}(u,v) \leq 4 d^T(u,v).$
+Let $T$ be a tree obtained by the algorithm of Theorem \ref{th:tree-metric}. Then there exists a tree $T' = (V,F)$ such that $d^T(u,v) \leq d^{T'}(u,v) \leq 4 d^T(u,v),$ and every $v \in V\backslash W$ is a leaf of $T'$.
 \end{theorem}
 \begin{proof}
-Pick $v \in V$ with a parent $w \not \in V$ and contract edge $vw$ in $T$. Repeat until all nodes of $T$ are in $V$. Multiply by $4$ the weights on all remaining edges. Call the resulting tree $T'$. Note that clearly $d^{T'}(u,v) \leq 4d^T(u,v)$ as contracting only shortens the distances. Furthermore, in the worst case $d^{T'}(u,v) = 2^i \cdot 4$ if contraction results in contracting $u$ and $v$ right up to the cluster where they were separated (that is, contracting preserves the largest edge distance on the $uv$-path in $T$). But 
-$$2^i \cdot 4 = 2^i + 2^i + 2^i + 2^i \geq d(S^u_{i-1}, S_i) + d(S^v_{i-1}, S_i) +  d(S^u_{i-1}, u) + d(S^v_{i-1}, v) = d^T(u,v).$$
+Pick $v \in W$ with a parent $w \not \in V$ and contract edge $vw$ in $T$. Repeat until all nodes of $T$ are in $V$. Multiply by $4$ the weights on all remaining edges. Call the resulting tree $T'$. To see this algorithm works observe that every node not in $V$ is a associated with some cluster $S_w$ corresponding to $w$. Descendant of the node $S_w$ in $T$ is the node associated with $w$. The path from $S_w$ to $w$ contains only cluster nodes not in $V$ or nodes in $W$. Thus we can find some cluster node with child in $W$ by following the path from $S_w$ to $w$ until we reach the first node in $W$ along this path. Its parent is a cluster node. The contraction operation preserves this structure of the tree, and hence we can repeat until all cluster nodes have been contracted into nodes in $W$.  Since each $v \in V\backslash W$ began with its associated vertex in $T$ as a leaf, and was never contracted it remains a leaf vertex in the resulting tree $T'$.
+\paragraph{}
+Note that clearly $d^{T'}(u,v) \leq 4d^T(u,v)$ as contracting only shortens the distances, but then edge distances were multiplied by a factor of $4$ at the end of operation. Furthermore, in the worst case $d^{T'}(u,v) = 2^i \cdot 4$ if contraction results in contracting $u$ and $v$ in $W$ right up to the cluster where they were separated (that is, contracting preserves the largest edge distance on the $uv$-path in $T$). But then
+$$d^{T'}(u,v) \geq 2^i \cdot 4 = 2^i + 2^i + 2^i + 2^i \geq d(S^u_{i-1}, S_i) + d(S^v_{i-1}, S_i) +  d(S^u_{i-1}, u) + d(S^v_{i-1}, v) = d^T(u,v).$$
 Hence the theorem holds.
 \end{proof}
 \paragraph{}
 Combining the above with Theorem \ref{th:tree-metric} and hiding the factor of $4$ in the $O$-notation we have the important corollary
 \begin{corollary}\label{cor:tree-metric}
-Let $G = (V,E)$ be a metric graph with edge lengths $d:E\rightarrow \R_+$ and $W \subset V$. One can randomly find a tree $T$ with vertex set $V$ such that
+Let $G = (V,E)$ be a metric graph with edge lengths $d:E\rightarrow \R_+$ and $W \subset V$. One can randomly find a tree $T$ with vertex set $V$ such that every $v \in V\backslash W$ is a leaf of $T$ and
 \begin{enumerate}
 \item $d(u,v) \leq d^T(u,v)$ for all $u,v\in W$
 \item $E[d^T(u,v)] \leq O(\log n) d(u,v)$ for all $u,v\in V$.
@@ -477,16 +479,39 @@ Consider the following algorithm, $\cA$, for GSN on $G$:
 \item Return $x$.
 \end{enumerate}
 \paragraph{}
-We want to show that $\cA$ is an $O(log |W|)$-approximation algorithm for GSN on $G$. Thus we need to show a few things:
+We want to show that $\cA$ is an $O(log |W|)$-approximation algorithm for GSN on $G$. Thus we need to show the following things:
 \begin{enumerate}
 \item That we can solve GSN on trees in polynomial time. This implies that $\cA$ runs in polynomial time since the tree of Theorem \ref{th:tree-metric} can be found in polynomial time, and the contractions necessary to yield the tree in Corollary \ref{cor:tree-metric} can be done in polynomial time. 
 \item The $x$ returned is feasible on $G$.
 \item The approximation factor holds.
 \end{enumerate}
 \paragraph{Proof of $1$}
-
+Observe that every edge $ab \in E(T)$ is a bridge. Thus is we let $T_a$ denote the connected component of $T-ab$ containing $a$ and $T_b$ be the connected component of $T-ab$ containing $b$ then any feasible solution $x$ to GSN on $T$ necessarily has
+$$x_{ab} \geq \max_{u \in V(T_a), v \in V(T_b)} \{r(u,v)\}$$
+since any $uv$-flow from $u\in V(T_a)$ to $v \in V(T_b)$ routes its entire value across $ab$. We claim that setting
+$$x_{ab} = \max_{u \in V(T_a), v\in V(T_b)} \{r(u,v)\}$$
+is actually feasible, and hence optimal. Let $u,v \in V$. Let $ab$ be any edge along the $uv$-path in $T$. Then deleting $ab$ separates $u$ from $v$. That is, without loss  of generality we have $u \in T_a$ and $v \in T_b$. So,
+$$x_{ab} = \max_{u \in V(T_a), v\in V(T_b)} \{r(u,v)\} \geq r(u,v).$$
+Thus we can route a flow of value of $r(u,v)$ from $u$ to $v$ along the path from $u$ to $v$ in $T$. Thus we can solve GSN on trees in $O(|E| |V|^2)$ time by iterating over all edges, and then iterating over all pairs of vertices to compute the optimal $x$ discussed above.
 \paragraph{Proof of $2$}
-
+To see that $x$ is feasible for $G$ observe that since $G$ is a metric graph it is necessarily complete. So $T$ is a subgraph of $G$. Since $T$ spans $G$ every demand $r(u,v) \in V(G)$ can be satisfied by installing capacities $x_e$ on the edges in $e\in E(T) \subseteq E(G)$. Hence $x$ is feasible for GSN on $G$.
 \paragraph{Proof of $3$}
-
+It remains to verify the desired approximation factor. To do so we first make an interesting observation about the structure of our tree $T$ and the resulting solution $x$ on $T$. Let $v \in V\backslash W$. Then $v$ is a leaf of $T$. Let $w \in W$ be the adjacent vertex of $v$ in $T$. Then
+$$x_{vw} = \max_{a \in T_v, b \in T_w} \{r(a,b)\} = \max_{b \in T_w} \{r(v, b)\} = 0$$
+with the last inequality following since $v \not\in W$ and by the definition of $W$ this implies $r(v,b) = 0$ for all $b \in V$ (otherwise there would exist some vertex $b$ where $r(v,b) > 0$ and that would force $v \in W$). Therefore
+$$\sum_{u,v \in V} d(u,v) x_{uv} = \sum_{u,v \in W} d(u,v) x_{uv} .$$
+Now we use that $d(u,v) \leq d^T(u,v)$ for all $u,w \in W$ to see that
+$$\sum_{u,v \in V} d(u,v) x_{uv} \leq \sum_{u,v \in W} d^T(u,v) x_{uv} = \sum_{u,v \in V} d^T(u,v) x_{uv}.$$
+Let $x^*$ be the optimal solution to GSN on $G$. We translate $x^*$ to a feasible solution on $T$ as follows. Start with $x' = 0$. For each $uv \in E(G)$ for each $ab \in P_{uv}$ update
+$$x'_{ab} = x'_{ab} + x^*_{uv}.$$
+That is we send each $uv$'s capacity on an edge of $G$ to each edge on the $uv$-path in $T$. Since $d^T(u,v) = \sum_{ab \in P_{uv}} d^T(ab)$ we have
+$$\sum_{u,v \in V} d^T(u,v) x^*_{uv} = \sum_{u,v \in V} d^T(u,v) x'_{uv}.$$
+Now we claim that $x'$ is feasible for $T$. Observe that since $x^*$ is feasible on $G$ every $uv$ pair has their demand satisfied by $G$. On $T$ the same demand can be satisfied by rerouting any flow on an edge no longer present in $T$ by routing along the $uv$-path using the capacity transferred to that path from $x^*_{uv}$. Thus $x'$ can route flows satisfying all demands using only edges of $T$. Hence $x'$ is feasible on $T$. Then,
+$$\sum_{u,v\in V} d^T(u,v) x_{uv} \leq \sum_{u,v in V} d^T(u,v) x'_{uv} = \sum_{u,v \in V} d^T(u,v) x^*_{uv}$$
+with the inequality following from $x$ being optimal on $T$ while $x'$ is feasible on $T$. So combining our inequalities so far we have
+$$ \sum_{u,v \in V} d(u,v) x_{uv} \leq \sum_{u,v \in V} d^T(u,v) x^*_{uv}.$$
+Taking Expectation of both sides and applying property $2.$ of Corollary \ref{cor:tree-metric} we see that
+$$E[\sum_{u,v \in V} d(u,v) x_{uv}] \leq O(\log |W|) E[\sum_{u,v\in V} d(u,v) x^*_{uv}].$$
+Therefore, in expectation, the cost of the solution returned by our algorithm is at most $O(\log |W|)$ times the cost of the optimal solution.
+Hence the algorithm $\cA$ is an $O(\log k)$-approximation algorithm for GSN where $k = |W| = |\{ v \in V: \exists u \in V, r(u,v) > 0 \}|.\blacksquare$
 \end{document}
