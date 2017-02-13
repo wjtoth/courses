@@ -89,6 +89,7 @@ $$\frac{1}{n}^\frac{q}{p}(\sum_{i=1}^n x_i^p)^\frac{q}{p} \leq \frac{1}{n} \sum_
 By raising both sides to the exponent $\frac{1}{q}$ (which preserves order) we obtain that
 $$(\frac{1}{n}\sum_{i=1}^n x_i^p)^\frac{1}{p} \leq (\frac{1}{n} \sum_{i=1}^n x_i^q)^\frac{1}{q}$$
 as desired. $\blacksquare$
+%Q2
 \section{}
 %Pa
 \subsection{a}
@@ -156,4 +157,46 @@ $$z(x) = \det(Z^\frac{1}{2})^\frac{2}{n}$$
 Then we see that
 $$g(t) = z\circ y\circ h(t).$$
 Thus $g$ is a composition of affine functions with a concave function and hence $g$ is concave.$\blacksquare$
+%Q3
+\section{}
+\paragraph{}
+Let $f : \R^n \rightarrow \R$ be a convex function and let $g : \R^n \rightarrow \R$ be a concave function with $\text{dom } f = \text{dom } g = \R^n$. Suppose that $g(x) < f(x)$ for all $x$. Let $e(f) = \{(x,t) \in \R^n \times \R: t \geq f(x) \}$ be the epigraph of $f$. We know from our notes that $e(f)$ is convex. Let $b(f) = \{(x,t) \in \R^n \times \R: t \leq g(x)\}$ denote the ``below" graph (sorry I don't know the technical name of this object) of $g$. We claim that $b(g)$ is convex.
+\paragraph{}
+Let $(x_1, t_1), (x_2, t_2) \in b(g)$. Then we have
+\begin{align*}
+-g(\frac{1}{2}(x_1 + x_2)) &\leq \frac{1}{2}(-g(x_1) - g(x_2)) &\text{ since $-g$ is convex} \\
+&=\frac{-1}{2}(g(x_1) + g(x_2)).
+\end{align*}
+Multiplying by $(-1)$, then using that $x_1, t_1), (x_2, t_2) \in b(g)$ we obtain
+$$g(\frac{1}{2}(x_1 + x_2)) \geq \frac{1}{2}(g(x_1) + g(x_2)) \geq \frac{1}{2}(t_1 + t_2).$$
+Thus $\frac{1}{2}[(x_1,t_1) + (x_2,t_2)] \in b(g)$, that is to say $b(g)$ is convex.
+\paragraph{}
+Now we claim that $e(f) \cap b(g) = \emptyset$. Suppose for a contradiction that there exists $(x,t) \in e(f) \cap b(g)$. Thus we have
+$$t \geq f(x) \quad \text{and}\quad t \leq g(x).$$
+But then $f(x) \leq g(x)$, contradicting that $f(x) > g(x)$ for all $x$. Thus $e(f)$ and $b(g)$ are disjoint.
+\paragraph{}
+Using the Separating Hyperplane Theorem as written in section $2.5.1$ of Boyd and Vandenberghe, on $e(f)$ and $b(g)$ we observe that there exists $(y,a) \in \R^n \times \R$ and $b \in \R$, a hyperplane, which separates $e(f)$ and $b(g)$:
+\begin{align}
+y^Tx + at &\geq b &\forall (x,t) \in e(f) \label{eq:3.1}\\
+y^Tx + at &\leq b &\forall (x,t) \in b(g) \label{eq:3.2}.
+\end{align}
+Now we verify that $a\geq 0$. Let $x \in \R^n$. Then applying $\ref{eq:3.1}$ to $(x,f(x))$ and $\ref{eq:3.2}$ to $(x,g(x))$ and applying transitivity through $b$ we have
+$$y^Tx + af(x) \geq y^Tx + ag(x)$$
+Thus
+$$a(f(x) - g(x)) \geq 0.$$
+Since $f(x) > g(x)$ this implies
+$$a \geq 0.$$
+Now observe that
+$$y^Tx + af(x) \geq b$$
+implies
+$$ f(x) \geq \frac{b}{a} - \frac{y^Tx}{a}$$
+and
+$$ y^Tx + ag(x) \leq b$$
+implies 
+$$g(x) \leq \frac{b}{a} - \frac{y^Tx}{a}.$$
+Let $h(x): \R^n \rightarrow \R$ be the affine function given by
+$$h(x) =\frac{-1}{a}(y^Tx - b)$$
+Then we have immediately
+$$g(x) \leq h(x) \leq f(x)$$
+for all $x \in \R^n$ as desired. $\blacksquare$
 \end{document}
