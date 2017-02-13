@@ -99,7 +99,7 @@ With the last inequality following since $M$ is the domain of $f$. Hence we have
 \paragraph{}
 We can decided in polynomial time if $M\cup \{e\}$ is a matching in $\cS$ by iterating over $V$, counting the number of edges in $M\cup\{e\}$ which cover each vertex in $V$, and returning ``No" is the count is greater than $1$ for any vertex and ``Yes" otherwise. Thus the algorithm clearly runs in polynomial time and returns a feasible set.
 \paragraph{}
-Let $S$ be the set of edges returned by the greedy algorithm. Order the edges as $S = \{e_1, \dots, e_n\}$ in the order they were taken during the operation of $\cA$. Let $F_i := E\backslash \tilde{E}$ be the edges removed from $E$ at the edge of iteration $i$ of $\cA$ (the iteration where $e_i$ is added to $S$). Let $S^*$ be the optimal solution and partition $S^* = S^*_1 \cup \dots \cup S^*_n$ where $S^*_i = S^* \cap F_i$.
+Let $S$ be the set of edges returned by the greedy algorithm. Order the edges as $S = \{e_1, \dots, e_n\}$ in the order they were taken during the operation of $\cA$. Let $F_i := E\backslash \tilde{E}$ be the edges removed from $E$ at the end of iteration $i$ of $\cA$ (the iteration where $e_i$ is added to $S$). Let $S^*$ be the optimal solution and partition $S^* = S^*_1 \cup \dots \cup S^*_n$ where $S^*_i = S^* \cap F_i$.
 \paragraph{}
 We want that $|S^*_i| \leq 2$ to hold, but we may need to redistribute some edges to ensure that this happens (and we will do this without effecting our ability to bound the optimal solution). Run the following algorithm, denoted $\cB$, to redistribute the edges in our partition of $S^*$:
 \begin{enumerate}
@@ -111,11 +111,11 @@ We want that $|S^*_i| \leq 2$ to hold, but we may need to redistribute some edge
 \paragraph{Claim 1}
 After the operation of $\cB$, for all $i = 1, \dots, n$, $|S^*_i| \leq 2$ and $w_{e_i} \geq w_e$ for all $e \in S^*_i$.
 \paragraph{Proof of Claim 1}
-We proceed by induction. For $e_1$ $\{e_1\}$ is inclusion-wise maximal on $\cS[F_1]$ (by definition of $F_1$), and $S_1^*$ is feasible on $\cS[F_1]$ since $S^*_1 \subseteq F_1$ and $S^* \in \cS$. Thus we have $|\{e_1\}| \geq \frac{1}{2} |S_1^*|$, and hence
-$$|S^*_1| \leq \alpha.$$
+We proceed by induction. For the base case $e_1$, $\{e_1\}$ is inclusion-wise maximal on $\cS[F_1]$ (by definition of $F_1$), and $S_1^*$ is feasible on $\cS[F_1]$ since $S^*_1 \subseteq F_1$ and $S^* \in \cS$. Thus we have $|\{e_1\}| \geq \frac{1}{2} |S_1^*|$, and hence
+$$|S^*_1| \leq 2.$$
 Further by our greedy choice of $e_1$, $w_{e_1} \geq w_e$ for all $e \in F_1$ (and hence for all $e \in S^*_1$).
 \paragraph{}
-Suppose that the claim holds for $S^*_1 ,\dots, S^*_i$. Now by our greedy choice, and induction, $w_{e_{i+1}} \geq w_{e_j} \geq w_e$ for all $e \in S^*_j$ for all $j = 1,\dots, i$. So when $\cB$ redistributes edges of $S^*_{i+1}$ the cost property on the earlier sets is not violated. Also by our greedy choice, any edges that were not moved from $S^*_{i+1}$ by $\cB$ have cost at most $w_{e_{i+1}}$. To finish the proof of the claim, we demonstrate that while $|S_{i+1}^*| > \alpha$ there exists some $S^*_j$ with $j\leq i$ and $|S^*_j| < 2$. Observe that $\{e_1, \dots, e_{i+1}\}$ is inclusion-wise maximal on $\cS[F_1 \cup \dots \cup F_{i+1}]$ by definition of $F_1 \cup \dots \cup F_{i+1}$. Also $\bigcup_{j=1}^{i+1} S^*_j \in \cS[F_1 \cup \dots \cup F_{i+1}]$ so we have that
+Suppose that the claim holds for $S^*_1 ,\dots, S^*_i$. Now by our greedy choice, and induction, $w_{e_{i+1}} \geq w_{e_j} \geq w_e$ for all $e \in S^*_j$ for all $j = 1,\dots, i$. So when $\cB$ redistributes edges of $S^*_{i+1}$ the cost property on the earlier sets is not violated. Also by our greedy choice, any edges that were not moved from $S^*_{i+1}$ by $\cB$ have cost at most $w_{e_{i+1}}$. To finish the proof of the claim, we demonstrate that while $|S_{i+1}^*| > 2$ there exists some $S^*_j$ with $j\leq i$ and $|S^*_j| < 2$. Observe that $\{e_1, \dots, e_{i+1}\}$ is inclusion-wise maximal on $\cS[F_1 \cup \dots \cup F_{i+1}]$ by definition of $F_1 \cup \dots \cup F_{i+1}$. Also $\bigcup_{j=1}^{i+1} S^*_j \in \cS[F_1 \cup \dots \cup F_{i+1}]$ so we have that
 $$|\{e_1, \dots, e_{i+1}\}| \geq \frac{1}{2} |\bigcup_{j=1}^{i+1} S^*_j | = \frac{1}{2} \sum_{j=1}^{i+1} |S^*_j|.$$
 Thus we see that
 $$ \frac{1}{i+1}\sum_{j=1}^{i+1} |S^*_j| \leq 2.$$
@@ -149,7 +149,7 @@ We will show the Greedy Algorithm, denoted $\cA$, is a $\frac{1}{\alpha}$-approx
 \paragraph{}
 Since we have a polynomial time oracle for membership in $\cS$ the algorithm clearly runs in polynomial time and returns a feasible set.
 \paragraph{}
-Let $S$ be the set of edges returned by the greedy algorithm. Order the edges as $S = \{e_1, \dots, e_n\}$ in the order they were taken during the operation of $\cA$. Let $F_i := E\backslash \tilde{E}$ be the edges removed from $E$ at the edge of iteration $i$ of $\cA$ (the iteration where $e_i$ is added to $S$). Let $S^*$ be the optimal solution and partition $S^* = S^*_1 \cup \dots \cup S^*_n$ where $S^*_i = S^* \cap F_i$.
+Let $S$ be the set of edges returned by the greedy algorithm. Order the edges as $S = \{e_1, \dots, e_n\}$ in the order they were taken during the operation of $\cA$. Let $F_i := E\backslash \tilde{E}$ be the edges removed from $E$ at the end of iteration $i$ of $\cA$ (the iteration where $e_i$ is added to $S$). Let $S^*$ be the optimal solution and partition $S^* = S^*_1 \cup \dots \cup S^*_n$ where $S^*_i = S^* \cap F_i$.
 \paragraph{}
 We want that $|S^*_i| \leq \alpha$ to hold, but we may need to redistribute some edges to ensure that this happens (and we will do this without effecting our ability to bound the optimal solution). Run the following algorithm, denoted $\cB$, to redistribute the edges in our partition of $S^*$:
 \begin{enumerate}
@@ -161,7 +161,7 @@ We want that $|S^*_i| \leq \alpha$ to hold, but we may need to redistribute some
 \paragraph{Claim 1}
 After the operation of $\cB$, for all $i = 1, \dots, n$, $|S^*_i| \leq \alpha$ and $w_{e_i} \geq w_e$ for all $e \in S^*_i$.
 \paragraph{Proof of Claim 1}
-We proceed by induction. For $e_1$ $\{e_1\}$ is inclusion-wise maximal on $\cS[F_1]$ (by definition of $F_1$), and $S_1^*$ is feasible on $\cS[F_1]$ since $S^*_1 \subseteq F_1$ and $S^* \in \cS$. Thus we have $|\{e_1\}| \geq \frac{1}{\alpha} |S_1^*|$, and hence
+We proceed by induction. For the base case $e_1$, $\{e_1\}$ is inclusion-wise maximal on $\cS[F_1]$ (by definition of $F_1$), and $S_1^*$ is feasible on $\cS[F_1]$ since $S^*_1 \subseteq F_1$ and $S^* \in \cS$. Thus we have $|\{e_1\}| \geq \frac{1}{\alpha} |S_1^*|$, and hence
 $$|S^*_1| \leq \alpha.$$
 Further by our greedy choice of $e_1$, $w_{e_1} \geq w_e$ for all $e \in F_1$ (and hence for all $e \in S^*_1$).
 \paragraph{}
@@ -186,9 +186,9 @@ Let $G = (V,E)$ be a graph. For any $S, T \subseteq V$ we denote by $E(S,T)$ the
 %Pa
 \subsection{a}
 \paragraph{}
-The fact that the Greedy Algorithm runs in polynomial time is obvious. $|E(v,S)|$ can be computed in $O(|E|)$ time and the while loop runs for $O(|V|)$ iterations. Further it clearly returns a cut. It remains to verify the approximation factor of $\frac{1}{2}$ holds.
+To see that the Greedy Algorithm runs in polynomial time observe that $|E(v,S)|$ can be computed in $O(|E|)$ time and the while loop runs for $O(|V|)$ iterations. Further the algorithm returns a feasible solution by definition. It remains to verify the approximation factor of $\frac{1}{2}$ holds.
 \paragraph{}
-We show that the approximation factor is maintained throughout operation of the algorithm on the graph $G[V\backslash \bar{V}]$ induced by vertices considered so far. After the first iteration only one vertex has been considered and the approximation factor holds trivially on the graph induced by that one vertex. Now for induction let $V' = V \backslash \bar{V}$ be the set of vertices considered so far by the Greedy Algorithm, and at the start of the next iteration the vertex $v \in V$ is being considered. Let $S \subseteq V$ be the cut set considered so far, and let $S^*$ be the optimal cut set on $G[V']$. Let $\bar{S} = V'\backslash S$ and $\bar{S^*} = V' \backslash S^*$. We may assume without loss of generality that the Greedy Algorithm puts $v \in S$ and the optimal solution puts $v \in S^*$ after this iteration (if this does not hold simply relabel $S$ with $\bar{S}$ below, or $S^*$ with $\bar{S^*}$ with respect to which assumption does not hold). 
+We show that the approximation factor is maintained throughout operation of the algorithm on the graph $G[V\backslash \bar{V}]$ induced by vertices considered so far. After the first iteration only one vertex has been considered and the approximation factor holds trivially on the graph induced by that one vertex. Now for induction let $V' = V \backslash \bar{V}$ be the set of vertices considered so far by the Greedy Algorithm, and at the start of the next iteration the vertex $v \in V$ is being considered. Let $S \subseteq V$ be the cut set considered so far, and let $S^*$ be the optimal cut set on $G[V']$. Let $\bar{S} = V'\backslash S$ and $\bar{S^*} = V' \backslash S^*$. We may assume without loss of generality that the Greedy Algorithm puts $v \in S$ and the optimal solution puts $v \in S^*$ after this iteration (if this does not hold simply interchange $S$ with $\bar{S}$ below, or $S^*$ with $\bar{S^*}$ with respect to which assumption does not hold). 
 \paragraph{}
 So after this iteration the optimal solution has value
 $$|E(S^* \cup \{v\}, \bar{S^*})| =  \sum_{u \in S^* \cup \{v\}} |E(u, \bar{S^*})| = |E(v,\bar{S^*})| + \sum_{u \in S^*} |E(u, \bar{S^*})| \leq |E(v,\bar{S^*})| + 2\sum_{u \in S} |E(u, \bar{S})|$$
@@ -238,7 +238,7 @@ $$c(\cO) - c(\cS^{i-1}) = c(\{S^*_1,\dots, S^*_l\}) = |\bigcup_{i=1}^k \delta(S^
 Let $$S^* = \text{arg max}_{S^*_i : i=1,\dots, k} |\delta(S^*_i)|.$$
 Then 
 $$c(\cO) - c(\cS^{i-1}) \leq k|\delta(S^*)|.$$
-Now observe that for all $i = 1,\dots, k$, $\delta(S^*_i) \subseteq E(G_i)$, hence in particular $\delta(S^*) \subseteq E(G_i)$. Thus $|\delta(S^*)|$ has size at most that of an optimal cut in $G_i$. Now by our choice of $V_i$, using $2$-approximation algorithm $\cB$, $2|\delta(V_i)|$ is at the size of an optimal cut in $G_i$. Hence we have
+Now observe that for all $i = 1,\dots, k$, $\delta(S^*_i) \subseteq E(G_i)$, hence in particular $\delta(S^*) \subseteq E(G_i)$. Thus $|\delta(S^*)|$ has size at most that of an optimal cut in $G_i$. Now by our choice of $V_i$, using $2$-approximation algorithm $\cB$, $2|\delta(V_i)|$ is at most the size of an optimal cut in $G_i$. Hence we have
 $$|\delta(S^*)| \leq 2|\delta(V_i)|.$$
 Thus, combining inequalities, we observe
 $$c(\cO) - c(\cS^{i-1}) \leq 2k |\delta(V_i)|.$$
@@ -251,7 +251,7 @@ Using the previous lemma, we can demonstrate that $\cA$ is a $\alpha := 1-(1-\fr
 \paragraph{Main Proof}
 Since $\cB$ can be run in polynomial time, and $k$ is at most $|V|$, it is clear that step $2$ of $\cA$, and hence $\cA$, runs in polynomial time. At termination the algorithm returns $k$ subsets of $V$, so the algorithm returns a feasible solution.
 \paragraph{} 
-Now to see the approximation factor holds let $\cS^i$ denote the solution maintained by $\cA$ at the end of iteration $i$. Then the returned solution is $\cS^{k}$. Let $\cO$ be an optimal solution. Observe from Lemma \ref{lemma:3b1} that $c(\cS^{i}) \geq \frac{1}{2k} c(\cO) + (1- \frac{1}{2k})c(S^{i-1})$. We will apply this inequality inductively to achieve the bound:
+Now to see the approximation factor holds let $\cS^i$ denote the solution maintained by $\cA$ at the end of iteration $i$. Then the returned solution is $\cS^{k}$. Let $\cO$ be an optimal solution. Observe from rewriting Lemma \ref{lemma:3b1} that $c(\cS^{i}) \geq \frac{1}{2k} c(\cO) + (1- \frac{1}{2k})c(S^{i-1})$. We will apply this inequality inductively to achieve the bound:
 \begin{align*}
 c(\cS^{k}) &\geq \frac{1}{2k} c(\cO) + (1- \frac{1}{2k})c(S^{k-1}) \\
 		&\geq \frac{1}{2k} c(\cO) + (1- \frac{1}{2k})(\frac{1}{2k} c(\cO) + (1- \frac{1}{2k})c(S^{k-2})) \\
@@ -307,14 +307,14 @@ Consider the following integer program, to be labelled $IP$:
 x &\geq 0, \text{ integer}.
 \end{align*}
 \paragraph{Solving $IP$ of Trees}
-We first observe that this $IP$ is easy to solve on trees. Indeed let $T$ be a tree, and for every $uv \in E(T)$ let $S^{uv}_u$ denote the set of vertices in connected component of $T-uv$ containing $u$, and define $S^{uv}_v$ similarly. By definition, $\delta(S^{uv}_u) =  \{e\} = \delta(S^{uv}_v)$. We define the following algorithm $\cA$ to solve $IP$ on a tree $T$:
+We first observe that this $IP$ is easy to solve on trees. Indeed let $T$ be a tree, and for every $uv \in E(T)$ let $S^{uv}_u$ denote the set of vertices in the connected component of $T-uv$ containing $u$, and define $S^{uv}_v$ similarly. By definition, $\delta(S^{uv}_u) =  \{e\} = \delta(S^{uv}_v)$. We define the following algorithm $\cA$ to solve $IP$ on a tree $T$:
 \begin{enumerate}
 \item For all $uv \in E(T)$ set $x_e = f(S^{uv}_u)$.
 \item Return $x$.
 \end{enumerate}
 To see that $\cA$ solves $IP$ on trees, we will show that $(1)$ the solution returned is feasible, and $(2)$ that every feasible $x$ has necessarily $x_{uv} \geq f(S^{uv}_u)$, implying that the $x$ returned by $\cA$ is optimal.  Let $x$ be the solution returned by $\cA$. 
 \paragraph{}
-To see $(1)$, it is immediate from the definition of $f$ that $x \geq 0$. It remains to verify the cut inequalities. Let $S \subseteq V$. Enumerate $\delta(S)$ as $\delta(S) = \{e_1, \dots, e_k \}$, where each $e_i := u_iv_i$ and $u_i \in S$. Let $S_1, \dots, S_\ell$ be the partition of $S$ induced by the connected components of $G-\delta(S)$ contained in $S$.  Now let $D(S_i) = \{ e_j \in \delta(S) : u_j \in S_i \}$ be the set of edges in $\delta(S)$ incident with $S_i$. Notice that the set of $D(S_i)$ partition $\delta(S)$. 
+To see $(1)$, it is immediate from the definition of $f$ that $x \geq 0$. It remains to verify the cut inequalities. Let $S \subseteq V$. Enumerate $\delta(S)$ as $\delta(S) = \{e_1, \dots, e_k \}$, where each $e_i := u_iv_i$ and $u_i \in S$. Let $S_1, \dots, S_\ell$ be the partition of $S$ induced by the connected components of $G-\delta(S)$ contained in $S$.  Now let $D(S_i) = \{ e_j \in \delta(S) : u_j \in S_i \}$ be the set of edges in $\delta(S)$ incident with $S_i$. Notice that $\{D(S_i): i = 1\dots \ell\}$ is a partition of $\delta(S)$. 
 \paragraph{}
 We claim that $\bigcap_{e_j \in D(S_i)} S^{e_j}_{u_j} = S_i.$ If $v \in S_i$ then for all $e_j \in D(S_i)$ there exists a $vu_j$-path that does not use $e_j$, since $v$ and $u_j$ are in the same connected component $S_i$. Thus $v \in \bigcap_{e_j \in D(S_i)}S^{e_j}_{u_j}$. If $v \not\in S_i$ then either $v \in S_{k}$ for $k \neq i$ or $v \in V\backslash S$. In either case, $v$ is connected to any vertex in $S_i$ via a path using some $e_j \in D(S_i)$. But then $v \in S^{e_j}_{v_j} = V \backslash S^{e_j}_{u_j}$. Therefore $v \not\in \bigcap_{e_j \in D(S_i)}S^{e_j}_{u_j}$. Thus the claim holds.
 \paragraph{}
@@ -323,7 +323,7 @@ So we have $$S = \bigcup_{i=1}^\ell S_i = \bigcup_{i=1}^\ell \bigcap_{e_j \in D(
 f(S) &\leq \sum_{i=1}^\ell f(\bigcap_{e_j \in D(S_i)}S^{e_j}_{u_j}) &\text{by subadditivity} \\
 &= \sum_{i=1}^\ell f(V\backslash \bigcap_{e_j \in D(S_i)} S^{e_j}_{u_j}) &\text{by symmetry} \\
 &= \sum_{i=1}^\ell f(\bigcup_{e_j\in D(S_i)} V\backslash S^{e_j}_{u_j}). \\
-&\leq \sum_{i=1}^\ell \sum_{e_j \in D(S_i)} f(V\backslash S^{e_j}_{u_j}) &\text{by subadditivity} \\ t
+&\leq \sum_{i=1}^\ell \sum_{e_j \in D(S_i)} f(V\backslash S^{e_j}_{u_j}) &\text{by subadditivity} \\ 
 &= \sum_{i=1}^\ell \sum_{e_j \in D(S_i)} f(S^{e_j}_{u_j}) &\text{by symmetry} \\
 &= \sum_{e_j \in \delta(S)} f(S^{e_j}_{u_j}) \\
 &= \sum_{e_j \i \delta(S)} x_{e_j}.
@@ -416,7 +416,7 @@ $$d(u,v) \leq d(u,w) + d(w,v) \leq 2^\beta 2^{i-1} + 2^\beta 2^{i-1} \leq 2^{i+1
 \paragraph{Proof of 2.}
 Observe that if $u,v$ are separated first at level $D_i$ then $d^T(u,v) \leq 2^{i+2}$. Let $S_i$ be the cluster in $D_i$ containing $u,v$. Let $S^u_{i-1}$ be descended cluster of $S_i$ from which $u$ descends and similarly define $S^v_{i-1}$. Then 
 \begin{align*}
-d^T(u,v) &= d^T(S_i, S^u_{i-1}) + d^T(S_, S^u_{i-1}) + d^T(S^u_{i-1}, u) + d^T(S^v_{i-1}, v)\\
+d^T(u,v) &= d^T(S_i, S^u_{i-1}) + d^T(S_i, S^v_{i-1}) + d^T(S^u_{i-1}, u) + d^T(S^v_{i-1}, v)\\
 &\leq \max\{2^i,0\} + \max\{2^i,0\} +  d^T(S^u_{i-1}, u) + d^T(S^v_{i-1}, v) \\
 &\leq 2^i + 2^i + 2\sum_{j = 1}^{i-1} 2^j \\
 &= 2^{i+1} + 2^{i+1} \\
@@ -429,7 +429,7 @@ Note that in the first case the distance between $u$ and $v$ is at most $2^{i+2}
  \end{align*}
  For $c \in W$, $u,v \in V$, and level $D_i$,  let $A$ be the event that $c$ settles $u,v$ and let $B$ be the event that $c$ cuts $u,v$ at $D_i$. We are interested in $Pr[A \cap B]$, or equivalently, $Pr[A \mid B] \cdot Pr[B]$.
  \paragraph{}
-We first analyze $Pr[B]$. Without loss we may assume $d(c,u) \leq d(c,v)$. For $c$ to cut $u,v$ we need $d(c,u) \leq 2^\beta 2^{i-1} < d(c,v)$ by definition.  Since we sample $2^\beta$ uniformly at random, the probability of this happening is simply $\frac{1}{2^{i-1}}$ times the length of the interval intersecting $[2^{i-1},2^i]$ with $[d(c,u), d(c,v)]$. More formally:
+We first analyze $Pr[B]$. Without loss we may assume $d(c,u) \leq d(c,v)$. For $c$ to cut $u,v$ we need $d(c,u) \leq 2^\beta 2^{i-1} < d(c,v)$ by definition.  Since we sample $2^\beta$ uniformly at random, the probability of this happening is simply $$\frac{1}{2^{i-1}}$$ times the length of the interval intersecting $[2^{i-1},2^i]$ with $[d(c,u), d(c,v)]$. More formally:
 $$Pr[B] = \frac{| [2^{i-1},2^i] \cap [d(c,u),d(c,v)]|}{|[2^{i-1},2^i]|} = \frac{| [2^{i-1},2^i] \cap [d(c,u),d(c,v)]|}{2^{i-1}}.$$
 \paragraph{}
 Now we need $Pr[A \mid B]$. Let us order the nodes of $W$ according to their distance to $u,v$. That is, $W = \{c_1, \dots, c_n\}$ where $\min\{d(c_i, v), d(c_i, u)\} \leq \min \{d(c_{i+1}, v), d(c_{i+1}, u)\}$ for all $i$. If $c= c_k$ then the probability that $c$ comes before $c_1, \dots, c_{k-1}$ in $\pi$ is at most $\frac{1}{k}$. In order for $c$ (given that $c$ cuts $u,v$) to settle $u,v$ at least that has to happen. Hence
