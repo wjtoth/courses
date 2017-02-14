@@ -266,32 +266,32 @@ Thus the approximation factor holds as desired. $\blacksquare$
 \paragraph{}
 Let $G = (V,E)$ be a graph with edge costs $c: E \rightarrow \R_+$. Let $r \in V$ be a root vertex. Let $R \subseteq V \backslash \{r\}$ be a set of terminals. Let $d_v \in \{2^0, 2^1, \dots, 2^\delta\}$ denote the demand of $v$ for each $v \in R$. We assume we have an $O(1)$-approximation algorithm for the Steiner Tree problem. Then each iteration of step $2$ of the given algorithm runs in polynomial time using the assumed approximation algorithm. There are $\delta+1$ iterations of step $2$ which is $O(\log \max_v d_v)$ and hence polynomial in the number of bits needed to specify the input to the problem. Thus the entirety of step $2$ runs in polynomial time and hence the given algorithm runs in polynomial time. It is clear the tree returned spans $R \cup \{r\}$ since the partial solution at each iteration $i$ spans $R_\delta \cup \dots \cup R_i \cup \{r\}$. Further at each iteration $i$ the paths in the final solution connecting $v \in R_i$ to $r$ are assigned costs $2^i$ on their edges and hence a feasible flow of value $d_v$ from $r$ to $v$ is possible. Thus the algorithm returns a feasible solution in polynomial time.
 \paragraph{}
-It remains to verify the approximation factor of $O(1)$. We do so by induction on the number of iterations the algorithm needs to run to return a solution. In the base case, that is when $\delta = 0$, the algorithm returns an $O(1)$-approximate Steiner Tree connecting $R \cup \{r\}$ and installs capacity of $1$ on each edge. By observing that the optimal solution in this case is a Steiner Tree connecting $R \cup \{r\}$ with capacity $1$ on each edge we see that the approximation factor holds in this case.
-\paragraph{}
-Suppose that $\delta > 0$ and for any problem instance with maximum demand $2^{\alpha}$ with $0 \leq \alpha < \delta$ the algorithm returns an $O(1)$ approximate solution. We will describe solutions by an ordered pair $(T, x)$ where $T$ is a tree and $x : T \rightarrow \R_+$ maps edges of $T$ with their corresponding capacity. Then the objective function, which we denote by $f$, in our problem maps feasible solutions $(T,x)$ as follows:
+It remains to verify the approximation factor of $O(1)$.We will describe solutions by an ordered pair $(T, x)$ where $T$ is a tree and $x : T \rightarrow \R_+$ maps edges of $T$ with their corresponding capacity. Then the objective function, which we denote by $f$, in our problem maps feasible solutions $(T,x)$ as follows:
 $$f(T,x) = \sum_{e \in T} c_e x_e.$$
 \paragraph{}
-Let $(T,x)$ be the solution returned by running our algorithm, and let $(T^*, x^*)$ be the optimal solution. Let $T_{\delta}$ be the $O(1)$-approximate Steiner Tree connecting $R_\delta \cup \{r\}$ in the first iteration (iteration $\delta$) of our algorithm. Let $(\bar{T}, x)$ denote the solution returned by our algorithm running on the residual problem with input graph $G_{\delta-1}$ (the resulting graph after contracting $T_{\delta}$ into $r$). Then $T = T_\delta \cup \bar{T}$ and 
-$$f(T,x) = f(T_\delta, x) + f(\bar{T},x).$$
-If we let $(\bar{T}^*, \bar{x}^*)$ denote the optimal solution for the residual problem with graph $G_{\delta - 1}$ then by our inductive hypothesis
-$$f(T,x) \leq f(T_\delta,x) + O(1)f(\bar{T}^*, \bar{x}^*).$$
-Now we observe that $T^*$ contains a Steiner Tree $T'$ with terminals $R_\delta \cup \{r\}$. Since $T_\delta$ is an $O(1)$-approximate optimal Steiner tree with terminals $R_\delta \cup \{r\}$ we have $c(T_\delta) \leq O(1) c(T')$. Since $T'$ necessarily installs capacities $2^\delta$ on all of its edges, $x_e^* = 2^\delta$ for all $e \in T'$. To see that a capacity of $2^\delta$ is necessary, suppose some edge $e$ in $T'$ has $x^*_e < 2^\delta$. Since $T'$ is a Steiner Tree, some terminal $v \in R_\delta$ uses $e$ on its unique path to $r$. But then an $rv$-flow along this path has value at most $x^*_e < 2^\delta$ contradicting feasibility of $(T^*, x^*)$. Thus $x_e^* = 2^\delta$ for all $e \in T'$. Hence we have
-$$f(T_\delta, x) = \sum_{e \in T_\delta} c_e x_e = 2^\delta c(T_\delta) \leq O(1)2^\delta c(T') = O(1)f(T', x^*) \leq O(1) f(T^*, x^*).$$
-Thus we see that
-$$f(T,x) \leq O(1) f(T^*,x^*) + O(1) f(\bar{T}^*, \bar{x}^*).$$
-Now consider the graph that results from contracting all edges of $T_\delta \cap T^*$ into $r$ in the tree $T^*$. If any cycles form then do the following: while there still exists a cycle $C$ take the edge $e = \text{argmin}_{e\in C} x^*_e$ and remove it. Call the resulting graph $S^*$. 
+Let $(T,x)$ be the solution returned by running our algorithm, and let $(T^*, x^*)$ be the optimal solution. Let $T_{i}$ be the $O(1)$-approximate Steiner Tree connecting $R_i \cup \{r\}$ in iteration $i$ of our algorithm. Similarly let $T^*_i$ denote the sub-tree of $T^*$ which spans $\{r\} \cup R_i$ after contracting $T^*_{i+1} \dots T^*_\delta$. Observe that the capacities on edges, $e$ of $T_i$ or $T^*_i$ are necessarily $2^i$, as otherwise a flow of value $2^i$ could not be routed along that edge to a vertex, $v$, in $R_i$ which $e$ is on the unique path to in $T_i$ or $T^*_i$.
 \paragraph{}
-We claim that $(S^*, x^*)$ is feasible for the residual problem on $G_{\delta-1}$. Indeed $S^*$ is a tree since we trimmed one edge from all cycles. Since trimming cycles preserves connectivity, and we contracted edges into $r$, all $rv$-paths in $T^*$ are preserved in $S^*$. Hence for all $v \in R\backslash R_\delta$ there exists an $rv$-path in $S^*$. Now we claim that the capacities on any $rv$-path still admit feasible flows after converting from $T^*$ to $S^*$. Observe that contraction will not decrease the minimum capacity. Further observe that deleted edges had minimum capacity on a cycle, so any flow that used a deleted edge $uv$ could send the same flow through the $uv$-path remaining from the cycle $uv$ was deleted from. Hence the flows on $S^*$ under capacities $x^*$ can still meet all demands in $R\backslash R_\delta$. Therefore $(S^*,x^*)$ (with $x^*$ restricted to $E(G_{\delta-1})$) is feasible for $G_{\delta -1}$. Hence, since $(\bar{T}^*, \bar{x}^*)$ is optimal for $G_{\delta -1}$:
-$$f(\bar{T}^*, \bar{x}^*) \leq f(S^*, x^*) \leq f(T^*, x^*).$$
-Therefore
+Thus we observe that $f(T_i,x) = 2^i |T_i|$ and $f(T^*_i, x^*) = 2^i |T^*_i|$. Now in the first iteration (iteration $\delta$), $T_\delta$ is computed as an $O(1)$-approximation of $T^*_\delta$. Thus
+$$2^\delta |T_\delta| = f(T_\delta, x) \leq O(1) f(T^*_\delta, x^*) = 2^\delta O(1) |T^*_\delta|.$$
+Now consider the sub-tree that forms by taking the iterations of $$\bigcup_{j=\delta}^i T^*_j$$
+and contracting $T_\delta \dots T_{i+1}$ into $r$. If any cycles are formed then do the following: while there still exists a cycle $C$ take the edge $e = \text{argmin}_{e\in C} x^*_e$ and remove it. Call the resulting tree $S^*$.
+\paragraph{}
+We claim that $(S^*,x^*)$ is feasible on $G_i$ for the nodes in $V(G_i) \cap R_i$, the graph which results from contracting $T_\delta, \dots, T_{i+1}$ into $r$. Since trimming cycles preserves connectivity, and we contracted edges into $r$, all $rv$-paths in $V(G_i) \cap R_i$ are preserved in $S^*$. Hence for all $v \in V(G_i) \cap R_i$ there exists an $rv$-path in $S^*$. Now we claim that the capacities on any $rv$-path still admit a feasible flow after converting to $S^*$. Observe that contraction will not decrease the minimum capacity. Further observe that deleted edges had minimum capacity on a cycle, so any flow that used a deleted edge $uv$ could send the same flow through the $uv$-path remaining in $S^*$ instead. Hence the flows on $S^*$ under capacities $x^*$ still meet the demands in $v \in V(G_i) \cap R_i$. Therefore $(S^*, x^*)$ feasible on $G_i$. Thus by our choice of $T_i$,
+$$f(T_i, x) \leq O(1) f(S^*,x^*).$$
+That is $$2^i |T_i| \leq 2^i O(1)|S^*| \leq 2^iO(1) (\sum_{j=\delta}^i |T^*_j|).$$
+\paragraph{}
+Summing these inequalities over $i$ we obtain:
 \begin{align*}
-f(T,x) &\leq O(1)f(T^*,x^*) + O(1)f(\bar{T}^*,\bar{x}^*) \\
-&\leq O(1)f(T^*,x^*) + O(1)f(T^*,x^*) \\
-&= 2O(1)f(T^*,x^*)\\
-&= O(1)f(T^*,x^*).
+f(T,x) &= \sum_{i=1}^\delta 2^i|T_i| \\
+&\leq \sum_{i=1}^\delta 2^i O(1)(\sum_{j=\delta}^i |T^*_j|)\\
+&= O(1) \sum_{i=1}^\delta \sum_{j=i}^\delta 2^i|T^*_j| \\
+&= O(1) \sum_{i=1}^\delta (\sum_{j=1}^{i}(2^j) |T^*_j| &\text{reindexing, and collecting coefficients on each $T^*_j$} \\
+&= O(1) \sum_{i=1}^\delta 2^{i+1} |T^*_i| \\
+&= 2O(1) \sum_{i=1}^\delta 2^i |T^*_i| \\
+&= 2O(1) \sum_{i=1}^\delta f(T^*_i, x^*) \\
+&= O(1) f(T^*, x^*).
 \end{align*}
-So the approximation factor $O(1)$ holds in the inductive case. Thus the algorithm given is a $O(1)$-approximation algorithm.$\blacksquare$
-
+Thus the $O(1)$ approximation factor holds, and hence the given algorithm is an $O(1)$-approximation algorithm.$\blacksquare$
 %Q5
 \section{}
 \paragraph{}
