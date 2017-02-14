@@ -199,4 +199,32 @@ $$h(x) =\frac{-1}{a}(y^Tx - b)$$
 Then we have immediately
 $$g(x) \leq h(x) \leq f(x)$$
 for all $x \in \R^n$ as desired. $\blacksquare$
+
+%Q4
+\section{}
+\paragraph{}
+Let $P = \{ x| Ax \leq b\}$ be a polytope, where $A \in \R^{m\times n}$, $b \in \R^m_{>0}$. Let $a_i$ denote the $i$-th row of $A$. Let $[m] = \{1,\dots, m\}$. Let $C = \text{conv} \{\frac{a_i}{b_i} : i\in [m]\}$ be the convex hull of $\frac{a_i}{b_i}$'s. We want to show that $P^* = C$, where $P^*$ denotes the polar set of $P$.
+\paragraph{}
+We will use the theorem from class that $P^{**} = P$. With this theorem it is equivalent to show that $P = C^*$. First we will rewrite $P$ as $P = \{x| a_i^Tx \leq b_i \forall i\in[m]\}$. Observe that 
+$$C^* := \{ x: x^Ty \leq 1\forall y \in C\}.$$
+Observe that $\forall y \in C$ there exists $\lambda_i$ for $i\in [m]$ such that $y = \sum_{i\in[m]} \lambda_i \frac{a_i^T}{b_i}$, $\sum_{i\in [m]}\lambda_i = 1$, and $\lambda \geq 0$. This is the definition of convex hull. Hence substituting into our definition of $C^*$ we see
+$$C^* = \{x : x^T(\sum_{i} \lambda_i \frac{a_i^T}{b_i}) \leq 1,\ \forall \lambda \geq 0, \sum_i \lambda_i = 1\}.$$
+Rewriting slightly this is equivalent to
+$$C^* = \{x : \sum_{i}\lambda_i \frac{a_i}{b_i}x \leq 1,\ \forall \lambda \geq 0, \sum_i\lambda_i = 1\}.$$
+It is not hard to see that such $C^* = P$. We will write it out formally below for the sake of completeness.
+\paragraph{}
+Let $x\in C^*$. Then if we for each $i \in [m]$ define the vector $\lambda^i$ as
+$$\lambda^i_j = \begin{cases}
+1, &i=j \\
+0, &i\neq j.
+\end{cases}$$
+Then $\lambda^i \geq 0$ and $\sum_j \lambda^i_j = \lambda^i_i = 1$. Since $x \in C$ we have
+$$\sum_{j}\lambda^i_j \frac{a_j}{b_j} x \leq 1$$
+and hence
+$$\frac{a_i}{b_i} x \leq 1.$$
+Thus for all $i \in [m]$, $a_i x\leq b_i$ ($b_i > 0$ implies inequality does not change order) and therefore $x \in P$. Now if we let $x\in P$, and let $\lambda \geq 0$ such that $\sum_i \lambda_i = 1$ then we need to show that $\sum_i \lambda_i \frac{a_i}{b_i} x \leq 1$. Since $x \in P$, $a_i x \leq b_i$ for all $i \in [m]$. Dividing by $b_i$ and multiplying by $\lambda_i \geq 0$ we obtain
+$$\lambda_i\frac{a_i}{b_i} x \leq \lambda_i \quad \forall i \in [m].$$
+Summing these inequalities over $i\in[m]$ obtains the desired bound:
+$$\sum_i \lambda_i \frac{a_i}{b_i}x \leq \sum_i \lambda_i = 1.$$
+Thus $P= C^*$ and by our theorem, $P^* = C^{**} = C$. $\blacksquare$
 \end{document}
