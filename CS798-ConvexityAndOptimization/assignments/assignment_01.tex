@@ -97,23 +97,41 @@ as desired. $\blacksquare$
 Consider the function
 $$f(x) = (\sum_{i=1}^n x_i^p)^\frac{1}{p}$$
 with $\text{dom} f = \R^n_{>0}$. We will compute the Hessian matrix. First observe that
-$$\frac{\partial f}{\partial x_i} f = x_i^{p-1}(\sum_{i=1}^n x_i^p)^\frac{1-p}{p}$$
+$$\frac{\partial f}{\partial x_i} f = x_i^{p-1}(\sum_{k=1}^n x_k^p)^\frac{1-p}{p}$$
 for $i = 1, \dots, n$. Now for $j = 1, \dots, n$
 \begin{align*}
 \frac{\partial f}{\partial x_j}\frac{\partial f}{\partial x_i} f &= \frac{\partial f}{\partial x_j}   x_i^{p-1}(\sum_{i=1}^n x_i^p)^\frac{1-p}{p} \\
-&= \begin{cases}
-0, &\text{ if } i=j \\
-(p-1)x_i^{p-1}(\sum_{i=1}^n x_i^p)^\frac{1-p}{p}[1- \frac{x_i^{p-1}}{\sum_{i=1}^n x_i^p}], &\text{if } i \neq j.
+&=(p-1)(\sum_{k=1}^n x_k^p)^\frac{1-2p}{p}\begin{cases}
+-x_i^{p-1}x_j^{p-1}, &i\neq j \\
+x_i^{p-2}\sum_{k=1}^n x_k^p  -x_i^{p-1}x_j^{p-1}, &i=j.
 \end{cases}
 \end{align*}
-Observe that if $p \geq 1$ each factor in the second case is non-negative when $x \in \R^n_{>0}$. Hence $\frac{\partial f}{\partial x_i} f  \geq 0$ for all $x \in \text{dom f}$ for all $i,j = 1, \dots, n$. Thus each entry of the Hessian is non-negative, and so the Hessian is PSD. Thus by the second order condition $f$ is convex.
+We claim that the Hessian is positive semidefinite. We prove this directly from the definition, let $y \in \R^n$:
+\begin{align*}
+y^T\nabla^2f(x)y &= \sum_{i=1}^n \sum_{j=1}^n \nabla^2f(x)_{ij} y_i y_j \\
+&= (p-1) (\sum_{k=1}^nx^p)^\frac{1-2p}{p}[\sum_{i=1}^nx_i^{p-2}(\sum_{k=1}^nx_k^p)y_i^2 - \sum_{i=1}^n\sum_{j=1}^n x_i^{p-1}x_j^{p-1}y_i y_j ] \\
+&= (p-1) (\sum_{k=1}^nx^p)^\frac{1-2p}{p}[(\sum_{i=1}^nx_i^{p})(\sum_{i=1}^nx_i^{p-2}y_i^2) - (\sum_{i=1}^n x_i^{p-1}y_i)(\sum_{i=1}^n x_i^{p-1} y_i) ] \\
+&= (p-1) (\sum_{k=1}^nx^p)^\frac{1-2p}{p}[(\sum_{i=1}^nx_i^{p})(\sum_{i=1}^nx_i^{p-2}py_i^2) - (\sum_{i=1}^n x_i^\frac{p}{2}x_i^\frac{p-2}{2}y_i)(\sum_{i=1}^n x_i^\frac{p}{2}x_i^\frac{p-2}{2}y_i)]\\
+&= (p-1) (\sum_{k=1}^nx^p)^\frac{1-2p}{p}[(\sum_{i=1}^nx_i^{p})(||x^\frac{p}{2}||^2||x^\frac{p-2}{2}y||^2 - \langle x^\frac{p}{2}, x^\frac{p-2}{2}y\rangle^2]
+\geq 0.
+\end{align*}
+The inequality follows since $p-1 \geq 1$ (as $p \geq 1$), $(\sum_{k=1}^nx^p)^\frac{1-2p}{p} \geq 0$ (as $x \in \R^n_{>0}$), and 
+$$||x^\frac{p}{2}||^2||x^\frac{p-2}{2}y||^2 \geq \langle x^\frac{p}{2}, x^\frac{p-2}{2}y\rangle^2$$
+by Cauchy-Schwarz. Hence $\nabla^2f(x)$ is positive semidefinite and thus by the Second Order Condition, (since $\R^n_{>0}$ is open) $f$ is convex.
 \paragraph{}
 Now when $p < 1$, by a similar calculation we observe
-$$\frac{\partial f}{\partial x_i} -f = \begin{cases}
-0, &\text{ if } i=j \\
-(1-p)x_i^{p-1}(\sum_{i=1}^n x_i^p)^\frac{1-p}{p}[1- \frac{x_i^{p-1}}{\sum_{i=1}^n x_i^p}], &\text{if } i \neq j.
-\end{cases}$$
-Again each factor is non-negative, and hence $-f$ is convex by the second order condition. Therefore $f$ is concave. $\blacksquare$
+\begin{align*}
+\frac{\partial -f}{\partial x_j}\frac{\partial f}{\partial x_i} f &=(1-p)(\sum_{k=1}^n x_k^p)^\frac{1-2p}{p}\begin{cases}
+-x_i^{p-1}x_j^{p-1}, &i\neq j \\
+x_i^{p-2}\sum_{k=1}^n x_k^p  -x_i^{p-1}x_j^{p-1}, &i=j.
+\end{cases}
+\end{align*}
+So again calculating the quadratic form $y^T\nabla^2-f(x)y$ we have
+\begin{align*}
+y^T\nabla^2-f(x)y &=(1-p) (\sum_{k=1}^nx^p)^\frac{1-2p}{p}[(\sum_{i=1}^nx_i^{p})(||x^\frac{p}{2}||^2||x^\frac{p-2}{2}y||^2 - \langle x^\frac{p}{2}, x^\frac{p-2}{2}y\rangle^2]\\
+&\geq 0.
+\end{align*}
+Since $p < 1$, $1-p >0$, and so the inequality follows as before. Therefore, by the Second Order Condition $-f$ is convex, and hence $f$ is concave. $\blacksquare$
 \paragraph{}
 Next we show that
 $$||x||_p = (\sum_{i=1}^n |x_i|^p)^\frac{1}{p}$$
@@ -205,7 +223,7 @@ for all $x \in \R^n$ as desired. $\blacksquare$
 \paragraph{}
 Let $P = \{ x| Ax \leq b\}$ be a polytope, where $A \in \R^{m\times n}$, $b \in \R^m_{>0}$. Let $a_i$ denote the $i$-th row of $A$. Let $[m] = \{1,\dots, m\}$. Let $C = \text{conv} \{\frac{a_i}{b_i} : i\in [m]\}$ be the convex hull of $\frac{a_i}{b_i}$'s. We want to show that $P^* = C$, where $P^*$ denotes the polar set of $P$.
 \paragraph{}
-We will use the theorem from class that $P^{**} = P$. With this theorem it is equivalent to show that $P = C^*$. First we will rewrite $P$ as $P = \{x| a_i^Tx \leq b_i \forall i\in[m]\}$. Observe that 
+We will use the theorem from class that $P^{**} = P$ when $0 \in P$. With this theorem it is equivalent to show that $P = C^*$. First we will rewrite $P$ as $P = \{x| a_i^Tx \leq b_i \forall i\in[m]\}$. Observe that 
 $$C^* := \{ x: x^Ty \leq 1\forall y \in C\}.$$
 Observe that $\forall y \in C$ there exists $\lambda_i$ for $i\in [m]$ such that $y = \sum_{i\in[m]} \lambda_i \frac{a_i^T}{b_i}$, $\sum_{i\in [m]}\lambda_i = 1$, and $\lambda \geq 0$. This is the definition of convex hull. Hence substituting into our definition of $C^*$ we see
 $$C^* = \{x : x^T(\sum_{i} \lambda_i \frac{a_i^T}{b_i}) \leq 1,\ \forall \lambda \geq 0, \sum_i \lambda_i = 1\}.$$
@@ -226,5 +244,50 @@ Thus for all $i \in [m]$, $a_i x\leq b_i$ ($b_i > 0$ implies inequality does not
 $$\lambda_i\frac{a_i}{b_i} x \leq \lambda_i \quad \forall i \in [m].$$
 Summing these inequalities over $i\in[m]$ obtains the desired bound:
 $$\sum_i \lambda_i \frac{a_i}{b_i}x \leq \sum_i \lambda_i = 1.$$
-Thus $P= C^*$ and by our theorem, $P^* = C^{**} = C$. $\blacksquare$
+Thus $P= C^*$ and by our theorem, $P^* = C^{**} = C$. For this theorem to apply it remains to verify that $0 \in C$.
+\paragraph{}
+Suppose for a contradiction that $0 \not\in C$. Since $C$ is a convex hull of a finite set it is closed and bounded. Hence, by the separating hyperplane theorem there exists a (non-zero) hyperplane $h \in \R^n$ such that 
+$$h^T0 > h^Tx \quad\forall x \in C.$$
+We claim that $h$ is a direction in $P$. To see this let $\alpha \in \R$ be a scalar. Let $x \in P$.  We will show that $x + \alpha h$ is feasible, implying that $h$ is a direction in $P$. Let $ i \in [m]$ and consider constraint $a_i$ with $b_i$. Then
+$$\frac{a_i}{b_i} (x + \alpha h) = \frac{a_i}{b_i}x + \alpha \frac{a_i}{b_i}h < \frac{a_i}{b_i}x \leq 1.$$
+The first inequality follows since $\frac{a_i}{b_i} \in C$ (and thus $\frac{a_i}{b_i} h < h^T0 = 0)$ and the second inequality follows since $x \in P$. Thus multiplying through by $b_i$, which will not reverse the order of inequalities since $b_i > 0$, we obtain
+$$\frac{a_i}(x + \alpha h) < b_i.$$
+Since this holds for all $i \in [m]$ this implies that $x + \alpha h \in P$. Hence $h$ is a direction, contradicting that $P$ is bounded. Therefore $0\in C$ as desired. $\blacksquare$
+
+%Q5
+\section{}
+Let $Q \in S^n_{++}$. We consider the quadratic norm $||x||_Q := (x^TQx)^\frac{1}{2}.$
+%pa
+\subsection{a}
+\paragraph{}
+We show that $||x||_Q$ is a norm. First since $Q\in S^n_{++}$ there exists non-singular, symmetric $V$ such that $Q = V^TV$. Observe that
+$$||x||_Q = (x^TQx)^\frac{1}{2} = (x^TV^TVx)^\frac{1}{2} =  ((Vx)^T(Vx))^\frac{1}{2} = ||Vx||_2.$$
+We will show that $||x||_Q$ is non-negative and equal to $0$ only when $x = 0$, that $||t x||_Q = |t|\cdot ||x||_Q$, and that triangle inequality holds.
+\paragraph{Non-negativity}
+Since $||\cdot||_2$ is a norm, $||x||_Q = ||Vx||_2 \geq 0$ and further $||Vx||_2 = ||x||_Q = 0$ only if $Vx = 0$, but then $x = V^{-1}0 = 0$.
+\paragraph{Scaling}
+Observe that $$||tx||_Q = ||V(tx)||_2 = |t|\cdot ||Vx||_2 = |t|\cdot ||x||_Q.$$
+\paragraph{Triangle Inequality}
+Let $x,y \in \R^n$. Then
+$$||x+y||_Q = ||V(x+y)||_2 = ||Vx + Vy||_2 \leq ||Vx||_2 + ||Vy||_2 = ||x||_Q + ||y||_Q.$$
+Therefore $||\cdot||_Q$ is a norm. $\blacksquare$
+%pb
+\subsection{b}
+\paragraph{}
+Let $x \in \R^n$. Then observe that
+\begin{align*}
+||x||_{Q^*} = \sup \{ x^Ty : ||y||_Q \leq 1\} \\
+&= \sup \{x^Ty : ||Vy||_2 \leq 1\} \\
+&= \sup \{x^TV^{-1}Vy : ||Vy||_2 \leq 1\} \\
+&= \sup\{x^TV^{-1}z : ||z||_2 \leq 1\} &\text{assigning $z=Vy$}. 
+\end{align*}
+The supremum is realized when $z = (x^TV^{-1})^T = V^{-1}x$. Therefore
+$$||x||_{Q^*} = x^TV^{-1}V^{-1}x = x^TQ^{-1}x = ||x||_{Q^{-1}}.$$
+Thus our nice formula is $||x||_{Q^*} = ||x||_{Q^{-1}}$.$\blacksquare$
+%pc
+\subsection{c}
+\paragraph{}
+Let $\cE = \{x : x^TQx \leq 1\}.$  Rewriting we have $\cE = \{x : ||x||_Q \leq 1\} = \cB$ where $\cB$ denote the norm ball of $||\cdot||_Q$. Then we have
+$$\cE^* = \{y : y^Tx \leq 1, \forall x \in \cE\} = \{y : y^Tx \leq 1, \forall x \in \cB\}  = \cB^* = \cB_*,$$
+where $\cB_*$ is the norm ball of $||\cdot||_{Q^*}$, and the last equality follows from the notes. Rewriting using part $(b)$ we see that $\cB_* = \{x: x^TQ^{-1}x \leq 1\}$. That is $\cE^*$ is ellipsoid given by $Q^{-1}$.
 \end{document}
