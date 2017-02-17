@@ -290,4 +290,100 @@ Thus our nice formula is $||x||_{Q^*} = ||x||_{Q^{-1}}$.$\blacksquare$
 Let $\cE = \{x : x^TQx \leq 1\}.$  Rewriting we have $\cE = \{x : ||x||_Q \leq 1\} = \cB$ where $\cB$ denote the norm ball of $||\cdot||_Q$. Then we have
 $$\cE^* = \{y : y^Tx \leq 1, \forall x \in \cE\} = \{y : y^Tx \leq 1, \forall x \in \cB\}  = \cB^* = \cB_*,$$
 where $\cB_*$ is the norm ball of $||\cdot||_{Q^*}$, and the last equality follows from the notes. Rewriting using part $(b)$ we see that $\cB_* = \{x: x^TQ^{-1}x \leq 1\}$. That is $\cE^*$ is ellipsoid given by $Q^{-1}$.
+\paragraph{}
+So suppose $\cE$ is a $2D$-ellipsoid with semi-axes $v_1$ and $v_2$ with corresponding side lengths $a_1$ and $a_2$. Then the spectral decomposition of $Q$ is
+$$Q = \begin{bmatrix} v_1 & v_2 \end{bmatrix} \begin{bmatrix} a_1^{-1} & 0 \\ 0 & a_2^{-1} \end{bmatrix} \begin{bmatrix} v_1^T \\v_2^T\end{bmatrix}.$$
+And further
+$$Q^{-1} =  \begin{bmatrix} v_1 & v_2 \end{bmatrix} \begin{bmatrix} a_1 & 0 \\ 0 & a_2 \end{bmatrix} \begin{bmatrix} v_1^T \\v_2^T\end{bmatrix}$$
+using that $ \begin{bmatrix} v_1 & v_2 \end{bmatrix}^T =  \begin{bmatrix} v_1 & v_2 \end{bmatrix}^{-1}$. Hence the polar ellipsoid $\cE^*$ has the same semi-axes as $\cE$, but with reciprocal side lengths.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\draw (0,0) ellipse (0.5cm and 2cm);
+\draw (0,0) ellipse (2cm and 0.5cm);
+\end{tikzpicture}
+\caption{Ellipsoid and its polar where $v_1 = e_1$ and $v_2 = e_2$ (standard basis vectors), and $a_1 = 2$ while $a_2 = \frac{1}{2}$. The polar scales $v_1$ by $\frac{1}{a_1} = \frac{1}{2}$ and scales $v_2$ by $\frac{1}{a_2} = 2$.}
+\end{figure}
+
+%Q6
+\section{}
+%Pa
+\subsection{a}
+\paragraph{}
+Let $\cE_1:= \{P_1 u + q_1 : ||u||_2 \leq 1\}$ and $\cE_2:= \{P_2 u + q_2 : ||u||_2 \leq 1\}$ be given ellipsoids. We want to find a separating hyperplane $(a,b)$ for these ellipsoids, that is:
+\begin{align*}
+a^Tx + b &\geq 0 &\forall x \in \cE_1 \\
+a^Tx+b &\leq 0 &\forall x \in \cE_2.
+\end{align*}
+This can be formulated as an optimization feasibility problem as
+\begin{align*}
+\min\ 0\\
+\text{s.t.}\ a^Tx + b &\geq 0 &\forall x \in \cE_1\\
+a^Tx + b &\leq 0 &\forall x \in \cE_2.
+\end{align*}
+This problem is equivalent to
+\begin{align*}
+\min\ 0\\
+\text{s.t.}\ a^T(-x)&\leq b &\forall x \in \cE_1\\
+a^Tx &\leq -b &\forall x \in \cE_2.
+\end{align*}
+Which is equivalent to
+\begin{align*}
+\min\ 0\\
+\text{s.t.}\  
+\sup\{ a^T(-x) : x \in \cE_1\}&\leq b\\
+\sup\{a^Tx : x\in \cE_2\} &\leq -b.
+\end{align*}
+Equivalently
+\begin{align*}
+\min\ 0\\
+\text{s.t.}\  
+\sup\{ a^T(-P_1 u - q_1) : ||u||_1 \leq 1\}&\leq b\\
+\sup\{a^T(P_2 u + q_2) : ||u||_2 \leq 1\} &\leq -b.
+\end{align*}
+Which is equivalent to
+\begin{align*}
+\min\ 0\\
+\text{s.t.}\  
+a^T(-q_1) + ||P_1a||_2 &\leq b\\
+a^Tq_2 + ||P_2a||_2 &\leq -b.
+\end{align*}
+Setting $A_1 = P_1$, $b_1 = 0$, $c_1=q_1$, $d_1 = b$, and $A_2 = P_2$, $b_2 = 0$, $c_2 = -q_2$, and $d_2 = -b$ we obtain the exact form of a Second Order Conic Program as described in the general formulation of such problems. $\blacksquare$
+\subsection{b}
+\paragraph{}
+We will write the Second-Order Cone Program (SOCP):
+\begin{align*}
+\min &f^Tx \\
+\text{s.t.} ||A_ix + b_i||_2 &\leq c^T_i x + d_i, &1\leq i \leq m \\
+Fx &= g,
+\end{align*}
+as a Semidefinite Program (SDP) in inequality form (see section $4.6.2$ of Boyd and Vandenberghe) :
+\begin{align*}
+\min\ &f^Tx \\
+\text{s.t.}\ G + \sum_{i=1}^n x_i F_i &\preccurlyeq 0 \\
+Fx &=g.
+\end{align*}
+Observe that it is enough to show that a constraint of the form $||Ax + b|| \leq c^Tx + d$ can be written as $G + \sum_{i=1}^n x_i F_i \preccurlyeq 0$ as then we could write each constraint $||A_ix + b_i||_2 \leq c^T_i x + d_i$ for $i\in [m]$ as $G^i + \sum_{j=1} x_j F^i_j$, and stack them as blocks as
+$$G = \begin{bmatrix} G^1 & & \\ & \ddots & \\ & & G^m \end{bmatrix} \quad F_i = \begin{bmatrix} F^1_i & & \\ & \ddots & \\ & & F^m_i \end{bmatrix}$$
+to obtain an equivalent single semidefinite constraint in place of $m$ semidefinite constraints.
+\paragraph{Lemma 6b}
+We will need the following lemma using Schur's complement: For any $x\in \R^n$ and $c\in \R$ we have $||x||_2 \leq c$ if and only if
+$$X = \begin{bmatrix} c &x^T \\ x & cI\end{bmatrix} \succcurlyeq 0.$$
+\paragraph{Proof of Lemma 6b}
+If $c = 0$ this is trivial, so we may assume that $c\neq 0$. In this case we invoke Schur's Complement Lemma and thus
+$$X \succcurlyeq 0$$
+if and only if $c \geq 0$ and $tI - \frac{1}{c}xx^T \succcurlyeq 0$. Which holds if and only if $c^2I - xx^T \succcurlyeq 0$. Now the eigenvalues of $c^2I - xx^T$ are non-negative if and only if $c^2 - ||x||^2_2 \geq 0$ (since $c^2$ is the least eigenvalue of $c^2I$ and $||x^2_2$ is the largest eigenvalue of $xx^T$), which holds if and only if $||x||_2 \leq c$ as desired. $\blacksquare$
+\paragraph{}
+Now applying Lemma $6b$ to our SOCP cone constraint we have $||Ax +b||_2 \leq c^Tx + d$ (suppose $x\in\R^n$ and $A \in \R^{r\times n}$) if and only if
+$$\begin{bmatrix} c^Tx + d & (Ax+b)^T \\ Ax + b &(c^T+d)xI \end{bmatrix} \succcurlyeq 0.$$
+Let $a^1, \dots, a^r$ be the rows of $A$. Separating out we obtain:
+$$\begin{bmatrix} d & b^T \\ b & dI \end{bmatrix} + \sum_{i=1}^n x_i \begin{bmatrix} c_i & a^1_i & \dots & a^r_i \\ a^1_i \\ \vdots & &c_iI\\ a^r_i \end{bmatrix} \succcurlyeq 0.$$
+Thus $$G = \begin{bmatrix} d & b^T \\ b & dI \end{bmatrix}$$
+and 
+$$F_i = \begin{bmatrix} c_i & a^1_i & \dots & a^r_i \\ a^1_i \\ \vdots & &c_iI\\ a^r_i \end{bmatrix}$$
+we have
+$$G + \sum_{i=1}^n F_i \succcurlyeq 0$$
+if and only if
+$$||Ax+b||_2 \leq c^Tx + d.$$
+Therefore we have shown that any SOCP can be written as an SDP. $\blacksquare$
 \end{document}
