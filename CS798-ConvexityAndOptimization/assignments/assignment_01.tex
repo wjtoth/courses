@@ -378,12 +378,48 @@ Now applying Lemma $6b$ to our SOCP cone constraint we have $||Ax +b||_2 \leq c^
 $$\begin{bmatrix} c^Tx + d & (Ax+b)^T \\ Ax + b &(c^T+d)xI \end{bmatrix} \succcurlyeq 0.$$
 Let $a^1, \dots, a^r$ be the rows of $A$. Separating out we obtain:
 $$\begin{bmatrix} d & b^T \\ b & dI \end{bmatrix} + \sum_{i=1}^n x_i \begin{bmatrix} c_i & a^1_i & \dots & a^r_i \\ a^1_i \\ \vdots & &c_iI\\ a^r_i \end{bmatrix} \succcurlyeq 0.$$
-Thus $$G = \begin{bmatrix} d & b^T \\ b & dI \end{bmatrix}$$
+Thus setting $$G = -\begin{bmatrix} d & b^T \\ b & dI \end{bmatrix}$$
 and 
-$$F_i = \begin{bmatrix} c_i & a^1_i & \dots & a^r_i \\ a^1_i \\ \vdots & &c_iI\\ a^r_i \end{bmatrix}$$
+$$F_i = -\begin{bmatrix} c_i & a^1_i & \dots & a^r_i \\ a^1_i \\ \vdots & &c_iI\\ a^r_i \end{bmatrix}$$
 we have
-$$G + \sum_{i=1}^n F_i \succcurlyeq 0$$
+$$G + \sum_{i=1}^n F_i \preccurlyeq 0$$
 if and only if
 $$||Ax+b||_2 \leq c^Tx + d.$$
 Therefore we have shown that any SOCP can be written as an SDP. $\blacksquare$
+
+%Q7
+\section{}
+\paragraph{}
+Consider the following optimization problem $(P)$:
+\begin{align*}
+\min\ &e^{-x} \\
+\text{s.t.}\ \frac{x^2}{y} &\leq 0,
+\end{align*}
+with domain $\cD = \{(x,y) : y > 0 \}$. The Lagrangian function $g(\lambda)$ is
+$$ g(\lambda) := \inf_{x,y} \{ e^{-x} + \lambda \frac{x^2}{y}\}.$$
+We will study the behaviour of $g$ to understand the value of the dual problem.
+\paragraph{}
+The dual problem $(D)$ is:
+\begin{align*}
+\max\ &g(\lambda) \\
+\lambda &\geq 0.
+\end{align*}
+We consider two cases: when $\lambda = 0$ and when $\lambda > 0$.
+\paragraph{}
+When $\lambda = 0$, 
+$$g(\lambda) = \inf_x e^{-x} = 0.$$
+Now when $\lambda > 0$ observe that $y = \lambda x^4 > 0$ for $x > 0$ and so
+$$\lim_{x \rightarrow \infty, y=x^4} (e^{-x} + \lambda\frac{x^2}{y}) = \lim_{x\rightarrow \infty} (e^{-x} + \lambda\frac{x^2}{\lambda x^4}) = \lim_{x\rightarrow \infty}( e^{-x} + \frac{1}{x^2}) = 0.$$
+Since $g(\lambda) \geq 0$ this implies $g(\lambda) = 0$. Therefore in either case $g(\lambda) = 0$. Thus $(D)$ is equal to:
+\begin{align*}
+\max\ &0 \\
+\lambda &\geq 0.
+\end{align*}
+And thus if we let$d^*$ be the optimal value of $(D)$, then $d^*=0$.
+\paragraph{}
+Now we return our attention to $(P)$. Since $x^2 \geq 0$ for all $x$ and $y > 0$ we observe that
+$$\frac{x^2}{y} \leq 0 \iff x = 0.$$
+Thus all feasible $(x,y)$ for $(P)$ have objective value $e^{-0} = 1$. So if we let $p^*$ be the optimal value of $(P)$ then $p^* = 1$.
+\paragraph{}
+Therefore $p^* = 1 > 0 = d^*$, so strong duality does not hold for this problem. $\blacksquare$
 \end{document}
