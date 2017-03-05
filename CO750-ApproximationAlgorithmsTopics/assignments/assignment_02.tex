@@ -137,5 +137,15 @@ Let $\Delta_i$ denote the amount by which all minimal violated cuts get increase
 $$\sum_{S\subseteq V} |\delta_F(S)|y_S = \sum_{i} \sum_{S\in \cS_i} |\delta_F(S)|\Delta_i \leq \sum_{i} 2w_i \Delta_i = 2\sum_{S\subseteq V} f(S) y_S.$$
 The inequality follows from our hypothesis, and the last equality follows since $f$ is a $01$-function for which non-zero $y_S$ (minimally violated sets) have $f(S) = 1$. 
 \end{proof}
+\paragraph{}
+Now we intend to show that the hypothesis of the previous lemma holds. Consider some iteration $i$ of $\cA$, and let $A$ be the of edges chosen so far at the end of $i$. Let $B = F \cap A$. Construct a graph $H$ by taking the graph $(V,F)$ and contracting the connected components of $(V,B)$ to vertices. Then $E(H) = F\backslash B$. Let $S_v$ denote the set of vertices in $G$ corresponding to vertex $v \in V(H)$. It is not hard to see that $H$ is a forest. Indeed if $H$ has some cycle $C$ then we can remove any edge in $E(C)$ from $F$ without increasing the number of connected components. 
 
+\begin{lemma}\label{lemma:leaves}
+$\sum_{v\in W} d_v \leq 2|W|$.
+\end{lemma}
+\begin{proof}
+First we claim that for every connected component $C$ of $H$, at most one leaf of $C$ satisfies $f(S_v) = 0$. Suppose for a contradiction there exists some connected component $C$ of $H$ that has two leaves $v$ and $w$ such that $f(S_v) = f(S_w) = 0$. Let $S_C = \cup_{u\in C} S_u$. Let $e_v, e_w \in F$ be the edges incident to $v$ and $w$ respectively in $H$. By minimality via the reverse deletion step, $F\backslash \{e_v\}$ and $F\backslash \{e_w\}$ are infeasible. But then $f(S_C\backslash S_v) =1 $ and $f(S_C\backslash S_w) = 1$. Since $C$ is a connected component of $H$ we have $f(S_C) = 0$. Hence
+$$f(S_v) = f(S_w) = f(S_C) = 0 \quad\text{and}\quad f(S_C\backslash S_v) = f(S_C \backslash S_w) = 1$$
+but $S_v, S_w \subseteq S_C$ and $S_v \cap S_w = \emptyset$. This contradictions property \ref{eq:1}.
+\end{proof}
 \end{document}
