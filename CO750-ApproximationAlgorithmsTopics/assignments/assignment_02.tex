@@ -1,0 +1,141 @@
+\documentclass[letterpaper,12pt,oneside,onecolumn]{article}
+\usepackage[margin=1in, bottom=1in, top=1in]{geometry} %1 inch margins
+\usepackage{amsmath, amssymb, amstext}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{theorem}
+\usepackage{tikz}
+\usepackage{tkz-berge}
+
+%Macros
+\newcommand{\A}{\mathbb{A}} \newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}} \newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+ 
+ 
+\newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}} \newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}} \newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}} \newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}} \newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}} \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}} \newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}} \newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}} \newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}} \newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}} \newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofof}[1]{{\bf Proof of #1:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofofnobox}[1]{{\bf#1:  }}{}\newenvironment{example}{{\bf Example:  }}{\hfill\rule{2mm}{2mm}}
+
+%\renewcommand{\thesection}{\lecnum.\arabic{section}}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}[fact]{Lemma}
+\newtheorem{theorem}[fact]{Theorem}
+\newtheorem{definition}[fact]{Definition}
+\newtheorem{corollary}[fact]{Corollary}
+\newtheorem{proposition}[fact]{Proposition}
+\newtheorem{claim}[fact]{Claim}
+\newtheorem{exercise}[fact]{Exercise}
+\newtheorem{note}[fact]{Note}
+\newtheorem{conjecture}[fact]{Conjecture}
+
+\newcommand{\size}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
+
+%END MACROS
+%Page style
+\pagestyle{fancy}
+
+\listfiles
+
+\raggedbottom
+
+\lhead{2017-03-14}
+\rhead{W. Justin Toth CO750-Approximation Algorithms Assignment 2} %CHANGE n to ASSIGNMENT NUMBER ijk TO COURSE CODE
+\renewcommand{\headrulewidth}{1pt} %heading underlined
+%\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
+
+\begin{document}
+
+%Question 1
+\section{}
+\paragraph{}
+Let $G = (V,E)$ be an undirected graph with edge cost $c: E\rightarrow \R_+$. Consider the problem $(IP)$:
+\begin{align*}
+\min\ \sum_{e\in E} c(e) x_e&\\
+\text{s.t.}\  \sum_{e\in\delta(S)} x_e &\geq f(S) &\forall S \subseteq V \\
+x&\geq 0\\
+x&\in \Z,
+\end{align*}
+where $f : S \rightarrow \{0,1\}$ satisfies the maximality property:
+$$\text{ for all disjoint } A,B\subseteq V, \text{ we have } f(A \cup B ) \leq \max\{f(A), f(B)\},$$
+and $f$ satisfies that there does not exist $S \subseteq V$ and $A, B \subseteq S$ such that
+\begin{equation}\label{eq:1}
+A\cap B = \emptyset,\ f(S)=f(A)=f(B)=0 \text{ and } f(S\backslash A) = f(S\backslash B) = 1.
+\end{equation}
+We may assume that $f(V') = 0$, for the every connected component vertex set $V'$, otherwise $(IP)$ is infeasible. Let $(LP)$ denote the linear programming relaxation of $(IP)$ and let $(D)$ denote the dual of $(LP)$:
+\begin{align*}
+\max\ \sum_{S\subseteq V} f(S) y_S&\\
+\text{s.t.}\ \sum_{S : e \in \delta(S)} y_S &\leq c(e) &\forall e \in E \\
+y&\geq 0. 
+\end{align*}
+\paragraph{Algorithm}
+Consider the primal-dual algorithm, $\cA$, for this problem:
+\begin{enumerate}
+\item Start with $x=0$, $y=0$, and $F \rightarrow \emptyset$.
+\item While $F$ is not feasible do:
+	\begin{enumerate}
+	\item Increase $y_S$ uniformly for ``minimal violated cuts" with respect to $F$ until some dual constraint corresponding to an edge $e$ becomes tight.
+	\item Set $x_e = 1$, $F = F\cup \{e\}$.
+	\end{enumerate}
+\item Reverse Deletion: Consider all edges $e$ in $F$ in reverse of the order they were added to $F$ and if $F\backslash \{e\}$ is feasible then set $F = F\backslash\{e\}$ and $x_e = 0$.
+\end{enumerate}
+\paragraph{}
+We intend to show that $\cA$ is a polynomial time $2$-approximation algorithm for $(IP)$. We will need the following lemma from class:
+\begin{lemma}\label{lemma:maximality}
+Let $f$ be a $01$-function satisfying maximality. Let $F\subseteq E$. Then
+\begin{enumerate}
+\item $F$ is feasible for $(IP)$ with $f$ if and only if every connected component $C$ of $(V,F)$ satisfies $f(C) = 0$.
+\item The minimal violated cuts are connected components $C$ that have $f(C) = 1$.
+\end{enumerate}
+\end{lemma}
+This lemma allows us to show that $\cA$ terminates in polynomial time.
+\begin{lemma}\label{lemma:poly1}
+Suppose we have a polynomial time oracle for $f$. Then $\cA$ returns a feasible solution for $(IP)$ in polynomial time
+\end{lemma}
+\begin{proof}
+By definition of $\cA$ if $\cA$ terminates then the result is feasible. To see that $\cA$ terminates observe that in every iteration of step $2$ some edge $e \in |E|$ is added to $F$. Since $E$ is feasible, the while loop terminates after $O(|E|)$ iterations. Hence $\cA$ terminates, and returns a feasible solution.
+\paragraph{} 
+It remains to show that $\cA$ runs in polynomial time. Since we have a polynomial time oracle for $f$ it is easy to see that step $3$ runs in polynomial time. Further we need only maintain $y_S$ for non-zero $y_S$, of which we will show there are a polynomial number. We need to verify step $2(a)$ can be done in polynomial time. By lemma \ref{lemma:maximality} we need only maintain connected components of $F$ since the connected components $C$ with $f(C) = 1$ are precisely the minimal violated cuts. There are a polynomial number of connected components at each iteration (hence a polynomial number of non-zero $y_S$), and since we have a polynomial time oracle for $f$ this implies step $2(a)$ can be done in polynomial time.
+\end{proof}
+\paragraph{}
+Now we need to check the approximation factor. We present the following reduction from class as a lemma:
+\begin{lemma}\label{lemma:degree}
+Let $w_i$ denote the number of minimally violated sets at iteration $i$.  Let $\cS_i$ denote the set of minimal violated cuts at iteration $i$. If $\sum_{S\in \cS_i} |\delta_F(S)| \leq 2w_i$ for all $i$ then $\cA$ is a $2$-approximation algorithm for $(IP)$ (for any $01$-function $f$).
+\end{lemma}
+\begin{proof}
+It is immediate from our construction of $x$ and $y$ that if $e \in F$ then
+$$\sum_{S : e\in\delta(S)} y_S = c(e).$$
+Thus we have the objection function value on $F$ is
+$$\sum_{e\in F} c(e) = \sum_{e\in F} \sum_{S : e\in\delta(S)} y_S = \sum_{S\subseteq V} |\delta_F(S)|y_S.$$
+Let $\Delta_i$ denote the amount by which all minimal violated cuts get increased in iteration $i$. Then
+$$\sum_{S\subseteq V} |\delta_F(S)|y_S = \sum_{i} \sum_{S\in \cS_i} |\delta_F(S)|\Delta_i \leq \sum_{i} 2w_i \Delta_i = 2\sum_{S\subseteq V} f(S) y_S.$$
+The inequality follows from our hypothesis, and the last equality follows since $f$ is a $01$-function for which non-zero $y_S$ (minimally violated sets) have $f(S) = 1$. 
+\end{proof}
+
+\end{document}
