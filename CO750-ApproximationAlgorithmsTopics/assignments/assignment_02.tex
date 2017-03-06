@@ -167,4 +167,63 @@ where $OPT$ is the optimal solution of $(IP)$. Therefore we have shown that
 \begin{theorem}
 $\cA$ is a $2$-approximation algorithm for $(IP)$.
 \end{theorem}
+
+%Q2
+\section{}
+\paragraph{}
+Let $G = (V,E)$ be a metric graph with edge costs $c: E\rightarrow \R_+$. Consider the problem of finding a minimum cost subset of edges $F\subseteq E$ such that each connected component of $(V,F)$ is an eulerian subgraph with at least $100$ vertices. We will denote this problem $(E100)$.
+\paragraph{}
+Define the function $f:2^V \rightarrow \{0,2\}$ by:
+$$f(S) = \begin{cases}
+2, &\text{if } 1\leq |S| < 100 \\
+0, &\text{otherwise.}
+\end{cases}$$
+Then we can define a linear programming relaxation $(LP)$ for $(E100)$:
+\begin{align*}
+\min\ \sum_{e\in E} c(e) x_e&\\
+\text{s.t.}\  \sum_{e\in\delta(S)} x_e &\geq f(S) &\forall S \subseteq V \\
+x&\geq 0.
+\end{align*}
+To justify this relaxation consider a feasible solution $F$ to $(E100)$. Let $x^F$ be the incidence vector of $F$. Then $x^F$ is feasible for $(LP)$. Let $S \subseteq V$ such that $1 \leq |S| < 100$. Since $|S| < 100$, $S$ does not contain any single connected component of $(V,F)$. Since $1\leq |S|$, $S$ has non-trivial intersection with some connected component $C$ of $(V,F)$ (i.e. $S\cap C \neq \emptyset$ and $S\cap C \supset C$). Since $F$ is feasible, $C$ is eulerian. Hence the degree of each vertex in $C$ (with respect to $F$) is even. Thus $|E(C\cap S, C\backslash S)| \geq 2$. Therefore
+$$\sum_{e \in \delta(S)} x_e \geq \sum_{e \in E(C\cap S, C\backslash S)} x_e \geq 2 \geq f(S),$$
+and hence $x$ is feasible for $(LP)$.
+\paragraph{}
+We now define another function $g: 2^V \rightarrow \{0,1\}$, given by
+$$g(S) = f(S)/2 = \begin{cases}
+1, &\text{if } 1\leq |S| < 100 \\
+0, &\text{otherwise.}
+\end{cases}$$  
+The integer program $(IP)$ for $g$ given by:
+\begin{align*}
+\min\ \sum_{e\in E} c(e) x_e&\\
+\text{s.t.}\  \sum_{e\in\delta(S)} x_e &\geq g(S) &\forall S \subseteq V \\
+x&\geq 0 \\
+x\in \Z
+\end{align*}
+describes the problem of finding a forest where each connected component is a tree with at least $100$ vertices. From our choice of $g$ it is clear that the connected components of any feasible solution must have at least $100$ vertices, as the cut defined by any smaller component does not satisfy the inequality for $g$. Optimal solutions to $(IP)$ do not have cycles, as we can remove any single edge present in a cycle and preserve connectivity.
+\paragraph{}
+Now we observe that $g$ satisfies property (\ref{eq:1}) from question $1$. Let $S \subseteq V$ and let $A, B \subseteq S$ such that $A \cap B = \emptyset$. Suppose that $g(S)=g(A) = g(B) = 0$. If $g(S\backslash A) = 1$ then $1 \leq |S\backslash A| < 100$. But $B \subseteq S\backslash A$, and hence $|B| \leq |S\backslash A|$. Since $g(B) = 0$ this means $|B| = 0$, that is $B = \emptyset$. Thus $g(S\backslash B) = g(S) = 0$. Similarly we can show if $g(S\backslash B) = 1$ then $g(S\backslash A) = 0$.  Hence property $(\ref{eq:1})$ is satisfied by $g$.
+\paragraph{}
+Consider the following algorithm, $\cA$, for $(E100)$:
+\begin{enumerate}
+\item Set $S = \emptyset$.
+\item Solve $(IP)$ for $g$ using the algorithm of question $1$, obtaining a forest $F$.
+\item For each connected component $T$ of $(V,F)$:
+	\begin{enumerate}
+	\item Compute a matching $M$ on the odd vertices of $T$.
+	\item Shortcut $T\cup M$ obtaining an Euler Tour $A$.
+	\item Set $S = S \cup A$.
+	\end{enumerate}
+\item Return $S$.
+\end{enumerate}
+\paragraph{}
+We claim that $\cA$ is a $2$-approximation algorithm for $(E100)$. In question $1$ we showed that step $2$ can be done in polynomial time. In the lecture notes we have shown that the shortcutting process of each iteration of step $3$ can be done in polynomial time. Further there are a polynomial number of components the shortcutting is done on, so step $3$ also runs in polynomial time. Therefore $\cA$ returns a solution in polynomial time. The solution is feasible since each component is a cycle (hence is eulerian) on at least $100$ vertices.
+\paragraph{}
+We now demonstrate the approximation factor holds. We know from lecture that the shortcutting process of step $3$ produces a set of cycles of cost at most twice that of the original trees in a metric graph. That is,
+$$c(A)\leq 2c(F).$$
+Let $y$ be the optimal dual solution produces by the primal-dual algorithm of step $1$. We have from question $1$ that
+$$c(F) \leq 2\sum_{S\subseteq V} g(S) y_S = \sum_{S\subseteq V} f(S) y_S \leq OPT.$$
+where $OPT$ is the optimal solution to $(LP)$. This follows since the dual to $(LP)$ (with respect to $(E100)$) has the same feasible region as the dual to the linear programming relaxation of $(IP)$. Combining inequalities we see that
+$$c(A) \leq 2c(F) \leq 2 \cdot OPT.$$
+Hence $\cA$ is a $2$-approximation algorithm for $(E100)$.$\blacksquare$
 \end{document}
