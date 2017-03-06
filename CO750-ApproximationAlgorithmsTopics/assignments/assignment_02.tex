@@ -138,14 +138,33 @@ $$\sum_{S\subseteq V} |\delta_F(S)|y_S = \sum_{i} \sum_{S\in \cS_i} |\delta_F(S)
 The inequality follows from our hypothesis, and the last equality follows since $f$ is a $01$-function for which non-zero $y_S$ (minimally violated sets) have $f(S) = 1$. 
 \end{proof}
 \paragraph{}
-Now we intend to show that the hypothesis of the previous lemma holds. Consider some iteration $i$ of $\cA$, and let $A$ be the of edges chosen so far at the end of $i$. Let $B = F \cap A$. Construct a graph $H$ by taking the graph $(V,F)$ and contracting the connected components of $(V,B)$ to vertices. Then $E(H) = F\backslash B$. Let $S_v$ denote the set of vertices in $G$ corresponding to vertex $v \in V(H)$. It is not hard to see that $H$ is a forest. Indeed if $H$ has some cycle $C$ then we can remove any edge in $E(C)$ from $F$ without increasing the number of connected components. 
-
+Now we intend to show that the hypothesis of the previous lemma holds. Consider some iteration $i$ of $\cA$, and let $A$ be the of edges chosen so far at the end of $i$. Let $B = F \cap A$. Construct a graph $H$ by taking the graph $(V,F)$ and contracting the connected components of $(V,B)$ to vertices. Then $E(H) = F\backslash B$. Let $S_v$ denote the set of vertices in $G$ corresponding to vertex $v \in V(H)$. It is not hard to see that $H$ is a forest. Indeed if $H$ has a cycle $C$ then, since for all $v \in V(C)$, $S_v$ is a connected component in $G$, we can find a cycle $C'$ in $G$ by expanding each $v \in V(C)$ and joining its vertices which lie on $C$ by a path in $S_v$. But $F$ is a forest since it is necessary that any edge $e$ be a bridge to survive the reverse deletion step as $f$ is a $01$-function (observe that for all $S$ $|\delta(S) \backslash \{e\}| \geq 1 \geq f(S)$ if $e$ is not a bridge).
+\paragraph{}
+Now let $W\subseteq V(H)$ be the set of vertices of $H$ such that for all $w \in W$, $f(S_w) = 1$. Then $\{S_w : w\in W\} = \cS_i$. Let $d_v$ denote the degree of vertex $v$ in $H$. So the condition
+$$\sum_{S \in \cS_i} |\delta_F(S)| \leq 2w_i$$
+is equivalent to
+$$\sum_{w \in W} d_w \leq 2|W|.$$
 \begin{lemma}\label{lemma:leaves}
-$\sum_{v\in W} d_v \leq 2|W|$.
+$\sum_{w\in W} d_w \leq 2|W|$.
 \end{lemma}
 \begin{proof}
-First we claim that for every connected component $C$ of $H$, at most one leaf of $C$ satisfies $f(S_v) = 0$. Suppose for a contradiction there exists some connected component $C$ of $H$ that has two leaves $v$ and $w$ such that $f(S_v) = f(S_w) = 0$. Let $S_C = \cup_{u\in C} S_u$. Let $e_v, e_w \in F$ be the edges incident to $v$ and $w$ respectively in $H$. By minimality via the reverse deletion step, $F\backslash \{e_v\}$ and $F\backslash \{e_w\}$ are infeasible. But then $f(S_C\backslash S_v) =1 $ and $f(S_C\backslash S_w) = 1$. Since $C$ is a connected component of $H$ we have $f(S_C) = 0$. Hence
+First we claim that for every connected component $C$ of $H$, at most one leaf of $C$ satisfies $f(S_v) = 0$. Suppose for a contradiction there exists some connected component $C$ of $H$ that has two leaves $v$ and $w$ such that $f(S_v) = f(S_w) = 0$. Let $S_C = \cup_{u\in C} S_u$. Let $e_v, e_w \in F$ be the edges incident to $v$ and $w$ respectively in $H$. By minimality via the reverse deletion step, $F\backslash \{e_v\}$ and $F\backslash \{e_w\}$ are infeasible. But then $f(S_C\backslash S_v) =1 $ and $f(S_C\backslash S_w) = 1$ as these are precisely the cuts which would have no incident edges when $e_v$ and $e_w$ are removed respectively (we already know $f(S_v) = f(S_w) = 0$). Since $C$ is a connected component of $H$ we have $f(S_C) = 0$ by the feasibility of $F$. Hence
 $$f(S_v) = f(S_w) = f(S_C) = 0 \quad\text{and}\quad f(S_C\backslash S_v) = f(S_C \backslash S_w) = 1$$
-but $S_v, S_w \subseteq S_C$ and $S_v \cap S_w = \emptyset$. This contradictions property \ref{eq:1}.
+but $S_v, S_w \subseteq S_C$ and $S_v \cap S_w = \emptyset$. This contradiction property (\ref{eq:1}).
+\paragraph{}
+Now we proceed to demonstrate the inequality. First discard isolated vertices of $H$ since they affect the count in no way. Let $c$ denote the number of connected components of $H$. Now we have,
+\begin{align*}
+\sum_{w\in W} d_w &= \sum_{v \in H} d_v - \sum_{v\not\in W} d_v \\
+&= 2|H| -2c - \sum_{v\not\in W} d_v &\text{since $H$ is a forest} \\
+&\leq 2|H| - 2c - 2(|H| - |W| - c) \\
+&= 2|W|.
+\end{align*}
+The inequality follows from our claim which implies all vertices not in $W$ have degree at least $2$ except for one leaf per connected component of $H$, which has degree $1$.
 \end{proof}
+\paragraph{}
+Hence combining lemma \ref{lemma:degree} and lemma \ref{lemma:leaves} with our discussion about $H$ we have shown that $\cA$ returns a solution $F$ with $$c(F) \leq 2\sum_{S\subseteq V} f(S) y_S \leq 2\cdot OPT,$$
+where $OPT$ is the optimal solution of $(IP)$. Therefore we have shown that
+\begin{theorem}
+$\cA$ is a $2$-approximation algorithm for $(IP)$.
+\end{theorem}
 \end{document}
