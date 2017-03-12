@@ -80,7 +80,7 @@ Let $G = (V,E)$ be an undirected graph with edge cost $c: E\rightarrow \R_+$. Co
 \min\ \sum_{e\in E} c(e) x_e&\\
 \text{s.t.}\  \sum_{e\in\delta(S)} x_e &\geq f(S) &\forall S \subseteq V \\
 x&\geq 0\\
-x&\in \Z,
+x&\in \Z^{|E|},
 \end{align*}
 where $f : S \rightarrow \{0,1\}$ satisfies the maximality property:
 $$\text{ for all disjoint } A,B\subseteq V, \text{ we have } f(A \cup B ) \leq \max\{f(A), f(B)\},$$
@@ -198,7 +198,7 @@ The integer program $(IP)$ for $g$ given by:
 \min\ \sum_{e\in E} c(e) x_e&\\
 \text{s.t.}\  \sum_{e\in\delta(S)} x_e &\geq g(S) &\forall S \subseteq V \\
 x&\geq 0 \\
-x\in \Z
+x\in \Z^{|E|}
 \end{align*}
 describes the problem of finding a forest where each connected component is a tree with at least $100$ vertices. From our choice of $g$ it is clear that the connected components of any feasible solution must have at least $100$ vertices, as the cut defined by any smaller component does not satisfy the inequality for $g$. Optimal solutions to $(IP)$ do not have cycles, as we can remove any single edge present in a cycle and preserve connectivity.
 \paragraph{}
@@ -226,4 +226,42 @@ $$c(F) \leq 2\sum_{S\subseteq V} g(S) y_S = \sum_{S\subseteq V} f(S) y_S \leq OP
 where $OPT$ is the optimal solution to $(LP)$. This follows since the dual to $(LP)$ (with respect to $(E100)$) has the same feasible region as the dual to the linear programming relaxation of $(IP)$. Combining inequalities we see that
 $$c(A) \leq 2c(F) \leq 2 \cdot OPT.$$
 Hence $\cA$ is a $2$-approximation algorithm for $(E100)$.$\blacksquare$
+
+%Q3
+\section{}
+\paragraph{}
+Consider again the problem $(IP)$, associated with a graph $G=(V,E)$ with edges costs $c: E \rightarrow \R_+$ given by:
+\begin{align*}
+\min\ \sum_{e\in E} c(e) x_e&\\
+\text{s.t.}\  \sum_{e\in\delta(S)} x_e &\geq f(S) &\forall S \subseteq V \\
+x&\geq 0 \\
+x&\in \Z^{|E|}.
+\end{align*}
+Suppose that $f:2^V \rightarrow \N$ is symmetric, meaning for all $S\subseteq V$:
+$$f(S) = f(V\backslash S)$$
+and that $f$ is subadditive, meaning for all $A,B \subseteq V$:
+$$f(A\cup B) \leq f(A) + f(B).$$
+We also suppose that the graph $G$ is a cycle on $n$ vertices.
+%3a
+\subsection*{a}
+\paragraph{}
+We begin by working towards a compact formulation for $(IP)$ on $G$. Since $G$ is a cycle we may label the vertices of $G$ as $V(G) = \{v_1,\dots, v_n\}$ such that $v_iv_j \in E(G)$ if and only if $$j \equiv i\pm1\mod n$$. For $i, \ell \in [n]$ ($[n] := \{1,\dots, n\}$) we define the path from $i$ of length $\ell$ as 
+$$P(i, \ell) := \{v_i, v_{i+1}, \dots, v_{i + \ell} \}$$
+where addition is taken modulo $n$. We use the convention that when $\ell = n$ we have the entire cycle, and when $\ell = 0$ we have just $v_i$. We define the family of paths on $G$ to as
+$$\cP := \{P(i,\ell) : i, \ell \in [n]\}.$$
+Observe that the size of $\cP$ is polynomial in $n$, in particular $|\cP| = O(n^2)$.
+\begin{lemma}\label{lemma:compact}
+The problem $(IP)$ on $G$ is equivalent to the compact integer program $(\overline{IP})$ given by:
+\begin{align*}
+\min\ \sum_{e\in E} c(e) x_e&\\
+\text{s.t.}\  \sum_{e\in\delta(P)} x_e &\geq f(P) &\forall P \in \cP \\
+x&\geq 0 \\
+x&\in \Z^{|E|}.
+\end{align*}
+\end{lemma}
+\begin{proof}
+
+\end{proof}
+%3b
+\subsection*{b}
 \end{document}
