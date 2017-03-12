@@ -247,9 +247,9 @@ We also suppose that the graph $G$ is a cycle on $n$ vertices.
 \paragraph{}
 We begin by working towards a compact formulation for $(IP)$ on $G$. Since $G$ is a cycle we may label the vertices of $G$ as $V(G) = \{v_1,\dots, v_n\}$ such that $v_iv_j \in E(G)$ if and only if $$j \equiv i\pm1\mod n$$. For $i, \ell \in [n]$ ($[n] := \{1,\dots, n\}$) we define the path from $i$ of length $\ell$ as 
 $$P(i, \ell) := \{v_i, v_{i+1}, \dots, v_{i + \ell} \}$$
-where addition is taken modulo $n$. We use the convention that when $\ell = n$ we have the entire cycle, and when $\ell = 0$ we have just $v_i$. We define the family of paths on $G$ to as
+where addition is taken modulo $n$. We use the convention that when $\ell = n$ we have the entire cycle, and when $\ell = 0$ we have just $v_i$. We define the family of all paths on $G$ as
 $$\cP := \{P(i,\ell) : i, \ell \in [n]\}.$$
-Observe that the size of $\cP$ is polynomial in $n$, in particular $|\cP| = O(n^2)$.
+Observe that the size of $\cP$ is polynomial in $n$, in particular $|\cP| = O(n^2)$ (since $n$ choices for $i$ and $n$ choices for $\ell$ covers all possible $P(i,\ell)$ with some overlap).
 \begin{lemma}\label{lemma:compact}
 The problem $(IP)$ on $G$ is equivalent to the compact integer program $(\overline{IP})$ given by:
 \begin{align*}
@@ -260,7 +260,80 @@ x&\in \Z^{|E|}.
 \end{align*}
 \end{lemma}
 \begin{proof}
-
+Since the objective functions are the same, we need only demonstrate that the feasible regions of $(IP)$ and $(\overline{IP})$ are equal. Since each $P \in \cP$ is a subset of $V$, it is clear that the feasible region of $(IP)$ is a subset of the feasible region of $(\overline{IP})$. So we just have to show the reverse containment.
+\paragraph{}
+Let $x$ be a feasible solution for $(\overline{IP})$. Let $S \subseteq V$. If we consider the connected components of $G[S]$ we observe that they are all paths. Hence there exist disjoint $P_1, \dots, P_k \in \cP$ such that
+$$S = P_1 \dot\cup \dots \dot\cup P_k$$
+where each $P_i$ corresponds to a connected component of $G[S]$. Now we see that
+\begin{align*}
+f(S) &= f(P_1 \dot\cup \dots \dot \cup P_k) \\
+&\leq f(P_1) + \dots + f(P_k) &\text{by subadditivity} \\
+&\leq x(\delta(P_1)) + \dots x(\delta(P_k)) &\text{by feasibility of $x$}.
+\end{align*}
+We claim that the edges incident to each path are disjoint. To see this, suppose that we have $P_i$ and $P_j$ with $\delta(P_i) \cap \delta(P_j) \neq \emptyset$. Let $v_iv_j \in \delta(P_i) \cap \delta(P_j)$. Since $P_i$ and $P_j$ are disjoint we may assume $v_i \in P_i \backslash P_j$ and $v_j \in P_j \backslash P_i$. But then $P_i$ and $P_j$ are connected by $v_iv_j$ violating that they are distinct connected components. So the claim holds. Thus we observe
+\begin{align*}
+f(S) &\leq x(\delta(P_1)) + \dots x(\delta(P_k)) \\
+&= x(\bigcup_{i=1}^k \delta(P_i)) &\text{by disjointness}\\
+&= x(\delta(S)) &\text{by disjointness}.
+\end{align*}
+Therefore $x$ satisfies the cut constraint for all $S$, and hence $x$ is feasible for $(IP)$.
+\end{proof}
+\paragraph{}
+Hence by lemma \ref{lemma:compact} it is equivalent for us to solve $(\overline{IP})$. Now we define a linear programming relaxation for $(\overline{IP})$, which we will denote $(\overline{LP})$:
+\begin{align*}
+\min\ \sum_{e\in E} c(e) x_e&\\
+\text{s.t.}\  \sum_{e\in\delta(P)} x_e &\geq f(P) &\forall P \in \cP \\
+x&\geq 0.
+\end{align*}
+Since $(\overline{LP})$ has a polynomial number of constraints and variables it can be solved in polynomial time. We now define our rounding-based approximation algorithm, $\cA$, for $(\overline{IP})$:
+\begin{enumerate}
+\item Solve $(\overline{LP})$ on $G$  returning solution $\bar{x}$.
+\item Let $\bar{x}_I \in \Z^{|E|}$ denote the integral part of $\bar{x}$. Let $\bar{x}_F \in [0,1)^{|E|}$ denote the fractional part of $\bar{x}$. Thus $\bar{x} = \bar{x}_I + \bar{x}_F.$
+\item Construct solution $x \in \Z^{|E|}$ by rounding. For each $e \in E$ set:
+$$x_e = \begin{cases}
+\bar{x}_I + 1, &\text{if } x_F \geq 0.5 \\
+\bar{x}_I, &\text{otherwise.}
+\end{cases}$$
+\item Return solution $x$.
+\end{enumerate}
+\begin{lemma}\label{lemma:feasible-rounding}
+If $\bar{x}$ is a feasible solution to $(\overline{LP})$ then the $x$ obtained from rounding $\bar{x}$ in step $3$ of $\cA$ is a feasible solution to $(\overline{IP})$.
+\end{lemma}
+\begin{proof}
+It is immediate from the description of step $3$ that $x$ is integral and non-negative. We need only verify the cut constraints. Let $P \in \cP$. Let $v_i, v_j \in P$ be the start and end vertices of $P$. That is,
+$$\delta(P) = \{v_{i-1}v_i,  v_jv_{j+1}\}.$$
+For convenience let $e_i = v_{i-1}v_i$ and let $e_j = v_jv_{j+1}$. Since $\bar{x}$ is feasible for $(\overline{LP})$:
+$$ f(P)\leq \bar{x}(e_i) + \bar{x}(e_j) = \bar{x}_I(e_i) + \bar{x}_F(e_i)  + \bar{x}_I(e_j) + \bar{x}_F(e_j).$$
+Since $f$ maps to $\N$ we have:
+$$f(P) \leq \floor{\bar{x}_I(e_i) + \bar{x}_F(e_i)  + \bar{x}_I(e_j) + \bar{x}_F(e_j)}.$$
+We consider the following cases: Case 1: $\bar{x}_F(e_i) + \bar{x}_F(e_j) < 1$ and Case 2: $\bar{x}_F(e_i) + \bar{x}_F(e_j) \geq 1$.
+\paragraph{}
+In Case 1 the fractional parts vanish during the floor-ing operation and hence
+$$ f(P) \leq \bar{x}_I(e_i) + \bar{x}_I(e_j)  \leq x(e_i) + x(e_j).$$
+In Case 2 we observe that $x_F(e_i) + x_F(e_j) = 1 + \alpha$ for some $\alpha \in [0,1)$. Thus
+$$f(P) \leq \floor{\bar{x}_I(e_i) + \bar{x}_F(e_i)  + \bar{x}_I(e_j) + \bar{x}_F(e_j)} = \bar{x}_I(e_i) + \bar{x}_I(e_j)  + 1.$$
+Since $\bar{x}_F(e_i) + \bar{x}_F(e_j) \geq 1$ at least one of $\bar{x}_F(e_i) ,\bar{x}_F(e_j) $ is greater than or equal to $0.5$. Assume without loss of generality $\bar{x}_F(e_i) \geq 0.5$. Then $x_(e_i) = \bar{x}_I(e_i) + 1$. So
+$$f(P) \leq \bar{x}_I(e_i) + \bar{x}_I(e_j)  + 1 = x(e_i) +\bar{x}(e_j) \leq x(e_i) + x(e_j).$$
+Therefore in either case $x$ satisfies the cut constraint for $P$. Therefore $x$ is feasible for $(\overline{IP})$.
+\end{proof}
+\begin{theorem}
+The algorithm $\cA$ is a $2$-approximation algorithm for $(\overline{IP})$.
+\end{theorem}
+\begin{proof}
+\paragraph{}
+As we have argued above, $(\overline{LP})$ can be solved in polynomial time, so step $1$ can be done in polynomial time. Step $3$ can be done in $O(|E|)$ time. Hence $\cA$ terminates in polynomial time. From lemma \ref{lemma:feasible-rounding} we see that $x$ is feasible for $(\overline{IP})$. It remains to check the approximation factor.
+\paragraph{}
+Let $e \in E$. If $\bar{x}(e) < 0.5$ then we have immediately $x(e) \leq \bar{x}(e)$ and so trivially we have $x(e) \leq 2\bar{x}(e)$. It remains to consider the pertinent case when $\bar{x}(e) \geq 0.5$. Therein we have
+\begin{align*}
+\frac{x(e)}{\bar{x}(e)} &= \frac{\bar{x}_I(e) + 1}{\bar{x}_I(e) + \bar{x}_F(e)} \\
+&\leq  \frac{\bar{x}_I(e) + 1}{\bar{x}_I(e) +0.5} \\
+&= \frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1}.
+\end{align*}
+Since $\frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1}$ is a non-increasing function, it is maximized when $\bar{x}_I(e) = 0$. Hence
+$$\frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1} \leq \frac{2\cdot 0 + 2}{2\cdot 0 + 1} = 2.$$
+Thus $x(e) \leq 2\bar{x}(e)$ as desired. Therefore
+$$\sum_{e\in E}c(e) x(e) \leq \sum_{e \in E}c(e)2\bar{x}(e) = 2\sum_{e\in E}\bar{x}(e) \leq 2\cdot OPT,$$
+where $OPT$ is the cost of an optimal solution to $(\overline{IP})$ (the last inequality follows immediately from $\bar{x}$ being optimal for $(\overline{LP})$. So $\cA$ is a $2$-approximation algorithm.
 \end{proof}
 %3b
 \subsection*{b}
