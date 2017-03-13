@@ -450,5 +450,70 @@ x&\geq 0.
 Let $k = \max_{S\in \cS} \{ |S|\}$.
 %pa
 \subsection*{a}
-
+\paragraph{}
+Let $x$ be a basic optimal solution to $(LP)$. Suppose for a contradiction that for all $S \in \cS$, $x_S < \frac{1}{k}$. We will contradict the fact that the number of tight constraints with respect to $x$ is at least the number of variables, that is $|\cS|$. We will proceed by a token argument. Give a token to each $S \in \cS$. Redistribute the tokens according to the following rules, for each $S \in \cS$:
+\begin{enumerate}
+\item If $x_S = 0$ distribute the token to the non-negativity constraint corresponding to $S$.
+\item Otherwise, for each $e \in S$ distribute $x_S$ token value to $e$.
+\end{enumerate}
+To achieve the desired contradiction, we need to show three things. First, that each $S \in \cS$ gives away at most $1$ token. Second, that each tight constraint receives at least $1$ token. Third, that some $S \in \cS$ keeps some fraction of their token. Together these propositions imply that $|\cS|$ is greater than the number of tight constraints at $x$. We complete the proof by showing these three porpositions.
+\paragraph{}
+We begin with the first proposition. If $x_S = 0$ then $S$ gives away at most one token by rule $1$. If $x_S > 0$ then $S$ gives away $\sum_{e: e\in S} x_S$ token value. Observe that
+$$\sum_{e: e\in S} x_S < \sum_{e: e\in S} \frac{1}{k} = \frac{|S|}{k} \leq 1.$$
+Thus $S$ gives away strictly less than one token. Thus to show proposition three we need only to show that there exists some $S$ with $x_S > 0$. This follows since $x$ is optimal. If all $S$ had $x_S = 0$, since $\cS \neq\emptyset$ we could simply set $x_S = 1$ for one $S \in \cS$ and increase cardinality, contradicting the optimality of $x$. Hence some $S$ exists with $x_S > 0$. Therefore we have show propositions one and three.
+\paragraph{}
+It remains to verify proposition two: that each tight constraint receives at least $1$ token. It is easy to see by rule $1$ that each tight non-negativity constraint receives $1$ token. Now consider a tight constraint corresponding to some $e \in U$. By rule two $e$ receives
+$$\sum_{S : e\in S, x_S > 0} x_S$$
+token value. But this is equal to
+$$\sum_{S: e\in S} x_S$$
+which in turn, since $e$ corresponds to a tight constraint satisfies
+$$\sum_{S: e\in S} x_S = 1.$$
+That is, $e$ receives $1$ token. Therefore every tight constraint receives $1$ token and this completes the proof. $\blacksquare$
+%pb
+\subsection*{b}
+\paragraph{}
+Consider the following iterative rounding algorithm, $\cA$, for packing problem $(P)$:
+\begin{enumerate}
+\item Set $H = \emptyset$, $\cS' = \cS$, and $U' = U$.
+\item While $\cS' \neq \emptyset$ do:
+	\begin{enumerate}
+	\item Let $x$ be a basic optimal solution to $(LP)$ on $\cS'$ and $U'$.
+	\item Let $S \subseteq \cS'$ such that $x_S \geq \frac{1}{k}$ where $k = \max_{S' \in \cS'}\{|S'|\}$ .
+	\item Set $H = H \cup \{S\}$.
+	\item For each $S' \in \cS'$ such that $S' \cap S \neq \emptyset$, remove $S'$ from $\cS'$.
+	\item For each $e \in S$, remove $e$ from $U'$. 
+	\end{enumerate}
+\item Return $H$.
+\end{enumerate}
+\begin{theorem}
+The algorithm $\cA$ is a $\frac{1}{k-1+\frac{1}{k}}$-approximation algorithm for $(P)$.
+\end{theorem}
+\begin{proof}
+\paragraph{}
+To see that $\cA$ terminates observe that by problem $3(a)$, a set $S \subseteq \cS'$ is always found in step $2(b)$, and hence $\cS'$ is eventually empty. To verify that $\cA$ runs in polynomial time, observe that $(LP)$ has a constraint for every $e \in U$ and a variable for every $S \in \cS$. Thus the size of $(LP)$ is polynomial in the size of the input to the problem. Each subsequent $(LP)$ is smaller than the previous, thus $2(a)$ runs in polynomial time. Step $2(b)$ can be done in $O(|\cS|)$ time, $2(c)$ in constant time, $2(d)$ in $O(|\cS|^2)$ time, and step $2(e)$ in $O(k|U|)$ time. These are all very pessimistic estimates,  but in any case they show that each iteration of step $2$ runs in polynomial time. Step $2$ has at most $|\cS|$ iterations and hence runs in polynomial time. Thus $\cA$ terminates in polynomial time.
+\paragraph{}
+Now we verify that the solution returned is feasible for $(P)$. We claim that $\cA$ maintains the invariant that after each iteration of step $2$, for each $S \in \cS'$ and each $T \in H$, $S\cap T = \emptyset$. It is easy to see that this invariant holds before step $2$. Suppose it holds inductively at the beginning of some iteration of step $2$. Let $S$ be the set chosen to enter $H$ in step $2(c)$. By step $2(d)$ each $S' \in \cS'$ that intersects $S$ is removed from$ \cS'$. Since no set in $\cS'$ intersects sets in $H$ by induction, after step $2(d)$ no set in $\cS'$ intersects $H \cup \{S\}$. Therefore the invariant holds. Using this invariant it is easy to see that at each iteration of step $2$ a set is added to $H$ which intersects no other set in $H$. Therefore at the termination of step $2$ the set $H$ returned is feasible for $(P)$.
+\paragraph{}
+It remains to demonstrate the approximation factor. We will bound the increase in $H$ versus the decrease in the fractional solution at each iteration of step $2$. Let $\Delta_i H$ denote the change in $|H|$ from the beginning of iteration $i$ to the end of iteration $i$.. Exactly one set is added to $H$ in each iteration so $\Delta_i H = 1$ for all $i$. Let $x^i$ be the fractional solution to $(LP)$ found at the beginning of iteration $i$. Let $\Delta_i x = \sum_{S \in \cS}x^{i}_S - \sum_{e \in \cS}x^{i+1}_S$, where we take $x^{n+1} = 0$ if step $2$ terminates in $n$ iterations, and take $x^{i}_S = 0$ if $S \not\in \cS'$ during iteration $i$.
+\paragraph{}
+Consider an arbitrary iteration of step $2$ of $\cA$. Let $x^i$ be the solution to $(LP)$ found in step $2(a)$. Let $S$ be the set chosen in step $2(b)$. For each $e \in S$, let $\cS^e = \{S' \in \cS'\backslash\{S\} : e \in S'\}$. Let the collection of deleted sets from step $2(d)$ be $D: = \bigcup_{e\in S} \cS^e$. Then
+$$x(D) \leq \sum_{e \in S} x(\cS^{e}) = \sum_{e\in S} \sum_{S' \in \cS'\backslash\{S\} : e\in S'} x_{S'} \leq \sum_{e \in S} (1 - x_S) = |S|(1-x_S),$$
+with the last inequality following from the corresponding packing constraints of $(LP)$ for each $e$. Now we observe that $x^{i}$ restricted to the variables of $\cS' \backslash (\{S\} \cup D)$ is feasible for $(LP)$ during iteration $i+1$. Hence $$\Delta_i x \leq \sum_{S'\in \cS'} x^i_{S'} - \sum_{S' \in \cS'\backslash (\{S\} \cup D)\}} x^i_{S'} = x_S + x(D).$$
+Thus by our bound on $x(D)$ we have
+\begin{align*}
+\Delta_i x &\leq x_S + |S|(1-x_S) \\
+&= 1 - (1-x_S) + |S|(1-x_S) \\
+&= 1 + (|S| -1)(1-x_S) \\
+&\leq 1+(k - 1)(1-x_S) &\text{by our choice of $k$ in step $2(b)$} \\
+&\leq 1 + (k-1)(1-\frac{1}{k}) &\text{by our choice of $x_S$} \\
+&= 1 + k - 1 - 1 + \frac{1}{k} \\
+&= k-1 + \frac{1}{k}.
+\end{align*}
+So we observe that $$\Delta_i H - \frac{1}{k-1+\frac{1}{k}}\Delta_i x \geq 0.$$
+Summing over each iteration $i$ we obtain
+$$\sum_i \Delta_i H - \frac{1}{k-1+\frac{1}{k}} \sum_i \Delta_i x \geq 0.$$
+Since $\sum_i \Delta_i H = |H|$, and $\sum_i \Delta_i x = \sum_i (x^i - x^{i+1}) = x^1$, we obtain
+$$|H| - \frac{1}{k-1+\frac{1}{k}}x^1 \geq 0.$$
+Since $x^1$ is an optimal solution to $(LP)$ for our original problem $(P)$ this implies that $|H|$ is at least $\frac{1}{k-1+\frac{1}{k}}$ times the cardinality of an optimal solution to $(P)$.
+\end{proof}
 \end{document}
