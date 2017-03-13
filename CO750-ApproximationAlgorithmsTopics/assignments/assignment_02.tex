@@ -435,4 +435,20 @@ Since $\frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1}$ is a non-increasing function
 $$\frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1} \leq \frac{2\cdot 1 + 2}{2\cdot 1 + 1} = \frac{4}{3}.$$
 Thus $x(e) \leq \frac{4}{3}\bar{x}(e)$ as desired. 
 \end{proof}
+
+%Q4
+\section{}
+\paragraph{}
+Consider the packing problem $(P)$: Let $U$ be a set of elements. Let $\cS$ be a non-empty family of sets $S\subseteq U$. The goal is to find a subcollection of $\cS$ of maximum cardinality, subject to the constraint that each element is contained in at most $1$ set.
+\paragraph{}
+We can write a linear programming relaxation for $(P)$, denoted $(LP)$ as
+\begin{align*}
+\max \sum_{S\in\cS} x_S\ & \\
+\text{s.t.} \sum_{S:e\in S} x_S &\leq 1 &\forall e\in U \\
+x&\geq 0.
+\end{align*}
+Let $k = \max_{S\in \cS} \{ |S|\}$.
+%pa
+\subsection*{a}
+
 \end{document}
