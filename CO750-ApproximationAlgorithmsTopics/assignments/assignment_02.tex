@@ -245,11 +245,11 @@ We also suppose that the graph $G$ is a cycle on $n$ vertices.
 %3a
 \subsection*{a}
 \paragraph{}
-We begin by working towards a compact formulation for $(IP)$ on $G$. Since $G$ is a cycle we may label the vertices of $G$ as $V(G) = \{v_1,\dots, v_n\}$ such that $v_iv_j \in E(G)$ if and only if $$j \equiv i\pm1\mod n$$. For $i, \ell \in [n]$ ($[n] := \{1,\dots, n\}$) we define the path from $i$ of length $\ell$ as 
-$$P(i, \ell) := \{v_i, v_{i+1}, \dots, v_{i + \ell} \}$$
-where addition is taken modulo $n$. We use the convention that when $\ell = n$ we have the entire cycle, and when $\ell = 0$ we have just $v_i$. We define the family of all paths on $G$ as
-$$\cP := \{P(i,\ell) : i, \ell \in [n]\}.$$
-Observe that the size of $\cP$ is polynomial in $n$, in particular $|\cP| = O(n^2)$ (since $n$ choices for $i$ and $n$ choices for $\ell$ covers all possible $P(i,\ell)$ with some overlap).
+We begin by working towards a compact formulation for $(IP)$ on $G$. Since $G$ is a cycle we may label the vertices of $G$ as $V(G) = \{v_1,\dots, v_n\}$ such that $v_iv_j \in E(G)$ if and only if $$j \equiv i\pm1\mod n$$. For $v_i, v_j \in V(G)$ we define the path from $v_i$ to $v_j$ as 
+$$P(i, \ell) := \{v_i, v_{i+1}, \dots, v_{j} \}$$
+where addition is taken modulo $n$. We define the family of all paths on $G$ as
+$$\cP := \{P(v_i, v_j) : v_i, v_j \in V(G)\}.$$
+Observe that the size of $\cP$ is polynomial in $n$, in particular $|\cP| = O(n^2)$ (since there are $n$ choices for $v_i$ and $n$ choices for $v_j$).
 \begin{lemma}\label{lemma:compact}
 The problem $(IP)$ on $G$ is equivalent to the compact integer program $(\overline{IP})$ given by:
 \begin{align*}
@@ -262,7 +262,7 @@ x&\in \Z^{|E|}.
 \begin{proof}
 Since the objective functions are the same, we need only demonstrate that the feasible regions of $(IP)$ and $(\overline{IP})$ are equal. Since each $P \in \cP$ is a subset of $V$, it is clear that the feasible region of $(IP)$ is a subset of the feasible region of $(\overline{IP})$. So we just have to show the reverse containment.
 \paragraph{}
-Let $x$ be a feasible solution for $(\overline{IP})$. Let $S \subseteq V$. If we consider the connected components of $G[S]$ we observe that they are all paths. Hence there exist disjoint $P_1, \dots, P_k \in \cP$ such that
+Let $x$ be a feasible solution for $(\overline{IP})$. Let $S \subseteq V$. If $S = V$ then $f(S)= f(V)=0\leq x(\delta(S)) $ (otherwise $(\overline{IP})$ and $(IP)$ are infeasible). By symmetry of $f$ the same holds for $S =\emptyset$. Thus we may assume $\emptyset \subset S \subset V$. If we consider the connected components of $G[S]$ we observe that they are all paths. Hence there exist disjoint $P_1, \dots, P_k \in \cP$ such that
 $$S = P_1 \dot\cup \dots \dot\cup P_k$$
 where each $P_i$ corresponds to a connected component of $G[S]$. Now we see that
 \begin{align*}
@@ -340,38 +340,47 @@ where $OPT$ is the cost of an optimal solution to $(\overline{IP})$ (the last in
 \paragraph{}
 We make an observation about optimal solutions to $(\overline{IP})$ which contain a $0$-valued edge. This will lead us to an approximation algorithm with a better bound than the one found in $3(a)$.
 \begin{lemma}\label{lemma:0edge}
-Let $x$ be an optimal solution $(\bar{IP})$. If there exists $v_iv_{i+1} \in E(G)$ such that $x(v_iv_{i+1}) = 0$ then for all $v_jv_{j+1} \in E(G)$
-$$x(v_jv_{j+1}) = f(P(i+1, \ell)),$$
-where $\ell = j-(i+1)$. Recall that $P(i+1, \ell)$ is the $\ell$ length path starting at $i+1$. In this case $P(i+1,\ell)$ is the path joining $v_{i+1}$ to $v_j$ avoiding $v_i$ and $v_{j+1}$. 
+Let $x$ be an optimal solution $(\bar{IP})$. Suppose there exists $v_iv_{i+1} \in E(G)$ such that $x(v_iv_{i+1}) = 0$. Reindex (by subtracting $i$ from each index) $V(G)$ so that $i = 0$. That is $x(v_0v_1)= 0$. Then for all $v_jv_{j+1} \in E(G)$, $j \neq 0$,
+$$x(v_jv_{j+1}) = f(P(v_1, v_j)).$$
 \end{lemma}
 \begin{proof}
-For each $v_jv_{j+1} \neq v_iv_{i+1} \in E(G)$ let $P(v_jv_{j+1}) = P(i+1, \ell)$ where $\ell = j-(i+1)$. Let $e_j \in E(G)$.  Since $x$ is feasible and $x(v_iv_{i+1}) = 0$,
-$$f(P(e_j)) \leq x(\delta(P(e_j))) = x(e_j) + x(v_iv_{i+1}) = x(e_j).$$
+For each $v_jv_{j+1} \neq v_0v_{1} \in E(G)$. Since $x$ is feasible and $x(v_0v_{1}) = 0$,
+$$f(P(v_1, v_j)) \leq x(\delta(P(v_1,v_j))) = x(v_jv_{j+1}) + x(v_0v_{1}) = x(v_jv_{j+1}).$$
 Suppose for a contradiction there exists $e_j = v_{j}v_{j+1} \in E(G)$ such that
-$$f(P(e_j)) < x(e_j).$$
- Let $x' \in \Z^{|E|}$ we given by
+$$f(P(v_1,v_j)) < x(v_jv_{j+1}).$$
+Since $f(V) = 0$, $j\neq 0$. Let $x' \in \Z^{|E|}$ we given by
 $$x'(e) = \begin{cases}
-x(e), &\text{ if $e\neq e_j$} \\
-f(P(e_j)), &\text{if $e=e_j$}. 
+x(e), &\text{ if $e\neq v_jv_{j+1}$} \\
+f(P(v_1,v_{j})), &\text{if $e=v_jv_{j+1}$}. 
 \end{cases}$$
-We claim that $x'$ is feasible for $(\overline{IP})$. By the feasibility of $x$, we need only check cut constraints involving $e_j$. Let $P \in \cP$ such that $e_j \in \delta(P)$. Let $e$ be the other edge in $\delta(P)$. If $e = v_iv_{i+1}$ then $P = P(i+1, \ell)$ or $P = V\backslash P(i+1, \ell)$. In either case $f(P) = x(e_j)$. So we may assume $e \neq v_iv_{i+1}$. Then either $v_i, v_{i+1} \in P$ or $v_i, v_{i+1} \in V\backslash P$. By the symmetry of $f$ we may assume $v_i, v_{i+1} \in P$ (otherwise proceed by replacing $P$ with $V\backslash P$). Thus since $v_i,v_{i+1} \in P$ and $e_j \in \delta(P)$, we have either $P(e_j) \subseteq P$ or $(V\backslash P(e_j)) \subseteq P$. Again by symmetry we may assume $P(e_j) \subseteq P$. Similarly $(V\backslash P(e)) \subseteq P$. In fact,
-$$P = P(e_j) \cup (V\backslash P(e)).$$
-Hence we have
+We claim that $x'$ is feasible for $(\overline{IP})$. By the feasibility of $x$, we need only check cut constraints involving $v_jv_{j+1}$. Let $v_i \in V(G)$, such that $i \neq j-1$. We consider $P(v_i,v_j)\in \cP$.
+\paragraph{}
+First consider the case where $0 < i \leq j$. In this case $v0,v_1 \in P(v_{j+1}, v_{i-1})$. We compute:
 \begin{align*}
-f(P) &\leq f(P(e_j)) + f(V\backslash P(e)) &\text{by subadditivity}
-\\
-&= f(P(e_j)) + f(P(e)) &\text{ by symmetry} \\
-&\leq f(P(e_j)) + x(\delta(P(e))) &\text{by feasibility of x} \\
-&= f(P(e_j)) + x(e) + x(v_iv_{i+1}) \\
-&= f(P(e_j)) + x(e) \\
-&= x'(e_j) + x'(e) &\text{by definition of $x'$} \\
-&= x'(\delta(P)).
+f(P(v_i,v_j)) &= f(P(v_{j+1}, v_{i-1})) &\text{by symmetry} \\
+&\leq f(P(v_{j+1}, v_0)) + f(P(v_{1},v_{i-1})) &\text{by subadditivity} \\
+&= f(P(v_1, v_j)) + f(P(v_1, v_{i-1})) &\text{by symmetry} \\
+&= x'(v_jv_{j+1}) + f(P(v_1, v_{i-1})) &\text{by definition of $x'$} \\
+&\leq x'(v_jv_{j+1}) + x(v_1v_{i-1}) +x(v_0v_1) &\text{by feasibility of $x$} \\
+&= x'(v_jv_{j+1}) + x'(v_1v_{i-1}) &\text{by definition of $x'$, and $x(v_0v_1)=0$} \\
+&=x'(\delta(P(v_i,v_j))).
 \end{align*}
-Thus $x'$ is feasible. But 
+Hence $x'$ satisfies the cut constraint.
+\paragraph{}
+Now consider the case where $i > j$. In this case $v_0,v_1 \in P(v_i,v_j)$. We compute (similarly):
 \begin{align*}
-\sum_{e\in E} c(e) x(e) &= c(e_j)x(e_j) + \sum_{e\in E\backslash\{e_j\}} c(e)x(e) \\
-&> c(e_j)x'(e_j) +  \sum_{e\in E\backslash\{e_j\}} c(e)x(e) &\text{by contradiction hypothesis and our choice of $x'$} \\
-&= c(e_j)x'(e_j) + \sum_{e\in E\backslash\{e_j\}} c(e)x'(e) &\text{by our choice of $x'$} \\
+f(P(v_i,v_j))&\leq f(P(v_{i}, v_0)) + f(P(v_{1},v_{j})) &\text{by subadditivity} \\
+&= f(P(v_1, v_{i-1})) + f(P(v_1, v_{j})) &\text{by symmetry} \\
+&= f(P(v_1,v_{i-1})) + x'(v_jv_{j+1}) &\text{by definition of $x'$} \\
+&\leq x(v_1v_{i-1}) + x(v_0v_1) + x'(v_jv_{j+1}) &\text{by feasibility of $x$} \\
+&= x'(v_jv_{j+1}) + x'(v_1v_{i-1}) &\text{by definition of $x'$, and $x(v_0v_1)=0$} \\
+&=x'(\delta(P(v_i,v_j))).
+\end{align*}
+Therefore in either case $x'$ is feasible. But
+\begin{align*}
+\sum_{e\in E} c(e) x(e) &= c(v_jv_{j+1})x(v_jv_{j+1}) + \sum_{e\in E\backslash\{v_jv_{j+1}\}} c(e)x(e) \\
+&> c(v_jv_{j+1})x'(v_jv_{j+1}) +  \sum_{e\in E\backslash\{v_jv_{j+1}\}} c(e)x(e) &\text{since $x'(v_jv_{j+1}) = f(P(v_1,v_j) < x(v_jv_{j+1})$} \\
+&= c(v_jv_{j+1})x'(v_jv_{j+1}) + \sum_{e\in E\backslash\{v_jv_{j+1}\}} c(e)x'(e) &\text{by our choice of $x'$} \\
 &= \sum_{e\in E} c(e) x'(e),
 \end{align*}
 contradicting the optimality of $x$.
