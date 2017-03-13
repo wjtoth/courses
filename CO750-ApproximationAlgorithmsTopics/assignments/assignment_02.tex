@@ -386,5 +386,53 @@ Therefore in either case $x'$ is feasible. But
 contradicting the optimality of $x$.
 \end{proof}
 \paragraph{}
-This lemma tells us precisely how to construct optimal solutions to $(\overline{IP})$ in the presence of $0$-valued edges.
+This lemma tells us precisely how to construct optimal solutions to $(\overline{IP})$ in the presence of $0$-valued edges. The idea for our algorithm is to construct from this lemma each potential solution with a $0$-valued edge, as well as an approximate solution with no $0$-valued edges, and return the best possible of those $|E|+1$ solutions.
+\paragraph{}
+In our algorithm we will use the following linear program, which is $(\overline{LP})$ with the constraint $x \geq 1$ instead of $x\geq 0$. We define the linear program $(\tilde{LP})$ as
+\begin{align*}
+\min\ \sum_{e\in E} c(e) x_e&\\
+\text{s.t.}\  \sum_{e\in\delta(P)} x_e &\geq f(P) &\forall P \in \cP \\
+x&\geq 1.
+\end{align*}
+\paragraph{}
+Consider the following improved algorithm for solving $(\overline{IP})$ which we will denote by $\cA'$:
+\begin{enumerate}
+\item Let $E' = \emptyset$. For each $e=v_iv_{i+1} \in E$:
+	\begin{enumerate}
+	\item Construct the solution $x^{e}$ as follows.
+	\item Set $x^{e}(e)=0$.
+	\item For each $v_jv_{j+1} \neq e$ Set $x^{e}(v_jv_{j+1}) = f(P(v_{i+1},v_j))$.
+	\item If $x^{e}$ is feasible for $(\overline{IP})$ add $e$ to $E'$.
+	\end{enumerate} 
+\item Solve $(\tilde{LP})$ on $G$  returning solution $\bar{x}$.
+\item Let $\bar{x}_I \in \Z^{|E|}$ denote the integral part of $\bar{x}$. Let $\bar{x}_F \in [0,1)^{|E|}$ denote the fractional part of $\bar{x}$. Thus $\bar{x} = \bar{x}_I + \bar{x}_F.$
+\item Construct solution $x \in \Z^{|E|}$ by rounding. For each $e \in E$ set:
+$$x_e = \begin{cases}
+\bar{x}_I + 1, &\text{if } x_F \geq 0.5 \\
+\bar{x}_I, &\text{otherwise.}
+\end{cases}$$
+\item Return $\arg\min\{c^Tx : x \in \{x^e : e \in E'\} \cup \{x\}\}$.
+\end{enumerate}
+\begin{theorem}
+The algorithm $\cA'$ is a $\frac{4}{3}$-approximation algorithm for $(\overline{IP})$.
+\end{theorem}
+\begin{proof}
+Step $1$ can be done in $O(|E|)$ iterations, each using $O(|E|)$ calls to the (we may assume polynomial time) oracle for $f$, and hence runs in polynomial time. Step $2$ can be done in polynomial time via the same argument used for $(\overline{LP})$. Step $4$ can be done in $O(|E|)$ time, as can step $5$. Therefore $\cA'$ runs in polynomial time. 
+\paragraph{}
+By definition, for each $e \in E'$, $x^{e}$ is feasible. Since the feasible region of $(\tilde{LP})$ is a subset of the feasible region of $(\overline{LP})$, $\bar{x}$ is feasible for $(\overline{LP})$ and therefore by lemma \ref{lemma:feasible-rounding} $x$ is feasible for $(\overline{IP})$ as Step $4$ of $\cA'$ is the same rounding procedure as step $3$ of $\cA$. Hence $\cA'$ returns a feasible solution for $(\overline{IP})$.
+\paragraph{}
+If there exists an optimal solution $x^*$ for $(\overline{IP})$ and $e \in E$ such that $x^*(e) = 0$ then $x^*(e) = x^{e}$ by lemma \ref{lemma:0edge} and $e \in E'$. Thus in step $5$ $\cA'$ returns a solution of cost at most that of $x^{e} = x^*$ which is therefore optimal. Trivially such a solution is of cost at most $\frac{4}{3}$ that of optimal.
+\paragraph{}
+It remains to consider the case where no optimal solution $x^*$ for $(\overline{IP})$ has $e\in E$ such that $x^*(e) = 0$. Since $x^*$ is integral and no component is zero optimal solutions for $(\overline{IP})$ satisfy the constraint $x\geq 1$. Therefore $(\tilde{LP})$ is a relaxation of $(\overline{IP})$.
+\paragraph{}
+Now it suffices to show that the returned solution $x$ has cost at most $\frac{4}{3}$ that of $\bar{x}$. Let $e \in E$. If $\bar{x}(e) < 0.5$ then we have immediately $x(e) \leq \bar{x}(e)$ and so trivially we have $x(e) \leq \frac{4}{3}\bar{x}(e)$. It remains to consider the pertinent case when $\bar{x}(e) \geq 0.5$. Therein we have
+\begin{align*}
+\frac{x(e)}{\bar{x}(e)} &= \frac{\bar{x}_I(e) + 1}{\bar{x}_I(e) + \bar{x}_F(e)} \\
+&\leq  \frac{\bar{x}_I(e) + 1}{\bar{x}_I(e) +0.5} \\
+&= \frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1}.
+\end{align*}
+Since $\frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1}$ is a non-increasing function, it is maximized when $\bar{x}_I(e) = 1$ (since $\bar{x}_I(e) \geq 1$). Hence
+$$\frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1} \leq \frac{2\cdot 1 + 2}{2\cdot 1 + 1} = \frac{4}{3}.$$
+Thus $x(e) \leq \frac{4}{3}\bar{x}(e)$ as desired. 
+\end{proof}
 \end{document}
