@@ -596,7 +596,7 @@ Let $Z_i$ be the undirected full component containing $e$. We proceed by case an
 \paragraph{}
 We begin with Case $1$. This case is trivial: with probability $1$, $e$ is the edge connecting the terminals. Thus by lemma \ref{lemma:20} $E[D(e)] = 1\cdot H_1 \cdot M = M \leq \frac{5}{4} M.$
 \paragraph{}
-Now we consider Case $2$. Suppose $Z_i$ is a $k$-restricted star where $k \in \{3,4\}$. Then with probability $\frac{1}{k}$ (when $e$ is the edge not in $\tilde{B}$), $|W(e)| = k-1$. With probability $1-\frac{1}{k}$), $|W(e)| = 1$. Thus by lemma \ref{lemma:20} we have
+Now we consider Case $2$. Suppose $Z_i$ is a $k$-restricted star where $k \in \{3,4\}$. Then with probability $\frac{1}{k}$ (when $e$ is the edge not in $\tilde{B}$), $|W(e)| = k-1$. With probability $(1-\frac{1}{k}$), $|W(e)| = 1$. Thus by lemma \ref{lemma:20} we have
 \begin{align*}E[D(e)] &\leq \frac{1}{k} H_{k-1} M + (1-\frac{1}{k})H_1 M
 \\&=\begin{cases}
 (\frac{1}{3}H_2 + \frac{2}{3})M, &\text{if $k = 3$} \\
@@ -612,9 +612,9 @@ Now we consider Case $2$. Suppose $Z_i$ is a $k$-restricted star where $k \in \{
 Finally we consider Case $3$. By lemma \ref{lemma:four} we have the following structure.Let $s_1,s_2$ be the two adjacent Steiner Nodes of $Z_i$ and let $r_1,r_2$ be the terminals adjacent to $s_1$, and let $r_3,r_4$ be the terminals adjacent to $s_2$. Suppose without loss of generality that $s_1r_1, s_2r_4 \in \tilde{B}$. The the probability that $|W(e)| = 1$ is $\frac{3}{5}$ (such edges are $s_1r_1, s_2r_4$ and $s_1s_2$). The probability that $|W(e)| = 2$ is $\frac{2}{5}$ (such edges are $s_1r_2$ and $s_2r_3$). Thus by lemma \ref{lemma:20} we have
 \begin{align*}
 E[D(e)] &\leq \frac{3}{5}H_1M + \frac{2}{5}H_2M \\
-&= (\frac{3}{5} + \frac{2}{10}) M \\
-&= (\frac{8}{10})M \\
-&= \frac{4}{5}M.
+&= (\frac{3}{5} + \frac{3}{5}) M \\
+&= (\frac{6}{5})M \\
+&\leq \frac{5}{4}M.
 \end{align*} 
 Therefore the expectation holds in each case as desired.
 \end{proof}
@@ -637,4 +637,19 @@ E[\sum_{t\geq 1} c(C^t)] &\leq \sum_{t\geq 1} \frac{1}{M}E[opt^t_f] \\
 
 %Q6
 \section{}
+\paragraph{}
+In the metric Travelling Salesman Problem $(TSP)$ we are given a metric graph $G=(V,E)$ with edge costs $c: E\rightarrow \R_+$. The goal is to find a minimum cost Hamilton Cycle visiting each $v \in V$. The Held-Karp relaxation for $(TSP)$, denoted $(HK)$ is
+\begin{align*}
+\min \sum_e c(e) x_e& \\
+\text{s.t.} x(\delta(v)) &= 2 &\forall v \in V \\
+x(\delta(S)) &\geq 2 &\forall S \subseteq V \\
+x &\geq 0.
+\end{align*}
+Let $n = |V|$. Let $x$ be a basic solution to $(HK)$. Our goal is to show that $x$ has $O(n)$ non-zero variables. The number of variables in $x$ correspond to a maximum size set of linearly independent tight constraints. Therefore the non-zero variables correspond to a collection $\cL \subseteq 2^V$ such that $x(\delta(S) = 2$ for all $S \in \cL$, and $\{\chi(S): S \in \cL\}$ is maximal linearly independent and $\chi(S)$ denotes the incidence vector of $S$. Hence we need to show that $|\cL| = O(n)$.
+\paragraph{}
+The constant function $f: 2^V \rightarrow \{2\}$ is trivially weakly supermodular. Therefore we may invoke a theorem from class saying we may choose $\cL$ to be a laminar family.
+\paragraph{}
+To show $|\cL| = O(n)$ we proceed by induction on $|V|$, the size of the ground set. The claim is trivial for $|V| = 1$: $|\cL| \leq |V|  = O(n)$. Suppose $|V| >1$. For the inductive hypothesis suppose for all $V' \subseteq V$, any laminar family on ground set $V'$ has size $O(|V'|)$. Let $S \in \cL\backslash\{V\}$ such that $|S|$ is maximal. We may assume such $S$ exists, as otherwise $|\cL| = 1 = O(n)$ as desired. Since $\cL$ is laminar, for all $S' \in \cL \backslash \{V\}$ either $S' \subseteq S$ or $S' \cap S = \emptyset$. Let $\cL' = \{ S' \in \cL\backslash\{V\} : S' \subseteq S\}$ and let $\cL'' = \{S' \in \cL\backslash \{V\} : S'\cap S \neq \emptyset\}$. Since $\cL'$ and $\cL''$ are subsets of $\cL$ they are both laminar families. The ground set of $\cL'$ is $S$, and the ground set of $\cL''$ is $V\backslash S$. Therefore by the inductive hypothesis $|\cL'| = O(|S|)$ and $|\cL''| = O(|V\backslash S|)$. Also, $\cL \subseteq \{V\} \cup \cL' \cup \cL''$. Then 
+$$|\cL| \leq |\{V\}| + |\cL'| + |\cL''| = 1 + O(|S|) + O(|V\backslash S|) = O(|V\backslash S| + |S| + 1) = O(|V|).$$
+Hence by induction $|\cL| = O(n)$ as desired. $\blacksquare$
 \end{document}
