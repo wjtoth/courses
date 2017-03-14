@@ -510,10 +510,43 @@ Thus by our bound on $x(D)$ we have
 &= k-1 + \frac{1}{k}.
 \end{align*}
 So we observe that $$\Delta_i H - \frac{1}{k-1+\frac{1}{k}}\Delta_i x \geq 0.$$
-Summing over each iteration $i$ we obtain
+Summing over each iteration $i$ (and taking $k$ to be the initial $k$ from the first iteration, since $k$ is non-increasing as the algorithm proceeds) we obtain
 $$\sum_i \Delta_i H - \frac{1}{k-1+\frac{1}{k}} \sum_i \Delta_i x \geq 0.$$
 Since $\sum_i \Delta_i H = |H|$, and $\sum_i \Delta_i x = \sum_i (x^i - x^{i+1}) = x^1$, we obtain
 $$|H| - \frac{1}{k-1+\frac{1}{k}}x^1 \geq 0.$$
 Since $x^1$ is an optimal solution to $(LP)$ for our original problem $(P)$ this implies that $|H|$ is at least $\frac{1}{k-1+\frac{1}{k}}$ times the cardinality of an optimal solution to $(P)$.
+\end{proof}
+
+%Q5
+\section{}
+\paragraph{}
+Academic Honesty Disclaimer: In this problem I rely heavily on her paper Dr. Sanita gave us on Learn: Steiner Tree Approximation via Iterative Randomized Rounding.
+\paragraph{}
+Given a metric graph $G=(V,E)$ with edge costs $c:E\rightarrow \R_+$ and a set of terminals $R\subseteq V$, the $k$-restricted Steiner Tree problem asks for a tree of minimum cost spanning $R$ whose full components each contain at most $k$ terminals. From class the following algorithm was shown to be a $\ln(4)$-approximation algorithm for this problem.
+\paragraph{}
+Let $\cC$ denote the set of all directed components which can be obtained in the following way. Let $R' \subseteq R$ such that $|R'| \leq k$. and let $r' \in R'$. Let $C$ be the minimum cost Steiner tree on $R'$, and direct all edges of $C$ towards $r'$. Then $r'$ denotes the unique sink terminal in this case. A component $C \in \cC$ ``crosses" $U\subseteq R$ if $C$ has at least one source in $U$ and its unique sink in $R\backslash U$. The set $\delta^+(U)$ will denote the set of $C \in \cC$ which cross $U$. Fix an arbitrary root terminal $r \in R$. The directed cut relaxation $(k-DCR)$ is
+\begin{align*}
+\min \sum_{C\in \cC} c(C)x_C& \\
+\text{s.t.} \sum_{C\in\delta^+(U)} x_C &\geq 1 &\forall U\subseteq R\backslash \{r\}, U\neq \emptyset \\
+x&\geq 0.
+\end{align*}
+As argued in class this is a relaxation of the $k$-restricted Steiner tree problem. The iterative randomized rounding algorithm, $\cA$, for this problem is:
+\begin{enumerate}
+\item For $t =1,2,\dots$
+\begin{enumerate}
+\item Solve $(k-DCR)$ on $G$ to obtain $x^t$.
+\item Sample one component $C^t$ where $C^t=C$ with probability $x^t_C/\sum_{C\in\cC} x^t_C$. Contract $C^t$ into its sink in $G$.
+\item If a single terminal remains, return $\bigcup_{i=1}^t C^i$.
+\end{enumerate}
+\end{enumerate}
+\paragraph{}
+Since we already know from class that $\cA$ is a $\ln(4)$-approximation algorithm for $k$-restricted Steiner Tree, it only remains to verify the new approximation factor of $\frac{5}{4}$ when we fix $k=4$. Let $S^*$ be an optimal $4$-restricted Steiner Tree with undirected full components $Z_1, \dots, Z_\ell$. We will start by studying the structure of each $Z_i$. The first observation, made in the paper, is that we may assume Steiner Nodes of $S^*$ have degree at least $3$. This follows since $G$ is a metric graph we may shortcut any Steiner Node of degree two by connecting its endpoints and removing it. By the triangle inequality this shortcutting operation does not increase the cost of the solution.
+\paragraph{}
+We now move to observations about each $Z_i$.
+\begin{lemma}\label{lemma:dk}
+If $Z_i$ is a $k$-component for any $k\leq 4$, then the degree of any Steiner Node in $Z_i$ is at most $k$.
+\end{lemma}
+\begin{proof}
+Suppose for a contradiction that $Z_i$ has a Steiner Node $s$ of degree greater than $k$. Then $s$ has at least $k+1$ neighbours: $v_1, \dots, v_{k+1}$. Since $Z_i$ is a tree, there is a unique path from $s$ to each of the $k$ terminals of $Z_i$, $r_1, \dots, r_k$. Each path $P_{s,r_j}$ can use only one of $v_1,\dots, v_{k+1}$. If they use more, say first $v_i$ and then next $v_j$ then the subpath $r,v_i,\dots,v_j$ with the edge $v_js$ forms a cycle in $Z_i$ contradicting that $Z_i$ is a tree. But then one of $v_1, \dots, v_{k+1}$ is not used on any path from $s$ to any of $r_1, \dots, r_k$. The edge from $s$ to the unused $v_j$ can then be removed from $Z_i$ without disconnecting the terminals, contradicting optimality.
 \end{proof}
 \end{document}
