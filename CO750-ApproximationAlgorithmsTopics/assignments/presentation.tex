@@ -91,8 +91,10 @@ for some weights $\alert{ w: E(G) \rightarrow \Q_+}$.
 \begin{frame}
 \frametitle{Fractional Matchings}
 We can extend this to the fractional matching case:
-$$FM_{G} = \{x \in \R^m_+ : x(\delta(u)) \leq 1, \forall u \in V(G)\}$$
-By defining for all $\alert{x, y \in FM_{G}}$:
+$$FM_{G} = \{x \in \R^m_+ : x(\delta(u)) \leq 1, \forall u \in V(G)\}.$$
+We extend the voting function by defining for all $\alert{x \in FM_G}$, for all $\alert{u,v' \in V(G)}$:
+$$vote_u(x,v) = \sum_{v\in V(G)} x_{uv} vote_u(v,v').$$ 
+We extend the vote aggregation defining for all $\alert{x, y \in FM_{G}}$:
 $$\Delta(x,y) = \sum_{u \in V(G)} \sum_{uv, uv' \in \delta(u)} x_{uv}y_{uv'} vote_u(v,v').$$
 The polytope of all fractional popular matchings is 
 $$P_G := \{x \in FM_{G}: \Delta(x,y) \geq 0, \forall y \in FM_G\}.$$
@@ -100,7 +102,7 @@ $$P_G := \{x \in FM_{G}: \Delta(x,y) \geq 0, \forall y \in FM_G\}.$$
 
 \begin{frame}
 \frametitle{Mixed Popular Matching Example}
-In bipartite graphs, each $\alert{x \in FM_G}$ is a convex combination of matchings. But observe that each $x\in P_G$ need not be a convex combination of popular matchings.
+In bipartite graphs, each $\alert{x \in FM_G}$ is a convex combination of matchings. But observe that each $\alert{x\in P_G}$ need not be a convex combination of popular matchings.
 \begin{columns}[T] % align columns
 \begin{column}{.48\textwidth}
 \begin{figure}
@@ -127,9 +129,12 @@ $$ $$
 Say each $\alert{a_i}$ has preferences $\alert{b_1 > b_2}$, and each $\alert{b_i}$ has preferences $\alert{a_1 > a_2 > a_0}$.
 \end{column}%
 \end{columns}
-
-
 Solid black edges $\alert{S}$ is the only popular matching. If we let $\alert{M}$ be the solid red edges then $$\Pi= \{(S,\frac{1}{2}), (M,\frac{1}{2})\}$$ is a fractional popular matching.
+\end{frame}
+
+\begin{frame}
+\frametitle{Extended Formulation}
+
 \end{frame}
 \section{Integrality of $P_G$ in a special case}
 
