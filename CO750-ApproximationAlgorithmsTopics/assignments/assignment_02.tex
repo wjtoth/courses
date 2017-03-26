@@ -138,7 +138,7 @@ $$\sum_{S\subseteq V} |\delta_F(S)|y_S = \sum_{i} \sum_{S\in \cS_i} |\delta_F(S)
 The inequality follows from our hypothesis, and the last equality follows since $f$ is a $01$-function for which non-zero $y_S$ (minimally violated sets) have $f(S) = 1$. 
 \end{proof}
 \paragraph{}
-Now we intend to show that the hypothesis of the previous lemma holds. Consider some iteration $i$ of $\cA$, and let $A$ be the of edges chosen so far at the end of $i$. Let $B = F \cap A$. Construct a graph $H$ by taking the graph $(V,F)$ and contracting the connected components of $(V,B)$ to vertices. Then $E(H) = F\backslash B$. Let $S_v$ denote the set of vertices in $G$ corresponding to vertex $v \in V(H)$. It is not hard to see that $H$ is a forest. Indeed if $H$ has a cycle $C$ then, since for all $v \in V(C)$, $S_v$ is a connected component in $G$, we can find a cycle $C'$ in $G$ by expanding each $v \in V(C)$ and joining its vertices which lie on $C$ by a path in $S_v$. But $F$ is a forest since it is necessary that any edge $e$ be a bridge to survive the reverse deletion step as $f$ is a $01$-function (observe that for all $S$ $|\delta(S) \backslash \{e\}| \geq 1 \geq f(S)$ if $e$ is not a bridge).
+Now we intend to show that the hypothesis of the previous lemma holds. Consider some iteration $i$ step $2$ of $\cA$, and let $A$ be the of edges chosen so far at the end of $i$. Let $B = F \cap A$. Construct a graph $H$ by taking the graph $(V,F)$ and contracting the connected components of $(V,B)$ to vertices. Then $E(H) = F\backslash B$. Let $S_v$ denote the set of vertices in $G$ corresponding to vertex $v \in V(H)$. It is not hard to see that $H$ is a forest. Indeed if $H$ has a cycle $C$ then, since for all $v \in V(C)$, $S_v$ is a connected component in $G$, we can find a cycle $C'$ in $G$ by expanding each $v \in V(C)$ and joining its vertices which lie on $C$ by a path in $S_v$. But $F$ is a forest since it is necessary that any edge $e$ be a bridge to survive the reverse deletion step as $f$ is a $01$-function (observe that for all $S$ $|\delta(S) \backslash \{e\}| \geq 1 \geq f(S)$ if $e$ is not a bridge).
 \paragraph{}
 Now let $W\subseteq V(H)$ be the set of vertices of $H$ such that for all $w \in W$, $f(S_w) = 1$. Then $\{S_w : w\in W\} = \cS_i$. Let $d_v$ denote the degree of vertex $v$ in $H$. So the condition
 $$\sum_{S \in \cS_i} |\delta_F(S)| \leq 2w_i$$
@@ -245,7 +245,7 @@ We also suppose that the graph $G$ is a cycle on $n$ vertices.
 %3a
 \subsection*{a}
 \paragraph{}
-We begin by working towards a compact formulation for $(IP)$ on $G$. Since $G$ is a cycle we may label the vertices of $G$ as $V(G) = \{v_1,\dots, v_n\}$ such that $v_iv_j \in E(G)$ if and only if $$j \equiv i\pm1\mod n$$. For $v_i, v_j \in V(G)$ we define the path from $v_i$ to $v_j$ as 
+We begin by working towards a compact formulation for $(IP)$ on $G$. Since $G$ is a cycle we may label the vertices of $G$ as $V(G) = \{v_1,\dots, v_n\}$ such that $v_iv_j \in E(G)$ if and only if $$j \equiv i\pm1\mod n.$$ For $v_i, v_j \in V(G)$ we define the path from $v_i$ to $v_j$ as 
 $$P(i, \ell) := \{v_i, v_{i+1}, \dots, v_{j} \}$$
 where addition is taken modulo $n$. We define the family of all paths on $G$ as
 $$\cP := \{P(v_i, v_j) : v_i, v_j \in V(G)\}.$$
@@ -323,7 +323,7 @@ The algorithm $\cA$ is a $2$-approximation algorithm for $(\overline{IP})$.
 \paragraph{}
 As we have argued above, $(\overline{LP})$ can be solved in polynomial time, so step $1$ can be done in polynomial time. Step $3$ can be done in $O(|E|)$ time. Hence $\cA$ terminates in polynomial time. From lemma \ref{lemma:feasible-rounding} we see that $x$ is feasible for $(\overline{IP})$. It remains to check the approximation factor.
 \paragraph{}
-Let $e \in E$. If $\bar{x}(e) < 0.5$ then we have immediately $x(e) \leq \bar{x}(e)$ and so trivially we have $x(e) \leq 2\bar{x}(e)$. It remains to consider the pertinent case when $\bar{x}(e) \geq 0.5$. Therein we have
+Let $e \in E$. If $\bar{x}_F(e) < 0.5$ then we have immediately $x(e) \leq \bar{x}(e)$ and so trivially we have $x(e) \leq 2\bar{x}(e)$. It remains to consider the pertinent case when $\bar{x}_F(e) \geq 0.5$. Therein we have
 \begin{align*}
 \frac{x(e)}{\bar{x}(e)} &= \frac{\bar{x}_I(e) + 1}{\bar{x}_I(e) + \bar{x}_F(e)} \\
 &\leq  \frac{\bar{x}_I(e) + 1}{\bar{x}_I(e) +0.5} \\
@@ -332,7 +332,7 @@ Let $e \in E$. If $\bar{x}(e) < 0.5$ then we have immediately $x(e) \leq \bar{x}
 Since $\frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1}$ is a non-increasing function, it is maximized when $\bar{x}_I(e) = 0$. Hence
 $$\frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1} \leq \frac{2\cdot 0 + 2}{2\cdot 0 + 1} = 2.$$
 Thus $x(e) \leq 2\bar{x}(e)$ as desired. Therefore
-$$\sum_{e\in E}c(e) x(e) \leq \sum_{e \in E}c(e)2\bar{x}(e) = 2\sum_{e\in E}\bar{x}(e) \leq 2\cdot OPT,$$
+$$\sum_{e\in E}c(e) x(e) \leq \sum_{e \in E}c(e)2\bar{x}(e) = 2\sum_{e\in E}c(e)\bar{x}(e) \leq 2\cdot OPT,$$
 where $OPT$ is the cost of an optimal solution to $(\overline{IP})$ (the last inequality follows immediately from $\bar{x}$ being optimal for $(\overline{LP})$. So $\cA$ is a $2$-approximation algorithm.
 \end{proof}
 %3b
@@ -421,11 +421,11 @@ Step $1$ can be done in $O(|E|)$ iterations, each using $O(|E|)$ calls to the (w
 \paragraph{}
 By definition, for each $e \in E'$, $x^{e}$ is feasible. Since the feasible region of $(\tilde{LP})$ is a subset of the feasible region of $(\overline{LP})$, $\bar{x}$ is feasible for $(\overline{LP})$ and therefore by lemma \ref{lemma:feasible-rounding} $x$ is feasible for $(\overline{IP})$ as Step $4$ of $\cA'$ is the same rounding procedure as step $3$ of $\cA$. Hence $\cA'$ returns a feasible solution for $(\overline{IP})$.
 \paragraph{}
-If there exists an optimal solution $x^*$ for $(\overline{IP})$ and $e \in E$ such that $x^*(e) = 0$ then $x^*(e) = x^{e}$ by lemma \ref{lemma:0edge} and $e \in E'$. Thus in step $5$ $\cA'$ returns a solution of cost at most that of $x^{e} = x^*$ which is therefore optimal. Trivially such a solution is of cost at most $\frac{4}{3}$ that of optimal.
+If there exists an optimal solution $x^*$ for $(\overline{IP})$ and $e \in E$ such that $x^*(e) = 0$ then $x^* = x^{e}$ by lemma \ref{lemma:0edge} and $e \in E'$. Thus in step $5$, $\cA'$ returns a solution of cost at most that of $x^{e} = x^*$ which is therefore optimal. Trivially such a solution is of cost at most $\frac{4}{3}$ that of optimal.
 \paragraph{}
-It remains to consider the case where no optimal solution $x^*$ for $(\overline{IP})$ has $e\in E$ such that $x^*(e) = 0$. Since $x^*$ is integral and no component is zero optimal solutions for $(\overline{IP})$ satisfy the constraint $x\geq 1$. Therefore $(\tilde{LP})$ is a relaxation of $(\overline{IP})$.
+It remains to consider the case where no optimal solution $x^*$ for $(\overline{IP})$ has $e\in E$ such that $x^*(e) = 0$. Since $x^*$ is integral and no component is zero optimal solutions for $(\overline{IP})$ satisfy the constraint $x\geq 1$. Therefore $(\tilde{LP})$ is a relaxation of $(\overline{IP})$ in this case.
 \paragraph{}
-Now it suffices to show that the returned solution $x$ has cost at most $\frac{4}{3}$ that of $\bar{x}$. Let $e \in E$. If $\bar{x}(e) < 0.5$ then we have immediately $x(e) \leq \bar{x}(e)$ and so trivially we have $x(e) \leq \frac{4}{3}\bar{x}(e)$. It remains to consider the pertinent case when $\bar{x}(e) \geq 0.5$. Therein we have
+Now it suffices to show that the returned solution $x$ has cost at most $\frac{4}{3}$ that of $\bar{x}$. Let $e \in E$. If $\bar{x}_F(e) < 0.5$ then we have immediately $x(e) \leq \bar{x}(e)$ and so trivially we have $x(e) \leq \frac{4}{3}\bar{x}(e)$. It remains to consider the pertinent case when $\bar{x}_F(e) \geq 0.5$. Therein we have
 \begin{align*}
 \frac{x(e)}{\bar{x}(e)} &= \frac{\bar{x}_I(e) + 1}{\bar{x}_I(e) + \bar{x}_F(e)} \\
 &\leq  \frac{\bar{x}_I(e) + 1}{\bar{x}_I(e) +0.5} \\
@@ -433,7 +433,9 @@ Now it suffices to show that the returned solution $x$ has cost at most $\frac{4
 \end{align*}
 Since $\frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1}$ is a non-increasing function, it is maximized when $\bar{x}_I(e) = 1$ (since $\bar{x}_I(e) \geq 1$). Hence
 $$\frac{2\bar{x}_I(e) + 2}{2\bar{x}_I(e) + 1} \leq \frac{2\cdot 1 + 2}{2\cdot 1 + 1} = \frac{4}{3}.$$
-Thus $x(e) \leq \frac{4}{3}\bar{x}(e)$ as desired. 
+Thus $x(e) \leq \frac{4}{3}\bar{x}(e)$ as desired. Therefore
+$$\sum_{e\in E}c(e) x(e) \leq \sum_{e \in E}c(e)\frac{4}{3}\bar{x}(e) = \frac{4}{3}\sum_{e\in E}c(e)\bar{x}(e)$$
+and the approximation factor follows.
 \end{proof}
 
 %Q4
@@ -466,7 +468,7 @@ It remains to verify proposition two: that each tight constraint receives at lea
 $$\sum_{S : e\in S, x_S > 0} x_S$$
 token value. But this is equal to
 $$\sum_{S: e\in S} x_S$$
-which in turn, since $e$ corresponds to a tight constraint satisfies
+which in turn, since $e$ corresponds to a tight constraint, satisfies
 $$\sum_{S: e\in S} x_S = 1.$$
 That is, $e$ receives $1$ token. Therefore every tight constraint receives $1$ token and this completes the proof. $\blacksquare$
 %pb
@@ -494,7 +496,7 @@ To see that $\cA$ terminates observe that by problem $3(a)$, a set $S \subseteq 
 \paragraph{}
 Now we verify that the solution returned is feasible for $(P)$. We claim that $\cA$ maintains the invariant that after each iteration of step $2$, for each $S \in \cS'$ and each $T \in H$, $S\cap T = \emptyset$. It is easy to see that this invariant holds before step $2$. Suppose it holds inductively at the beginning of some iteration of step $2$. Let $S$ be the set chosen to enter $H$ in step $2(c)$. By step $2(d)$ each $S' \in \cS'$ that intersects $S$ is removed from$ \cS'$. Since no set in $\cS'$ intersects sets in $H$ by induction, after step $2(d)$ no set in $\cS'$ intersects $H \cup \{S\}$. Therefore the invariant holds. Using this invariant it is easy to see that at each iteration of step $2$ a set is added to $H$ which intersects no other set in $H$. Therefore at the termination of step $2$ the set $H$ returned is feasible for $(P)$.
 \paragraph{}
-It remains to demonstrate the approximation factor. We will bound the increase in $H$ versus the decrease in the fractional solution at each iteration of step $2$. Let $\Delta_i H$ denote the change in $|H|$ from the beginning of iteration $i$ to the end of iteration $i$.. Exactly one set is added to $H$ in each iteration so $\Delta_i H = 1$ for all $i$. Let $x^i$ be the fractional solution to $(LP)$ found at the beginning of iteration $i$. Let $\Delta_i x = \sum_{S \in \cS}x^{i}_S - \sum_{e \in \cS}x^{i+1}_S$, where we take $x^{n+1} = 0$ if step $2$ terminates in $n$ iterations, and take $x^{i}_S = 0$ if $S \not\in \cS'$ during iteration $i$.
+It remains to demonstrate the approximation factor. We will bound the increase in $H$ versus the decrease in the fractional solution at each iteration of step $2$. Let $\Delta_i H$ denote the change in $|H|$ from the beginning of iteration $i$ to the end of iteration $i$. Exactly one set is added to $H$ in each iteration so $\Delta_i H = 1$ for all $i$. Let $x^i$ be the fractional solution to $(LP)$ found at the beginning of iteration $i$. Let $\Delta_i x = \sum_{S \in \cS}x^{i}_S - \sum_{e \in \cS}x^{i+1}_S$, where we take $x^{n+1} = 0$ if step $2$ terminates in $n$ iterations, and take $x^{i}_S = 0$ if $S \not\in \cS'$ during iteration $i$.
 \paragraph{}
 Consider an arbitrary iteration of step $2$ of $\cA$. Let $x^i$ be the solution to $(LP)$ found in step $2(a)$. Let $S$ be the set chosen in step $2(b)$. For each $e \in S$, let $\cS^e = \{S' \in \cS'\backslash\{S\} : e \in S'\}$. Let the collection of deleted sets from step $2(d)$ be $D: = \bigcup_{e\in S} \cS^e$. Then
 $$x(D) \leq \sum_{e \in S} x(\cS^{e}) = \sum_{e\in S} \sum_{S' \in \cS'\backslash\{S\} : e\in S'} x_{S'} \leq \sum_{e \in S} (1 - x_S) = |S|(1-x_S),$$
@@ -520,7 +522,7 @@ Since $x^1$ is an optimal solution to $(LP)$ for our original problem $(P)$ this
 %Q5
 \section{}
 \paragraph{}
-Academic Honesty Disclaimer: In this problem I rely heavily on her paper Dr. Sanita gave us on Learn: Steiner Tree Approximation via Iterative Randomized Rounding.
+When I refer to ``the paper" below, I mean Dr. Sanita's paper she gave us on Learn: Steiner Tree Approximation via Iterative Randomized Rounding.
 \paragraph{}
 Given a metric graph $G=(V,E)$ with edge costs $c:E\rightarrow \R_+$ and a set of terminals $R\subseteq V$, the $k$-restricted Steiner Tree problem asks for a tree of minimum cost spanning $R$ whose full components each contain at most $k$ terminals. From class the following algorithm was shown to be a $\ln(4)$-approximation algorithm for this problem.
 \paragraph{}
@@ -572,12 +574,12 @@ We are prepared to analyze the algorithm. Following the notation in the paper we
 		 \item add one edge of $r_3s_2$, $r_4s_2$ to $\tilde{B}$ chosen uniformly at random
 \end{enumerate}
 	\end{enumerate}
-\item Return Witness Tree $W= \{\{u,v\} in {R\choose 2} : |P_uv \cap \tilde{B}| = 1\}$.
+\item Return Witness Tree $W= \{\{u,v\} \in {R\choose 2} : |P_{uv} \cap \tilde{B}| = 1\}$.
 \end{enumerate}
 \paragraph{}
-By lemma \ref{lemma:four} and the preceding discussion, this procedure covers all possible forms the components $Z_i$ can take. Further one can verify that $W$ is a terminal spanning tree. 
+By lemma \ref{lemma:four} and the preceding discussion, this procedure covers all possible forms the components $Z_i$ can take. Further it is immediate from our choice of $\tilde{B}$ that $W$ is a terminal spanning tree. A simple inspection of the edges taken in $W$ with respect to the terminals of each $Z_i$ verifies this.
 \paragraph{}
-For any $e \in E(S^*)$ we define $W(e) = \{ uv \in E(W): e \in P_{uv}\}$. When the edges of $W(e)$ are $\textit{marked}$ (see paper) the edge $e$ is deleted. We have the following lemma from the paper/class (rephrased in terms of $W(e)$ for simplicity):
+For any $e \in E(S^*)$ we define $W(e) = \{ uv \in E(W): e \in P_{uv}\}$. When the edges of $W(e)$ are $\textit{marked}$ (see the paper) the edge $e$ is deleted. We have the following lemma from the paper/class (rephrased in terms of $W(e)$ for simplicity):
 \begin{lemma}\label{lemma:20}
 Let $e \in E(S^*)$. Then the expected number of iterations until all the edges of $W(e)$ are $\textit{marked}$ satisfies $$E[X(W(e))] \leq H_{|W(e)|} \cdot M,$$
 where $M$ is an upperbound on $|\cC|$ polynomial in $n$.
@@ -596,7 +598,7 @@ Let $Z_i$ be the undirected full component containing $e$. We proceed by case an
 \paragraph{}
 We begin with Case $1$. This case is trivial: with probability $1$, $e$ is the edge connecting the terminals. Thus by lemma \ref{lemma:20} $E[D(e)] = 1\cdot H_1 \cdot M = M \leq \frac{5}{4} M.$
 \paragraph{}
-Now we consider Case $2$. Suppose $Z_i$ is a $k$-restricted star where $k \in \{3,4\}$. Then with probability $\frac{1}{k}$ (when $e$ is the edge not in $\tilde{B}$), $|W(e)| = k-1$. With probability $1-\frac{1}{k}$), $|W(e)| = 1$. Thus by lemma \ref{lemma:20} we have
+Now we consider Case $2$. Suppose $Z_i$ is a $k$-restricted star where $k \in \{3,4\}$. Then with probability $\frac{1}{k}$ (when $e$ is the edge not in $\tilde{B}$), $|W(e)| = k-1$. With probability $(1-\frac{1}{k}$), $|W(e)| = 1$. Thus by lemma \ref{lemma:20} we have
 \begin{align*}E[D(e)] &\leq \frac{1}{k} H_{k-1} M + (1-\frac{1}{k})H_1 M
 \\&=\begin{cases}
 (\frac{1}{3}H_2 + \frac{2}{3})M, &\text{if $k = 3$} \\
@@ -612,9 +614,9 @@ Now we consider Case $2$. Suppose $Z_i$ is a $k$-restricted star where $k \in \{
 Finally we consider Case $3$. By lemma \ref{lemma:four} we have the following structure.Let $s_1,s_2$ be the two adjacent Steiner Nodes of $Z_i$ and let $r_1,r_2$ be the terminals adjacent to $s_1$, and let $r_3,r_4$ be the terminals adjacent to $s_2$. Suppose without loss of generality that $s_1r_1, s_2r_4 \in \tilde{B}$. The the probability that $|W(e)| = 1$ is $\frac{3}{5}$ (such edges are $s_1r_1, s_2r_4$ and $s_1s_2$). The probability that $|W(e)| = 2$ is $\frac{2}{5}$ (such edges are $s_1r_2$ and $s_2r_3$). Thus by lemma \ref{lemma:20} we have
 \begin{align*}
 E[D(e)] &\leq \frac{3}{5}H_1M + \frac{2}{5}H_2M \\
-&= (\frac{3}{5} + \frac{2}{10}) M \\
-&= (\frac{8}{10})M \\
-&= \frac{4}{5}M.
+&= (\frac{3}{5} + \frac{3}{5}) M \\
+&= (\frac{6}{5})M \\
+&\leq \frac{5}{4}M.
 \end{align*} 
 Therefore the expectation holds in each case as desired.
 \end{proof}
@@ -637,4 +639,19 @@ E[\sum_{t\geq 1} c(C^t)] &\leq \sum_{t\geq 1} \frac{1}{M}E[opt^t_f] \\
 
 %Q6
 \section{}
+\paragraph{}
+In the metric Travelling Salesman Problem $(TSP)$ we are given a metric graph $G=(V,E)$ with edge costs $c: E\rightarrow \R_+$. The goal is to find a minimum cost Hamilton Cycle visiting each $v \in V$. The Held-Karp relaxation for $(TSP)$, denoted $(HK)$ is
+\begin{align*}
+\min \sum_e c(e) x_e& \\
+\text{s.t.} x(\delta(v)) &= 2 &\forall v \in V \\
+x(\delta(S)) &\geq 2 &\forall S \subseteq V \\
+x &\geq 0.
+\end{align*}
+Let $n = |V|$. Let $x$ be a basic solution to $(HK)$. Our goal is to show that $x$ has $O(n)$ non-zero variables. The number of variables in $x$ correspond to a maximum size set of linearly independent tight constraints. Therefore the non-zero variables correspond to a collection $\cL \subseteq 2^V$ such that $x(\delta(S) = 2$ for all $S \in \cL$, and $\{\chi(S): S \in \cL\}$ is maximal linearly independent and $\chi(S)$ denotes the incidence vector of $S$. Hence we need to show that $|\cL| = O(n)$.
+\paragraph{}
+The constant function $f: 2^V \rightarrow \{2\}$ is trivially weakly supermodular. Therefore we may invoke a theorem from class saying we may choose $\cL$ to be a laminar family.
+\paragraph{}
+To show $|\cL| = O(n)$ we proceed by induction on $|V|$, the size of the ground set. The claim is trivial for $|V| = 1$: $|\cL| \leq |V|  = O(n)$. Suppose $|V| >1$. For the inductive hypothesis suppose for all $V' \subseteq V$, any laminar family on ground set $V'$ has size $O(|V'|)$. Let $S \in \cL\backslash\{V\}$ such that $|S|$ is maximal. We may assume such $S$ exists, as otherwise $|\cL| = 1 = O(n)$ as desired. Since $\cL$ is laminar, for all $S' \in \cL \backslash \{V\}$ either $S' \subseteq S$ or $S' \cap S = \emptyset$. Let $\cL' = \{ S' \in \cL\backslash\{V\} : S' \subseteq S\}$ and let $\cL'' = \{S' \in \cL\backslash \{V\} : S'\cap S \neq \emptyset\}$. Since $\cL'$ and $\cL''$ are subsets of $\cL$ they are both laminar families. The ground set of $\cL'$ is $S$, and the ground set of $\cL''$ is $V\backslash S$. Therefore by the inductive hypothesis $|\cL'| = O(|S|)$ and $|\cL''| = O(|V\backslash S|)$. Also, $\cL \subseteq \{V\} \cup \cL' \cup \cL''$. Then 
+$$|\cL| \leq |\{V\}| + |\cL'| + |\cL''| = 1 + O(|S|) + O(|V\backslash S|) = O(|V\backslash S| + |S| + 1) = O(|V|).$$
+Hence by induction $|\cL| = O(n)$ as desired. $\blacksquare$
 \end{document}
