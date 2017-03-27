@@ -56,7 +56,7 @@
 %END MACROS
 
 \begin{document}
-
+\setbeamercolor{background canvas}{bg=white}
 \maketitle
 
 \section{Introduction}
@@ -134,10 +134,142 @@ Solid black edges $\alert{S}$ is the only popular matching. If we let $\alert{M}
 
 \begin{frame}
 \frametitle{Extended Formulation}
+Fix a popular fractional matching $\alert{y}$. Then $\alert{\Delta(x,y)}$ is a linear function in $\alert{x}$. Since $\alert{y}$ is popular $\alert{\Delta(x,y) \leq 0}$ with equality when $\alert{x}$ is popular.
+\begin{columns}[T]
+\begin{column}{.48\textwidth}
+\begin{align*}
+\max &\Delta(x,y) \\
+\text{s.t.} \sum_{e \in \delta(u)} x_e &= 1 &\forall u \in V(G) \\
+x_e &\geq 0 &\forall e \in E
+\end{align*}
+\end{column}
+\begin{column}{.48\textwidth}
+\begin{align*}
+\min &\sum_{u \in V(G)} \alpha_u  \\
+\text{s.t.} \alpha_a + \alpha_b &\geq vote_a(b,y) \\&+ vote_b(a,y) &\forall ab \in E(G) \\
+\alpha_u &\geq vote_u(\ell(u), y) &\forall u \in V(G).
+\end{align*}
+\end{column}
+\end{columns}
+Where $\alert{\ell(u)}$ is a last choice vertex for each $\alert{u}$ so that each vertex is fully matched in any fractional matching.
 
+We call $\alert{\alpha}$ such that $\alert{\sum_{u} \alpha_u = 0}$ a witness to the popularity of $\alert{y}$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Extended Formulation}
+From the primal-dual pair we obtain the extended formulation $\alert{(LP)}$:
+\begin{align*}
+\min &\sum_{u \in V(G)} \alpha_u \\
+\text{s.t.} \alpha_a + \alpha_b &\geq vote_a(b,x) + vote_b(a,x) &\forall ab \in E(G) \\
+\alpha_u &\geq vote_u(\ell(u),x) &\forall u \in V(G) \\
+\sum_{e \in \delta(u)} x_e &=1 &\forall u \in V(G) \\
+x_e &\geq 0 &\forall e \in E.
+\end{align*}
+Optimal value is $0$. The optimal solutions are $\text{\alert{popular matchings}}$ and their $\text{\alert{witnesses}}$ (see Popular Mixed Matchings by Kavitha et al. for details).
+\end{frame}
+
+\begin{frame}
+\frametitle{Extended Formulation}
+Let $\alert{P'_G}$ be the optimal solutions to $\alert{(LP)}$. Then $\alert{P'_G}$ is described by the set of $\alert{(x,\alpha)}$ such that:
+\begin{align*}
+\sum_{u \in V(G)} \alpha_u &= 0 \\
+\text{s.t.} \alpha_a + \alpha_b &\geq vote_a(b,x) + vote_b(a,x) &\forall ab \in E(G) \\
+\alpha_u &\geq vote_u(\ell(u),x) &\forall u \in V(G) \\
+\sum_{e \in \delta(u)} x_e &=1 &\forall u \in V(G) \\
+x_e &\geq 0 &\forall e \in E.
+\end{align*}
+\end{frame}
+
+\begin{frame}
+\frametitle{Self-Duality}
+It is straightforward to see that $\alert{(LP)}$ is self-dual (exercise). This implies, by $\text{\alert{complementary slackness}}$, that the covering constraint for $\alert{ab}$ is tight when $\alert{x_{ab} > 0}$ for any popular fractional matching $\alert{x}$.
+
+$\textbf{Lemma 1}$: For any $\alert{(x,\alpha) \in P'_G}$, if $\alert{x_{ab} > 0}$ then:
+$$\alpha_a + \alpha_b = vote_a(b,x) + vote_b(a,x).$$ 
 \end{frame}
 \section{Integrality of $P_G$ in a special case}
+\begin{frame}
+\frametitle{Objective}
+$\textbf{Theorem 1:}$ If $\alert{G =(A\cup B, E)}$ is $\text{\alert{bipartite}}$ and admits a $\text{\alert{perfect stable matching}}$ then $\alert{P_G}$ is integral.
 
+From prior talks: $\text{\alert{stable matchings}}$ are $\text{\alert{minimum size popular matchings}}$.
+
+So the hypothesis says $\text{\alert{popular matching}}$ is perfect and, in the fractional setting, for each $\alert{u\in A \cup B}$, $\alert{x_{u\ell(u)} = 0}$.
+
+To prove $\textbf{Theorem 1}$ we will write $\alert{(x,\alpha^x) \in P_G'}$ as a convex combination of $\text{\alert{popular matchings}}$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Bounding $\alpha^x$}
+$\textbf{Lemma 2:}$ $\alert{\alpha^x \in [-1,1]}$.
+
+$\textbf{Proof:}$ First
+$$\alpha^x_u \geq vote_u(\ell(u), x) = -1 \text{(since }x_{u,\ell(u)} = 0\text{).}$$
+Now let $\alert{v}$ be the least preferred neighbour of $\alert{u}$ such that $\alert{x_{uv} >0}$. Then
+$$vote_u(v,x) = -vote_u(x,v) = -(1-x_{uv}).$$
+Also
+$$vote_v(u,x) = \sum_{u':u' <_v u} x_{u'v} - \sum_{u':u' >_v u} x_{u'v} = 1-x_{uv}.$$
+So by $\textbf{Lemma 1}$
+$$\alpha_u + \alpha_v = vote_u(v,x) + vote_v(u,x) \leq -(1-x_{uv}) + (1-x_{uv}) = 0.$$
+Since $\alert{\alpha_v \geq -1}$ this implies $\alert{\alpha_u \leq 1}$.$\blacksquare$
+\end{frame}
+
+\begin{frame}
+\frametitle{Constructing the Table: $a \in A$}
+\centering
+$r_a\cdot 1 + (1-r_a)(-1) = \alpha^x_a$ 
+\includegraphics[scale=0.25]{Xa}
+
+For each $\alert{ab \in \delta(a)}$ create a cell of length $\alert{x_{ab}}$ (omit $0$-length cells) and arrange cells in increasing order (w.r.t. $\alert{a}$) to form $\alert{X_a}$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Constructing the Table: $b \in B$}
+\centering
+$r_b(-1) + (1-r_b)\cdot 1 = \alpha^x_b$
+\includegraphics[scale=0.25]{Xb}
+
+For each $\alert{ab \in \delta(b)}$ create a cell of length $\alert{x_{ab}}$ (omit $0$-length cells) and arrange cells in decreasing order (w.r.t. $\alert{b}$) to form $\alert{X_b}$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Constructing the Table: Finding Matchings}
+We form the table $\alert{T}$ whose rows are the arrays $\alert{X'_u}$ for each $\alert{u \in V(G)}$.
+
+For any $\alert{t \in [0,1)}$ form $\alert{M_t\subseteq E}$ as follows:
+\begin{enumerate}
+\item Draw a vertical line at distance $\alert{t}$ from left end of $\alert{T}$.
+\item For each $\alert{u \in V(G)}$ define $\alert{c_u(t)}$ to be the cell in $\alert{X'_u}$ which the line intersects (or touches the left boundary of).
+\item Set $\alert{M_t = \{ uv \in E(G) : u \in V(G) \text{and} v \in c_u(t)\}}$.
+\end{enumerate}
+
+We claim that each $\alert{M_t}$ is a $\text{\alert{popular matching}}$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Brief detour to pick up a Lemma}
+$\textbf{Lemma 3}$ For any $\alert{ab \in E(G)}$,
+$$ x_{ab} + \sum_{b' <_a b} x_{ab'} + \sum_{a' <_b a} x_{a'b} \leq r_a + (1-r_b).$$
+Equality holds if $\alert{x_{ab} > 0}$.
+
+$\textbf{Proof:}$
+From the covering constraint for $\alert{P'_G}$:
+$$\alpha^x_a + \alpha^x_b \geq \sum_{b' <_a b} x_{ab'} - \sum_{b' >_a b} x_{ab'} + \sum_{a' <_b a} x_{a'b} - \sum_{a' >_b a} x_{a'b}.$$
+Substitute $\alert{\sum_{b' >_a b} x_{ab'} = 1- x_{ab} - \sum_{b'<_a b} x_{ab'}}$, and similar for $\alert{\sum_{a' >_b a}x_{a'b}}$. Substitute $\alert{\alpha^x_a = 2r_a -1}$ and $\alert{\alpha^x_b = 1-2r_b}$.
+
+The result follows. $\textbf{Lemma 1}$ yields equality when $\alert{x_{ab}} > 0$.$\blacksquare$
+\end{frame}
+
+\begin{frame}
+\frametitle{$M_t$ is a matching}
+%May take multiple frames
+\end{frame}
+
+\begin{frame}
+\frametitle{$M_t$ is popular}
+%May take multiple frames
+\end{frame}
 \section{Half-Integrality of $P_G$ in any bipartite instance}
 %maybe omit this as next section generalizes and uses same ideas
 \section{Half-Integrality of $P_G$ in a roommates instance}
