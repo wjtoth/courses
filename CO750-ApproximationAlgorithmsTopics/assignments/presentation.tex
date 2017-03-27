@@ -263,16 +263,112 @@ The result follows. $\textbf{Lemma 1}$ yields equality when $\alert{x_{ab}} > 0$
 
 \begin{frame}
 \frametitle{$M_t$ is a matching}
-%May take multiple frames
+$\textbf{Strategy:}$
+\begin{enumerate}
+\item Consider some edge $\alert{ab}$ such that $\alert{x_{ab} > 0}$.
+\item Want to show that $\alert{b \in c_t(a) \iff a \in c_t(b)}$ for any $\alert{t \in [0,1)}$.
+\item Will show that the $\alert{ab}$ cell in rows $\alert{X'_a}$ and $\alert{X'_b}$ is perfectly aligned in table $\alert{T}$.
+\end{enumerate}
+
+$\textbf{Recall:}$
+\begin{itemize}
+\item In $\alert{X'_a}$: $\alert{a}$'s increasing order start from $\textit{left}$ of blue subarray (wraps around).
+\item In $\alert{X'_b}$: $\alert{b}$'s increasing order starts from $\textit{right}$ of blue subarray (wraps around).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{$M_t$ is a matching}
+$\textbf{Case 1: }$ $\alert{\sum_{b' <_a b} x_{ab'} \geq r_a}$
+\begin{columns}[T] % align columns
+\begin{column}{.48\textwidth}
+\includegraphics[scale=0.23]{geqRa}
+\end{column}
+\begin{column}{.48\textwidth}
+$$ $$
+$\quad\quad d:= \sum_{b' <_a b} x_{ab'} -r_a$
+
+$\quad\quad d':=\sum_{a'<_b a} x_{a'b}$
+
+$\quad\quad$By $\textbf{Lemma 3}$:
+$$d + x_{ab} + d' = 1-r_b.$$
+\end{column}
+\end{columns}
+The $\textbf{case}$ where $\alert{\sum_{a'<_b a} x_{a'b} \geq (1-r_b)}$ is symmetric.
+\end{frame}
+
+\begin{frame}
+\frametitle{$M_t$ is a matching}
+$\textbf{Case 2: }$ $\alert{\sum_{b' <_a b} x_{ab'} < r_a}$ and $\alert{\sum_{a' <_b a} x_{a'b} < 1 - r_b}$.
+
+In this case, the $\alert{ab}$ cell has been split in $\alert{X'_a}$ and $\alert{X'_b}$.
+\begin{columns}[T] % align columns
+\begin{column}{.48\textwidth}
+\includegraphics[scale=0.23]{lessRa}
+\end{column}
+\begin{column}{.48\textwidth}
+$$ $$
+$\quad\quad d_0:= \sum_{b' <_a b} x_{ab'} $
+
+$\quad\quad d_1:=\sum_{a'<_b a} x_{a'b}$
+
+$\quad\quad x^0_{ab} := \text{hatched blue of }X'_a.$
+
+$\quad\quad x^1_{ab} := \text{hatched blue of }X'_b.$
+
+$\quad\quad$By $\textbf{Lemma 3}$:
+$$d_0 + x_{ab} + d_1 = r_a + 1-r_b.$$
+\end{column}
+\end{columns}
+\centering
+Hence $\alert{x_{ab} + r_a - x^0_{ab}  + (1-r_b) - x^1_{ab} = r_a + (1-r_b)}$, and so $\alert{x_{ab} = x^0_{ab} + x^1_{ab}}$.
+\end{frame}
+\begin{frame}
+\frametitle{$M_t$ is popular}
+$\textbf{Strategy:}$
+\begin{enumerate}
+\item Exhibit a witness vector $\alert{\alpha^t}$ which satisfies $\alert{P'_G}$.
+\item For each $\alert{u \in A\cup B}$ if vertical line intersects $\alert{c_t(u)}$ in blue (positive) subarray set $\alert{\alpha^t_u = 1}$
+\item Otherwise, in red (negative) subarray, set $\alert{\alpha^t_u = -1}$.
+\end{enumerate}
+From previous proof, for any $\alert{ab \in M_t}$:
+
+$\quad\alert{c_t(a)}$ is positive if and only if $\alert{c_t(b)}$ is negative.
+
+So then $\alert{\sum_{u \in A\cup B} \alpha^t_u = 0}$. Here we used that $\alert{M_t}$ is perfect. Remains to verify covering constraints.
 \end{frame}
 
 \begin{frame}
 \frametitle{$M_t$ is popular}
-%May take multiple frames
+Want to show $\alert{\forall ab \in E(G)}$, $\alert{\alpha^t_a + \alpha^t_b \geq vote_a(b,M_t(a)) + vote_b(a, M_t(b))}.$
+We do a case analysis on the ``colours" of $\alert{c_t(a)}$ and $\alert{c_t(b)}$:
+\begin{columns}[T] % align columns
+\begin{column}{.48\textwidth}
+\begin{enumerate}
+\item If exactly one of $\alert{c_t(a)}$ or $\alert{c_t(b)}$ is positive then either $\alert{ab \in M_t}$ or at least one of $\alert{a,b}$ is matched to someone better.
+\item If both $\alert{c_t(a)}$ and $\alert{c_t(b)}$ are negative then both $\alert{a}$ and $\alert{b}$ get matched to someone better.
+\item If both $\alert{c_t(a)}$ and $\alert{c_t(b)}$ are positive their coverage is trivial (RHS $\leq 2$).
+\end{enumerate}
+\end{column}
+\begin{column}{.48\textwidth}
+\includegraphics[scale=0.2]{covering}
+\end{column}
+\end{columns}
 \end{frame}
-\section{Half-Integrality of $P_G$ in any bipartite instance}
-%maybe omit this as next section generalizes and uses same ideas
-\section{Half-Integrality of $P_G$ in a roommates instance}
+
+\begin{frame}
+\frametitle{Sweeping Procedure}
+We write $\alert{x}$ as a convex combination of $\text{\alert{popular matchings}}$:
+\begin{enumerate}
+\item Initialize $\alert{i=0}$.
+\item Sweep a vertical line from left to right across $\alert{T}$. Denote its distance by $\alert{t}$. 
+\item Whenever a new cell is encountered fix matching $\alert{M^i = M_t}$ and fix $\alert{t_i = t}$. 
+\end{enumerate}
+Say we find $\alert{k}$ such matchings. We can then write $\alert{x}$ as:
+$$x = t_1\chi(M^0) + (t_2 - t_1)\chi(M^1) + \dots + (1 - t_{k-1}) \chi(M^{k-1}).$$
+This constructive procedure runs in $\alert{O(|E| + |V|)}$ time.
+\end{frame}
+\section{Half-Integrality of $P_G$ in a general instance}
 
 \section{Hardness and Inapproximability}
 
