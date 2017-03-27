@@ -83,26 +83,26 @@ We call $\text{\alert{M}}$ a $\text{\alert{popular}}$ matching if it never loses
 $$\forall \text{matchings } M', \quad \Delta(M,M') \geq 0.$$
 
 
-The max utility popular matching problem $\text{\alert{(MaxPM)}}$ asks to find a popular matching $\alert{M}$ on $\alert{G}$ which maximizes
+The max utility popular matching problem $\text{\alert{(MaxPM)}}$ asks to find a $\text{\alert{popular}}$ matching $\alert{M}$ on $\alert{G}$ which maximizes
 $$\sum_{e\in M} w(e)$$
 for some weights $\alert{ w: E(G) \rightarrow \Q_+}$.
 \end{frame}
 
 \begin{frame}
 \frametitle{Fractional Matchings}
-We can extend this to the fractional matching case:
+We can extend this to the $\text{\alert{fractional matching}}$ case:
 $$FM_{G} = \{x \in \R^m_+ : x(\delta(u)) \leq 1, \forall u \in V(G)\}.$$
 We extend the voting function by defining for all $\alert{x \in FM_G}$, for all $\alert{u,v' \in V(G)}$:
 $$vote_u(x,v) = \sum_{v\in V(G)} x_{uv} vote_u(v,v').$$ 
 We extend the vote aggregation defining for all $\alert{x, y \in FM_{G}}$:
 $$\Delta(x,y) = \sum_{u \in V(G)} \sum_{uv, uv' \in \delta(u)} x_{uv}y_{uv'} vote_u(v,v').$$
-The polytope of all fractional popular matchings is 
+The polytope of all $\text{\alert{fractional popular matchings}}$ is 
 $$P_G := \{x \in FM_{G}: \Delta(x,y) \geq 0, \forall y \in FM_G\}.$$
 \end{frame}
 
 \begin{frame}
 \frametitle{Mixed Popular Matching Example}
-In bipartite graphs, each $\alert{x \in FM_G}$ is a convex combination of matchings. But observe that each $\alert{x\in P_G}$ need not be a convex combination of popular matchings.
+In $\text{\alert{bipartite}}$ graphs, each $\alert{x \in FM_G}$ is a convex combination of matchings. But observe that each $\alert{x\in P_G}$ need not be a convex combination of $\text{\alert{popular}}$ matchings.
 \begin{columns}[T] % align columns
 \begin{column}{.48\textwidth}
 \begin{figure}
@@ -129,7 +129,7 @@ $$ $$
 Say each $\alert{a_i}$ has preferences $\alert{b_1 > b_2}$, and each $\alert{b_i}$ has preferences $\alert{a_1 > a_2 > a_0}$.
 \end{column}%
 \end{columns}
-Solid black edges $\alert{S}$ is the only popular matching. If we let $\alert{M}$ be the solid red edges then $$\Pi= \{(S,\frac{1}{2}), (M,\frac{1}{2})\}$$ is a fractional popular matching.
+Solid black edges $\alert{S}$ is the only $\text{\alert{popular}}$ matching. If we let $\alert{M}$ be the solid red edges then $$\Pi= \{(S,\frac{1}{2}), (M,\frac{1}{2})\}$$ is a $\text{\alert{fractional popular matching}}$.
 \end{frame}
 
 \begin{frame}
@@ -174,7 +174,7 @@ Optimal value is $0$. The optimal solutions are $\text{\alert{popular matchings}
 Let $\alert{P'_G}$ be the optimal solutions to $\alert{(LP)}$. Then $\alert{P'_G}$ is described by the set of $\alert{(x,\alpha)}$ such that:
 \begin{align*}
 \sum_{u \in V(G)} \alpha_u &= 0 \\
-\text{s.t.} \alpha_a + \alpha_b &\geq vote_a(b,x) + vote_b(a,x) &\forall ab \in E(G) \\
+ \alpha_a + \alpha_b &\geq vote_a(b,x) + vote_b(a,x) &\forall ab \in E(G) \\
 \alpha_u &\geq vote_u(\ell(u),x) &\forall u \in V(G) \\
 \sum_{e \in \delta(u)} x_e &=1 &\forall u \in V(G) \\
 x_e &\geq 0 &\forall e \in E.
@@ -195,7 +195,7 @@ $\textbf{Theorem 1:}$ If $\alert{G =(A\cup B, E)}$ is $\text{\alert{bipartite}}$
 
 From prior talks: $\text{\alert{stable matchings}}$ are $\text{\alert{minimum size popular matchings}}$.
 
-So the hypothesis says $\text{\alert{popular matching}}$ is perfect and, in the fractional setting, for each $\alert{u\in A \cup B}$, $\alert{x_{u\ell(u)} = 0}$.
+So the hypothesis says each $\text{\alert{popular matching}}$ is perfect and, in the fractional setting, for each $\alert{u\in A \cup B}$, $\alert{x_{u\ell(u)} = 0}$.
 
 To prove $\textbf{Theorem 1}$ we will write $\alert{(x,\alpha^x) \in P_G'}$ as a convex combination of $\text{\alert{popular matchings}}$.
 \end{frame}
@@ -241,7 +241,7 @@ For any $\alert{t \in [0,1)}$ form $\alert{M_t\subseteq E}$ as follows:
 \begin{enumerate}
 \item Draw a vertical line at distance $\alert{t}$ from left end of $\alert{T}$.
 \item For each $\alert{u \in V(G)}$ define $\alert{c_u(t)}$ to be the cell in $\alert{X'_u}$ which the line intersects (or touches the left boundary of).
-\item Set $\alert{M_t = \{ uv \in E(G) : u \in V(G) \text{and} v \in c_u(t)\}}$.
+\item Set $\alert{M_t = \{ uv \in E(G) : u \in V(G) \text{ and } v \in c_u(t)\}}$.
 \end{enumerate}
 
 We claim that each $\alert{M_t}$ is a $\text{\alert{popular matching}}$.
@@ -403,10 +403,10 @@ By $\textbf{Theorem 1}$, $\alert{P_H}$ is integral.
 
 Let $\alert{(x, \alpha) \in P'_G}$. Define $\alert{f: P_G \rightarrow P_H}$ by
 $$f(x) = z \text{ where } z_{uv'}=z_{u'v} =x_{uv} \text{ and } z_{uu'} = x_{u\ell(u)}.$$
-With vector $\alert{\beta}$ such that $\alert{\beta_u = \beta_{u'} = \alpha_u}$ it is easy to check $\alert{Im(f) \subseteq P_H}$.
+Verified by witness $\alert{\beta}$ such that $\alert{\beta_u = \beta_{u'} = \alpha_u}$.
 Define $\alert{h: P_H \rightarrow P_G}$ by 
 $$h(z) = y \text{ where } y_{uv} = (z_{uv'} + z_{u'v})/2 \text{ and } y_{u\ell(u)} = z_{uu'}.$$
-With witness $\alert{\alpha_u = (\beta_u + \beta_u')/2}$ it is easy to check $\alert{Im(h) \subseteq P_G}$.
+Verified by witness $\alert{\alpha_u = (\beta_u + \beta_u')/2}$.
 $$x = h(f(x)) = \sum_{i=0}^{k-1} h(\lambda_i \chi(M^i)) = \sum_{i=0}^{k-1} \lambda_i h(\chi(M^i)).$$
 Each $\alert{h(\chi(M^i))}$ is $\frac{1}{2}$-integral. $\blacksquare$
 \end{frame}
