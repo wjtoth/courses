@@ -93,16 +93,16 @@ for some weights $\alert{ w: E(G) \rightarrow \Q_+}$.
 We can extend this to the $\text{\alert{fractional matching}}$ case:
 $$FM_{G} = \{x \in \R^m_+ : x(\delta(u)) \leq 1, \forall u \in V(G)\}.$$
 We extend the voting function by defining for all $\alert{x \in FM_G}$, for all $\alert{u,v' \in V(G)}$:
-$$vote_u(x,v) = \sum_{v\in V(G)} x_{uv} vote_u(v,v').$$ 
+$$vote_u(x,v) = \sum_{uv'\in \delta(u)} x_{uv'} vote_u(v',v) \text{ and } vote_u(v,x) = -vote_u(x,v).$$ 
 We extend the vote aggregation defining for all $\alert{x, y \in FM_{G}}$:
-$$\Delta(x,y) = \sum_{u \in V(G)} \sum_{uv, uv' \in \delta(u)} x_{uv}y_{uv'} vote_u(v,v').$$
+$$\Delta(x,y) = \sum_{u \in V(G)} \sum_{uv \in \delta(u)} x_{uv}vote_u(v,y).$$
 The polytope of all $\text{\alert{fractional popular matchings}}$ is 
 $$P_G := \{x \in FM_{G}: \Delta(x,y) \geq 0, \forall y \in FM_G\}.$$
 \end{frame}
 
 \begin{frame}
 \frametitle{Mixed Popular Matching Example}
-In $\text{\alert{bipartite}}$ graphs, each $\alert{x \in FM_G}$ is a convex combination of matchings. But observe that each $\alert{x\in P_G}$ need not be a convex combination of $\text{\alert{popular}}$ matchings.
+In $\text{\alert{bipartite}}$ graphs, each $\alert{x \in FM_G}$ is a convex combination of matchings. But each $\alert{x\in P_G}$ need not be a convex combination of $\text{\alert{popular}}$ matchings.
 \begin{columns}[T] % align columns
 \begin{column}{.48\textwidth}
 \begin{figure}
@@ -151,7 +151,7 @@ x_e &\geq 0 &\forall e \in E
 \end{align*}
 \end{column}
 \end{columns}
-Where $\alert{\ell(u)}$ is a last choice vertex for each $\alert{u}$ so that each vertex is fully matched in any fractional matching.
+Where $\alert{\ell(u)}$ is an appended last choice vertex for each $\alert{u}$.
 
 We call $\alert{\alpha}$ such that $\alert{\sum_{u} \alpha_u = 0}$ a witness to the popularity of $\alert{y}$.
 \end{frame}
@@ -183,7 +183,7 @@ x_e &\geq 0 &\forall e \in E.
 
 \begin{frame}
 \frametitle{Self-Duality}
-It is straightforward to see that $\alert{(LP)}$ is self-dual (exercise). This implies, by $\text{\alert{complementary slackness}}$, that the covering constraint for $\alert{ab}$ is tight when $\alert{x_{ab} > 0}$ for any popular fractional matching $\alert{x}$.
+It is straightforward to see that $\alert{(LP)}$ is self-dual (exercise). By $\text{\alert{complementary slackness}}$: the covering constraint for $\alert{ab}$ is tight when $\alert{x_{ab} > 0}$ for any popular fractional matching $\alert{x}$.
 
 $\textbf{Lemma 1}$: For any $\alert{(x,\alpha) \in P'_G}$, if $\alert{x_{ab} > 0}$ then:
 $$\alpha_a + \alpha_b = vote_a(b,x) + vote_b(a,x).$$ 
@@ -195,7 +195,7 @@ $\textbf{Theorem 1:}$ If $\alert{G =(A\cup B, E)}$ is $\text{\alert{bipartite}}$
 
 From prior talks: $\text{\alert{stable matchings}}$ are $\text{\alert{minimum size popular matchings}}$.
 
-So the hypothesis says each $\text{\alert{popular matching}}$ is perfect and, in the fractional setting, for each $\alert{u\in A \cup B}$, $\alert{x_{u\ell(u)} = 0}$.
+Hypothesis says each $\text{\alert{popular matching}}$ is perfect and, in fractional setting, for each $\alert{u\in A \cup B}$, $\alert{x_{u\ell(u)} = 0}$.
 
 To prove $\textbf{Theorem 1}$ we will write $\alert{(x,\alpha^x) \in P_G'}$ as a convex combination of $\text{\alert{popular matchings}}$.
 \end{frame}
@@ -366,7 +366,6 @@ We write $\alert{x}$ as a convex combination of $\text{\alert{popular matchings}
 \end{enumerate}
 Say we find $\alert{k}$ such matchings. We can then write $\alert{x}$ as:
 $$x = t_1\chi(M^0) + (t_2 - t_1)\chi(M^1) + \dots + (1 - t_{k-1}) \chi(M^{k-1}).$$
-This constructive procedure runs in $\alert{O(|E| + |V|)}$ time.
 \end{frame}
 \section{Half-Integrality of $P_G$ in a general instance}
 
@@ -433,6 +432,9 @@ Can we settle the complexity of $\text{\alert{(MaxPM)}}$ on $\text{\alert{bipart
 $$ $$
 
 Is there an algorithm for deciding if a general graph admits a $\text{\alert{popular matching}}$ under $\text{\alert{strict}}$ preferences?
+
+$$ $$
+Can we say anything better for $\text{\alert{roommates}}$ instances with a $\text{\alert{perfect stable matching}}$?
 \end{frame}
 
 \end{document}
