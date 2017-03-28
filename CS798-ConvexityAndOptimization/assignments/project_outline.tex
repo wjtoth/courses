@@ -1,0 +1,92 @@
+\documentclass[letterpaper,12pt,oneside,onecolumn]{article}
+\usepackage[margin=1in, bottom=1in, top=1in]{geometry} %1 inch margins
+\usepackage{amsmath, amssymb, amstext}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{theorem}
+\usepackage{tikz}
+\usepackage{tkz-berge}
+
+%Macros
+\newcommand{\A}{\mathbb{A}} \newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}} \newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+ 
+ 
+\newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}} \newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}} \newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}} \newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}} \newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}} \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}} \newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}} \newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}} \newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}} \newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}} \newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofof}[1]{{\bf Proof of #1:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofofnobox}[1]{{\bf#1:  }}{}\newenvironment{example}{{\bf Example:  }}{\hfill\rule{2mm}{2mm}}
+
+%\renewcommand{\thesection}{\lecnum.\arabic{section}}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}[fact]{Lemma}
+\newtheorem{theorem}[fact]{Theorem}
+\newtheorem{definition}[fact]{Definition}
+\newtheorem{corollary}[fact]{Corollary}
+\newtheorem{proposition}[fact]{Proposition}
+\newtheorem{claim}[fact]{Claim}
+\newtheorem{exercise}[fact]{Exercise}
+\newtheorem{note}[fact]{Note}
+\newtheorem{conjecture}[fact]{Conjecture}
+
+\newcommand{\size}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
+
+%END MACROS
+%Page style
+\pagestyle{fancy}
+
+\listfiles
+
+\raggedbottom
+
+\lhead{2017-03-03}
+\rhead{William Justin Toth CS798-Convexity and Optimization Project Outline} %CHANGE n to ASSIGNMENT NUMBER ijk TO COURSE CODE
+\renewcommand{\headrulewidth}{1pt} %heading underlined
+%\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
+
+\begin{document}
+\paragraph{Project Title:} Applications of the Multiplicative Weight Update Method to Game Theory.
+\paragraph{Goal:} The goal of this report is to study problems in algorithmic game theory where algorithms featuring the Multiplicative Weight Update Method have found use.
+\paragraph{Review}
+We will begin by reviewing the multiplicative weight update method studied in class \cite{arora2012multiplicative} and covering its analysis. This will give time to set up some basic notation and make the report more self-contained.
+\paragraph{Two-Player Zero Sum Games} We will define Two-Player Zero Sum Games, and show how multiplicative weights can be used to provide approximately optimal (up to a an additive error) mixed strategies. This result first appeared in \cite{freund1999adaptive}
+\paragraph{A Generalized Multiplicative Weight Update Method}
+In \cite{bhalgat2013optimal} a generalization of the multiplicative weight update method previously discussed is presented. Specifically they are generalizing the application to solving linear inequality feasibility presented in class. Their generalization allows different linear constraints in each round, and is now able to bound the average violation of a constraint in any given round, not just the total at the end. They omit their proofs, claiming they follow simply from the original analysis of \cite{arora2012multiplicative}. I intend to fill in this analysis in my report.
+\paragraph{Designing Multi-Unit Bayesian Auctions}
+The motivation for the generalization above \cite{bhalgat2013optimal} is to use multiplicative weights at the heart of an algorithm for designing approximately optimal multi-unit auction mechanisms. I will define all the necessary terms to understand what they are trying to do, present their algorithm, and its analysis.
+
+\paragraph{Competitive Online Algorithms via Primal-Dual Methods}
+In \cite{buchbinder2009design} a framework for designing online algorithms which are competitive (approximate the optimal solution of the offline version up to a given factor) is presented. The framework is based on the primal-dual method. Multiplicative weights comes in as the scheme for updating the dual variables, and thus our bounds arising from multiplicative weights can be used in the analysis of these algorithms. We provide the necessary background and study the general framework.
+\paragraph{Competitive Ad Auctions}
+We study the application of the Primal-Dual method in the design of competitive ad auctions as presented in \cite{buchbinder2007online}. We give an online primal dual algorithm for maximizing revenue and analyze its competitiveness. An elegant use of Strong Duality arises when we extend this to multi-slot auctions. 
+\paragraph{Connections}
+We will conclude by trying to see if we can observe any connections between the two mechanism design algorithms for different auctions presented in the report. If we are lucky perhaps we can combine ideas to solve an auction design problem that shares features of both applications by plugging the generalized multiplicative weight update method into the primal-dual framework.
+\bibliography{references}
+\bibliographystyle{plain}
+\end{document}
