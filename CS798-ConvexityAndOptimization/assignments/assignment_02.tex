@@ -74,7 +74,72 @@
 
 %Question 1
 \section{}
-
+\paragraph{}
+Let $A \in \{0,1\}^{m\times n}$ be a matrix. Let $\mathbf{1}$ denote the all-ones vector where dimension is clear from context. Consider the following $(LP)$:
+\begin{align*}
+\min\ &\mathbf{1}^T x \\
+\text{s.t. } Ax &\geq \mathbf{1} \\
+x &\geq 0.
+\end{align*}
+\paragraph{}
+We intend to use the multiplicative weight update method to solve this linear program. So we will need an oracle function. Thinking ahead to our intention to use multiplicative weights within a binary search framework we will design our oracle with a parameter representing the intended upper bound on our linear program. Let $\mu \in [0,n]$ and define the oracle $\cO(\mu)$ as follows:
+\begin{enumerate}
+\item Suppose $p\in \R^m_+$ represents the probability distribution passed to the oracle.
+\item Let $a_j$ denote the $j$-th column of $A$. Compute
+$$j^* = \text{argmax}_{j \in [n]} \{p^Ta_j\}.$$
+\item If $p^Ta_{j^*} = 0$ return infeasible.
+\item Let $r = \frac{1}{p^Ta_{j^*}}$. If $r  > \mu$ return infeasible.
+\item Set $x_{j^*} = r$ and set $x_j = 0$ for all $j \neq j^*$.
+\item Return $x$.
+\end{enumerate}
+\begin{lemma}\label{lemma:oracle}
+Let $(LP)(p)$ be the linear program
+$$\min\{\mathbf{1}^Tx : p^TAx \geq 1 \text{ and } x \geq 0\}.$$
+If $\cO(\mu)$ returns infeasible then there is no feasible solution to $(LP)(p)$ of cost at most $\mu$. Otherwise $\cO(\mu)$ returns an optimal solution to $(LP)(p)$. The width of $\cO(\mu)$ is at most $n$.
+\end{lemma}
+\begin{proof}
+If $\cO(\mu)$ returns infeasible in step $3$ then $p^TA = 0$ and hence $(LP)(p)$ is infeasible. We will show that $\cO(\mu)$ returns an optimal solution to $(LP)(p)$ of cost $r$, and thus if $\cO(\mu)$ returns infeasible in step $4$ then by optimality there is no feasible solution to $(LP)(p)$ of cost  at most $\mu$.
+\paragraph{}
+To see the optimality of $x$ observe the dual of $(LP)(p)$:
+$$\max\{y : yp^Ta_j \leq 1 \forall j \in [n] \text{ and } y \geq 0\}.$$
+By our choice of $j^*$, setting $y = r = \frac{1}{p^Ta_{j^*}}$ satisfies all constraints of the dual to $(LP)(p)$ and thus by strong duality, $x$ is an optimal solution to $(LP)(p)$.
+\paragraph{}
+It remains to verify the width of $\cO(\mu)$. Consider of row $A_i$ of $A$. If $A_{ij^*} = 0$ then $|A_i x - 1 | = 1 \leq n$. If $A_{ij^*} = 1$ then
+$$|A_i x - 1| = |r - 1| \leq \mu -1 \leq n.$$
+Thus the width of $\cO(\mu)$ is at most $n$.
+\end{proof}
+We will use a version the procedure given in Lecture $9$ for solving linear programs via multiplicative weight update. Let $\cM(\mu)$ denote the procedure:
+\begin{enumerate}
+\item Let $p^{(1)} = \frac{1}{m} \mathbf{1}.$
+\item For $t = 1, \dots, T$
+	\begin{enumerate}
+	\item Use $\cO(\mu)$ with $p^{(t)}$ to find $x^{(t)}$ such that $(p^{(t)})^TA x^{(t)} \geq 1.$
+	\item For all $i$ set $m_i^{(t)} = \frac{A_ix^{(t)} - b_i}{n}.$
+	\item Use the multiplicative weight update method with $m_i^{(t)}$ to compute $p^(t+1)$.
+	\end{enumerate}
+\item Return $x = \frac{1}{T}\sum_{t=1}^T x^{(t)}.$
+\end{enumerate}
+We have the following Theorem from class, which by Lemma \ref{lemma:oracle} we can modify slightly with respect to upper bound $\mu$.
+\begin{theorem}\label{th:mwu}
+Let $\epsilon > 0$ be a given error parameter. Then $\cM(\mu)$ either finds a solution $x$ such that $A_ix\geq b_i - \epsilon$ for all $i$, or correctly concludes that the system has no feasible solution of cost at most $\mu$. The algorithm $\cM(\mu)$ is called at most $O(n^2\log (m) / \epsilon^2)$ times with $O(m)$ additional processing per call.
+\end{theorem}
+The theorem as stated in Lecture $9$ said that the oracle correctly concludes the system is infeasible, but by lemma \ref{lemma:oracle} this needs to be changed to infeasibility for $x$ of cost at most $\mu$. We note that feasibility is not affected by ignoring constraints $x\geq 0$ since our oracle always gives non-negative solutions and thus there average will be non-negative.
+\paragraph{}
+Now we want to use $\cM(\cdot)$ in a bineary search procedure to find a solution to $(LP)$ with additive error $\epsilon>0$. Consider the following algorithm denoted $\cA$:
+\begin{enumerate}
+\item Fix $\ell = 0$ and $u = n$. Set $x = null$ (denoting infeasible)
+\item While $\ell \neq u$ do:
+	\begin{enumerate}
+	\item Compute $\mu = \floor{\frac{\ell + u}{2}}$
+	\item Run $\cM(\mu)$ with error parameter $\epsilon$.
+	\item If $\cM(\mu)$ returns infeasible set $\ell = \mu$.
+	\item Otherwise let $x$ be the solution returned by $\cM(\mu)$ and set $u = \mu$.
+	\end{enumerate}
+\item Return $x$.
+\end{enumerate}
+\paragraph{}
+The binary search procedure $\cA$ will find the optimal $\mu$ for which $\cM(\mu)$ returns a feasible solution. Therefore $\cA$ returns an optimal solution to $(LP)$ and by Theorem \ref{th:mwu} the solution returned is infeasible by at most an additive error of $\epsilon$. The running time of binary search is $O(\log(n))$. Our oracle uses an additional $O(m)$ processing to find $j^*$. Therefore, along with the running time of $\cM(\mu)$, our algorithm runs in time
+$$O(\frac{m^2n^2\log(m)\log(n)}{\epsilon^2}).$$
 %Question 2
 \section{}
 
@@ -83,7 +148,7 @@
 \paragraph{}
 I collaborated with Sharat on this problem.
 \paragraph{}
-Let $\cA$ denote our black-box algorithm. Let $f$ be at $\beta$-smooth function. Given an initial point $x_0$ and desired accuracy $\epsilon > 0$ our algorithm does:
+Let $\cA$ denote our black-box algorithm. Let $f$ be a $\beta$-smooth function. Given an initial point $x_0$ and desired accuracy $\epsilon > 0$ our algorithm does:
 \begin{enumerate}
 \item If $||x_0 - x^*||_2^2 = 0$ return $x_0$.
 \item Let $\epsilon' = \epsilon/2$ and set $\alpha = \frac{\epsilon}{||x_0 - x^*||_2^2}$.
