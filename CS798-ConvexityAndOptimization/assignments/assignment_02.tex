@@ -65,7 +65,7 @@
 
 \raggedbottom
 
-\lhead{2017-03-27}
+\lhead{2017-03-29}
 \rhead{William Justin Toth CS798-Convexity and Optimization Assignment 2} %CHANGE n to ASSIGNMENT NUMBER ijk TO COURSE CODE
 \renewcommand{\headrulewidth}{1pt} %heading underlined
 %\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
@@ -143,11 +143,38 @@ $$O(\frac{m^2n^2\log(m)\log(n)}{\epsilon^2}).$$
 %Question 2
 \section{}
 \paragraph{}
-Let $A \in \R^{m\times n}$ and let $i$-th row of $A$ be denoted by $a_i$. Let $b \in \R^m$. We assume that each entry of $A$ and $b$ has absolute value at most $c$. To solve the system of linear inequalities we can reformulate as
+Let $A \in \R^{m\times n}$ and let $i$-th row of $A$ be denoted by $a_i$. Let $b \in \R^m$. We assume that each entry of $A$ and $b$ has absolute value at most $c$. Let $a_0$ be a row of zeroes and let $b_0$ be zero. To solve the system of linear inequalities we can reformulate as
 $$\min_{x \in \R^n} f(x)$$
-where $f(x) :=\max_{1\leq i \leq m} (b_i - a_ix)$. We attempt to approximate $f(x)$ with the $0$-convex soft-max function (for some parameter $K$):
-$$g(x) := \frac{1}{K}\log \sum_{i=1}^m \exp (K(b_i - a_i x)).$$
-
+where $f(x) :=\max_{0 \leq i \leq m} (b_i - a_ix)$. We added $b_0 - a_0 x = 0$ to avoid the situation where the polytope described by $Ax \geq b$ is unbounded. In such a situation attempting this optimization would lead to something unbounded, which is undesirable. Now $f(x) \geq 0$, and for any feasible point $x^*$, $f(x^*) = 0$. Thus any feasible point is optimal for this choice of function $f$. We attempt to approximate $f(x)$ with the $0$-convex soft-max function (for some parameter $K$):
+$$g(x) := \frac{1}{K}\log (1 + \sum_{i=1}^m \exp (K(b_i - a_i x))).$$
+Using the inequalities for log-sum-exp we saw in lecture $2$ we see this function has the property that
+$$f(x) \leq g(x) \leq f(x) + \frac{\log(m + 1)}{k}.$$
+We let $\cA(\epsilon, \beta)$ denote the algorithm of running standard gradient descent on $g(x)$ with accuracy $\epsilon$ and step size $\eta = \frac{1}{\beta}$. We will use the theorem from class lecture $7$ on the convergence rate of gradient descent on $\beta$-smooth functions:
+\begin{theorem}\label{th:gd}
+If $f$ is $\beta$-smooth then $\cA(\epsilon, \beta)$ returns a point $x$ such that $f(x) -f(x^*) \leq \epsilon$, where $x^*$ minimizes $f$,  in running time $O(\frac{\beta}{\epsilon})$.
+\end{theorem}
+\paragraph{}
+We need to determine two things: first what $K$ and $\epsilon$ to choose so that optimizing $g$ gives us the desired accuracy with respect to $f$, and second what is an upper bound on $\beta$.
+\paragraph{}
+Let $\epsilon >0$ be our desired accuracy for approximating $Ax \geq b$. That is we want $x$ such that $Ax \geq b - \epsilon \textbf{1}$. Equivalently we want $x$ such that $f(x) - f(x^*) \leq \epsilon$ where $x^*$ minimizes $f$ (that is, $x^*$ is feasible for $Ax \geq b$). Suppose we run $\cA(\frac{\epsilon}{2}, \beta)$ on $g$ with some choice of $K$ and $\beta$ obtaining a point $x$. Say $\tilde{x}$ minimizes $g$. Then is we set $K = \frac{2\log(m+1)}{\epsilon}$ we obtain:
+$$f(x) -f(x^*) \leq g(x) -g(x^*) + \frac{\log(m+1)}{K} \leq g(x) - g(\tilde{x}) + \frac{\log(m+1)}{K} \leq \frac{\epsilon}{2} + \frac{\log(m+1)}{\frac{2\log(m+1)}{\epsilon}} = \epsilon.$$
+\paragraph{}
+Thus if we run $\cA(\frac{\epsilon}{2}, \beta)$, the $x$ returned will achieve our desired accuracy for the system of linear inequalities. It remains to bound $\beta$ so we can calculate the running time. We compute a generic entry of the gradient of $g$ (and then later an entry of the hessian). For ease of notation we let $z(x) \in \R^m$ we defined by $z_i(x) = \exp(b_i-a_ix)$ and let $S(x) = \textbf{1}^Tz(x) +1$.
+$$\nabla g(x)_j = \frac{\partial}{\partial x_j} g(x) = \frac{1}{S(x)} \sum_{i=1}^m z_i(x)a_{ij}.$$
+From this we compute a generic entry of the hessian:
+$$\nabla^2g(x)_{jk} = \frac{\partial^2}{\partial x_k \partial x_j} g(x) = \frac{K}{S(x)^2} [(\sum_{i=1}^m z_i(x)a_{ik})(z_i(x)a_{ij}) - S(x)\sum_{i=1}^m z_i(x)a_{ij}a_{ik}].$$ 
+We want to obtain a bound on the largest eigenvalue, $\lambda_1$, of $\nabla^2g(x)$. To do this we use the loose bound
+$$\lambda_1 \leq n \max_{j,k} |\nabla^2g(x)_{jk}|.$$
+Observe that
+\begin{align*}
+|\nabla^2g(x)_{jk}| &= |\frac{K}{S(x)^2} [(\sum_{i=1}^m z_i(x)a_{ik})(z_i(x)a_{ij}) - S(x)\sum_{i=1}^m z_i(x)a_{ij}a_{ik}]| \\
+&\leq \frac{K}{S(x)^2}[ |\sum_{i=1}^m z_i(x)a_{ik}| \cdot |\sum_{i=1}^m z_i(x)a_{ij}| + S(x) |\sum_{i=1}^m z_i(x)a_{ij}a_{ik}| ]&\text{note that $S(x) \geq 0$} \\
+&\leq \frac{K}{S(x)^2}[ c|\sum_{i=1}^m z_i(x)| \cdot c|\sum_{i=1}^m z_i(x)| + S(x) c^2|\sum_{i=1}^m z_i(x)| ] &\text{since $|a_{ij}| \leq c$}\\
+&\leq \frac{Kc^2}{S(x)^2}[2S(x)^2 ] \\
+&= 4c^2\log(m) &\text{by our choice of $K$}.
+\end{align*}
+Therefore $\lambda_1 \leq 4c^2 n\log(m)$. Hence we can run our algorithm with $\beta = 4c^2n\log(m)$. So the final running time is
+$$O(\frac{4c^2n\log(m)}{\frac{\epsilon}{2}}) = O(\frac{c^2n\log(m)}{\epsilon}).$$
 %TODO compute the Hessian and determine for which \beta is g \beta-smooth
 
 %TODO figure out which values of K and epilson' are needed so that we can find a point x with approximates f(x)-f(x^*) \leq \epsilon
