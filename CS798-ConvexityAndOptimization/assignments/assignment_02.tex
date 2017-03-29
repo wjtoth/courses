@@ -142,6 +142,19 @@ The binary search procedure $\cA$ will find the optimal $\mu$ for which $\cM(\mu
 $$O(\frac{m^2n^2\log(m)\log(n)}{\epsilon^2}).$$
 %Question 2
 \section{}
+\paragraph{}
+Let $A \in \R^{m\times n}$ and let $i$-th row of $A$ be denoted by $a_i$. Let $b \in \R^m$. We assume that each entry of $A$ and $b$ has absolute value at most $c$. To solve the system of linear inequalities we can reformulate as
+$$\min_{x \in \R^n} f(x)$$
+where $f(x) :=\max_{1\leq i \leq m} (b_i - a_ix)$. We attempt to approximate $f(x)$ with the $0$-convex soft-max function (for some parameter $K$):
+$$g(x) := \frac{1}{K}\log \sum_{i=1}^m \exp (K(b_i - a_i x)).$$
+
+%TODO compute the Hessian and determine for which \beta is g \beta-smooth
+
+%TODO figure out which values of K and epilson' are needed so that we can find a point x with approximates f(x)-f(x^*) \leq \epsilon
+
+%TODO propose algorithm: run gradient descent on g with K and \epsilon'
+
+%TODO verify correctness and running time using theorem about gradient descent on \beta-smooth functions
 
 %Question 3
 \section{}
