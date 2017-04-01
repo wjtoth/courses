@@ -74,7 +74,67 @@
 
 %Question 1
 \section{}
-
+\paragraph{}
+Let $G=(V,E)$ be a metric graph with costs $c: E \rightarrow \R_+$. Let $T \subseteq V$ be a subset of nodes. Let $\equiv_2$ denote equivalence modulo $2$ (that is $a \equiv_2 b$ if and only if $\exists k \in \Z$ such that $a = b + 2k$). Suppose that $|T| \equiv_2 0$.
+\paragraph{}
+The minimum cost connected $T$-Join problem asks us to find a minimum cost multiset $F$ of edges such that the set of nodes with odd degree in the multigraph $H=(V,F)$ is exactly $T$ and $H$ is connected.
+\paragraph{}
+Let $\cA$ denote the following algorithm for solving minimum cost connected $T$-Join on $G$:
+\begin{enumerate}
+\item Compute a minimum cost spanning tree on $G$. Call it $S$.
+\item Let $A \subseteq T$ be the set of nodes in $T$ of even degree in $S$.
+\item Let $B \subseteq V\backslash T$ be the set of nodes not in $T$ of odd degree in $S$.
+\item Let $T' = A \cup B$. Compute a minimum cost $T'$-join in $G$. Call it $J$.
+\item Return $S \cup J$.
+\end{enumerate}
+\begin{theorem}
+The algorithm $\cA$ is a $\frac{5}{3}$-approximation algorithm for the minium cost connected $T$-join problem.
+\end{theorem}
+\begin{proof}
+Standard algorithms for minimum cost spanning tree and $T$-join run in polynomial time. Hence $\cA$ is a polynomial time algorithm. The multigraph $(V, S\cup J)$ is connected since it contains a spanning tree $S$. Further by our choice of $A$ and $B$, the nodes in $T$ are precisely the nodes of odd degree in $(V, S \cup J)$. With respect to correctness of $\cA$, the only question which remains is that $|T'| \equiv_2 0$ so that a $T'$-join can be computed. 
+\paragraph{}
+Let any $C \subseteq V$ let $C^o := \{ v \in C: d_S(v) \equiv_2 1 \}$ where $d_S$ denotes $|\delta(v) \cap S|$. Then by our choice of $A$ and $B$: 
+$$|T| = |A| + |T^o| = |A| + |V^o\backslash B| = |A| + |V^o| - |B|.$$
+Since $|T| \equiv_2 0$ and $|V^o| \equiv_2 0$ (it is the set of odd degree vertices in $(V,S)$ so its cardinality is even):
+$$|A| \equiv_2 |B|,$$
+Thus $$|T'| \equiv_2 |A| + |B| \equiv_2 2|A| \equiv_2 0.$$
+So we have verified that $|T'|$ is even. Therefore the algorithm $\cA$ terminates in polynomial time returning a feasible solution to minimum cost connected $T$-Join.
+\paragraph{}
+We now verify the approximation factor. Let $J^*$ denote an optimal minimum cost connected $T$-join. Since $(V,J^*)$ is connected, $J^*$ contains a spanning tree. Therefore 
+$$c(S) \leq c(J^*).$$
+Now since $(V,S)$ is connected it contains a $T'$-Join. Let $J_1$ be such a $T'$-Join. Also since $(V,J^*)$ is connected it contains a $T'$-Join. Let $J_2$ be such a $T'$-Join. We claim that $J_3 := S\backslash J_1 \cup J^* \backslash J_2$ is a $T'$-join. To verify this consider a vertex $v \in T'$. We will study the parity of $d(v)$ with respect various sets mentioned above. Since $J_1$ and $J_2$ are $T'$-Joins we have
+$$d_{J_1}(v) \equiv_2 d_{J_2}(v) \equiv_2 0.$$
+Thus
+$$d_{J_3}(v) \equiv_2 d_S(v) + d_{J^*}(v).$$
+Since $J^*$ is a $T$-Join we have
+$$d_{J^*}(v) \equiv_2 \begin{cases}
+1, &\text{if } v \in V\backslash T \\
+0, &\text{if } v \in T.
+\end{cases}$$
+By our choice of $T'$, $v$ is either in $A\subseteq T$ or $B\subseteq V\backslash T$. So the case breakdown for $d_{J^*}(v)$ is more precisely:
+ $$d_{J^*}(v) \equiv_2 \begin{cases}
+1, &\text{if } v \in B \\
+0, &\text{if } v \in A.
+\end{cases}$$
+By our choice $A$ and $B$ we have
+$$d_{S}(v) \equiv_2 \begin{cases}
+1, &\text{if } v \in B \\
+0, &\text{if } v \in A.
+\end{cases}$$
+Now observe that in either case ($v \in A$ or $v\in B$)
+$$d_{J_3}(v) = d_S(v) + d_{J^*}(v) = 0.$$
+Thus $J_3$ is a $T'$-Join as claimed.
+\paragraph{}
+Since $J_1$, $J_2$, and $J_3$ are $T'$-Joins, and $J$ is a minimum cost $T'$-Join,
+$$3c(J) \leq c(J_1) + c(J_2) + c(J_3).$$
+By our choices of $J_1$, $J_2$, and $J_3$ their union of edges is a subset of $S \cup J^*$. So we have
+$$c(J_1) + c(J_2) + c(J_3) \leq c(S) + c(J^*) \leq 2c(J^*).$$
+Combining inequalities we see that
+$$3c(J) \leq 2c(J^*).$$
+Therefore 
+$$c(S) + c(J) \leq c(J^*) + \frac{2}{3}c(J^*) = \frac{5}{3}c(J^*)$$
+and so the approximation factor holds as desired.
+\end{proof}
 %Question 2
 \section{}
 \paragraph{}
