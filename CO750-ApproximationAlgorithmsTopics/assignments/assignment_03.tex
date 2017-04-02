@@ -189,7 +189,50 @@ Therefore the approximation factor holds.
 \end{proof}
 %Question 3
 \section{}
+\paragraph{}
+In an instance of $(WTAP)$ we are given a tree $G=(V,E)$ and a set $L \subseteq V\times V$, called ``links". We are also given a cost function $c: L \rightarrow \R_+$. The goal is to find a minimum cost subset $\bar{L} \subseteq L$ such that $(V, E \cup \bar{L})$ is $2$-edge-connected.
+%Part (a) of Q3
+\subsection{a}
+We are given the following algorithm for $(WTAP)$, as usual we will denote it $\cA$:
+\begin{enumerate}
+\item Select an arbitrary $r \in V$ as the root. Orient $E$ towards $r$, and set the $w(a) = 0$ for all the resulting arcs $a$.
+\item For each $uv \in L$ do:
+	\begin{enumerate}
+	\item Let $p$ be the lowest-common-ancestor of $u$ and $v$ on $G$. Add to $G$ the arcs $(p,u)$ and $(p,v)$ with $w(p,u) = w(p,v) = c(uv)$. Note that if $p=u$ or $p=v$ we only add one arc). We say the arcs $(p,u)$ and $(p,v)$ ``correspond" to the link $uv$.
+	\end{enumerate}
+\item Compute a minimum weight $out$-arborescence $R$ rooted at $r$ in the resulting digraph from steps $1$ and $2$.
+\item Output the set $\bar{L} \subseteq L$ such that $\ell \in \bar{L}$ iff there exists an arc in $R$ that correponds to $\ell$.
+\end{enumerate}
 
+\begin{lemma}\label{lemma:3a-poly}
+The algorithm $\cA$ returns a feasible solution for $(WTAP)$ on $G$ with links $L$ in polynomial time.
+\end{lemma}
+\begin{proof}
+First we check that the algorithm terminates in polynomial time. Step $1$ can be done in $O(|E|)$ time. Step $2$ uses $O(|L|)$ iterations, and each iteration can use a depth-first-search to find the lowest-common ancestor in polynomial time. Hence Step $2$ runs in polynomial time. We have seen an exact polynomial time algorithm in class for computing a minimum weight arborescence. Hence Step $3$ runs in polynomial time. Step $4$ only necessitates iterating over links of $L$ and arcs of $R$ and thus runs in polynomial time. Hence $\cA$ terminates in polynomial time.
+\paragraph{}
+Consider the solution $\bar{L}$ returned by the algorithm. Let $up \in E$ where $p$ is the parent of $u$ with respect to the orientation in Step $1$. Let $G_u$ be the connected component of $G-up$ which contains $u$ and let $G_p$ be the connected component of $G-up$ which contains $p$. To verify that $(V, E \cup \bar{L})$ is $2$-edge-connected we will show that there exists $\ell \in \bar{L}$ with one endpoint in $V(G_u)$ and one in $V(G_p)$.
+\paragraph{}
+Consider the directed path $P$ from $r$ to $u$ in the arborescence $R$ computed in Step $3$. Let $g$ be the last ancestor of $u$ on $P$ before reaching $u$. Then $(g,c) \in P$ where $c$ is either a child of $u$ or $c=u$. By our construction, since $(g,c)$ travels from a vertex closer to the root to a vertex farther from the root, $(g,c)$ corresponds to some link $\ell \in \bar{L}$. The endpoint $c$ of $\ell$ lies $G_u$. The other endpoint, say $v$, has their lowest common ancestor with $c$ being $g$. Thus $v \not \in V(G_u)$ and therefore $v \in V(G_p)$. Therefore $\ell$ is a link connected $G_u$ to $G_p$, and thus $(V, E \cup \bar{L})$ is $2$-edge-connected.
+\end{proof}
+\begin{theorem}
+The algorithm $\cA$ is $2$-approximation algorithm for $(WTAP)$.
+\end{theorem}
+\begin{proof}
+By lemma \ref{lemma:3a-poly} it remains to verify the approximation factor. Let $L^* \subseteq L$ be an optimal solution to $(WTAP)$ on $G$. Let $D$ denote the directed graph which results from the construction in Steps $1$ and $2$ of $\cA$. We will construct from $L^*$ an arc set $R^*$ of cost
+$$c(R^*)=2c(L^*)$$
+which contains at $out$-arborescence rooted at $r$ on $D$.
+Then, since $R$ is a minimum weight $out$-arborescence on $G$ with $c(\bar{L}) = c(R)$ this will suffice to prove the approximation factor as $c(R) \leq c(R^*) = 2c(L^*)$.
+\paragraph{}
+For each $\ell \in L^*$ add the arcs which correspoind to $\ell$ to $R^*$. Now we have $c(L^*) = 2c(R^*)$. It remains to fix connectivity in $R^*$ so that there is a directed path from $r$ to each vertex. We will fix it by adding $0$ cost arcs. For each $u \in V\backslash \{r\}$ do the following. Let $p$ be the parent of $u$ with respect to the orientation of step $1$.  Let $G_u$ be the connected component of $G-up$ which contains $u$ and let $G_p$ be the connected component of $G-up$ which contains $p$. Since $L^*$ is feasible for $(WTAP)$ there exists some $ab \in L^*$ such that $a \in V(G_u)$ and $b \in V(G_p)$. Now $a$ is a descendant of $u$. Thus there exists a $0$-cost directed path from $a$ to $u$. Add this path to $R^*$. Note this does not change $c(R^*)$.
+\paragraph{}
+We claim that after doing this for each vertex, the connectivity requirement is satisfied. Let $u \in V$. We proceed by induction on the distance from $u$ to the root. In the base case $r=u$ and so there trivially is a path from $r$ to $u$ in $R^*$. Now suppose $u$ is at least at distance $1$ from $r$, and for all ancestors $u$ there a directed path from $r$ to $u$'s ancestor using arcs of $R^*$. Let $p$, $a$, and $b$ be as in the previous paragraph with respect to $u$. Since $a$ is in $G_u$ and $b$ is in $G_p$ the lowest common ancestor of $a$ and $b$ is some vertex $g$ that is an ancestor of $u$. By induction there is a directed path $P_{rg}$ from $r$ to $g$ using arcs of $R^*$. By construction the arc $(g,a)$ is in $R^*$. So $P_{rg}$, $(g,a)$, and the $0$-cost path from $a$ to $u$ added to $R^*$ in the previous paragraph forms a directed path from $r$ to $u$ in $R^*$. Hence the claim holds. 
+\paragraph{}
+So $R^*$ contains a directed path from $r$ to every vertex of $D$. Therefore $R^*$ contains an $out$-arborescence, and as argued in the first paragraph this suffices to prove the approximation factor.
+\end{proof}
+%Part b of Q3
+\subsection{b}
+\paragraph{}
+Now we change $(WTAP)$ so that the requirement is $(V, E\cup \bar{L})$ is $2$-vertex-connected.
 %Question 4
 \section{}
 \end{document}
