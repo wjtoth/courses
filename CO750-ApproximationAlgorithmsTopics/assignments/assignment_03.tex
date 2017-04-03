@@ -279,4 +279,35 @@ So the approximation factor holds as desired.
 \end{proof}
 %Question 4
 \section{}
+\paragraph{}
+We are given a bipartite graph $G=(A\cup B, E)$ where $A$ denotes the set of ``men" and $B$ denotes the set of ``women". Each vertex gives a preference order over their neighbouring vertices. The preference orders are strict for men, but may contain ties for women. We let $>_u$ denote the preference order for vertex $u$. That is, we say $w >_u v $ if $u$ prefers neighbour $w$ to neighbour $v$. We will use $\geq_u$, $=_u$, $<_u$, and $\leq_u$ in a similar manner. Let $N(u)$ denote the neighbourhood of vertex $u$. Let the first choice of vertex $u$ with be denoted $f(u)$. That is $f(u) \geq_u w$ for all $w \in N(u)$. Let $(SM)$ denote the problem of finding a maximum cardinality stable matching in $G$.
+\paragraph{}
+We assume that any vertex prefers to be matched to unmatched. Given a matching $M$, we let $M(u) := v$ iff $uv \in M$. If $u$ is unmatched in $M$ we let $M(u)$ denote some empty element which indicates that $u$ is unmatched. Let $V(M):= \{ u \in V(G): \exists v \in V(G), uv \in M\}$ be the set of matched vertices. We are given the following algorithm, which we will denote $\cA$:
+\begin{enumerate}
+\item Let $M = \emptyset$. Let $G' = G$. No $m \in A$ is a bachelor to start.
+\item While there exists an unmatched $m \in A$ with some women on his list do:
+	\begin{enumerate}
+	\item $m$ proposes to $w = f(m)$ with respect to $G'$. Let $m' = M(w)$.
+	\item If $m >_w m'$ then set $M = M\backslash \{m'w\} \cup \{mw\}$. Set $G' = G' - m'w$ (remove $w$ from $m'$'s list).
+	\item If $m =_w m'$ and $m$ is a bachelor then set $M = M\backslash \{m'w\} \cup \{mw\}$. Set $G' = G'-m'w$.
+	\item Else (both previous conditions fail) $w$ rejects $m$ and set $G' = G' -mw$ (remove $w$ from $m$'s list). 
+	\item If $N(m) = \emptyset$ for the first time, label $m$ a bachelor and add all edges in $\delta(m)$ with respect to $G$ back to $G'$.
+	\end{enumerate}
+\item Return $M$.
+\end{enumerate}
+\begin{lemma}\label{lemma:4poly}
+The algorithm $\cA$ returns a stable matching in polynomial time.
+\end{lemma}
+\begin{proof}
+The algorithm iterates over each man's list at most twice, and each iteration takes polynomial time, so $\cA$ runs in polynomial time. So it remains to verify that $\cA$ returns a stable matching. It is easy to see that $M$ is a matching since each vertex has at most one partner at any time in the operation of $\cA$. Suppose for a contradiction there exists some blocking pair $ab$ with $a \in A$ and $b \in B$. Since $b >_a M(a)$, whenever $a$ proposes to $b$, $a$ is rejected. Thus during the iterations $a$ proposes to $b$, $M(b) \geq_b a$. Since $b$ never releases a man for one she likes less, the quality of $b$'s partner from her perspective is non-decreasing each iteration. So since $M(b) \geq_b a$ when $a$ proposed to $b$ for the last time, this also holds at the end of $\cA$. But this contradicts $a>_b M(a)$ which comes from $ab$ being a blocking pair. Hence the matching $M$ returned is stable. 
+\end{proof}
+\begin{theorem}
+The algorithm $\cA$ is a $\frac{3}{2}$-approximation algorithm for $(SM)$.
+\end{theorem}
+\begin{proof}
+By lemma \ref{lemma:4poly} it only remains to show the approximation factor holds. Let $M^*$ be an optimal stable matching solution to $(SM)$. Let $H = (V, M \Delta M^*)$. By standard matching theory, $H$ is a composition of paths and cycles. If we can show there are no $M$-exposing paths of lengths at most $3$ then the approximation ratio holds. This follows since we would have $$\frac{|M|}{|M^*} \leq \frac{|P \cap M|}{|P\cap M^*|} \leq \frac{2}{3},$$
+where $P$ is the shortest $M$-exposing path in $H$. The second inequality follows since $M$-exposing paths are of odd length in $H$, and so $|P| \geq 5$.
+\paragraph{}
+To complete the proof we show there are no $M$-exposing paths of length at most $3$. An $M$-exposing path of length $1$ would be a blocking pair against $M$, so by stability such a path does not exist. So suppose for a contradiction that there is an $M$-exposing path of length $3$. Say the path is $a_1b_1, b_1a_2,a_2b_2$ where $a_1b_1,a_2b_2 \in M^*$ and $b_1a_2 \in M$. Since $M^*$ is stable $a_1 \geq_{b_1} a_2$ or $b_2 >_{a_2} b_1$.
+\end{proof}
 \end{document}
