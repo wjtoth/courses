@@ -201,7 +201,7 @@ We are given the following algorithm for $(WTAP)$, as usual we will denote it $\
 	\item Let $p$ be the lowest-common-ancestor of $u$ and $v$ on $G$. Add to $G$ the arcs $(p,u)$ and $(p,v)$ with $w(p,u) = w(p,v) = c(uv)$. Note that if $p=u$ or $p=v$ we only add one arc). We say the arcs $(p,u)$ and $(p,v)$ ``correspond" to the link $uv$.
 	\end{enumerate}
 \item Compute a minimum weight $out$-arborescence $R$ rooted at $r$ in the resulting digraph from steps $1$ and $2$.
-\item Output the set $\bar{L} \subseteq L$ such that $\ell \in \bar{L}$ iff there exists an arc in $R$ that correponds to $\ell$.
+\item Output the set $\bar{L} \subseteq L$ such that $\ell \in \bar{L}$ iff there exists an arc in $R$ that corresponds to $\ell$.
 \end{enumerate}
 
 \begin{lemma}\label{lemma:3a-poly}
@@ -223,7 +223,7 @@ $$c(R^*)=2c(L^*)$$
 which contains at $out$-arborescence rooted at $r$ on $D$.
 Then, since $R$ is a minimum weight $out$-arborescence on $G$ with $c(\bar{L}) = c(R)$ this will suffice to prove the approximation factor as $c(R) \leq c(R^*) = 2c(L^*)$.
 \paragraph{}
-For each $\ell \in L^*$ add the arcs which correspoind to $\ell$ to $R^*$. Now we have $c(L^*) = 2c(R^*)$. It remains to fix connectivity in $R^*$ so that there is a directed path from $r$ to each vertex. We will fix it by adding $0$ cost arcs. For each $u \in V\backslash \{r\}$ do the following. Let $p$ be the parent of $u$ with respect to the orientation of step $1$.  Let $G_u$ be the connected component of $G-up$ which contains $u$ and let $G_p$ be the connected component of $G-up$ which contains $p$. Since $L^*$ is feasible for $(WTAP)$ there exists some $ab \in L^*$ such that $a \in V(G_u)$ and $b \in V(G_p)$. Now $a$ is a descendant of $u$. Thus there exists a $0$-cost directed path from $a$ to $u$. Add this path to $R^*$. Note this does not change $c(R^*)$.
+For each $\ell \in L^*$ add the arcs which correspond to $\ell$ to $R^*$. Now we have $c(L^*) = 2c(R^*)$. It remains to fix connectivity in $R^*$ so that there is a directed path from $r$ to each vertex. We will fix it by adding $0$ cost arcs. For each $u \in V\backslash \{r\}$ do the following. Let $p$ be the parent of $u$ with respect to the orientation of step $1$.  Let $G_u$ be the connected component of $G-up$ which contains $u$ and let $G_p$ be the connected component of $G-up$ which contains $p$. Since $L^*$ is feasible for $(WTAP)$ there exists some $ab \in L^*$ such that $a \in V(G_u)$ and $b \in V(G_p)$. Now $a$ is a descendant of $u$. Thus there exists a $0$-cost directed path from $a$ to $u$. Add this path to $R^*$. Note this does not change $c(R^*)$.
 \paragraph{}
 We claim that after doing this for each vertex, the connectivity requirement is satisfied. Let $u \in V$. We proceed by induction on the distance from $u$ to the root. In the base case $r=u$ and so there trivially is a path from $r$ to $u$ in $R^*$. Now suppose $u$ is at least at distance $1$ from $r$, and for all ancestors $u$ there a directed path from $r$ to $u$'s ancestor using arcs of $R^*$. Let $p$, $a$, and $b$ be as in the previous paragraph with respect to $u$. Since $a$ is in $G_u$ and $b$ is in $G_p$ the lowest common ancestor of $a$ and $b$ is some vertex $g$ that is an ancestor of $u$. By induction there is a directed path $P_{rg}$ from $r$ to $g$ using arcs of $R^*$. By construction the arc $(g,a)$ is in $R^*$. So $P_{rg}$, $(g,a)$, and the $0$-cost path from $a$ to $u$ added to $R^*$ in the previous paragraph forms a directed path from $r$ to $u$ in $R^*$. Hence the claim holds. 
 \paragraph{}
@@ -232,7 +232,28 @@ So $R^*$ contains a directed path from $r$ to every vertex of $D$. Therefore $R^
 %Part b of Q3
 \subsection{b}
 \paragraph{}
-Now we change $(WTAP)$ so that the requirement is $(V, E\cup \bar{L})$ is $2$-vertex-connected.
+Now we change $(WTAP)$ so that the requirement is $(V, E\cup \bar{L})$ is $2$-vertex-connected. Since links between adjacent vertices do not help $2$-vertex-connectivity we may assume there are no such links, otherwise just discard them before starting the algorithm. We will modify the algorithm $\cA$ as follows, the big changes are that we take a leaf to be the root, and we ``shorten" the downward arcs:
+\begin{enumerate}
+\item Select an arbitrary leaf $r \in V$ as the root. Orient $E$ towards $r$, and set the $w(a) = 0$ for all the resulting arcs $a$.
+\item For each $uv \in L$ do:
+	\begin{enumerate}
+	\item Let $p$ be the lowest-common-ancestor of $u$ and $v$ on $G$. Add to $G$ the arcs $(p,u)$ and $(p,v)$ with $w(p,u) = w(p,v) = c(uv)$. Note that if $p=u$ or $p=v$ we only add one arc). We say the arcs $(p,u)$ and $(p,v)$ ``correspond" to the link $uv$.
+	\item For each downward arc $(p,u)$ do: if $p$ is not a leaf let $c_p$ be the child of $p$  that succeeds $p$ on the path to $u$ (otherwise let $c_p = p$). If $u$ is not a leaf let $p_u$ be the parent of $u$ (otherwise let $p_u = u$). Replace the arc $(p,u)$ with the arc $(c_p, p_u)$ with the same weight, and same corresponding link as $(p,u)$.
+	\end{enumerate}
+\item Compute a minimum weight $out$-arborescence $R$ rooted at $r$ in the resulting digraph from steps $1$ and $2$.
+\item Output the set $\bar{L} \subseteq L$ such that $\ell \in \bar{L}$ iff there exists an arc in $R$ that corresponds to $\ell$.
+\end{enumerate}
+\begin{lemma}\label{lemma:3b-poly}
+The algorithm $\cA$ returns a feasible solution for $(WTAP)$ on $G$ with links $L$ in polynomial time.
+\end{lemma}
+\begin{proof}
+As argued in lemma \ref{lemma:3a-poly} the algorithm $\cA$ runs in polynomial time, it is clear that the additional processing runs in polynomial time. To verify feasibility suppose for a contradiction that the graph $H := (V, E \cup \bar{L})$ has a vertex $p$ whose deletion disconnects the graph. Let $g$ be the parent of $p$. The vertex $g$ exists since we choose $r$ to be a leaf and hence $p \neq r$. Let $u_1, \dots, u_k$ be the children of $p$. For each $v \in V$, let $C(v)$ denote the connected component of $H-p$ containing vertex $v$. Let $A := \{u \in \{u_1, \dots, u_k\} : u \in C(g)\}$ be the set of children of $p$ which are connected to $g$ after removing $p$. We claim that $A \neq \emptyset$.
+\paragraph{}
+Clearly $r \in C(g)$, as are all ancestors of $p$. Now since $R$ is an $out$-arborescence there exists a directed path from $r$ to $p \cup \bigcup_{i=1}^k u_i$. The arc such a path uses to enter $p \cup \bigcup_{i=1}^k u_i$ is a downward arc from some ancestor of $p$, $a$, to either $p$ or a descendant of $p$, $d$. If the arc is of the form $(a,d)$ then the corresponding link connects an ancestor of $p$ to some descendant of a child $u_i$. Hence $C(g)$ is connected to $C(u_i)$. That is $u_i \in A$ and hence $A \neq \emptyset$. In the case the arc is of the form $(a,p)$, then by our construction of $(a,p)$ in step $2(b)$ there is a link in $\bar{L}$ connecting an ancestor of $p$ to some child of $p$, $u_i$. Thus $C(g)$ is connected to $C(u_i)$. Therefore our claim that $A$ is not empty holds. Let $\bar{A} = \{u_1, \dots, u_k\} \backslash A$. By our contradiction assumption, $\bar{A}\neq \emptyset$ as otherwise removing $p$ does not disconnect $H$.
+\paragraph{}
+Now, again since $R$ is an $out$-arborescence there exists a directed path from $r$ to $\bigcup_{u \in \bar{A}} C(u)$. The directed arc which enters $\bigcup_{u \in \bar{A}} C(u)$ is either a downward ar 
+\paragraph{} 
+\end{proof}
 %Question 4
 \section{}
 \end{document}
