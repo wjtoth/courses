@@ -1,0 +1,126 @@
+\documentclass[letterpaper,12pt,oneside,onecolumn]{article}
+\usepackage[margin=1in, bottom=1in, top=1in]{geometry} %1 inch margins
+\usepackage{amsmath, amssymb, amstext}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{theorem}
+\usepackage{tikz}
+\usepackage{tkz-berge}
+
+%Macros
+\newcommand{\A}{\mathbb{A}} \newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}} \newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+ 
+ 
+\newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}} \newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}} \newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}} \newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}} \newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}} \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}} \newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}} \newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}} \newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}} \newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}} \newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofof}[1]{{\bf Proof of #1:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofofnobox}[1]{{\bf#1:  }}{}\newenvironment{example}{{\bf Example:  }}{\hfill\rule{2mm}{2mm}}
+
+%\renewcommand{\thesection}{\lecnum.\arabic{section}}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}[fact]{Lemma}
+\newtheorem{theorem}[fact]{Theorem}
+\newtheorem{definition}[fact]{Definition}
+\newtheorem{corollary}[fact]{Corollary}
+\newtheorem{proposition}[fact]{Proposition}
+\newtheorem{claim}[fact]{Claim}
+\newtheorem{exercise}[fact]{Exercise}
+\newtheorem{note}[fact]{Note}
+\newtheorem{conjecture}[fact]{Conjecture}
+
+\newcommand{\size}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
+
+%END MACROS
+%Page style
+\pagestyle{fancy}
+
+\listfiles
+
+\raggedbottom
+
+\lhead{2017-04-04}
+\rhead{W. Justin Toth CO750-Approximation Algorithms Report} %CHANGE n to ASSIGNMENT NUMBER ijk TO COURSE CODE
+\renewcommand{\headrulewidth}{1pt} %heading underlined
+%\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
+
+\begin{document}
+\paragraph{Paper Title:} Popularity, Mixed Matchings, and Self-duality
+\paragraph{Authors:} Chien-Chun Huang and Telikepalli Kavitha
+
+\section{Preliminaries}
+\paragraph{}
+We will begin by introducing the definitions of the main objects of study, and some useful notation. Then we will state the theorems to be shown in the later sections of this report.
+\paragraph{}
+As in most problems in the stable matching family we are given a graph $G=(V,E)$ where each vertex has ranking over its neighbours. We will assume throughout that these preference orders are strict, and a vertex prefers any neighbour to being unmatched. We will denote by $N(v)$ the set of neighbours of vertex $v$, and by $\delta(v)$ the set of edges incident with $v$. We will use the notation $>_v$ to describe $v$'s preference order over $N(v)$. Precisely for $u, w \in N(v)$, we write $u >_v w$ if $u$ is preferred by $v$ to $w$. We will use $\geq_v$, $\leq_v$, $=_v$, and $<_v$ analogously.
+\paragraph{}
+One way to think of $\textit{popular}$ matchings is as matchings which never lose an election to any other matching. Since we will speak often about partners in matchings, we introduce the notation: if $M$ is a matching then $M(u) = v$ provided $uv \in M$. For any $u \in V$ and $v,v' \in N(v)$ we define $vote_u(v,v')$ as
+$$vote_u(v,v') := \begin{cases}
+1, \text{ if } v >_u v' \\
+-1, \text{ if } v <_u v' \\
+0, \text{ otherwise (ie. } v = v').
+\end{cases}$$
+To decide the winner of the election we some the votes. The aggregate voting between two matchings $M$ and $M'$ is
+$$\Delta(M, M') = \sum_{u \in V} vote_u(M(u), M'(u)).$$
+Observe that $\Delta(M,M') \geq 0$ if at least as many vertices prefer their partner in $M$ to their partner in $M'$. A $\textit{popular}$ matching $M$ is  a matching where
+$$\Delta(M, M') \geq 0$$
+for any matching $M'$.
+\paragraph{}
+We are interested in the $\textit{max weight popular matching}$ problem in this report. That is, given a weight function $w: E \rightarrow \R_+$ find a popular matching $M$ on $G$ which maximizes $w(M) := \sum_{e \in M} w(e).$ A standard approach to such problems is to attempt to formulate them as linear programs. This will motivate our definitions of fractional popular matchings to follow. In this approach the major question is whether or not your linear programming formulation gives back integral solutions which can be used to solve the original combinatorial problem. In this paper we will prove that there is an integral formulation for a special case, and a $\frac{1}{2}$-integral formulation in general.
+\paragraph{}
+The fractional matching polytope $FM_{G}$ is defined as
+$$FM_{G} := \{x \in \R_{\geq 0}^{E} : x(\delta(v)) \leq 1, \forall v \in V \}.$$
+This object has been well-studied in combinatorial optimization. We want to study the analogous $\textit{popular fractional matching polytope}$ which we will call $P_G$. To formally define $P_G$ we will need to extend our notions related to voting as used in defining popular matchings. Let $x \in FM_G$. We define
+$$vote_u(x, v') := \sum_{v \in V(G)} x_{uv} vote_u(v,v') = x(\delta^{>v'}(u)) - x(\delta^{<v'}(u)),$$
+where $\delta^{>v'}(u) := \{vu \in \delta(u) : v >_u v'\}$ denotes the set of edges $u$ prefers to $uv'$, and $\delta^{<v'}(u)$ is defined analogously.  We define $vote_u(v',x) = -vote_u(x,v')$. Now we have a means of voting between two fractional matchings $x,y \in FM_G$:
+$$vote_u(x,y) := \sum_{uv' \in \delta(u)} y_{uv'}vote(x,v'), $$
+and the total votes:
+$$\Delta(x,y) := \sum_{u \in V} vote_u(x,y).$$
+Now we can formally describe $P_G$ as 
+$$P_G = \{ x\in FM_G: \Delta(x,y) \geq 0, \forall y \in FM_G\}.$$
+\paragraph{}
+We finally have sufficient definitions to describe the results of this paper. In section \ref{sec:formulation} we describe a useful extended formulation which describes $P_G$ that will come into play when studying popular fractional matchings throughout this work. In section \ref{sec:special} we build up the following theorem
+\begin{theorem}\label{th:special}
+Let $G = (A \cup B, E)$ be a bipartite graph with strict preferences. If $G$ admits a perfect stable matching the $P_G$ is integral.
+\end{theorem}
+Building upon this theorem we show that $\frac{1}{2}$-integrality holds in general in section \ref{sec:general}.
+\begin{theorem}
+Let $G=(V,E)$ be an arbitrary graph with strict preferences. Then the extreme points of $P_G$ lie in $\{0,\frac{1}{2}, 1\}^E$.
+\end{theorem}
+In section \ref{sec:complexity} we discuss some results showing that max weight popular matching is $NP$-hard and under the Unique Games Conjecture is difficult to approximate. We conclude with a section discussing open problems.
+\section{Extended Formulation}\label{sec:formulation}
+
+\section{Integrality of $P_G$ in a special case}\label{sec:special}
+
+\section{$\frac{1}{2}$-Integrality of $P_G$ in general}\label{sec:general}
+
+\section{Complexity Results}\label{sec:complexity}
+
+\section{Conclusions}
+\end{document}
