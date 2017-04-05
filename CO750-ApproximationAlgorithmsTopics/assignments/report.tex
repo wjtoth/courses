@@ -98,9 +98,9 @@ We are interested in the $\textit{max weight popular matching}$ problem in this 
 The fractional matching polytope $FM_{G}$ is defined as
 $$FM_{G} := \{x \in \R_{\geq 0}^{E} : x(\delta(v)) \leq 1, \forall v \in V \}.$$
 This object has been well-studied in combinatorial optimization. We want to study the analogous $\textit{popular fractional matching polytope}$ which we will call $P_G$. To formally define $P_G$ we will need to extend our notions related to voting as used in defining popular matchings. Let $x \in FM_G$. We define
-$$vote_u(x, v') := \sum_{v \in V(G)} x_{uv} vote_u(v,v') = x(\delta^{>v'}(u)) - x(\delta^{<v'}(u)),$$
+$$vote_u(x, v') := \sum_{uv \in \delta(u)} x_{uv} vote_u(v,v') = x(\delta^{>v'}(u)) - x(\delta^{<v'}(u)),$$
 where $\delta^{>v'}(u) := \{vu \in \delta(u) : v >_u v'\}$ denotes the set of edges $u$ prefers to $uv'$, and $\delta^{<v'}(u)$ is defined analogously.  We define $vote_u(v',x) = -vote_u(x,v')$. Now we have a means of voting between two fractional matchings $x,y \in FM_G$:
-$$vote_u(x,y) := \sum_{uv' \in \delta(u)} y_{uv'}vote(x,v'), $$
+$$vote_u(x,y) := \sum_{uv' \in \delta(u)} y_{uv'}vote_u(x,v'), $$
 and the total votes:
 $$\Delta(x,y) := \sum_{u \in V} vote_u(x,y).$$
 Now we can formally describe $P_G$ as 
@@ -121,10 +121,126 @@ In section \ref{sec:complexity} we discuss some results showing that max weight 
 Here we present the extended formulation $P'_G$ which we will use to study the popular fractional matching polytope. The properties of $P'_G$ were first studied in \cite{kavitha2011popular}. For a more rigorous treatment of its connection to $P_G$ refer to that paper. Here we try to present ideas about how $P'_G$ was derived.
 
 \paragraph{}
-We begin by augmenting our graph $G$ with a set of last resort neighbours $\ell(u)$ for every $u \in V$. The vertices $\ell(u)$ are only connected to their respective vertex $u$. The preference lists of each $u$ are modified so that $\ell(u)$ is their last choice. That is for all $v \in N(u)$, $v \geq_u \ell(u)$. 
+We begin by augmenting our graph $G$ with a set of last resort neighbours $\ell(u)$ for every $u \in V$. The vertices $\ell(u)$ are only connected to their respective vertex $u$. The preference lists of each $u$ are modified so that $\ell(u)$ is their last choice. That is for all $v \in N(u)$, $v \geq_u \ell(u)$. The vertex set and edge set now look like
+$$V(G) = V \cup \bigcup_{u \in V} \ell(u) \quad\text{and}\quad E(G) = E \cup \bigcup_{u \in V} u\ell(u).$$  With the addition of the last resort vertices we may now assume that every $v \in V$ (the original vertices) is fully matched in any popular fractional matching.
 
+\paragraph{}
+Fix a fractional matching $x \in FM_G$.  We seek a linear program which characterizes when $x$ is popular. Let $w: E(G) \rightarrow \R_+$ be the weight function given by assigning  $$w(ab) := vote_a(b,x) + vote_b(a,x) = x(\delta^{<b}(a)) - x(\delta^{>b}(a)) + x(\delta^{<a}(b)) - x(\delta^{>a}(b))$$
+for any $ab \in E$, and assigning
+$$w(u\ell(u)) := vote_u(\ell(u),x) = -x(\delta^{>\ell(u)}(u)).$$
+Observe that if $y \in FM_G$ fully matches each $u \in V$ then $\sum_{ab \in E(G)} w(ab)y_{ab} = \Delta(y,x).$ So the fractional matching $x$ is popular if and only if the optimal value of the following LP is $0$ (it cannot be less than $0$ as $x$ is a feasible solution, and $\Delta(x,x) = 0$) :
+\begin{align*}
+\max\  &\sum_{e \in E(G)} w(e) y_{e} \\
+\text{s.t.}\ y(\delta(u)) &= 1 &\forall u \in V \\
+y_e &\geq 0 &\forall e \in E(G).
+\end{align*}
+Consider the dual to previous linear program, to be denoted $(LP1)$:
+\begin{align*}
+\min\ &\sum_{u \in V} \alpha_u \\
+\text{s.t.}\ \alpha_a + \alpha_b &\geq w(ab) &\forall ab \in E \\
+\alpha_u &\geq w(u\ell(u)) &\forall u \in V.
+\end{align*}
+If $x$ is popular then the optimal value of $(LP1)$ is $0$. Also note that if $x$ is not popular then the optimal value is greater than $0$. So one means of finding popular fractional matchings would be to let $x$ vary as a fractional matching and minimize $\sum_{u} \alpha_u$. We call that linear program $(LP2)$:
+\begin{align*}
+\min\ &\sum_{u \in V} \alpha_u \\
+\text{s.t.}\ \alpha_a + \alpha_b &\geq w(ab) &\forall ab \in E \\
+\alpha_u &\geq w(u\ell(u)) &\forall u \in V \\
+x(\delta(u)) &= 1 &\forall u \in V \\
+x_e &\geq 0 &\forall e \in E(G).
+\end{align*}
+As discussed above, the optimal value of $(LP2)$ is $0$, and so a corresponding optimal solution for $(LP2)$ is a vector $(x,\alpha) \in \R^{E(G)}\times \R^{V}$ where $x$ is a popular fractional matching and $\sum_{u \in V} \alpha_u = 0$. Such $\alpha$ is called a $\textit{witness}$ to the popularity of $x$. The polytope of optimal solutions of $(LP2)$ is what we will use as our extended formulation for the popular fractional matching polytope. We can describe it as $P'_G$, the set of solutions to the set of linear inequalities:
+\begin{align*}
+\sum_{u \in V} \alpha_u &= 0\\
+\alpha_a + \alpha_b &\geq vote_a(b,x) + vote_b(a,x) &\forall ab \in E \\
+\alpha_u &\geq vote_u(\ell(u),x) &\forall u \in V \\
+x(\delta(u)) &= 1 &\forall u \in V \\
+x_e &\geq 0 &\forall e \in E(G).
+\end{align*}
+Thus $P'_G$ involves $O(|E| + |V|)$ constraints, and hence provides a polynomial size description of popular fractional matchings. The following lemma demonstrates a very interesting property of $(LP2)$
+\begin{lemma}\label{lemma:self-dual}
+The linear program $(LP2)$ is its own dual program program. That is $(LP2)$ is self-dual.
+\end{lemma}
+\begin{proof}
+Consider the dual to $(LP2)$ in variables $y \in \R^{E(G)}$ and $\beta \in \R^V$:
+\begin{align*}
+\max\ &\sum_{u \in V} \beta_u \\
+\text{s.t.} \beta_a + \beta_b + y(\delta^{<b}(a))  - y(\delta^{>b}(a)) + y(\delta^{<a}(b)) - y(\delta^{>a}(b)) &\leq 0 &\forall ab \in E \\
+\beta_u - y(\delta^{>\ell(u)}(u)) &\leq 0 &\forall u \in V \\
+y(\delta(u)) &= 1 &\forall u \in V \\
+y_e &\geq 0 &\forall e \in E(G).
+\end{align*}
+If we perform the substitutions $\alpha_u = -\beta_u$ for each $u \in V$ and $x_e = y_e$ for each $e \in E(G)$ then the above dual LP becomes exactly the same as $(LP2)$.
+\end{proof}
+\paragraph{}
+This lemma leads to the following very useful lemma, which follows immediately from the previous result via complementary slackness.
+\begin{lemma}\label{lemma:self-dual-cs}
+Let $(x, \alpha^x) \in P'_G$.  For every $ab \in E$, if $x_{ab} > 0$ then the ``covering constraint" in $P'_G$ for $ab$ is tight. Formally we have
+$$\alpha_a^x + \alpha_b^x = x(\delta^{<b}(a)) - x(\delta^{>b}(a)) + x(\delta^{<a}(b)) - x(\delta^{>a}(b)).$$
+\end{lemma}
 \section{Integrality of $P_G$ in a special case}\label{sec:special}
+\paragraph{}
+In this section we turn our attention to theorem \ref{th:special}. So suppose that our graph $G$ is bipartite with bipartition $A \cup B$. Also suppose that $G$ admits a perfect stable matching. This condition actually implies that every popular matching is perfect. This follows since stable matchings always match the same set of vertices, and stable matchings are minimum size popular matchings \cite{huang2011popular}. It is not hard to see that this extends to popular fractional matchings, meaning every popular fractional matching fully matches each $u \in V$ to its true neighbours (not last resort vertices). 
+\paragraph{}
+Let $(x, \alpha^x) \in P'_G$. We want to write $x$ as a convex combination of popular matchings. First we want bounds on the values the witness vector $\alpha^x$ takes
+\begin{lemma}
+For every $u \in V$, $\alpha_u^x \in [-1,1]$.
+\end{lemma}
+\begin{proof}First
+$$\alpha^x_u \geq vote_u(\ell(u), x) = -1 \quad\text{(since }x_{u,\ell(u)} = 0\text{).}$$
+Now let $v$ be the least preferred neighbour of $u$ such that $x_{uv} >0$. Then
+$$vote_u(v,x) = -(1-x_{uv}).$$
+Also
+$$vote_v(u,x) = x(\delta^{<u}(v))-x(\delta^{>u}(v))= 1-x_{uv}.$$
+So by lemma \ref{lemma:self-dual-cs},
+$$\alpha_u + \alpha_v = vote_u(v,x) + vote_v(u,x) = -(1-x_{uv}) + (1-x_{uv}) = 0.$$
+Since $\alpha_v \geq -1$ this implies $\alpha_u \leq 1$.
+\end{proof}
+\paragraph{}
+Thinking ahead, we want to write $x$ as a convex combination of popular matchings. In doing this we will use a witness vector in $\{-1,1\}^V$ to certify the popularity of each chosen matching. From our previous lemma we can think of each $\alpha^x_u$ as a convex combination of $-1$ and $1$. For each $a \in A$ let $r_a$ denote the fraction of popular matchings in the convex combination forming $x$ whose $\alpha_a^x$ value is assigned $1$. Similarly define for each $b \in B$ the value $r_b$ to be the fraction assigning $\alpha^x_b$ to $-1$. Precisely we have $2r_a -1 = \alpha^x_a$ and $1-2r_b = \alpha^x_b$.
+\paragraph{}
+Let $X_a$ be the array for the assignment of $a\in A$ in $x$. Each cell of $X_a$ corresponds to some $b \in N(a)$ and the length of the cell is $x_{ab} > 0$ (we omit $0$-length cells). The cells in $X_a$ are arranged in increasing order with respect to $a$'s preferences. The first $r_a$ fraction of $X_a$ is called the $\textit{positive}$ subarray and the remaing the $\textit{negative}$ subarray. We split and reorder the arrays as shown in the following figure to obtain $X'_a$
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.25]{Xa}
+\end{figure}
+We do the same thing for each $b \in B$, creating $X_b$. But the only difference is that we arrange $X_b$'s cell in decreasing order of $b$'s preferences. Also notice that since $r_b$ corresponds to the negative $\alpha_b$ cells, the array begins with the negative subarray. We again split and reorder to obtain $X'_b$ as shown
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.25]{Xb}
+\end{figure}
+One interesting thing about our choice of the $r_a$'s and $r_b$'s is that they allow us to rewrite our covering constraints for $ab$ in a simpler form.
+\begin{lemma}\label{lemma:covering}
+For any $ab \in E$ we have
+$$x_{ab} + x(\delta^{<b}(a)) + x(\delta^{<a}(b)) \leq r_a + (1-r_b),$$
+and if $x_{ab} > 0$ then the above is tight.
+\end{lemma}
+\begin{proof}
+Take the constraint
+$$ \alpha^x_a + \alpha^x_b \geq x(\delta^{<b}(a)) - x(\delta^{>b}(a)) + x(\delta^{<a}(b)) - x(\delta^{>a}(b)) $$
+and rewrite using $\alpha^x_a = 2r_a-1$ and $\alpha^x_b = 1-2r_b$. Further substitute $-x(\delta^{>b}(a)) = -(1 -x_{ab} - x(\delta^{<b}(a)))$ and $-x(\delta^{>a}(b)) = -(1- x_{ab} - x(\delta^{<a}(b)))$. After simplifying the inequality in the lemma statement is obtained. By lemma \ref{lemma:self-dual-cs} this inequality is tight when $x_{ab} > 0$.
+\end{proof}
 
+\paragraph{}
+Now we show how to obtain popular matchings whose convex hull contains $x$. Form a table $T$ by stacking each $X'_u$ for $u \in V$ in rows. The width of $T$ is $1$, so for any $t \in [0,1)$ we can define a set of edges $M_t$ as follows:
+\begin{enumerate}
+\item Form a vertical line at distance $t$ from the left end of $T$
+\item For each $u \in V$ the vertical line intersects (or touches the left boundary of) a cell in $X'_u$. We will denote this cell by $c_u(t)$.
+\item Form the set $M_t$ as $M_t := \{uv : u \in V \text{ and } uv \text{ corresponds to cell } c_u(t)\}$.
+\end{enumerate}
+\paragraph{}
+We need to verify two things: the first is that $M_t$ is a matching, and the second is that $M_t$ is indeed popular. This will be done in the following two subsections. Supposing we are successful in the promised arguments to follow, we will show how this allows us to find a set of popular matchings for which $x$ is a convex combination. Execute the following algorithm:
+\begin{enumerate}
+\item Initialize $i=0$.
+\item Sweep a vertical line from left to right across $T$. Denote its distance from the left by $t$. 
+\item Whenever a new cell is encountered fix matching $M^i = M_t$ and fix $t_i = t$. 
+\end{enumerate}
+Say we find $k$ such matchings. We can then write $x$ as:
+$$x = t_1\chi(M^0) + (t_2 - t_1)\chi(M^1) + \dots + (1 - t_{k-1}) \chi(M^{k-1})$$
+where $\chi(\cdot)$ if the function mapping sets to incidence vectors.
+
+\subsection{$M_t$ is a matching}
+
+\subsection{$M_t$ is popular}
 \section{$\frac{1}{2}$-Integrality of $P_G$ in general}\label{sec:general}
 
 \section{Complexity Results}\label{sec:complexity}
