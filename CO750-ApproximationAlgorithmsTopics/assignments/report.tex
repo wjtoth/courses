@@ -73,6 +73,7 @@
 \begin{document}
 \paragraph{Paper Title:} Popularity, Mixed Matchings, and Self-duality
 \paragraph{Authors:} Chien-Chun Huang and Telikepalli Kavitha
+\paragraph{Reference:} \cite{huang2017popularity}
 
 \section{Preliminaries}
 \paragraph{}
@@ -115,6 +116,12 @@ Let $G=(V,E)$ be an arbitrary graph with strict preferences. Then the extreme po
 \end{theorem}
 In section \ref{sec:complexity} we discuss some results showing that max weight popular matching is $NP$-hard and under the Unique Games Conjecture is difficult to approximate. We conclude with a section discussing open problems.
 \section{Extended Formulation}\label{sec:formulation}
+
+\paragraph{}
+Here we present the extended formulation $P'_G$ which we will use to study the popular fractional matching polytope. The properties of $P'_G$ were first studied in \cite{kavitha2011popular}. For a more rigorous treatment of its connection to $P_G$ refer to that paper. Here we try to present ideas about how $P'_G$ was derived.
+
+\paragraph{}
+We begin by augmenting our graph $G$ with a set of last resort neighbours $\ell(u)$ for every $u \in V$. The vertices $\ell(u)$ are only connected to their respective vertex $u$. The preference lists of each $u$ are modified so that $\ell(u)$ is their last choice. That is for all $v \in N(u)$, $v \geq_u \ell(u)$. 
 
 \section{Integrality of $P_G$ in a special case}\label{sec:special}
 
