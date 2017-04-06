@@ -111,7 +111,7 @@ We finally have sufficient definitions to describe the results of this paper. In
 Let $G = (A \cup B, E)$ be a bipartite graph with strict preferences. If $G$ admits a perfect stable matching the $P_G$ is integral.
 \end{theorem}
 Building upon this theorem we show that $\frac{1}{2}$-integrality holds in general in section \ref{sec:general}.
-\begin{theorem}
+\begin{theorem}\label{th:general}
 Let $G=(V,E)$ be an arbitrary graph with strict preferences. Then the extreme points of $P_G$ lie in $\{0,\frac{1}{2}, 1\}^E$.
 \end{theorem}
 In section \ref{sec:complexity} we discuss some results showing that max weight popular matching is $NP$-hard and under the Unique Games Conjecture is difficult to approximate. We conclude with a section discussing open problems.
@@ -292,11 +292,141 @@ we see that both $a$ and $b$ are matched to better partners than each other. The
 \end{figure}
 \end{proof}
 \section{$\frac{1}{2}$-Integrality of $P_G$ in general}\label{sec:general}
+\paragraph{}
+We now return our attention to general, ie. non-bipartite, graphs $G = (V,E)$ and do not assume the presence of a perfect stable matching. In this case we are interested in proving theorem \ref{th:general}, which says that $P_G$ is $\frac{1}{2}$-integral in these instances. Our strategy is to map $G$ to a bipartite graph with a perfect stable matching, use the previous result, and map what we get back.
+\paragraph{}
+We begin by describing the bipartite graph $H$ obtained from $G$. The vertex set is $V(H) := V \cup V'$, where $V' = \{v' : v \in V\}$, and so $H$ has two vertices $v$ and $v'$ for each vertex in $G$. The edge set is $E(H) := \{uv', vu': uv \in E\} \cup \{uu' : u \in V(G)\}$. Hence $V$, $V'$ forms a bipartition of $V(H)$. Now we describe the preference lists. For each $v \in V$, if $u >_v w$ then $u'>_v w'$ in $H$ and $u >_{v'} w$ in $H$. In $H$ each vertices last choice is their ``twin" vertex. So $u' \geq_v v'$ for all $u' \in N(v)$, and similarly $u \geq_{v'} v$ for all $u \in N(v')$.
+\begin{lemma}
+$H$ admits a stable matching.
+\end{lemma}
+\begin{proof}
+Let $S$ be a stable matching in $H$. Suppose without loss of generality that $S$ exposes $u \in V(H)$. Let $S' := \{uv' :u'v \in S\} \cup \{u'v: uv' \in S\}$ be the ``twin" matching of $S$. By symmetry of the preference orders, since $S$ is stable so is $S'$. By our construction of $S'$, $S'$ exposes $u'$. But further since each stable matching matches the same vertex set, this implies that $S$ also exposes $u'$. But then the edge $uu'$ blocks $S$, a contradiction.
+\end{proof}
 
+\paragraph{}
+Thus by theorem \ref{th:special}, $P_H$ is integral. Now we describe the mapping alluded to an the outset of this section. Let $f: P_G \rightarrow P_H$ be defined as follows.
+$$f(x) = z \text{ where } z_{uv'}=z_{u'v} =x_{uv} \text{ and } z_{uu'} = x_{u\ell(u)}.$$
+We need to verify that $f$ indeed maps popular fractional matchings to popular fractional matchings. It is clear that $z$ is a fractional matching on $H$. We need to check that $z$ is popular.
+\begin{lemma}
+Let $x \in P_G$. Then $z = f(x) \in P_H$.
+\end{lemma}
+\begin{proof}
+We construct a witness $\beta$ to the popularity of $z$. Let $\alpha$ be a witness to the popularity of $x$. For each $u \in V$ set $\beta_u = \beta_{u'} = \alpha_u$. Now $\sum_{v\in V(H)} \beta_v = \sum_{v \in V} \beta_v + \sum_{v' \in V'} \beta_v' = 2 \sum_{u \in V} \alpha_u = 0$. Now we need to check the covering constraints. Let $ab \in E(G)$. Since $(x,\alpha)$ satisfies the $ab$-covering constraint for $P'_G$, it immediate that $(z,\beta)$ satisfies the covering constraints for $ab'$ and $a'b$ in $P'_H$.
+\paragraph{}
+It remains to consider covering constraints for $uu' \in E(H)$. Consider $u\ell(u) \in E(G)$. We have $\alpha_u \geq x_{u\ell(u)} - 1$ from the description of $P'_G$. Now observe that the right-hand side of the covering constraint for $uu'$ in $P'_H$ is
+$$vote_u(u', z) + vote_u'(u,z) = 2(x_{u\ell}-1).$$
+The left-hand side of the covering constraint for $uu'$ in $P'_H$ is
+$$\beta_u + \beta_u' = 2\alpha_u \geq 2(x_{u\ell(u)}-1)$$
+and hence the covering constraint for $uu'$ is satisfied. It is trivial to see that the last-resort covering constraints in $P'_H$ are satisfied. Hence $z \in P_H$.
+\end{proof}
+\paragraph{}
+Now we need a mapping that will take us back from $P_H$ to $P_G$. We want this mapping to be the inverse of $f$ when restricted to fractional matchings in the image of $f$. Let $h: P_H \rightarrow P_G$. We want that $h \circ f (x) = x$ for all $x \in P_G$. To satisfy this we define $h$ as follows:
+$$h(z) = y \text{ where } y_{uv} = (z_{uv'} + z_{u'v})/2 \text{ and } y_{u\ell(u)} = z_{uu'}.$$
+Verifying that $h(z)$ is popular is a routine calculation as in the previous lemma. The witness vector chosen is  $\alpha$ where $\alpha_u = (\beta_u + \beta_u')/2$ and $\beta$ is a witness to the popularity of $z$.
+\paragraph{}
+Now we can show how to write $x \in P_G$ as a convex combination of $\frac{1}{2}$-integral popular matchings. Let $z=f(x)$. Then $z \in P_H$. By theorem \ref{th:special}, that there exist $M_1, \dots, M_k$ and $\lambda \in \R_+^k$ such that $\sum_{i=}^k \lambda_i = 1$ and 
+$$z = \sum_{i=1}^k \lambda_i \chi(M_i).$$
+Now we have $x = h(z)$, and from the definition of $h$, $h$ distributes over scalar multiplication so we have
+$$x = h(z) = \sum_{i=1}^k \lambda_i h(\chi(M_i)).$$
+Now from the definition of $h$, $h(\chi(M_i)) \in \{0,\frac{1}{2}, 1\}^{E(G)}$, so we have shown that $x$ is a convex combination of $\frac{1}{2}$-integral popular matchings.$\blacksquare$
 \section{Complexity Results}\label{sec:complexity}
+\paragraph{}
+The previous section showed that we can find max-weight popular $\frac{1}{2}$-integral matchings in polynomial time. This section seeks to study the hardness of max-weight popular matching. We will show that not only is this problem $NP$-hard, but hard to approximate under the Unique Games Conjecture.
+\paragraph{}
+We give a reduction from VERTEX COVER $(VC)$. Let $H = (V_H, E_H)$ be an instance of $(VC)$ with $|V(H)| = n$. From $H$ we will construct a graph $G=(V,E)$ with preferences, and a weight function $w: E \rightarrow \{1,2\}$. The graph $G$ will be the complete graph on $4n$ vertices. For each $v \in V(H)$ we have $4$ vertices $v_0, v_1, v_2, v_3 \in V(G)$. Below we present the preference lists of $v_0,v_1,v_2,v_3$. In these lists we use $\pi(u_0: u \in N(v))$ to denote an arbitrary permutation on  $\{u_0: u \in N(v) \text{ with respect to $H$}\}$, and we use $\pi(\dots)$ to denote an arbitrary permutation of the vertices not mentioned so far in the particular list. We use these notations to indicate that our reductions are indifferent to how these parts of the preference lists are arranged.
+\begin{align*}
+v_0 &: v_1 > \pi(u_0: u \in N(v)) > v_2 > v_3 >\pi(\dots) \\
+v_1 &: v_0 > v_2 > v_3 > \pi(\dots) \\
+v_2 &: v_1 > v_0 > v_3 > \pi(\dots) \\
+v_3 &: v_1 > v_2 > v_0 > \pi(\dots).
+\end{align*}
+The weight function $w$ is described by $w(v_0v_2) = w(v_1v_3) = 2$ for each $v \in V(H)$ and $w(e) = 1$ for all other edges $e\in E(G)$. 
+\paragraph{}
+In the reductions we rely critically on the following characterization of popular matchings from \cite{huang2011popular}.
+\begin{lemma}\label{lemma:char}
+\cite{huang2011popular} Let $M$ be a perfect matching in $G$. For all $uv \in E\backslash M$ label $uv$ with $(vote_u(v,M(u)), vote_v(u,M(v)))$. Then $(1,1)$ edges are blocking edges in the stable matching sense. Let $G_M$ be the graph obtained from $G$ by deleting $(-1,-1)$ edges (doesn't hurt popularity). Then $M$ is popular if and only if in $G_M$:
+\begin{enumerate}
+\item There is no $M$-alternating cycle containing a blocking edge, and
+\item there is not $M$-alternating path with two or more blocking edges.
+\end{enumerate}
+\end{lemma}
 
+\begin{lemma}\label{lemma:firstreduc}
+Let $C$ be a vertex cover of size $k$ in $H$. Then there exists a popular matching $M$ of $G$ with $w(M) = 4n-2k$. This gives one direction of the desired reduction.
+\end{lemma}
+\begin{proof}
+Construct matching $M$ by adding two edges for each $v \in V(H)$:
+$$\text{ if $v \in C$ then add $v_0v_1, v_2v_3$ to $M$, otherwise add $v_0v_2, v_1v_3$ to $M$}.$$
+Then $w(M) = (1+1)k + (2+2)(n-k) = 4n - 2k$ as desired. We need only verify popularity of $M$. This is done through checking the two conditions of lemma \ref{lemma:char} on $G_M$. One can observe there are four classes of edges in $G_M$:
+\begin{enumerate}
+\item Edges of $M$.
+\item Edges $v_0v_2, v_1v_2, v_1v_3$ for all $v \in C$. The label on these edges is $(-1,1)$.
+\item Edges $v_0v_1, v_1v_2$ for all $v \not\in C$. The label on these edges is $(1,1)$, that is they are blocking edges.
+\item The edge $v_0u_0$ where $vu \in E(H)$ and exactly one of $u,v \in C$. The label on this edge is either $(1,-1)$ or $(-1,1)$.
+\end{enumerate}
+It is not hard to verify the first two conditions of lemma \ref{lemma:char} from this point. To see the alternating cycle condition, one observes that the edges containing any $v_3$ are either in $M$ or $(1,1)$ edges, hence the degree of $v_3$ is one. Since blocking edges are either $v_0v_1$ of $v_1v_2$ and their partner is $v_3$ there cannot be an alternating cycle containing a blocking edge.
+\paragraph{}
+Suppose $P$ is an $M$-alternating path containing either $v_0v_1$ or $v_1v_2$ for $v \not\in C$. It cannot contain both as there is no such alternating path in $G_M$. Then the path $P$ needs to use a class $4$ edge $v_0u_0$ to get out of the ``$v$" edges and find another blocking edge. Since $v \not\in C$, such $u$ is in $C$. Thus $M(u_0) = u_1$. Now the neighbours of $u_1$ are $u_2$ and $u_3$ only. Since $u_2$ and $u_3$ are not incident to any blocking edges, $P$ cannot find a second blocking edge.
+\end{proof}
+\begin{lemma}\label{lemma:6.2}
+Let $M$ be a popular matching in $G$. Then there does not exist $v_su_j \in M$ with $v\neq u$ and $s,t \in \{0,1,2,3\}$.
+\end{lemma}
+\begin{proof}
+The proof is by case analysis using the characterization from lemma \ref{lemma:char}. They show that allowing such an edge contradicts the characterization. The computations are routine in popular matchings, so we'll enumerate the cases and spare the details. The cases are
+\begin{enumerate}
+\item $s,t \in \{0,1\}$
+\item $s, \in \{0,1\}$ and $t=2$
+\item $s \in \{0,1\}$ and $t=3$
+\item $s,t \in\{2,3\}$.
+\end{enumerate}
+\end{proof}
+\begin{lemma}\label{lemma:6.3}
+Suppose $M$ is a popular matching in $G$. Then 
+\begin{enumerate}
+\item For all $v_0,v_1,v_2,v_3 \in V(G)$, either $v_0v_1,v_2v_3 \in M$ or $v_0v_2v_1v_3 \in M$
+\item If $vu \in E(H)$ then either $v_0v_1 v_2v_3 \in M$ or $u_0u_1, u_2u_3 \in M$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+The previous lemma (lemma \ref{lemma:6.2}) tells us that $v_0,v_1,v_2,v_3$ are necessarily matched together. But if $v_0v_3, v_1v_2 \in M$ then $v_0,v_3,v_2,v_1,v_0$ forms an $M$-alternating cycle in $G_M$ containing blocking edge $v_0v_1$. Hence the options stated in $1.$ are the only possibilities. For the second part one can similarly find an alternating path containing two blocking edges.
+\end{proof}
+\begin{lemma}\label{lemma:secondreduc}
+If $M$ is a popular matching in $G$ with $w(M) \geq 4n-2k$ then there is a vertex cover $C$ in $H$ with $|C| \leq k$. This gives the other direction of the desired reduction.
+\end{lemma}
+\begin{proof}
+From part $1)$ of lemma \ref{lemma:6.3}, for all $v \in V(H)$ either $v_0v_1, v_2v_3 \in M$ or $v_0v_2,v_1v_3 \in M$. Define $C$ as
+$$C := \{ v \in V(H): v_0v_1, v_2v_3 \in M\}.$$
+Lemma \ref{lemma:6.3} part $2)$ implies that $H$ is a vertex cover. Now we have the equation
+$$w(M) = (1+1)|C| + (2+2)(n-|C|).$$
+Rearranging, using $w(M) \geq 4n-2k$,  we obtain that $|C| \leq k$.
+\end{proof}
+\paragraph{}
+Thus we have shown the following result. Since we used a stricter version of max-weight popular matching we have a stronger $NP$-hardness result
+\begin{theorem}
+The max-weight popular matching problem on graph $G$ is $NP$-hard, even in the special case that $w: E(G)\rightarrow \{1,2\}$, preferences are strict, $G$ is a complete graph, and $G$ admits a stable matching.
+\end{theorem}
+\paragraph{}
+We can obtain an inapproximability result by slightly modifying our reduction from $H$ to $G$. We change the weight function $w$ so that $w(v_0v_2) = w(v_1v_3) = 1$ for all $v \in V(H)$, and $w(e) = 0$ for all other edges of $G$. Now our previous lemmas of this section still hold, but the size-weight connection is slightly different: there is a vertex cover of $H$ of size $\leq k$ if and only if there is a popular matching of $G$ of weight $\geq 2n-2k$ (and this vertex cover can be found in polynomial time).
+\begin{theorem}
+There does not exist an $O(1)$-approximation algorithm for max-weight popular matching with non-negative weights under Unique Games Conjecture.
+\end{theorem}
+\begin{proof}
+Let $C^*$ be an optimal vertex cover on $H$. Since $H$ is hardest to approximate when it contains a perfect matching, we may assume it does so. Thus $|C^*| \geq \frac{n}{2}$. Suppose for a contradiction that there exists an $\epsilon$-approximation algorithm $\cA$ for max-weight popular matching on $G$ where $\epsilon  \in (0,1)$. Compute a popular matching $M$ on $G$ using $\cA$. We split into two cases on $|C^*|$.
+\paragraph{Case 1}
+Suppose that $|C^*| \leq (1+\epsilon)\frac{n}{2}$. In this case $w(M) \geq \epsilon(1-\epsilon) n$. Using our reduction we can find a vertex cover $C$ with $|C| \leq (2-\epsilon+\epsilon^2)\frac{n}{2}$. Since $\frac{n}{2} \leq |C^*|$ this implies
+$$|C| \leq (2-\epsilon +\epsilon^2)|C^*|.$$
+\paragraph{Case 2}
+In this case we obtain $C$ as above. The approximation factor is $\frac{n}{(1+\epsilon)n/2}$ which is at most $2(1-\epsilon + \epsilon^2)$.
+\paragraph{}
+So we can find a vertex cover $C$ with $|C| \leq (2-\epsilon + \epsilon^2)|C^*|$ in either case. Since $\epsilon \in (0,1)$ this contradiction Unique Games Conjecture.
+\end{proof}
 \section{Conclusions}
-
+\paragraph{}
+We have shown that given a bipartite graph with strict preferences, if the graph admits a perfect stable matching then we can solve the max-weight popular matching problem in polynomial time using linear programming. We have also shown that for arbitrary graphs we can find a max-weight $\frac{1}{2}$-integral popular matching in polynomial time. In the bipartite case, since the fractional matching polytope is integral, this implies we can actually find a mixed matching (ie a convex combination of matchings) using at most two matchings.
+\paragraph{}
+We have demonstrated hardness results saying that on general graphs the max-weight popular matching problem is not only $NP$-hard but also inapproximable unless Unique Games Conjecture does not hold.
+\paragraph{}
+The major open problems here are two: $1)$ settle the complexity of the max-weight popular matching problem on bipartite graphs, and $2)$ to resolve the popular matching problem on general graphs. The latter problem is simply the decision problem resolving existence of a popular matching on graphs with strict preferences.
 \bibliography{references}
 \bibliographystyle{plain}
 \end{document}
