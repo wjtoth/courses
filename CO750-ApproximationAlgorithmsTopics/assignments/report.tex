@@ -239,8 +239,58 @@ $$x = t_1\chi(M^0) + (t_2 - t_1)\chi(M^1) + \dots + (1 - t_{k-1}) \chi(M^{k-1})$
 where $\chi(\cdot)$ if the function mapping sets to incidence vectors.
 
 \subsection{$M_t$ is a matching}
+\paragraph{}
+Let $ab$ be an edge with $x_{ab} > 0$. To show that $M_t$ is a matching it suffices to show that the cell corresponding to $ab$ is perfectly aligned in its position in $X'_a$ with its position in $X'_b$. Then when a vertical line is dropped through the $ab$-cell in $X'_a$ it also dropped through the $ab$-cell in $X'_b$. Thus each vertex is matched to exactly one partner in $M_t$.
 
+\begin{proof} There are two cases to consider: When $x(\delta^{<b}(a)) \geq r_a$ (the case $x(\delta^{<a}(b)) \geq 1-r_b$ is absolutely symmetric) and the case when both $x(\delta^{<b}(a)) < r_a$ and $x(\delta^{<a}(b)) < 1-r_b$.
+\paragraph{Case 1}
+Suppose that $x(\delta^{<b}(a)) \geq r_a$. Then $x_{ab}$ is in $a$'s negative subarray. Let $d = x(\delta^{<b}(a)) - r_a$ be the distance from the left $X'_a$ to $x_{ab}$. Let $d' = x(\delta^{<a}(b))$ be the distance to $x_{ab}$ from the right of the positive subarray of $X'_b$ (see the figure). From lemma \ref{lemma:covering} we have
+$$d + x_{ab} + d' = 1-r_b.$$
+Thus $x_{ab}$ is perfectly aligned as desired. Further since $d \geq 0$, $x_{ab}$ lies in $X'_b$'s positive subarray.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.25]{geqRa}
+\caption{Case 1}
+\end{figure}
+\paragraph{Case 2}
+Suppose $x(\delta^{<b}(a)) < r_a$ and $x(\delta^{<a}(b)) < 1-r_b$. In this case we have separated the cell corresponding to $x_{ab}$. We will describe the proof below, but as before it is more clear from the figure
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.25]{lessRa}
+\caption{Case 2}
+\end{figure}
+Let $d_0 = x(\delta^{<b}(a))$ be the distance from $X'_a$'s positive subarray to $x_{ab}$. Let $d_1 = x(\delta^{<a}(b))$ be the distance from the right of $X'_b$'s positive subarray to the right of $x_{ab}$. Let $x^0_{ab} = r_a-d_0$ be the length of the portion of the $x_{ab}$ cell on the right end of $X'_a$. Let $x^1_{ab} = 1-r_b - d_1$ be the length of the portion of the $x_{ab}$ cell on the left end of $X'_b$. By lemma \ref{lemma:covering} we know that
+$$x_{ab} + d_0 + d_1 = r_a + (1-r_b)$$
+and thus $x_{ab} = x^0_{ab} + x^1_{ab}$. Therefore as in the previous case the cells for $x_{ab}$ are perfectly aligned. Again observe that the cell portions in the positive subarray of $X'_a$ are aligned in the negative subarray of $X'_b$, and vice versa. This additional observation will be useful when we move to popularity.
+\end{proof}
 \subsection{$M_t$ is popular}
+\paragraph{}
+Our plan is to exhibit a witness vector $\alpha \in \{-1,1\}^V$ such that $(\chi(M_t), \alpha) \in P'_G$. Then $M_t$ is popular. We construct $\alpha$ as follows, for every $u \in A\cup B$: set $\alpha_u = -1$  if the vertical line intersect the negative subarray of $X'_u$, else set $\alpha_u = 1$ (the vertical line intersects or touches the boundary of the positive subarray).
+\paragraph{}
+Let $ab \in M_t$. Then, as an artifact of the proof that $M_t$ is a matching, the vertical line intersects the positive subarray of $X'_a$ if and only if it doesn't intersect the positive subarray for $X'_b$. Thus $\alpha_a + \alpha_b = 0$. Since $M_t$ is perfect this implies that
+$$\sum_{u \in A\cup B} \alpha_u = 0.$$
+Since $\alpha_u \geq -1 = vote_u(\ell(u), M_t)$ as $M_t$ is perfect, it only remains to verify the covering constraints. That is for all $ab \in E$
+$$\alpha_a + \alpha_b \geq vote_a(b,M_t) + vote_b(a,M_t).$$
+
+\begin{proof} Recall that we use $c_u(t)$ to denote the cell of $X'_u$ which the vertical line at distance $t$ intersects. Then the cell $c_u(t)$ has a correspondence with $uM_t(u)$. We delineate the following three cases: $1)$ both $c_a(t)$ and $c_b(t)$ are lie in their respective positive subarrays, $2)$ one of $c_a(t)$ or $c_b(t)$ is positive and the other negative, $3)$ or both $c_a(t)$ and $c_b(t)$ are negative. 
+\paragraph{Case 1}
+Suppose that both $c_a(t)$ is positive and $c_b(t)$ is positive. Then $\alpha_a = \alpha_b = 1$. Since $vote_a(b,M_t) + vote_b(a,M_t) \leq 2$ this constraint is easily satisfied.
+\paragraph{Case 2}
+Suppose that one of $c_a(t), c_b(t)$ is positive and the other is negative. Then $\alpha_a + \alpha_b = 0$. From lemma \ref{lemma:covering} we know
+$$x(\delta^{<b}(a)) + x_{ab} + x(\delta^{<a}(b)) \leq r_a + (1-r_b)$$
+Hence for $a$ and $b$ to be matched to worse partners than each other, we need $c_t(a)$ and $c_t(b)$ to be in their respective positive subarrays. That cannot happen in this case, so either $a$ and $b$ matched, or at least one of them prefers the other to their partner. Hence 
+$$vote_a(b,M_t) + vote_b(a,M_t) \geq 0$$
+as desired.
+\paragraph{Case 3}
+Suppose that both $c_a(t)$ and $c_b(t)$ are negative. Then $\alpha_a + \alpha_b = -2$. Again using the inequality 
+$$x(\delta^{<b}(a)) + x_{ab} + x(\delta^{<a}(b)) \leq r_a + (1-r_b)$$
+we see that both $a$ and $b$ are matched to better partners than each other. Therefore $vote_a(b,M_t) + vote_b(a,M_t) = -2$. This is clear from the following picture:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.25]{covering}
+\caption{In Case 3, $c_a(t)$ and $c_b(t)$ are in the common red (negative) area for both. Since $x_{ab}$ lies in the sum length of $r_a + 1-r_b$, both $a$ and $b$ prefer their match to each other.}
+\end{figure}
+\end{proof}
 \section{$\frac{1}{2}$-Integrality of $P_G$ in general}\label{sec:general}
 
 \section{Complexity Results}\label{sec:complexity}
