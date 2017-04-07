@@ -87,7 +87,7 @@ $$vote_u(v,v') := \begin{cases}
 -1, \text{ if } v <_u v' \\
 0, \text{ otherwise (ie. } v = v').
 \end{cases}$$
-To decide the winner of the election we some the votes. The aggregate voting between two matchings $M$ and $M'$ is
+To decide the winner of the election we sum the votes. The aggregate voting between two matchings $M$ and $M'$ is
 $$\Delta(M, M') = \sum_{u \in V} vote_u(M(u), M'(u)).$$
 Observe that $\Delta(M,M') \geq 0$ if at least as many vertices prefer their partner in $M$ to their partner in $M'$. A $\textit{popular}$ matching $M$ is  a matching where
 $$\Delta(M, M') \geq 0$$
@@ -418,7 +418,7 @@ $$|C| \leq (2-\epsilon +\epsilon^2)|C^*|.$$
 \paragraph{Case 2}
 In this case we obtain $C$ as above. The approximation factor is $\frac{n}{(1+\epsilon)n/2}$ which is at most $2(1-\epsilon + \epsilon^2)$.
 \paragraph{}
-So we can find a vertex cover $C$ with $|C| \leq (2-\epsilon + \epsilon^2)|C^*|$ in either case. Since $\epsilon \in (0,1)$ this contradiction Unique Games Conjecture.
+So we can find a vertex cover $C$ with $|C| \leq (2-\epsilon + \epsilon^2)|C^*|$ in either case. Since $\epsilon \in (0,1)$ this is a contradiction under Unique Games Conjecture.
 \end{proof}
 \section{Conclusions}
 \paragraph{}
