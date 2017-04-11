@@ -130,7 +130,38 @@ The dual variables start at $0$ and increase by $1$ whenever they are changed. T
 \item In each iteration of $\cA$ the increase in $c^Tx$ is at most twice the increase in $\sum_{j=1}^m y_j$.
 \item for all $i \in [n]$, $\sum_{j : i \in S(j)} y_j \leq c_i + O(\log d)$.
 \end{enumerate}
-
+\paragraph{}
+Part $1.$ is quite clear. Whenever a primal constraint is introduced, the While loop of Step $2$ does not terminate until the constraint is satisfied. Subsequent iterations do not decrease the variables of $x$, so the constraint remains satisfied.
+\paragraph{}
+To demonstrate $2.$ we will study a single iteration of the While loop. In an iteration of Step $2$ the change in $\sum_{j=1}^m y_j$ is precisely $1$. The change in the primal objective value $c^Tx$ is (from the update in Step $2a$):
+$$\sum_{i \in S(j)} c_i (\frac{x_i}{c_i} + \frac{1}{|S(j)| c_i}) = \sum_{i \in S(j)}(x_i + \frac{1}{|S(j)|}) \leq 2$$
+since $\sum_{i \in S(j)} x_i \leq 1$ at the time Step $2a$. Therefore $2.$ holds.
+\paragraph{}
+Let $i \in [n]$. We consider the dual constraint corresponding to $i$. Whenever we increase a dual variable $y_j$ such that $i \in S(j)$ by $1$ in Step $2b$ we had just increased $x_i$ in Step $2a$. We claim that 
+$$x_i \geq \frac{1}{d}((1+\frac{1}{c_i})^{\sum_{j : i \in S(j)} y_j} - 1).$$
+We will proceed by induction on the iterations of $\cA$. In the base case $x_i = 0$, and $\sum_{j : i \in S(j)} y_j = 0$ so the claim holds. Now consider an iteration in which some dual variable $y_k$ with $k \in S(j)$ is increased. Let $x_i'$ denote the value of $x_i$ after this iteration (and $x_i$ denote the value before).
+\begin{align*}
+x'_i &= x_i(1 + \frac{1}{c_i}) + \frac{1}{|S(j)|c_i} \\
+&\geq x_i(1+\frac{1}{c_i}) + \frac{1}{d\cdot c_i} \\
+&\geq \frac{1}{d}((1+\frac{1}{c_i})^{\sum_{j : i \in S(j)\backslash\{k\}}y_j} - 1)(1 + \frac{1}{c_i})^y_k + \frac{1}{d\cdot c_i} &\text{by the inductive hypothesis on $x_i$} \\
+&= \frac{1}{d}((1+\frac{1}{c_i})^{\sum_{j :i \in S(j)} y_j} -1).
+\end{align*}
+So the claim holds by induction. Now we compute an upper bound on $x'_i$. By the condition of the While loop, $x_i <1$. We also have $c_i \geq 1$ and $d\geq 1$, so
+$$x'_i =  x_i(1 + \frac{1}{c_i}) + \frac{1}{|S(j)|c_i} \leq 1(1+1) + 1 = 3.$$
+Combining inequalities we have
+$$ \frac{1}{d}((1+\frac{1}{c_i})^{\sum_{j :i \in S(j)} y_j} -1) \leq 3.$$
+Using once more that $c_i \geq 1$ and rearranging for $\sum_{j : in \in S(j)} y_j$ we obtain
+$$\sum_{j : i \in S(j)} y_j \leq c_i \log(3d+1) = c_i \cdot O(\log d)$$
+as desired.
+\paragraph{}
+It remains to use these claims to verify the competitive factors. This is done via duality of linear programs. Let $p^*$ be the optimal value of $(P)$. Let $f^*$ be the optimal value of $(D)$. By claim $2$ we have
+$$c^Tx \leq 2 \sum_{j} y_j.$$
+Since $x$ is primal feasible, $c^Tx \geq p^*$. So 
+$$2\sum_j y_j \geq c^Tx \geq p^* = f^*.$$
+Thus $y$ is $2$-competitive. By claim $3$, $y' \in \R^m$ where $y'_j = y_j/O(\log d)$ is feasible for $(D)$.
+So similarly,
+$$c^Tx \leq 2 O(\log d) \sum_j y_j \leq O(\log d) f^* = O(\log d) p^*.$$
+Therefore $x$ is $O(\log d)$-competitive.
 \end{proof}
 \section{Ad Auctions}
 \subsection{Single Slot}
