@@ -76,13 +76,62 @@ The multiplicative weights update method studied in Lecture $9$ is a powerful an
 \paragraph{}
 We will begin by introducing the framework in which competitive online algorithms are studied. General packing/covering problems with be defined, and a we will give an online algorithm using the primal-dual paradigm for such problems. We will observe how a multiplicative weights update procedure is used to update the primal variables in each iteration. 
 \paragraph{}
-Afterwards we will see how this general approach can be applied to applications in implementing ad auctions. We will start with the simple single-unit case, then move on to the more complex multi-slot case. In the multi-slot case strong duality of linear programs will be of great utility.
+Afterwards we will see how ideas from this general approach can be applied to applications in implementing ad auctions. We will start with the simple single-unit case, then move on to the more complex multi-slot case. In the multi-slot case strong duality of linear programs will be of great utility.
 \section{Competitive Online Algorithms via Primal-Dual}
 \subsection{Online Packing and Covering}
 \paragraph{}
-
+We will start by discussing packing/covering problems in the standard, offline setting then move from there to the online model. The $\textit{covering}$ problem is specified by a linear program $(P)$ of the form:
+\begin{align*}
+\min &\sum_{i=1}^n c_i x_i \\
+\text{s.t.} \sum_{i \in S(j)} x_i &\geq 1 &\forall j \in [m]\\
+x_i &\geq 0 &\forall  i \in [n].
+\end{align*}
+There is some notation here to unpack. First for any $k \in \N$ we have $[k] := \{1, \dots, k\}$. The vector $x \in \R^n$ is the variable set. The vector $c \in \R^n$ is the objective function, which is assumed to be non-negative. The sets $S(1), \dots, S(m)$ are subsets of $[n]$. We note here that this model is not the most general form of covering problem imaginable, but it is somewhat simpler while still being general enough to capture the main ideas we are striving for. 
+\paragraph{}
+We are discussing $\textit{fractional}$ covering here, but if we were to restrict our attention to $0-1$ integral solutions we would have nice a combinatorial interpretations for this problem. In this context, covering asks you to find a minimum cost subset of $[n]$ whose intersection with each $S(j)$ is non-empty.
+\paragraph{}
+The $\textit{packing}$ problem $(D)$ is defined as the dual to a corresponding covering problem:
+\begin{align*}
+\max &\sum_{j=1}^m y_j \\
+\text{s.t.} \sum_{j : i \in S(j)} y_j &\leq c_i &\forall i \in [n] \\
+y_j &\geq 0 &\forall j \in [m].
+\end{align*}
+\paragraph{}
+In the $\textit{online covering problem}$ we are solving the covering problem, but we do not have all the information in advance. The cost function $c$ is known to us, as well as the size of the variable space. The entire space of constraints is not known. The constraints are given in some sequence unknown to the algorithm. At each point in the sequence the algorithm receives knowledge of one constraint, and must decide on a feasible solution to the covering problem with the constraints at hand. Any variables the algorithm decides to increase to maintain feasibility of the current sub-instance may not be decreased at future points in the input sequence.
+\paragraph{}
+One can observe that at any point in the operation of the algorithm in the online model, the constraints revealed so far form a sub-instance of the covering problem which is itself a covering problem. We define the online packing problem in such a way that its sub-instances are the duals to the covering problem sub-instances. That is, we reveal the variables one-at-a-time in the online packing problem, as opposed to the constraints as we did for online covering.
+\paragraph{}
+In the $\textit{online packing problem}$ we are solving the packing problem, but again we do not have all the information in advance. The values of $c$ are all known to us in advance, however the number of variables and the precise way they must be packed is not known. At each point in the sequence for which the input is given, a new variable can be introduced to the algorithm. If $y_j$ is the variable introduced, the algorithm is at this point made aware of precisely which $i \in [n]$ satisfy $i \in S(j)$. So the constraints are revealed over time. The algorithm must decide on the value of $y_j$ at the point it is introduced and may not change it in subsequent iterations. Under this definition, for any online covering problem, there is a corresponding online packing problem that, if run simultaneously, have their sub-instances at each point in the sequence the input is given acting as primal-dual pairs.
 \subsection{General Algorithm}
+\paragraph{}
+Consider the following algorithm for simultaneously solving a corresponding pair of online packing/covering problems of the form $(P)$ and $(D)$ from the previous subsection. By scaling, we may assume that each $c_i \geq 1$. We denote the algorithm by $\cA$:
+\begin{enumerate}
+\item When a new constraint for $(P)$ of the form $\sum_{i \in S(j)} x_i \geq 1$ arrives with corresponding dual variable $y_j$ do:
+\item While $\sum_{i \in S(j)} x_i < 1$:
+	\begin{enumerate}
+	\item For each $i \in S(j)$: $x_i \leftarrow x_i(1+\frac{1}{c_i}) + 1(|S(j)|\cdot c_i)$.
+	\item $y_j \leftarrow y_j +1$.
+	\end{enumerate}
+\end{enumerate}
+\paragraph{}
+We now proceed to analyze this algorithm. The critical notion we will use here is that of a $\textit{competitive online algorithm}$. An online algorithm $\cA$ (or its solution) is said to be $c$-competitive if for every instance of the minimization problem $\cA$ solves, the cost of the solution produced by $\cA$ is at most $c\cdot OPT + \alpha$ where $OPT$ is the optimal value of solving the ``offline" version of the problem, and $\alpha$ is an additive factor independent of the sequence in which the input is presented to $\cA$. If $\cA$ instead solves a maximization problem, to be $c$-competitive the cost of the solution produced instead needs to be at least $\frac{1}{c} OPT -\alpha$.
+\begin{theorem}\label{th:1}
+Let $d = \max_{j \in [m]} |S_(j)|$. Then $\cA$ produces two things:
+\begin{enumerate}
+\item An $O(\log d)$-competitive fractional covering solution,
+\item and a $2$-competitive integral packing solution which violates each packing constraint by at most $O(\log d)$.
+\end{enumerate}
+Note: We can rescale our packing solution by $O(\log d)$ to obtain a feasible fractional packing if desired.
+\end{theorem}
+\begin{proof}
+The dual variables start at $0$ and increase by $1$ whenever they are changed. Thus the packing solution returned is integral. By an iteration of $\cA$ we mean a complete execution of step $2$. Let $x$ be the solution for $(P)$ returned by $\cA$. Let $y$ be the solution for $(D)$ returned by $\cA$. We want to show three things:
+\begin{enumerate}
+\item $x$ is feasible for $(P)$.
+\item In each iteration of $\cA$ the increase in $c^Tx$ is at most twice the increase in $\sum_{j=1}^m y_j$.
+\item for all $i \in [n]$, $\sum_{j : i \in S(j)} y_j \leq c_i + O(\log d)$.
+\end{enumerate}
 
+\end{proof}
 \section{Ad Auctions}
 \subsection{Single Slot}
 
