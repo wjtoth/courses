@@ -65,7 +65,7 @@
 
 \raggedbottom
 
-\lhead{2017-04-09}
+\lhead{\today}
 \rhead{William Justin Toth CS798-Convexity and Optimization Project} %CHANGE n to ASSIGNMENT NUMBER ijk TO COURSE CODE
 \renewcommand{\headrulewidth}{1pt} %heading underlined
 %\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
@@ -180,6 +180,86 @@ In the $\textit{ad-auctions problem}$ we are given a set $I$ of $n$ buyers, each
 Allocations can be either $\textit{fractional}$ or $\textit{integral}$. In integral allocation, each item is allocated to a single buyer. In fractional allocations the items can be subdivided and allocated to multiple buyers. The algorithm we present will give an integral allocation, but the linear programming formulation we base it on will be fractional. Clearly, integral allocations suffice as fractional allocations, so we can naturally come our integral solutions to the optimal values of the fractional linear programs.
 \paragraph{}
 The objective is to maximize the total revenue of the seller. The revenue received from each buyer is the minimum of the sum total of bids corresponding to items allocated to that buyer and their budget. It is defined as such since we cannot overcharge buyers.
+\paragraph{}
+We will denote by $(D)$ the $\textit{fractional ad-allocation}$ linear program, defined as follows:
+\begin{align*}
+\max \sum_{j =1}^m \sum_{i=1}^n &b(i,j) y(i,j) \\
+\text{s.t. } \sum_{i=1}^n y(i,j) &\leq 1 &\forall j \in [m] \\
+\sum_{j=1}^m b(i,j)y(i,j) &\leq B(i) &\forall i \in [n] \\
+y(i,j)&\geq 0 &\forall i \in [n], \forall j \in [m]. 
+\end{align*}
+The variables of $(D)$ are the values $y(i,j)$. The meaning of $y(i,j)$ is the fraction of item $j$ that is allocated to buyer $i$. The objective function maximizes our revenue, assuming that we do not overcharge any buyer. The second collection of constraints ensures just that: that we do not charge any buyer more than their budget $B(i)$. The first set of constraints ensures that each item is not over-allocated. That is, you can allocated at most one of item $j$. We observe that $(D)$ is a packing problem, similar to the simplified packing problem studied in the previous section.
+\paragraph{}
+Since $(D)$ is a packing problem, its dual is a covering linear program which we will denote $(P)$. The linear program $(P)$ is as follows:
+\begin{align*}
+\min \sum_{i=1}^nB(i)x(i) &+ \sum_{j=1}^m z(j) \\
+\text{s.t. } b(i,j)x(i) + z(j) &\geq b(i,j) &\forall i \in [n], \forall j \in [m] \\
+x(i) &\geq 0 &\forall i \in [n] \\
+z(j) &\geq 0 &\forall j \in [m].
+\end{align*}
+We describe the following primal-dual algorithm, $\cA$, for ad-allocation (initially all variables are set to $0$):
+\begin{enumerate}
+\item When a new item $j$ is given, allocate $j$ to buyer $i$ which maximizes $b(i,j)(1-x(i))$.
+\item If $x(i) < 1$ then do
+	\begin{enumerate}
+	\item Charge buyer $i$ the minimum of $b(i,j)$ and the remainder of $B(i)$ not yet charged. Set $y(i,j) = 1$
+	\item Set $z(j) = b(i,j)(1-x(i))$.
+	\item Set $x(i) = x(i)\frac{1+b(i,j)}{B(i)} + \frac{b(i,j)}{(c-1)B(i)}$.
+	\end{enumerate} 
+\end{enumerate}
+The value of $c$ above is taken to be $(1+R_{max})^\frac{1}{R_{max}}$ where $R_{max} = \max_{i \in I, j\in M} \frac{b(i,j)}{B(i)}$.
+\begin{theorem}
+The algorithm $\cA$ is $(1-\frac{1}{c})(1-R_{max})$-competitive for the ad-allocation problem. Note that when $R_{max} \rightarrow 0$, $\cA$ tends to being $(1-\frac{1}{e})$-competitive.
+\end{theorem}
+\begin{proof}
+As in the proof of theorem \ref{th:1} we prove three claims about feasibility and the relative change in objective value for $(P)$ and $(D)$ in each iteration:
+\begin{enumerate}
+\item The solution returned by $\cA$ for $(P)$ is feasible.
+\item The increase in the solution for $(P)$ in each iteration is at most $(1+\frac{1}{c-1})$ times in the increase in the solution for $(D)$ during that iteration.
+\item The solution returned for $(D)$ is ``nearly feasible". We will derive the precise bounds when we reach this step of the proof. 
+\end{enumerate}
+\paragraph{}
+Consider a constraint of $(P$) for buyer $i$ and item $j$:
+$$b(i,j)x(i) + z(j) \geq b(i,j).$$
+Suppose $x$ with $z$ is the solution for $(P)$ returned by $\cA$. If $x(i) \geq 1$ then the constraint is satisfied immediately. Otherwise let $i'$ be the buyer $\cA$ allocates $j$ to during operation. The buyer $i'$ maximizes $b(i',j)(1-x(i'))$ by Step $1$. In Step $2b$ $z(j)$ is set to $b(i',j)(1-x(i')).$ It is never changed in later iterations. By our choice of $i'$, 
+$$z(j) \geq b(i,j)(1-x(i))$$
+and hence the constraint for $i$ and $j$ is satisfied by $x$ and $z$. Therefore we have shown claim $1$.
+\paragraph{}
+In each iteration of $\cA$, the increase in value for $(D)$ is $b(i,j)$ where $i$ is the buyer the item $j$ corresponding to the given iteration is allocated to. This follows since we always set $y(i,j)$ to $1$. By step $2b$ the increase in $z$ is 
+$$b(i,j) (1-x(i)).$$
+By step $2c$ the increase in $x$ is
+$$(\frac{1+b(i,j)}{B(i)}-1)x(i) + \frac{b(i,j)}{(c-1)B(i)}.$$
+So the increase in the objective value for $(P)$ is
+\begin{align*}
+&B(i)[(\frac{1+b(i,j)}{B(i)}-1)x(i) + \frac{b(i,j)}{(c-1)B(i)}] + b(i,j)(1-x(i)) \\&= x(i) +b(i,j)x(i) - B(i)x(i) +\frac{b(i,j)}{(c-1)} + b(i,j) -b(i,j)x(i)\\
+&\leq b(i,j)(1+\frac{1}{c-1}).
+\end{align*}
+Therefore claim $2$ holds.
+\paragraph{}
+We want to show that there is at most one iteration per buyer $i$ that we charge them in a manner which exceeds their budget. In particular during the last iteration where we charge $i$, this can happen. To prove this we observe that $\cA$ never increases $y(i,j)$ when $j$ has been allocated to $i$ yet $x(i) \geq 1$. So we want to show that 
+$$\sum_j b(i,j)y(i,j) \geq B(i)$$
+implies that $x(i) \geq 1$. It suffices to show that 
+\begin{equation}\label{eq:1}
+x(i) \geq \frac{1}{c-1}(c^{\frac{\sum_j b(i,j)y(i,j)}{B(i)}} -1)
+\end{equation}
+and when $\sum_j b(i,j)y(i,j) \geq B(i)$ this implies $x(i) \geq 1$. We proceed by induction on the iterations in which an item is allocated to buyer $i$. Before any item has been allocated to buyer $i$, the right hand side of (\ref{eq:1}) is $0$ and so the claim holds. Now consider the inductive case: suppose we are in some iteration where item $k$ is allocated to buyer $i$. Let $x'$ be the value of $x$ after this iteration and $x$ will denote the prior value. Then
+\begin{align*}
+x'(i) &= x(i)(1+\frac{b(i,k)}{B(i)}) + \frac{b(i,k)}{(c-1)B(i)} \\
+&\geq \frac{1}{c-1}(c^{\frac{\sum_{j\neq k} b(i,j)y(i,j)}{B(i)}} -1)(1+\frac{b(i,k)}{B(i)}) + \frac{b(i,k)}{(c-1)B(i)}  &\text{by inductive hypothesis}\\
+&= \frac{1}{c-1}(c^{\frac{\sum_{j\neq k} b(i,j)y(i,j)}{B(i)}}(1+\frac{b(i,k)}{B(i)}) - 1) \\
+&\geq \frac{1}{c-1}(c^{\frac{\sum_{j\neq k} b(i,j)y(i,j)}{B(i)}}c^{\frac{b(i,k)}{B(i)}} -1) \\
+&=\frac{1}{c-1}(c^{\frac{\sum_{j} b(i,j)y(i,j)}{B(i)}} -1).
+\end{align*}
+When $\frac{b(i,k)}{B(i)} = R_{max}$, the second inequality holds with equality. From this we derived our choice of $c$.
+\paragraph{}
+Now we have shown that once the sum of charges for items allocated to any buyer exceeds their budget, we no longer charge the buyer. So their charge can exceed their budget by at most the cost of one bid. Hence for each buyer $i$:
+$$\sum_j b(i,j)y(i,j) \leq B(i) + \max_j b(i,j).$$
+This is precisely how much $(D)$ is violated by in the solution $y$ returned by $\cA$. So we have claim $3$.
+\paragraph{}
+Now the revenue we receive from buyer $i$ is at least
+$$(\sum_j b(i,j)y(i,j))) \frac{B(i)}{B(i) + \max_j b(i,j)} \geq (\sum_j b(i,j)y(i,j)) (1-R_{max}).$$
+From claim $2$ the value of $y$ for $(D)$ present above is at least $1-\frac{1}{c}$ times the value of $(P)$. Since $x$ and $z$ is feasible by claim $1$, the value of $(P)$ is an upper bound on the optimal value of $(D)$. Together this demonstrates the competitive ratio.
+\end{proof}
 \subsection{Multiple Slots}
 \bibliography{references}
 \bibliographystyle{plain}
