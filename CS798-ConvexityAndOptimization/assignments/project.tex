@@ -164,14 +164,22 @@ $$c^Tx \leq 2 O(\log d) \sum_j y_j \leq O(\log d) f^* = O(\log d) p^*.$$
 Therefore $x$ is $O(\log d)$-competitive.
 \end{proof}
 \paragraph{Connection to Multiplicative Weights}
-If we looks at Step $2a$ of $\cA$, we observe multiplicative update rule very similar to those used in the study of the Multiplicative Weights Update Method of Lecture $9$:
+If we looks at Step $2a$ of $\cA$, we observe a multiplicative update rule very similar to those used in the study of the Multiplicative Weights Update Method of Lecture $9$:
 $$x_i \leftarrow x_i(1+\frac{1}{c_i}) + 1(|S(j)|\cdot c_i).$$
 So each $x_i$ involved in constraint $j$ is increased multiplicatively, while $y_j$ increases additively during the operation of the While loop in Step $2$. Notice that during the proof for the competitive factor we used an induction obtaining that $x_i$ is approximately an exponential function of the $y_j$'s:
 $$x_i = \frac{1}{d}((1+\frac{1}{c_i})^{\sum_{j : i \in S(j)} y_j} -1),$$
 similar to how we observe an exponential relationship between the potential function (in the proof for the performance guarantee in multiplicative weights update) and the variables of the multiplicative weights update procedure. In both scenarios these exponentials that arise from the respective multiplicative update rules allow us to derive logarithmic performance factors. The difference being that factor is additive in multiplicative update method, and is multiplicative in primal-dual.
 \section{Ad Auctions}
-\subsection{Single Slot}
+\paragraph{}
+The business of displaying ads in search engine results is a natural and important application for online algorithms. Search provides like Google and Microsoft will sell ad space to advertisers in the search results corresponding with some users given keyword query. The way they sell the space is through auctions to buyers interested in displaying ads related to the given query.
 
+\subsection{Single Slot}
+\paragraph{}
+In the $\textit{ad-auctions problem}$ we are given a set $I$ of $n$ buyers, each with a daily budget of $B(i)$. We are also given a set $M$ of items with $|M| = m$. The items arrive in an online manner. Upon the arrival of some item, say the $j$-th item for $j \in [m]$, each buyer will submit a bid for said item, denoted $b(i,j)$. The algorithm can decide to allocate the item to any of the buyer upon its arrival. The online constraint is that they cannot reallocate items once they have decided who they are to be allocated to.
+\paragraph{}
+Allocations can be either $\textit{fractional}$ or $\textit{integral}$. In integral allocation, each item is allocated to a single buyer. In fractional allocations the items can be subdivided and allocated to multiple buyers. The algorithm we present will give an integral allocation, but the linear programming formulation we base it on will be fractional. Clearly, integral allocations suffice as fractional allocations, so we can naturally come our integral solutions to the optimal values of the fractional linear programs.
+\paragraph{}
+The objective is to maximize the total revenue of the seller. The revenue received from each buyer is the minimum of the sum total of bids corresponding to items allocated to that buyer and their budget. It is defined as such since we cannot overcharge buyers.
 \subsection{Multiple Slots}
 \bibliography{references}
 \bibliographystyle{plain}
