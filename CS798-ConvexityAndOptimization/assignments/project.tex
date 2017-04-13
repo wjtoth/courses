@@ -332,6 +332,18 @@ Now by step $1c$ the increase in $(D)$ is precisely
 $$\sum_{i=1}^n \sum_{k=1}^\ell b(i,j,k)y(i,j,k)$$
 and so claim $2.$ holds.
 \end{proof}
+\section{Conclusions}
+\paragraph{}
+Putting things together, we can synthesize a general approach to using the primal-dual method for designing competitive online algorithms. First one formulates the offline version of their problem as a primal-dual pair of linear programs such that the introduction of a new part of the input in the online model corresponds to the introduction of some new constraints in the primal and some new variables to the dual. Then design an algorithm which additively decides the value of the new dual variables, and multiplicatively updates the primal variables in the new primal constraints until they are satisfied. This multiplicative update will secure a high quality competitive factor if chosen properly.
+\paragraph{}
+The analysis of such general algorithms above proceeds via three claims. First that the primal solution is feasible. Second that the increase in the primal in each iteration can be bounded by some factor of the increase in the dual. The tighter you get this bound, the better your competitive ratio. Third that the dual solution violates its constraints by some small factor. That factor will appear in your competitive ratio and thus should be as tight as possible. The three claims together can be filtered through weak duality to provide a bound on the competitive ratio with factors coming from claim $2$ and $3$.
+\paragraph{}
+For the ad-auction problems we gave algorithms for both the single-slot and multi-slot versions with a competitive ratio that tends to $(1-\frac{1}{e})$. These were first studied in \cite{buchbinder2007online}. In \cite{mehta2007adwords} they demonstrate that the ratios we give are in fact tight, showing that $(1-\frac{1}{e})$ is a lower bound for these problems. 
+\paragraph{}
+Some work has been done on going beyond the lower bounds by instituting additional assumptions for ad-auctions that are reasonable in real world applications. These are detailed in \cite{buchbinder2009design}. One possibility is to assume that each bidder is likely to spend some fraction of their budget, say $g_i$. Such an assumption can be verified by observing past behaviour of the bidder in the real world. In this case, known as the stochastic information case, one can use primal-dual with some modifications to achieve a competitive ratio of $$1-\frac{1-g}{e^{1-g}}$$
+where $g = \min_{i} g_i$. Another assumption that allows one to get below the lower bound is the bounded degree assumption. Here we assume that the buyer is interested in at most $d$ of the items. Usually $d$ is much smaller than $m$. In this case a ratio of 
+$$1-\frac{d-1}{d(1+\frac{1}{d-1})^{d-1}}$$
+can be achieved.
 \bibliography{references}
 \bibliographystyle{plain}
 \end{document}
