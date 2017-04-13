@@ -257,10 +257,81 @@ $$\sum_j b(i,j)y(i,j) \leq B(i) + \max_j b(i,j).$$
 This is precisely how much $(D)$ is violated by in the solution $y$ returned by $\cA$. So we have claim $3$.
 \paragraph{}
 Now the revenue we receive from buyer $i$ is at least
-$$(\sum_j b(i,j)y(i,j))) \frac{B(i)}{B(i) + \max_j b(i,j)} \geq (\sum_j b(i,j)y(i,j)) (1-R_{max}).$$
+$$(\sum_j b(i,j)y(i,j)) \frac{B(i)}{B(i) + \max_j b(i,j)} \geq (\sum_j b(i,j)y(i,j)) (1-R_{max}).$$
 From claim $2$ the value of $y$ for $(D)$ present above is at least $1-\frac{1}{c}$ times the value of $(P)$. Since $x$ and $z$ is feasible by claim $1$, the value of $(P)$ is an upper bound on the optimal value of $(D)$. Together this demonstrates the competitive ratio.
 \end{proof}
 \subsection{Multiple Slots}
+\paragraph{}
+Now we extend to a more general problem. As before we will have $n$ buyers and $m$ items, but now each item will have $\ell$ ``slots". Think of slots as different positions for an ad on a given page of search results corresponding to some keyword. Naturally, different positions may have different value to advertisers, so we allow different bids for different slots. Thus each buyer $i \in [n]$ submits a bid for each slot $k \in[\ell]$ of item $j \in [m]$: $b(i,j,k)$. We fractionally allocate slots just as we did before for items. Thus our general form for $(D)$ is
+\begin{align*}
+\max \sum_{j =1}^m \sum_{i=1}^n \sum_{k=1}^\ell&b(i,j,k) y(i,j,k) \\
+\text{s.t. } \sum_{i=1}^n y(i,j,k) &\leq 1 &\forall j \in [m], \forall k \in [\ell]. \\
+\sum_{j=1}^m \sum_{k=1}^\ell b(i,j,k)y(i,j,k) &\leq B(i) &\forall i \in [n] \\
+y(i,j,k)&\geq 0 &\forall i \in [n], \forall j \in [m], \forall k \in [\ell]. 
+\end{align*}
+The dual to $(D)$, denoted $(P)$ is now
+\begin{align*}
+\min \sum_{i=1}^nB(i)x(i) &+ \sum_{j=1}^m\sum_{k=1}^\ell z(j,k) + \sum_{i=1}^n\sum_{j=1}^m s(i,j) \\
+\text{s.t. } b(i,j,k)x(i) + z(j,k) + s(i,j) &\geq b(i,j,k) &\forall i \in [n], \forall j \in [m] , \forall k \in [\ell]\\
+x(i) &\geq 0 &\forall i \in [n] \\
+z(j,k) &\geq 0 &\forall j \in [m], \forall k \in [\ell] \\
+s(i,j) &\geq 0 &\forall i \in [n], \forall j \in [m].
+\end{align*}
+The generalized algorithm, $\cA$, is as follows:
+\begin{enumerate}
+\item When a new item $j$ is given, do:
+	\begin{enumerate}
+	\item Let $H$ be a bipartite graph with vertex set $[n] \cup [\ell]$. Each edge of $H$ is of the form $ik$ with $i \in [n]$ and $k \in [\ell]$.  The weight of edge $ik$ is $b(i,j,k)(1-x(i))$.
+	\item Find a maximum weight integral matching in $H$. Such a matching forms an assignment on the variables $y(i,j,k)$.
+	\item Charge buyer $i$ the minimum of $\sum_{k=1}^\ell b(i,j,k)y(i,j,k)$ and the remainder of $B(i)$ not yet charged.
+	\item For each $i \in [n]$, for each $k \in [\ell]$ with $y(i,j,k) > 0$ update  $$x(i) = x(i)(1+ \frac{b(i,j,k)y(i,j,k)}{B(i)}) + \frac{b(i,j,k)y(i,j,k)}{(c-1)B(i)}.$$
+	\end{enumerate} 
+\end{enumerate}
+One can observe that this algorithm is indeed a proper generalization of the previous algorithm. In the case where $\ell = 1$ (ie. each item has one slot), the multiple slot algorithm computes a maximum weight matching in a very simple graph: where there is one vertex in the item partition, and all the buyers in the other. It amounts to picking the max weight bidder as we did in the previous algorithm. Thus the operation of the multiple slot algorithm reduces to the operation of the single slot algorithm in the case where $\ell = 1$.
+\paragraph{}
+We will need the linear programs for maximum weight matching, and its dual in our analysis of $\cA$. Fix some item $j$ and some previously set $x \in \R^n$. Then the maximum weight matching linear program for $H$, denoted $(M)$ is
+\begin{align*}
+\max \sum_{i=1}^n \sum_{k=1}^\ell b(i,j,k)(1-x(i))&y(i,j,k) \\
+\text{s.t.} \sum_{i=1}^ny(i,j,k) &\leq 1 &\forall j \in [\ell] \\
+\sum_{k=1}^\ell y(i,j,k) &\leq 1 &\forall i \in [n] \\
+y(i,j,k) &\geq 0 &\forall i \in [n], \forall k \in [\ell].
+\end{align*}
+The dual of $(M)$ is a vertex cover problem $(C)$ of the form
+\begin{align*}
+\min \sum_{i=1}^n s(i,j) &+ \sum_{k=1]}^\ell z(j,k) \\
+\text{s.t.} s(i,j) + z(j,k) &\geq b(i,j,k)(1-x(i)) &\forall i \in [n], \forall k \in [\ell] \\
+z(j,k) &\geq 0 &\forall k \in [\ell] \\
+s(i,j) &\geq 0 &\forall i \in [n].
+\end{align*}
+It is a well known theorem that $(M)$ always has integral optimal solutions, and thus by strong duality the integral matching found along with dual vertex cover in $H$  satisfies:
+\begin{equation}\label{eq:sd}
+\sum_{i=1}^n \sum_{k=1}^\ell b(i,j,k)(1-x(i))y(i,j,k) = \sum_{i=1}^n s(i,j) + \sum_{k=1]}^\ell z(j,k)
+\end{equation}
+The theorem will use this connection critically in its analysis, but otherwise follows the same structure as the proof in the single slot case.
+\begin{theorem}
+The algorithm $\cA$ is $(1-\frac{1}{c})(1-R_{max})$-competitive for the online ad allocation problem with multiple slots.
+\end{theorem}
+\begin{proof}
+As in the single slot case we will show the following three claims:
+\begin{enumerate}
+\item The solution returned by $\cA$ for $(P)$ is feasible.
+\item The increase in the solution for $(P)$ in each iteration is at most $(1+\frac{1}{c-1})$ times in the increase in the solution for $(D)$ during that iteration.
+\item The solution returned for $(D)$ is ``nearly feasible". We will derive the precise bounds when we reach this step of the proof. 
+\end{enumerate}
+Then, just before we can achieve the desired competitive ratio using weak duality.  The proof for claims $1.$ and $3.$ are directly analogous to their proofs in the single slot case. So we shall focus our attention on the proof of claim $2.$ where strong duality is used.
+\paragraph{}
+Consider the iteration for item $j$. The increase in $x(i)$ during this iteration is 
+$$ \sum_{k=1}^\ell (x(i)\frac{b(i,j,k)y(i,j,k)}{B(i)} + \frac{b(i,j,k)y(i,j,k)}{(c-1)B(i)})$$
+for each $i \in [n]$. So the increase in $(P)$ is
+$$\sum_{i=1}^n z(j,i) + \sum_{k=1}^\ell s(i,j) +\sum_{i=1}^n\sum_{k=1}^\ell B(i) (x(i)\frac{b(i,j,k)y(i,j,k)}{B(i)} + \frac{b(i,j,k)y(i,j,k)}{(c-1)B(i)})$$
+Using strong duality equation (\ref{eq:sd}) this is equal to
+$$\sum_{i=1}^n \sum_{k=1}^\ell b(i,j,k)(1-x(i))y(i,j,k) + \sum_{i=1}^n \sum_{k=1}^\ell (b(i,j,k)x(i)y(i,j,k) + \frac{b(i,j,k)y(i,j,k)}{c-1}) $$
+Simplifying this gives
+$$\sum_{i=1}^n \sum_{k=1}^\ell b(i,j,k)y(i,j,k)(1+\frac{1}{c-1}).$$
+Now by step $1c$ the increase in $(D)$ is precisely
+$$\sum_{i=1}^n \sum_{k=1}^\ell b(i,j,k)y(i,j,k)$$
+and so claim $2.$ holds.
+\end{proof}
 \bibliography{references}
 \bibliographystyle{plain}
 \end{document}
