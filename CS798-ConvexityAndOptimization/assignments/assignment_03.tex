@@ -73,7 +73,77 @@
 \begin{document}
 %Question 1
 \section{}
-
+Let $K \subseteq R^n$ be a convex body with $rB^n_2 \subseteq K \subseteq RB^n_2$ for some $0 < r < R$. Suppose there exists a separation oracle for $K$. Consider the following algorithm, $\cA$:
+\begin{enumerate}
+\item Start with $\cE = RB^n_2$. Throughout we use $v_1, \dots, v_n$ to denote the semi-axes of $\cE$, $\lambda_1, \dots, \lambda_n$ the respective side-lengths, and $c$ the centre of $\cE$.
+\item Repeat:
+	\begin{enumerate}
+	\item For each $p \in \{ c+ \frac{v_i}{n+1} : i \in [n]\} \cup \{c-\frac{v_i}{n+1} : i \in [n]\}$:
+		\begin{enumerate}
+		\item Call separation oracle on $p$.
+		\item If $p \not \in K$ let $v^Tx = b$ be the hyperplane returned by the oracle (with $v^Tp > b$). ``Shrink" $\cE$ with respect to $v^Tx=b$ (to be detailed) and $\cE$ to be the new ellipsoid from shrinking. Continue to the next iteration of Step $2$.
+		\end{enumerate}
+	\item Return $\cE$ (each $p \in K$).
+	\end{enumerate}
+\end{enumerate}
+\paragraph{Shrinking Process}
+As in the ellipsoid method, given some ellipsoid $\cE_t$ (with $K \subseteq \cE_t$) and a hyperplane $v^Tx = b$ we want to find a new ellipsoid $\cE_{t+1}$ such that $\cE \cap \{x : v^Tx \leq b\} \subseteq \cE_{t+1}$. Critically we want $vol(\cE_{t+1}) \leq O(\exp(\frac{-1}{n}))  vol(\cE_t)$. As we have seen in Lecture $15$, via an affine change of variables this problem can be reduced to one where $\cE_t$ is the unit ball centred at the origin. We use the same change of variables here and detail the process in the special case below. Although we will get a different estimate on the volume this reduction is still valid since the critical point is that the volume proportions are invariant under an affine map.
+\paragraph{}
+As in the lecture notes, we will use $\cB = \cE_t$ to denote the origin-centered unit ball. We may assume that $||v|| =1$ (we use $2$-norm throughout). We will use $\cE$ to denote $\cE_{t+1}$. We will describe $\cE$ as 
+$$\cE := \{x \in \R^n : (x-c)^TH^{-1}(x-c) \leq 1\}.$$
+The centre $c$ will be at $-\alpha v$ for some $\alpha \in [0,1]$. We will use $v$ as one semi-axes, while the others shall be orthogonal to $v$ of the same side length. Hence we have
+$$H^{-1} = avv^T + b(I - vv^T)$$
+where $a$ is the inverse side length square of $v$, and $b$ is the inverse side length square of the other semi-axes. To ensure $\cE$ satisfies the desired containment, and yet is as small as possible we want the boundary of $\cE$ to touch $-v$ and the points on the boundary of $B$ that intersect the hyperplane $v^Tx = b$. The first condition yields
+$$(-v+\alpha v)^T(avv^T + b(I-vv^T))(-v+\alpha v) = 1$$
+which implies
+$$a = \frac{1}{(\alpha-1)^2}.$$
+The second condition implies that for all $y$ orthogonal to $v$, with $||y + \frac{n}{n+1}v || =1$ we have
+$$(y + (\frac{n}{n+1} + \alpha)v)^T(avv^T + b(I-vv^T))(y+(\frac{n}{n+1} + \alpha)v) = 1.$$
+This condition implies
+$$ b = \frac{1-\beta^2a}{||y||^2}$$
+where $\beta = \frac{n}{n+1} + \alpha.$ Note that we may use the pythagorean theorem to find $||y||$:
+$$||y||^2 =\frac{2n+1}{(n+1)^2}.$$ 
+We hope to bound the ratio of $vol(\cE)$ to $vol(B)$. We have the equation
+$$\frac{vol(\cE)}{vol(\cB)} = \frac{1}{\sqrt{ab^{n-1}}} = \frac{||v||^{n-1}}{\sqrt{a(1-\beta^2a)^{n-1}}}.$$
+So we want to maximize
+$$f(\alpha) = a(1-\beta^2a)^{n-1}.$$
+Simplifying $1-\beta^2a$ we obtain
+$$1-\beta^2a = \frac{2n+1}{(n+1)^2}(\frac{2(n+1)}{1-\alpha} - \frac{2n+1}{(1-\alpha)^2}.$$
+Setting $h = \frac{1}{1-\alpha}$ this gives
+$$1-\beta^2a = \frac{2(n+1)}{((n+1)^2}(2(n+1)h - (2n+1)h^2).$$
+Thus $f$ may be rewritten in terms of $h$ as
+$$f(h) = (\frac{2n+1}{(n+1)^2})^{n-1}[h^2(2(n+1)h - (2n+1)h^2)^{n-1}].$$
+To maximize $f$ we take the derivate and set $f'(h) = 0$. Solving for $h$ yields
+$$h = \frac{n+1}{2n+1}.$$
+Such $h$ allows us to find $\alpha$, $a$, and $b$. Thus we have found our ellipse. Now we need to verify the volume. Plugging $h$ into $f$ yields
+$$f(h) = (\frac{1}{2n+1})^{n-1}(\frac{4n+3}{2n+1})^{n-1}.$$
+Therefore
+\begin{align*}
+\frac{f(h)}{||y||^{2(n-1)}} &= (\frac{1}{2n+1})^{n-1}(\frac{4n+3}{2n+1})^{n-1}(\frac{(n+1)^2}{2n+1})^{n-1} \\
+&=(\frac{(n+1)^2(4n+3)}{(2n+1)^3})^{n-1} \\
+&= (\frac{4m^3 - m^2}{(2m-1)^3})^{m-2} &\text{where $m=n+1$} \\
+&\geq (\frac{1}{2} - \frac{1}{8m})^{m-2} \\
+&\geq (\frac{1}{2}- \frac{1}{8(n-1)})^{n-1} \\
+&\geq exp(\frac{1}{8(n-1)}).
+\end{align*}
+Therefore $\frac{vol(\cE)}{vol(\cB)} = O(exp(\frac{-1}{n})).$
+\paragraph{Runtime of Algorithm}
+Now we bound the oracle calls used by $\cA$. Each iteration of Step $2$ used $O(n)$ oracle calls in Step $2a$. The question now is how many times Step $2$ iterates. Let $\cE_t$ be the current ellipsoid at iteration $t$ of Step $2$. By the argument above (in big-$O$),
+$$vol(\cE_{t+1}) \leq exp(\frac{-1}{n}) vol(\cE_t).$$
+Let $t$ be the last iteration of $\cA$. With $\cE_0 = RB^n_2$ we have by induction
+$$vol(\cE_t) \leq exp(\frac{-1}{n})^t vol(RB^n_2).
+$$Since $rB^n_2 \subseteq K$, $vol(rB^n_2) \leq vol(\cE_t)$. Thus we have
+$$vol(rB^n_2) \leq exp(\frac{-1}{n})^t vol(RB^n_2)$$
+Solving for $t$ we have
+$$\frac{t}{n} = \log(\frac{R}{r})^n$$
+and so 
+$$t = O(n^2\log(\frac{R}{r})).$$
+Therefore the total number of oracle calls in $\cA$ is $O(n^3\log(\frac{R}{r}))$.
+\paragraph{Correctness}
+By our shrinking procedure, $K \subseteq \cE$. When $\cA$ terminates we have that
+$c\pm \frac{v_i}{n+1} \in K$ for all $i \in [n]$. Let $C$ be the convex hull of $\{c\pm \frac{v_i}{n+1} : i \in [n]\}$. So $C \subseteq K$. From the definition of $C$, we have that $C$ is a symmetric convex body. Since the vertices of $C$ are semiaxes endpoints of $\cE' := c + \frac{1}{n+1}(\cE - c)$, we have that $\cE'$ is the minimum volume ellipsoid containing $C$. Thus by John's theorem, $c + \frac{1}{\sqrt{n}}(\cE'-c) \subseteq C$. Hence 
+$$c + \frac{1}{\sqrt{n}(n+1)}(\cE  - c) \subseteq C \subseteq K \subseteq \cE$$
+as desired. $\blacksquare$
 %Question 2
 \section{}
 
