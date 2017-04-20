@@ -146,7 +146,35 @@ $$c + \frac{1}{\sqrt{n}(n+1)}(\cE  - c) \subseteq C \subseteq K \subseteq \cE$$
 as desired. $\blacksquare$
 %Question 2
 \section{}
-
+\paragraph{}
+Let $A \in \{\pm 1\}^{m\times n}$. Suppose that the rank of $A$ is $r$. Let $a^1, \dots, a^r \in \R^m$ be a basis for the rowspace of $A$. Then for each row $i \in [m]$ of $A$ there exists $\lambda_1^i, \dots, \lambda^i_r$ such that the row vector can be expressed as $\sum_{j=1}^r \lambda_j^i a^j$. Therefore if we let $u_i^T = \begin{bmatrix} \lambda^i_1 &\dots &\lambda^i_r\end{bmatrix}$ and collect $U = \begin{bmatrix} u_1 &\dots & u_m \end{bmatrix}$, and we let $$V = \begin{bmatrix}
+(a^1)^T \\ \dots \\ (a^r)^T
+\end{bmatrix}$$ then we can write $A$ as 
+$$A = U^T V.$$
+Let $v_1, \dots, v_n$ be the columns of $V$. Since $A \in \{\pm 1\}^{m \times n}$, observe that $$|u^T_i v_j | = 1$$ for all $i \in [m], j \in [n]$. This fact will be useful later.
+\paragraph{}
+Let $K$ be the convex hull of $\{ \pm u_i : i \in [m]\}$. Then $K$ is a symmetric convex body in $\R^r$. By John's theorem there exists an ellipsoid $\cE$, centered at $0$, such that
+$$ \frac{1}{\sqrt{r}} \cE \subseteq K \subseteq \cE.$$
+There exists some positive definite matrix $H$ such that we can write $\cE = \{ x : x^TH^{-1}x \leq 1\}$. Then $H^\frac{1}{2} (\cE) = \cB$ where $\cB$ is the Euclidean norm unit ball. So $\sqrt{r}H^\frac{1}{2}(\cE) = \sqrt{r}\cB$. Let $\overline{U} = \sqrt{r}H^\frac{1}{2}U$, and let $\overline{V} = \frac{1}{\sqrt{r}} H^\frac{-1}{2}V$. Then
+$$\overline{U}^T\overline{V} = U^TH^\frac{1}{2}H^\frac{-1}{2}V = U^TV = A$$
+using that $H^\frac{1}{2}$ is symmetric.
+\paragraph{}
+For any matrix $M$ we use $col(M)$ to denote the set of column vectors of $M$. Since $col(U) \subseteq K$ and $$\sqrt{r}H^\frac{1}{2}(K) \subseteq \sqrt{r}H^\frac{1}{2} \cE = \sqrt{r} B$$
+we have $||\overline{u}|| \leq \sqrt{r}$ for all $\overline{u} \in col(\overline{U}) = col(\sqrt{r}H^\frac{1}{2}U)$. Let $\overline{v} \in col(\overline{V})$. Then 
+$$||\overline{v}||^2 = \overline{v}^T \overline{v} = \frac{1}{r}v^THv = \frac{1}{r} ||v||_H^2.$$
+Thus
+$$||\overline{v}|| = \frac{1}{\sqrt{r}} ||v||_H = ||v||_{\frac{1}{\sqrt{r}}H}.$$
+Now the norm $||\cdot ||_{\frac{1}{\sqrt{r}}H}$ is dual to the norm $||\cdot||_{\frac{1}{\sqrt{r}}H^{-1}}$ so 
+$$||\overline{v}|| = \sup \{ v^Tx : \frac{1}{\sqrt{r}} x^TH^{-1}x \leq 1\} = \sup_{x \in \frac{1}{\sqrt{r}}\cE} x^Tv.$$
+Since $\frac{1}{\sqrt{r}}\cE \subseteq K$ we have
+$$||\overline{v}|| \leq \sup_{x \in K} x^Tv.$$
+Since $K$ is the convex hull of $\{\pm u : u \in col(U)\}$, for all $x \in K$ there exists $\lambda \in \R^{2r}$ such that $\lambda \geq 0$, $\sum_{i=1}^{2r} \lambda_i = 1$ and $\sum_{i=1}^r \lambda_i u_i - \sum_{i=r+1}^{2r} \lambda_i u_i = x$. But, since $|u^Tv| =1$ for all $u \in col(U)$, this expression is maximized when $\lambda_{r+1} = \dots = \lambda_{2r} = 0$ and in such a case 
+$$\sum_{i=1}^r \lambda_i u_iv^T \leq \sum_{i=1}^r\lambda_i\cdot 1 = 1.$$
+Hence
+$$||\overline{v}|| \leq \sup_{x \in K} x^Tv \leq 1.$$
+Therefore, for all $\overline{v} \in col(\overline{V})$, $||\overline{v}|| \leq 1\leq \sqrt{r}$, and for all $\overline{u} \in col(\overline{U})$, $||\overline{u}|| \leq \sqrt{r}$. Further
+$$A = \overline{U}^T\overline{V}$$
+as desired. $\blacksquare$
 %Question 3
 \section{}
 \paragraph{}
