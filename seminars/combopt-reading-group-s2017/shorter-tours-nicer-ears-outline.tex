@@ -83,5 +83,36 @@ For minimum $T$-tour, $LP(G)$ is not a lower bound, so we introduction the more 
 \paragraph{}
 Proposition $1.4$, explaining how we may assume the graphs given are $2$-vertex connected.
 \section{Ear Decompositions}
-
+\subsection{Definitions}
+\paragraph{}
+Define an ear decomposition, and terms such as closed, open, endpoint, internal, attached. The term ``open ear-decomposition".
+\paragraph{}
+Note the theorem of Whitney that a graph has an open ear decomposition if and only if it is 2-vertex-connected.
+\paragraph{}
+Length of ears, non-trivial ears, pendant ears. Give an example decomposition to demonstrate all these concepts.
+\subsection{M\"omke-Svensson Bound}
+\paragraph{}
+Recall definition of removable pairing. Recall theorem of M\"omke-Svensson. Show how to use this theorem and ear-decompositions to obtain a good tour when there are not many pendant ears.
+\subsection{Even, Short, and Clean Ears}
+\paragraph{}
+Define the terms even, short, and clean ears. Give an example, (or show them on a previous drawing). Explain algorithmic idea at play. Show how it gives workhorse lemma Lemma $2.1$. Connect the idea that when $\gamma(P)$ is $0$, applying this to pendant ears can give $T$-tours which pick up a $-1$ for each pendant ear, good when there are many.
+\paragraph{}
+Defer mention of Proposition $2.2$ and Theorem $1$ until needed.
+\section{Nice(r) Ear-Decompositions}
+\subsection{Nice Ear Decompositions}
+\paragraph{}
+Define a nice ear decomposition. Give an example. State Lemma that they can be found in polynomial time for $2$-vertex-connected graphs. Defer proof to end of talk.
+\subsection{Switching to Nicer Ears}
+\paragraph{}
+Lemma $2.1(b)$ indicates clean ears are expensive. Define eardrum as it arises for our purposes with respect to ear decompositions. Show how the $1$-ears connecting $V_M$ to $V(G)\backslash V_M$ effectively give us a choice in how to choose our clean ears.
+\paragraph{}
+Proposition $2.6$ tells us that we can switch paths on these $1$-ears and still have a nice ear-decomposition. We want to choose the paths so that the ears associated with the eardrum have as few connected components as possible. We are going to need to connect these so we want to minimize these. Notice this would give a spanning subgraph where $V_M$ vertices have even degree.
+\subsection{Earmuffs}
+\paragraph{}
+Define earmuff, it's basically what we said we were looking for before. Define maximum earmuff. Consider using Figure $2$ to communicate intent.
+\paragraph{}
+Theorem $2$ of Rado. What matroids to choose to apply this to earmuff maximization. Theorem $4$ which results.
+\section{Lower Bounds}
+\subsection{$L_\phi(G)$}
+\subsection{$L_\mu(G,M)$}
 \end{document}
