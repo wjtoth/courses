@@ -118,4 +118,29 @@ it suffices to show that $B (H\otimes H) = C$. Thus we compute
 \begin{align*}B(H\otimes H) &= \frac{1}{\sqrt{2}} \begin{bmatrix} 1 & 0 & 0 & 1 \\ 0 & 1 & 1 & 0 \\ 1 & 0 & 0 & -1\\ 0 & 1 & -1 & 0\end{bmatrix}\cdot \frac{1}{2}\begin{bmatrix} 1 & 1 & 1 & 1 \\ 1 & - 1 & 1 & -1 \\ 1 & 1& -1 & -1 \\ 1 & -1 & -1 &1\end{bmatrix} \\
 &=\frac{1}{\sqrt{2}}\cdot \frac{1}{2}\begin{bmatrix}2 &0 & 0 & 2 \\ 2 & 0 & 0 & -2 \\ 0 & 2 & 2 & 0 \\ 0 & -2 & 2 & 0 \end{bmatrix} \\
 & C. \blacksquare\end{align*}
+\section{}
+\paragraph{}
+Let $\ket{\psi} = \frac{1}{\sqrt{2}}\ket{00} + \frac{1}{2}\ket{01} + \frac{1}{2}\ket{11}.$
+\subsection{a}
+\paragraph{}
+When we measure the first qubit with respect to the computational basis ($\ket{0}, \ket{1}$) we obtain $\ket{0}$ with probability
+$$|\frac{1}{\sqrt{2}}|^2 + |\frac{1}{2}|^2 = \frac{3}{4}$$
+and the second qubit would be left in the normalized post-measurement state
+$$\sqrt{\frac{2}{3}} \ket{0} + \frac{1}{\sqrt{3}} \ket{1},$$
+and we obtain $\ket{1}$ with probability
+$$|\frac{1}{2}|^2 = \frac{1}{4}$$
+and the second qubit would be left in the normalized post-measurement state
+$$\ket{1}.$$
+\subsection{b}
+\paragraph{}
+Rewriting $\ket{\psi}$ in the $\ket{+}, \ket{-}$ basis gives
+$$\ket{\psi} = \frac{\sqrt{2} + 2}{4}\ket{++} + \frac{\sqrt{2}-2}{4}\ket{+-} + \frac{\sqrt{2}}{4}\ket{-+} + \frac{\sqrt{2}}{4}\ket{--}.$$
+So measuring the first qubit with respect to the $\ket{+}, \ket{-}$ basis gives $\ket{+}$ with probability
+$$|\frac{\sqrt{2}+2}{4}|^2+ |\frac{\sqrt{2}-2}{4}|^2 = \frac{3}{4}.$$
+and the second qubit would be left in the normalized post-measurement state
+$$ \frac{\sqrt{2} + 2}{2\sqrt{3}}\ket{+} + \frac{\sqrt{2}-2}{2\sqrt{3}}\ket{-},$$
+and gives $\ket{-}$ with probability
+$$2|\frac{\sqrt{2}}{4}|^2 = \frac{1}{4}$$
+and the second qubit would be left in the normalized post-measurement state
+$$\frac{1}{\sqrt{2}}\ket{+} + \frac{1}{\sqrt{2}}\ket{-} .$$
 \end{document}
