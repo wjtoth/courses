@@ -181,5 +181,30 @@ $$f(\arctan(3-\sqrt{10})) \approx 0.895$$
 and optimal basis
 $$\ket{\phi_0} = \begin{bmatrix} \cos(\arctan(3-\sqrt{10})) \\ \sin(arctan(3-\sqrt{10})) \end{bmatrix}, \quad \ket{\phi_1}=\begin{bmatrix}-\sin(\arctan(3-\sqrt{10})) \\ \cos(\arctan(3-\sqrt{10})) \end{bmatrix}.$$
 \section{}
-
+\subsection{a}
+\paragraph{}
+\begin{align*}
+\ket{\Psi}^{12}\ket{\Psi}^{34} &= \frac{1}{2}(\ket{00}^{12} + \ket{11}^{12})(\ket{00}^{34} + \ket{11}^{34}) \\
+&= \frac{1}{2}(\ket{00}^{12}\ket{00}^{34} + \ket{00}^{12}\ket{11}^{34} + \ket{11}^{12}\ket{00}^{34} + \ket{11}^12\ket{11}^{34})\\
+&= \frac{1}{2}(\ket{00}^{23}\ket{00}^{14} + \ket{01}^{23}\ket{01}^{14} + \ket{10}^{23}\ket{10}^{34} + \ket{11}^{23}\ket{11}^{34}).
+\end{align*}
+Choose $\ket{\phi_{ab}} = \ket{\Psi_{ab}}$ for $a,b \in \{0,1\}$. Observe that 
+\begin{align*}
+&\ \ \ \ket{\Psi_{00}}^{23}\ket{\Psi_{00}}^{14} + \ket{\Psi_{11}}^{23}\ket{\Psi_{11}}^{14} \\
+&= \frac{1}{2}(\ket{00}^{23}\ket{00}^{14} + \ket{00}^{23}\ket{11}^{14} + \ket{11}^{23}\ket{00}^{14} + \ket{11}^{23}\ket{11}^{14}) \\
+&+ \frac{1}{2}(\ket{00}^{23}\ket{00}^{14} - \ket{00}^{23}\ket{11}^{14} - \ket{11}^{23}\ket{00}^{14} + \ket{11}^{23}\ket{11}^{14}) \\
+&= \ket{00}^{23}\ket{00}^{14} + \ket{11}^{23}\ket{11}^{14}.
+\end{align*}
+and similarly by symmetry
+$$\ket{\Psi_{01}}^{23}\ket{\Psi_{01}}^{14} + \ket{\Psi_{10}}^{23}\ket{\Psi_{10}}^{14} = \ket{01}^{23}\ket{01}^{14} + \ket{10}^{23}\ket{10}^{14} $$
+So using the above observations we see that
+\begin{align*}
+&\ \ \ \frac{1}{2}(\ket{\Psi_{00}}^{23}\ket{\phi_{00}}^{14} + \ket{\Psi_{01}}^{23}\ket{\phi_{01}}^{14} + \ket{\Psi_{10}}^{23}\ket{\phi_{10}}^{14} \ket{\Psi_{11}}^{23}\ket{\phi_{11}}^{14}) \\
+&= \frac{1}{2}(\ket{\Psi_{00}}^{23}\ket{\Psi_{00}}^{14} + \ket{\Psi_{01}}^{23}\ket{\Psi_{01}}^{14} + \ket{\Psi_{10}}^{23}\ket{\Psi_{10}}^{14} \ket{\Psi_{11}}^{23}\ket{\Psi_{11}}^{14}) \\
+&= \frac{1}{2}(\ket{00}^{23}\ket{00}^{14} + \ket{01}^{23}\ket{01}^{14} + \ket{10}^{23}\ket{10}^{34} + \ket{11}^{23}\ket{11}^{34})
+\end{align*}
+as desired.
+\subsection{b}
+\paragraph{}
+Performing a Bell measurement on qubits $2$ and $3$ yields state $\ket{\Psi_{ab}}$ with probability $\frac{1}{4}$ and qubits $1$ and $4$ are left in state $\ket{\Psi_{ab}}$ (for $a,b \in\{0,1\}$).
 \end{document}
