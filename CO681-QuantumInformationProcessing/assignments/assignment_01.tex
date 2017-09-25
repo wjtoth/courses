@@ -59,6 +59,9 @@
 \newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
 \newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
 
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
 %END MACROS
 %Page style
 \pagestyle{fancy}
@@ -143,4 +146,40 @@ and gives $\ket{-}$ with probability
 $$2|\frac{\sqrt{2}}{4}|^2 = \frac{1}{4}$$
 and the second qubit would be left in the normalized post-measurement state
 $$\frac{1}{\sqrt{2}}\ket{+} + \frac{1}{\sqrt{2}}\ket{-} .$$
+\section{}
+\paragraph{}
+Suppose that a qubit is prepared in the state $\ket{0}$ with probability $p$ and prepared in state $\ket{+}$ with probability $q$, where $p+q=1$ and $p,q\geq 0$. Then a measurement in the basis $\ket{\phi_0}, \ket{\phi_1}$ identifies the state successfully with probability
+$$p\abs{\ip{\phi_0}{0}}^2 + q\abs{\ip{\phi_1}{+}}^2.$$
+Since $\ket{0}$ and $\ket{+}$ lie in $\R^2$, the optimal $\ket{\phi_0}$ and $\ket{\phi_1}$ lie in $\R^2$ so as to optimize the length of projection of $\ket{\phi_0}$ and $\ket{\phi_1}$ onto $\ket{0}$ and $\ket{+}$ respectively (ie $\ip{\phi_0}{0}$ and $\ip{\phi_1}{+}$).
+\paragraph{}
+We can describe an arbitrary orthonormal basis of $\R^2$ as
+$$\ket{\phi_0} = \begin{bmatrix} \cos\theta \\ \sin\theta \end{bmatrix}, \quad \ket{\phi_1}=\begin{bmatrix}-\sin\theta \\ \cos\theta \end{bmatrix}.$$
+Now our success probability simplifies as
+$$f(\theta) :=p\cos^2\theta + \frac{q}{2}(\cos\theta - \sin\theta)^2$$
+with first derivative
+$$f'(\theta) = -2p\sin\theta\cos\theta - q(\cos^2\theta - \sin^2\theta).$$
+\subsection{a}
+\paragraph{}
+If we set $p=q=\frac{1}{2}$ then we have
+$$f(\theta) = \frac{1}{2}\cos^2\theta + \frac{1}{4}(\cos\theta - \sin\theta)^2$$
+and
+$$f'(\theta) = -\sin\theta\cos\theta -\frac{1}{2}(\cos^2\theta-\sin^2\theta).$$
+So $f$ is periodic with period $\pi$. Setting $f'(\theta)=0$ and solving we obtain one possible optimal solution: $\theta^* = \frac{-\pi}{8}.$
+Since $f'(\frac{-2\pi}{8}) >0$ and $f'(0) < 0$, we know $\theta^*$ is a maximizer of $f$. Hence we have optimal success probability
+$$f(\frac{-\pi}{8}) = \frac{1}{4}(2 + \sqrt(2)) \approx 0.85$$
+and optimal basis
+$$\ket{\phi_0} = \begin{bmatrix} \cos(\frac{-\pi}{8}) \\ \sin(\frac{-\pi}{8}) \end{bmatrix}, \quad \ket{\phi_1}=\begin{bmatrix}-\sin(\frac{-\pi}{8}) \\ \cos(\frac{-\pi}{8}) \end{bmatrix}.$$
+\subsection{b}
+\paragraph{}
+If we set $p=\frac{3}{4}$ and $q=\frac{1}{4}$ then we have
+$$f(\theta) = \frac{3}{4}\cos^2\theta + \frac{1}{8}(\cos\theta - \sin\theta)^2$$
+and
+$$f'(\theta) = -\frac{3}{2}\sin\theta\cos\theta -\frac{1}{4}(\cos^2\theta-\sin^2\theta).$$
+So $f$ is periodic with period $\pi$. Setting $f'(\theta)=0$ and solving we obtain one possible optimal solution: $\theta^* = \arctan(3-\sqrt{10}).$
+Since $f'(\arctan(3-\sqrt{10})-\frac{\pi}{4}) >0$ and $f'(\arctan(3-\sqrt{10}) + \frac{\pi}{4}) < 0$, we know $\theta^*$ is a maximizer of $f$. Hence we have optimal success probability
+$$f(\arctan(3-\sqrt{10})) \approx 0.895$$
+and optimal basis
+$$\ket{\phi_0} = \begin{bmatrix} \cos(\arctan(3-\sqrt{10})) \\ \sin(arctan(3-\sqrt{10})) \end{bmatrix}, \quad \ket{\phi_1}=\begin{bmatrix}-\sin(\arctan(3-\sqrt{10})) \\ \cos(\arctan(3-\sqrt{10})) \end{bmatrix}.$$
+\section{}
+
 \end{document}
