@@ -150,7 +150,7 @@ $$\frac{1}{\sqrt{2}}\ket{+} + \frac{1}{\sqrt{2}}\ket{-} .$$
 \paragraph{}
 Suppose that a qubit is prepared in the state $\ket{0}$ with probability $p$ and prepared in state $\ket{+}$ with probability $q$, where $p+q=1$ and $p,q\geq 0$. Then a measurement in the basis $\ket{\phi_0}, \ket{\phi_1}$ identifies the state successfully with probability
 $$p\abs{\ip{\phi_0}{0}}^2 + q\abs{\ip{\phi_1}{+}}^2.$$
-Since $\ket{0}$ and $\ket{+}$ lie in $\R^2$, the optimal $\ket{\phi_0}$ and $\ket{\phi_1}$ lie in $\R^2$ so as to optimize the length of projection of $\ket{\phi_0}$ and $\ket{\phi_1}$ onto $\ket{0}$ and $\ket{+}$ respectively (ie $\ip{\phi_0}{0}$ and $\ip{\phi_1}{+}$).
+Since $\ket{0}$ and $\ket{+}$ lie in $\R^2$, there exist optimal $\ket{\phi_0}$ and $\ket{\phi_1}$ in $\R^2$. This can be seen by observing that $\abs{\ip{0}{\phi_0}}$ and $\abs{\ip{+}{\phi_1}}$ are invariant multiplications of $\ket{\phi_a}$ by some $e^{i\theta_a}$. With a bit of work, one can convince themselves we can always rotate an optimal solution in the real plane.
 \paragraph{}
 We can describe an arbitrary orthonormal basis of $\R^2$ as
 $$\ket{\phi_0} = \begin{bmatrix} \cos\theta \\ \sin\theta \end{bmatrix}, \quad \ket{\phi_1}=\begin{bmatrix}-\sin\theta \\ \cos\theta \end{bmatrix}.$$
