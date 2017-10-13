@@ -135,4 +135,31 @@ $$ C (X \otimes I) C^\dagger =  \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \
  Let $A$ be the Toffoli gate (CCNOT). For the sake of space we'll abbreviate the calculations. We have that
  $$A(I\otimes X\otimes I) A^\dagger = \begin{bmatrix} X\otimes I & 0 \\ 0 & Z\otimes Z\end{bmatrix}.$$
  This can't be written as a tensor product $\alpha V_1\otimes V_2 \otimes V_3$ with $\alpha$ scalar and $V_1,V_2, V_3 \in \{I,X,Y,Z\}$. To see this observe that if we take $V_1 \in  \{X, Y\}$ then the first $4x4$ diagonal block of $V_1\otimes V_2 \otimes V_3$ will be $0$, contradicting that it should be $X \otimes I$, and if we take $V_1 \in \{I,Z\}$ then the first $4x4$ diagonal block will be $\pm1$ times the second, but $X\otimes I \neq \pm Z\otimes Z$. Therefore no such tensor product expression for $A(I\otimes X \otimes I)A^\dagger$ is possible, and hence the Toffoli gate is not in the $3$-qubit Clifford group. $\blacksquare$
+ \section{}
+ \subsection{a}
+ \paragraph{}
+We use the same notation for gates as in question $2$. $X_4$ is given by the circuit
+ \[ \Qcircuit @C=1em @R=1em {
+ & \targ &   \qw & \qw\\
+ & \ctrl{-1} & \gate{X} & \qw
+}\]
+$Z_4$ is given by the circuit
+\[ \Qcircuit @C=1em @R=1em {
+ & \gate{S} &  \gate{S} & \qw\\
+ & \gate{S} & \qw & \qw
+}\].
+\subsection{b}
+\paragraph{}
+$X_8$ is given by the circuit (using one Toffoli gate)
+\[ \Qcircuit @C=1em @R=1em {
+ & \targ &  \qw & \qw & \qw & \qw\\
+ & \ctrl{-1} & \targ& \qw  & \qw &\qw\\
+ & \ctrl{-1} & \ctrl{-1} & \gate{X} &\qw & \qw
+}\]
+$Z_8$ is given by the circuit
+\[ \Qcircuit @C=1em @R=1em {
+ & \gate{T} &  \gate{T} & \gate{T} & \gate{T} & \qw\\
+ & \gate{T} & \gate{T}& \qw  & \qw &\qw\\
+ & \gate{T} & \qw & \qw &\qw & \qw
+}\].
 \end{document}
