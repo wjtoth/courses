@@ -168,4 +168,72 @@ $Z_8$ is given by the circuit
  & \gate{T} & \gate{T}& \qw  & \qw &\qw\\
  & \gate{T} & \qw & \qw &\qw & \qw
 }\]
+\section{}
+\subsection{a}
+\paragraph{}
+We can express $F_d, F_d^{-1}, X_d$, and $Z_d$ as sums or rank one matrices as follows:
+$$F_d = \frac{1}{\sqrt{d}} \sum_{j,k \in \Z_d} \omega^{j k} \ket{j}\bra{k}$$
+$$F_d^{-1} = \frac{1}{\sqrt{d}} \sum_{j,k \in \Z_d} \omega^{- j k} \ket{k}\bra{j}$$
+$$X_d = \sum_{k \in \Z_d} \ket{k+1 \mod d} \bra{k}$$
+$$Z_d = \sum_{k \in \Z_d} \omega^k \ket{k}\bra{k}$$
+where $\omega := \exp(2\pi i / d)$.
+\paragraph{}
+Then we have
+\begin{align*}
+F_dX_dF_d^{-1} &= \frac{1}{d} \sum_{j,k \in \Z_d} \omega^{j k} \ket{j}\bra{k}\sum_{k \in \Z_d} \ket{k+1 \mod d} \bra{k}\sum_{j,k \in \Z_d} \omega^{- j k} \ket{k}\bra{j}\\
+&= \frac{1}{d} \sum_{j,k \in \Z_d} \omega^{j k} \ket{j}\bra{k} \sum_{j,k \in \Z_d} \omega^{- j k} \ket{k+1 \mod d}\bra{j} \\
+&= \frac{1}{d} \sum_{j,k,\ell \in \Z_d}\omega^{\ell(k+1\mod d)}\omega^{-jk}\ket{\ell}\bra{j} \\
+&=\frac{1}{d} \sum_{j,k,\ell \in \Z_d}\omega^{\ell(k+1)}\omega^{-jk}\ket{\ell}\bra{j}  \quad\text{(we may drop mod since $\omega^{\ell 0 } = \omega^{\ell d} = 1$)} \\
+&= \frac{1}{d} \sum_{j,k,\ell \in \Z_d}\omega^{k(\ell-j)}\omega^{\ell}\ket{\ell}\bra{j} \\
+&= \sum_{\ell \in \Z_d} \omega^\ell \ket{\ell}\bra{\ell} \quad \text{(applying Kronecker Delta summing over $k$)} \\
+&= Z_d.
+\end{align*}
+So $F_d X_d F_d^{-1} = Z_d$. Thus we have (we will show the desired form of $F_d^2$ is part $b$)
+\begin{align*}
+F_dZ_d F_d^{-1} &= F_d^2 X_d F_d^{-2} \\
+&= \sum_{k \in Z_d} \ket{-k \mod d} \bra{k} \sum_{k \in \Z_d} \ket{k+1 \mod d}\bra{k} \sum_{k \in \Z_d} \ket{k}\bra{-k\mod d} \\
+&= \sum_{k \in Z_d} \ket{-k \mod d} \bra{k} \sum_{k \in Z_d}\ket{k+1 \mod d}\bra{-k \mod d} \\
+&= \sum_{k \in Z_d} \ket{-(k+1) \mod d} \bra{- k \mod d} \\
+&= \sum_{k \in Z_d} \ket{k+1 \mod d} \bra{k \mod d} \\
+&= X_d.
+\end{align*}
+Hence $F_d Z_d F_d^{-1} = X_d$.
+\subsection{b}
+Let $p \in \Z_d$. Then we have
+\begin{align*}
+F^2_d\ket{k} &= \frac{1}{d} \sum_{j,k \in \Z_d} \omega^{j k} \ket{j}\bra{k}\sum_{j,k \in \Z_d} \omega^{j k} \ket{j}\bra{k} \ket{p} \\
+&= \frac{1}{d} \sum_{j,k \in \Z_d} \omega^{j k} \ket{j}\bra{k}\sum_{j \in \Z_d}\omega^{jp}\ket{j} \\
+&=\frac{1}{d} \sum_{j,k \in \Z_d} \omega^{k(j+ p)}\ket{j}.
+\end{align*}
+For fixed $j$, $$\frac{1}{d} \sum_{k \in \Z_d} \omega^{k(j+p)} = 1$$ if and only if $$j+p = 0 \mod d$$ and otherwise $$\frac{1}{d} \sum_{k \in \Z_d} \omega^{k(j+p)} = 0$$. Hence 
+$$F^2_d \ket{k} = \ket{-k \mod d}$$
+and so
+$$F^2_d = \sum_{k \in \Z_d} \ket{-k \mod d} \bra{k}.$$
+\subsection{c}
+Since $-0 \mod d \equiv 0$ and $-d/2 \mod d \equiv d/2$ ($d$ is even), we have that
+$$F^2_d \ket{0} = \ket{0}$$
+and $$F^2_d\ket{d/2} = \ket{d/2}$$
+so $1$ is an eigenvalue of $F^2_d$. Further, let $k \in \Z_d \backslash \{0, d/2\}$. Then
+$$F^2_d(\ket{k} + \ket{-k \mod d}) = (\ket{k} + \ket{-k \mod d})$$
+and
+$$F^2_d(\ket{k} - \ket{-k \mod d}) = -\ket{k} + \ket{-k\mod d}$$
+so $-1$ is another eigenvalue of of $F^2_d$, and we have found a basis of $\C^d$ consisting of eigenvectors of $F_d^2$ (the two eigenvectors generated for each such $k$ above, and $\ket{0}$ and $\ket{d/2}$). Hence we have found all eigenvalues of $F^2_d$. That is the eigenvalues of $F^2_d$ are precisely $\pm 1$.
+\subsection{d}
+\paragraph{}
+We check the action of $F_4$:
+\begin{align*}
+F_4(X\otimes I) F_4^{-1} &= \frac{1}{4} \sum_{j,k = 0}^3 \omega^{jk}\ket{j}\bra{k}(\ket{2}\bra{0} + \ket{3}\bra{1} + \ket{0}\bra{2} + \ket{1}\bra{3})\sum_{j,k = 0}^3 \omega^{-jk}\ket{k}\bra{j}\\
+&= \frac{1}{4} \sum_{j,k = 0}^3 \omega^{jk}\ket{j}\bra{k}(\sum_{\ell=0}^3 \ket{\ell}\bra{\ell + 2 \mod 4})\sum_{j,k=0}^3\omega^{-jk}\ket{k}\bra{j}\\
+&=  \frac{1}{4} \sum_{j,k = 0}^3 \omega^{jk}\ket{j}\bra{k}\sum_{\ell,j=0}^3 \omega^{-j(\ell+2)}\ket{\ell}\bra{j} \\
+&=\frac{1}{4} \sum_{j,k,\ell=0}^3 \omega^{jk}\omega^{-\ell(k+2)}\ket{j}\bra{\ell} \\
+&=\frac{1}{4} \sum_{j,k,\ell=0}^3\omega^{-2\ell} \omega^{k(j-\ell)} \ket{j}\bra{\ell}\\
+&=\sum_{\ell=0}^3\omega^{-2\ell} \ket{\ell}\bra{\ell}\\
+&= I \otimes Z.
+\end{align*}
+\begin{align*}
+F_4(I\otimes X) F_4^{-1} &= \frac{1}{4} \sum_{j,k = 0}^3 \omega^{jk}\ket{j}\bra{k}(\ket{1}\bra{0} + \ket{0}\bra{1} + \ket{3}\bra{2} +\ket{2}\bra{3})\sum_{j,k = 0}^3 \omega^{-jk}\ket{k}\bra{j} \\
+&= \frac{1}{4}(\sum_{j,k=0}^3(\omega^{j} + \omega^{-k} + \omega^{3j - 2k} + \omega^{2j - 3k})\ket{j}\bra{k} \\
+&= \ket{0}\bra{0} + -i\ket{3}\bra{1} - \ket{2}\bra{2} + i \ket{1}\bra{3}
+\end{align*}
+which cannot be written as a tensor product of $\{I, X, Y, Z\}$. Hence $F_4$ is not in the Clifford group.
 \end{document}
