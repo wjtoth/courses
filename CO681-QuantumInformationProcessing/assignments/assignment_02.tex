@@ -232,8 +232,24 @@ F_4(X\otimes I) F_4^{-1} &= \frac{1}{4} \sum_{j,k = 0}^3 \omega^{jk}\ket{j}\bra{
 \end{align*}
 \begin{align*}
 F_4(I\otimes X) F_4^{-1} &= \frac{1}{4} \sum_{j,k = 0}^3 \omega^{jk}\ket{j}\bra{k}(\ket{1}\bra{0} + \ket{0}\bra{1} + \ket{3}\bra{2} +\ket{2}\bra{3})\sum_{j,k = 0}^3 \omega^{-jk}\ket{k}\bra{j} \\
-&= \frac{1}{4}(\sum_{j,k=0}^3(\omega^{j} + \omega^{-k} + \omega^{3j - 2k} + \omega^{2j - 3k})\ket{j}\bra{k} \\
+&= \frac{1}{4}(\sum_{j,k=0}^3(\omega^{j} + \omega^{-k} + \omega^{3j - 2k} + \omega^{2j - 3k}))\ket{j}\bra{k} \\
 &= \ket{0}\bra{0} + -i\ket{3}\bra{1} - \ket{2}\bra{2} + i \ket{1}\bra{3}
 \end{align*}
 which cannot be written as a tensor product of $\{I, X, Y, Z\}$. Hence $F_4$ is not in the Clifford group.
+\section{}
+\paragraph{}
+Suppose that $m$ is prime. Let $\lambda \in \Z_m$. Let $r \in \Z_m\times \Z_m \backslash \{(0,0)\}$. We may assume without loss of generality that $r_1 \neq 0$. We define $L_\lambda$ and $\ket{L_\lambda}$ as in the question preamble. Then we have
+\begin{align*}
+(F^{-1}_m \otimes F^{-1}_m) \ket{L_\lambda} &= \frac{1}{\sqrt{m}} \sum_{j,k \in \Z_m} \frac{1}{m} \sum_{(x_1,x_2) \in L_\lambda}\omega^{x_1j + x_2k}\ket{j}\ket{k}.
+\end{align*}
+For a fixed $j,k \in \Z_m\times \Z_m$ the $\ket{j}\ket{k}$ term in the above vanishes iff $\sum_{(x_1,x_2) \in L_\lambda}\omega^{x_1j + x_2k} = 0$.  From the hint we know that $$\sum_{s \in \Z_m} \omega^s = 0.$$
+Hence the $\ket{j}\ket{k}$ term vanishes iff for all $s \in \Z_m$ there exists $(x_1,x_2) \in L_\lambda$ such that $x_1j + x_2k = s$ (this establishes a bijection from $L_\lambda$ to $\Z_m$, proving $\abs{L_\lambda} = m$, as we'll see below such $x$ must be unique).
+\paragraph{}
+For all $s \in \Z_m$ we want $x \in \Z_m \times \Z_m$ satisfying
+$$x_1j + x_2k = s \quad\text{and}\quad x_1r_1 + x_2r_2 = \lambda.$$
+This system has no solution provided
+$$jr_1 = kr_2 \quad \text{and} \quad s -kr_1^{-1}\lambda\neq 0 \quad(\text{mod } m)$$
+The first condition is satisfied iff $(j,k)$ is a scalar multiple of $(r_1,r_2)$. Given that the first condition is satisfied, the second condition is satisfied for all $s \in \Z_m$, save $s = -r^{-1}_1k\lambda$. Thus we have
+$$(F^{-1}_m \otimes F^{-1}_m) \ket{L_\lambda} = \frac{1}{\sqrt{m}} \sum_{\alpha \in \Z_m} \omega^{\alpha \lambda}\ket{\alpha r_1}\ket{\alpha r_2}.$$
+So measuring this state will yield a scalar multiple of $(r_1,r_2)$ each with equal probability. This does not reveal any information about $\lambda$.
 \end{document}
