@@ -99,7 +99,7 @@ $2^8\equiv 9 \mod 13$ so $\log_2(9)$ is $8$ in $\Z^\times_{13}$.
 \item $12 \equiv 1 \mod 13$ so $12$ is not a generator
 \end{itemize}
 Hence the generators of $\Z_{13}^\times$ besides $2$ are: $6,7,$ and $11$.
-
+\newpage
 \section{}
 \subsection{a}
 \paragraph{}
@@ -134,7 +134,7 @@ $$ C (X \otimes I) C^\dagger =  \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \
  Let $A$ be the Toffoli gate (CCNOT). For the sake of space we'll abbreviate the calculations. We have that
  $$A(I\otimes X\otimes I) A^\dagger = \begin{bmatrix} X\otimes I & 0 \\ 0 & Z\otimes Z\end{bmatrix}.$$
  This can't be written as a tensor product $\alpha V_1\otimes V_2 \otimes V_3$ with $\alpha$ scalar and $V_1,V_2, V_3 \in \{I,X,Y,Z\}$. To see this observe that if we take $V_1 \in  \{X, Y\}$ then the first $4x4$ diagonal block of $V_1\otimes V_2 \otimes V_3$ will be $0$, contradicting that it should be $X \otimes I$, and if we take $V_1 \in \{I,Z\}$ then the first $4x4$ diagonal block will be $\pm1$ times the second, but $X\otimes I \neq \pm Z\otimes Z$. Therefore no such tensor product expression for $A(I\otimes X \otimes I)A^\dagger$ is possible, and hence the Toffoli gate is not in the $3$-qubit Clifford group. $\blacksquare$
- \section{}
+ \newpage\section{}
  \subsection{a}
  \paragraph{}
 We use the same notation for gates as in question $2$. $X_4$ is given by the circuit
@@ -168,6 +168,7 @@ $Z_8$ is given by the circuit
  & \gate{T} & \gate{T}& \qw  & \qw &\qw\\
  & \gate{T} & \qw & \qw &\qw & \qw
 }\]
+\newpage
 \section{}
 \subsection{a}
 \paragraph{}
@@ -236,7 +237,7 @@ F_4(I\otimes X) F_4^{-1} &= \frac{1}{4} \sum_{j,k = 0}^3 \omega^{jk}\ket{j}\bra{
 &= \ket{0}\bra{0} + -i\ket{3}\bra{1} - \ket{2}\bra{2} + i \ket{1}\bra{3}
 \end{align*}
 which cannot be written as a tensor product of $\{I, X, Y, Z\}$. Hence $F_4$ is not in the Clifford group.
-\section{}
+\newpage\section{}
 \paragraph{}
 Suppose that $m$ is prime. Let $\lambda \in \Z_m$. Let $r \in \Z_m\times \Z_m \backslash \{(0,0)\}$. We may assume without loss of generality that $r_1 \neq 0$. We define $L_\lambda$ and $\ket{L_\lambda}$ as in the question preamble. Then we have
 \begin{align*}
