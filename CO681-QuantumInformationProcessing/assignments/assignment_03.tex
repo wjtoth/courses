@@ -88,5 +88,10 @@ before measuring. So measuring the first register yields $\ket{a}$ with probabil
 \paragraph{}
 The probability of getting outcome $j$ is
 $$Tr(A_j\ket{\psi_j}\bra{\psi_j}A_j^\dagger) = \frac{1}{2} Tr(\ket{\psi_j}\bra{\psi_j}\ket{\psi_j}\bra{\psi_j}\ket{\psi_j}\bra{\psi_j}) = \frac{1}{2}Tr(\ip{\psi}{\psi}^3) = \frac{1}{2}.$$
-
+\subsection{b}
+\paragraph{}
+Let $j \in \{0,1,2,3\}$. The density matrix resulting from measuring $\ket{\psi_j}$ is
+$$\frac{1}{2}\ket{\psi_j}\bra{\psi_j} + \frac{1}{2}\ip{\psi_j}{\psi_{j+1}}^2\ket{\psi_{j+1}}\bra{\psi_{j+1}} + \frac{1}{2}\ip{\psi_j}{\psi_{j+3}}^2\ket{\psi_{j+3}}\bra{\psi_{j+3}}$$
+where addition in the subscripts is taken modulo $4$. This simplifies as
+$$\frac{1}{2}\ket{\psi_j}\bra{\psi_j} + \frac{1}{4}\ket{\psi_{j+1}}\bra{\psi_{j+1}} + \frac{1}{4}\ket{\psi_{j+3}}\bra{\psi_{j+3}}.$$
 \end{document}
