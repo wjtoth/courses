@@ -82,7 +82,11 @@ $$W(\ket{0}(\alpha\ket{\psi} + \beta\ket{\phi})) = \alpha W(\ket{0}\ket{\psi}) +
 before measuring. So measuring the first register yields $\ket{a}$ with probability $|\alpha|^2$ and $b$ with probability $|\beta|^2$.
 \subsection{b}
 \paragraph{}
-
+Let $\ket{\psi}$ be a normal vector in $\C^k$. Let $\ket{\phi^i}$ for $i=1,\dots, k$ be orthonormal eigenvectors of $U$ with corresponding eigenvalues $\lambda_1, \dots, \lambda_k$. Then since the set of $\ket{\phi^i}$ is a basis, there exist $\alpha_1, \dots, \alpha_k$ such that
+$$\ket{\psi} = \sum_{i=1}^k \alpha_i \ket{\phi^i}.$$
+So then $W$ acts on $\ket{\psi}$ as
+$$W\ket{\psi} = \sum_{i=1}^k \alpha_i \ket{\lambda_i}\ket{\phi^i}.$$
+Measuring the second register then yields $\ket{\phi^i}$ with probability $|\alpha_i|^2$. So then if we let $A_i = \ket{\phi^i}\bra{\phi^i}$ then $A_1, \dots, A_k$ forms a general measurement. If we let $\rho = \ket{\psi}\bra{\psi}$ then $Tr(A_i\rho A_i^\dagger) = |\alpha|^2$ and $\frac{1}{Tr(A_i\rho A_i^\dagger)} A_i \rho A_i^\dagger = \ket{\phi^i}\bra{\phi^i}$ as desired.
 \section{}
 \subsection{a}
 \paragraph{}
