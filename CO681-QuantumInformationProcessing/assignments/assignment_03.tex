@@ -86,7 +86,7 @@ Let $\ket{\psi}$ be a normal vector in $\C^k$. Let $\ket{\phi^i}$ for $i=1,\dots
 $$\ket{\psi} = \sum_{i=1}^k \alpha_i \ket{\phi^i}.$$
 So then $W$ acts on $\ket{\psi}$ as
 $$W\ket{\psi} = \sum_{i=1}^k \alpha_i \ket{\lambda_i}\ket{\phi^i}.$$
-Measuring the second register then yields $\ket{\phi^i}$ with probability $|\alpha_i|^2$. So then if we let $A_i = \ket{\phi^i}\bra{\phi^i}$ then $A_1, \dots, A_k$ forms a general measurement. If we let $\rho = \ket{\psi}\bra{\psi}$ then $Tr(A_i\rho A_i^\dagger) = |\alpha|^2$ and $\frac{1}{Tr(A_i\rho A_i^\dagger)} A_i \rho A_i^\dagger = \ket{\phi^i}\bra{\phi^i}$ as desired.
+Measuring the second register then yields $\ket{\phi^i}$ with probability $|\alpha_i|^2$. So then if we let $A_i = \ket{\phi^i}\bra{\phi^i}$ then $A_1, \dots, A_k$ forms a general measurement since the set $A_i$'s is a set of $k$ rank $1$ orthogonal projectors. If we let $\rho = \ket{\psi}\bra{\psi}$ then $Tr(A_i\rho A_i^\dagger) = |\alpha|^2$ and $\frac{1}{Tr(A_i\rho A_i^\dagger)} A_i \rho A_i^\dagger = \ket{\phi^i}\bra{\phi^i}$ as desired.
 \section{}
 \subsection{a}
 \paragraph{}
@@ -98,4 +98,12 @@ Let $j \in \{0,1,2,3\}$. The density matrix resulting from measuring $\ket{\psi_
 $$\frac{1}{2}\ket{\psi_j}\bra{\psi_j} + \frac{1}{2}\ip{\psi_j}{\psi_{j+1}}^2\ket{\psi_{j+1}}\bra{\psi_{j+1}} + \frac{1}{2}\ip{\psi_j}{\psi_{j+3}}^2\ket{\psi_{j+3}}\bra{\psi_{j+3}}$$
 where addition in the subscripts is taken modulo $4$. This simplifies as
 $$\frac{1}{2}\ket{\psi_j}\bra{\psi_j} + \frac{1}{4}\ket{\psi_{j+1}}\bra{\psi_{j+1}} + \frac{1}{4}\ket{\psi_{j+3}}\bra{\psi_{j+3}}.$$
+\subsection{c}
+We implement the desired unitary matrix $U$ via the following quantum circuit
+\[ \Qcircuit @C=1em @R=1em {
+ \ket{k}\ \  \ & \qw &  \gate{H} & \qw\\
+  \ket{0}\ \ \  & \gate{H} & \ctrl{-1} & \qw
+}\]
+with $k \in \{0,1\}$. When $k=0$ the circuit outputs the state $$\frac{1}{\sqrt{2}}\ket{00} + \frac{1}{2}\ket{01} + \frac{1}{2}\ket{11}$$ and when $k=1$ then circuit outputs the state $$\frac{1}{\sqrt{2}}\ket{10} + \frac{1}{2}\ket{01} - \frac{1}{2}\ket{11}$$
+as desired.
 \end{document}
