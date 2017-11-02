@@ -113,6 +113,20 @@ We can write any density matrix $\rho$ as
 $$\frac{1}{2}\begin{bmatrix} 1+ r_z & r_x - i r_y \\ r_x + i r_y & 1-r_z \end{bmatrix}$$
 Computing $T\rho T^{-1}$ then yields
 $$\frac{1}{2}\begin{bmatrix} 1+r_z & \frac{r_x - r_y}{\sqrt{2}} -i\frac{r_x + r_y}{\sqrt{2}} \\ \frac{r_x - r_y}{\sqrt{2}} + i\frac{r_x + r_y}{\sqrt{2}} & 1-r_z\end{bmatrix}.$$
-Then the corresponding map on $r$ sends $(r_x, r_y, r_z)$ to
+Then the corresponding affine linear map on $r$ sends $(r_x, r_y, r_z)$ to
 $$ (\frac{r_x - r_y}{\sqrt{2}}, \frac{r_x+r_y}{\sqrt{2}}, r_z).$$
+\subsection{b}
+\paragraph{}
+Using the same notation for $\rho$ as the previous part, we compute 
+$$A_0\rho A_0^\dagger = \frac{1}{2}\begin{bmatrix}
+1+r_z & \sqrt{p}(r_x - i r_y) \\ \sqrt{r}(r_x + ir_y) & p(1-r_z)
+\end{bmatrix}$$
+and $$A_1 \rho A_1^\dagger = \frac{1}{2}\begin{bmatrix} (1-p)(1-r_z) & 0 \\ 0 & 0 \end{bmatrix}.$$
+So, adding the above and simplifying, the operator on $\rho$ yields
+$$\begin{bmatrix}
+1+ pr_z + 1-p & \sqrt{p}(r_x - i r_y) \\ \sqrt{p}(r_x + i r_y) & 1 - (pr_z + 1-p)
+\end{bmatrix}.$$
+Then the corresponding affine linear map on $r$ sends $(r_x, r_y, r_z)$ to
+$$ (\sqrt{p}r_x, \sqrt{p}r_y, pr_z + 1-p).$$
+\subsection{c}
 \end{document}
