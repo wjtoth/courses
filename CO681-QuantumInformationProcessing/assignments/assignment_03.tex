@@ -106,4 +106,13 @@ We implement the desired unitary matrix $U$ via the following quantum circuit
 }\]
 with $k \in \{0,1\}$. When $k=0$ the circuit outputs the state $$\frac{1}{\sqrt{2}}\ket{00} + \frac{1}{2}\ket{01} + \frac{1}{2}\ket{11}$$ and when $k=1$ then circuit outputs the state $$\frac{1}{\sqrt{2}}\ket{10} + \frac{1}{2}\ket{01} - \frac{1}{2}\ket{11}$$
 as desired.
+\section{}
+\subsection{a}
+\paragraph{}
+We can write any density matrix $\rho$ as
+$$\frac{1}{2}\begin{bmatrix} 1+ r_z & r_x - i r_y \\ r_x + i r_y & 1-r_z \end{bmatrix}$$
+Computing $T\rho T^{-1}$ then yields
+$$\frac{1}{2}\begin{bmatrix} 1+r_z & \frac{r_x - r_y}{\sqrt{2}} -i\frac{r_x + r_y}{\sqrt{2}} \\ \frac{r_x - r_y}{\sqrt{2}} + i\frac{r_x + r_y}{\sqrt{2}} & 1-r_z\end{bmatrix}.$$
+Then the corresponding map on $r$ sends $(r_x, r_y, r_z)$ to
+$$ (\frac{r_x - r_y}{\sqrt{2}}, \frac{r_x+r_y}{\sqrt{2}}, r_z).$$
 \end{document}
