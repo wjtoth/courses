@@ -94,4 +94,18 @@ So from part $1(a)$ we know the eigenvalues of $\rho-\sigma$ are $\pm \frac{1}{2
 Using that the trace norm is the sum of the eigenvalues in absolute value we see that
 $$||\rho-\sigma||_1 = \frac{1}{2}||r-r'||_2 + \frac{1}{2}||r-r'||_2 = ||r-r'||_2$$
 as desired.
+\section{}
+\subsection{a}
+Given that the upper bound on the trace distance on slide $13$ of lecture $13$ is attained by the distance between two pure states we have that
+$$||\ket{\psi}\bra{\psi} - \ket{\phi}\bra{\phi}||_1 = 2\sqrt{1-|\ip{\psi}{\phi} |^2}.$$
+\subsection{b}
+\paragraph{}
+The eigenvalues of $\ket{\psi}\bra{\psi} - \frac{1}{d}I$ are $1-\frac{1}{d}$ with multiplicity $1$ and $-\frac{1}{d}$ with multiplicity $d-1$.
+So we have $$||\ket{\psi}\bra{\psi} - \frac{1}{d}I ||_1 = \frac{1}{2} (|1-\frac{1}{d}| + \sum_{i=1}^{d-1} |-\frac{1}{d}|) = \frac{1}{2}(1 - \frac{d-2}{d}).$$
+For fidelity we have
+$$F(\ket{\psi}\bra{\psi}, \frac{1}{d}I) = Tr\sqrt{(\ket{\psi}\bra{\psi})^\frac{1}{2}\frac{1}{d}I (\ket{\psi}\bra{\psi})^\frac{1}{2} } = \sqrt{\frac{1}{d}}Tr\sqrt{(\ket{\psi}\bra{\psi})^\frac{1}{2}(\ket{\psi}\bra{\psi})^\frac{1}{2}} = \sqrt{\frac{1}{d}\ip{\psi}{\psi}} = \sqrt{\frac{1}{d}}.$$
+By the Holevo-Helstrom Theorem the optimal distinguishing probability between $\ket{\psi}\bra{\psi}$ and $\frac{1}{d}I$ given each with equal probability is
+$$\frac{1}{2} + \frac{1}{4}||\ket{\psi}\bra{\psi} - \frac{1}{d}I ||_1 = \frac{1}{2} + \frac{1}{8}(1 - \frac{d-2}{d}).$$
+\section{}
+
 \end{document}
