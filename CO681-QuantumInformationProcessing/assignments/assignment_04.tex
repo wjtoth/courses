@@ -96,16 +96,22 @@ $$||\rho-\sigma||_1 = \frac{1}{2}||r-r'||_2 + \frac{1}{2}||r-r'||_2 = ||r-r'||_2
 as desired.
 \section{}
 \subsection{a}
-Given that the upper bound on the trace distance on slide $13$ of lecture $13$ is attained by the distance between two pure states we have that
-$$||\ket{\psi}\bra{\psi} - \ket{\phi}\bra{\phi}||_1 = 2\sqrt{1-|\ip{\psi}{\phi} |^2}.$$
+\paragraph{}
+Via the Gram-Schmidt there exists a pair of orthonormal vectors $\ket{a}$ and $\ket{b}$ so that $\ket{\psi}=\ket{a}$ and $\ket{b}$ is the normalization of $\ket{\phi} - \ip{\psi}{\phi}\ket{\psi}$. Since $\ket{\phi}$ lies in the hyperplane spanned by $\ket{a} and \ket{b}$, there exists an angle $\theta$ such that 
+$$\ket{\phi} = \cos \theta \ket{a} + \sin \theta\ket{b}.$$
+Now we have that
+$$(\ket{\psi}\bra{\psi} - \bra{\phi}\ket{\phi})^2 = (1-\cos^2\theta)\ket{a}\bra{a} - \cos\theta\sin\theta(\ket{a}\bra{b} + \ket{b}\bra{a}) -\sin^2\theta\ket{b}\bra{b}$$
+So then
+$$||\ket{\psi}\bra{\psi} - \bra{\phi}\ket{\phi}||_1 = Tr\abs{\begin{bmatrix} 1 - \cos^2\theta & -\cos\theta\sin\theta \\ -\cos\theta\sin\theta & -\sin^2\theta\end{bmatrix}} = 2|\sin\theta| = 2\sqrt{1-\cos^2\theta}.$$
+Since $\ip{\psi}{\phi} = \cos\theta$ this show the desired equality.
 \subsection{b}
 \paragraph{}
 The eigenvalues of $\ket{\psi}\bra{\psi} - \frac{1}{d}I$ are $1-\frac{1}{d}$ with multiplicity $1$ and $-\frac{1}{d}$ with multiplicity $d-1$.
-So we have $$||\ket{\psi}\bra{\psi} - \frac{1}{d}I ||_1 = \frac{1}{2} (|1-\frac{1}{d}| + \sum_{i=1}^{d-1} |-\frac{1}{d}|) = \frac{1}{2}(1 - \frac{d-2}{d}).$$
+So we have $$||\ket{\psi}\bra{\psi} - \frac{1}{d}I ||_1 = |1-\frac{1}{d}| + \sum_{i=1}^{d-1} |-\frac{1}{d}| =1 - \frac{d-2}{d}.$$
 For fidelity we have
 $$F(\ket{\psi}\bra{\psi}, \frac{1}{d}I) = Tr\sqrt{(\ket{\psi}\bra{\psi})^\frac{1}{2}\frac{1}{d}I (\ket{\psi}\bra{\psi})^\frac{1}{2} } = \sqrt{\frac{1}{d}}Tr\sqrt{(\ket{\psi}\bra{\psi})^\frac{1}{2}(\ket{\psi}\bra{\psi})^\frac{1}{2}} = \sqrt{\frac{1}{d}\ip{\psi}{\psi}} = \sqrt{\frac{1}{d}}.$$
 By the Holevo-Helstrom Theorem the optimal distinguishing probability between $\ket{\psi}\bra{\psi}$ and $\frac{1}{d}I$ given each with equal probability is
-$$\frac{1}{2} + \frac{1}{4}||\ket{\psi}\bra{\psi} - \frac{1}{d}I ||_1 = \frac{1}{2} + \frac{1}{8}(1 - \frac{d-2}{d}).$$
+$$\frac{1}{2} + \frac{1}{4}||\ket{\psi}\bra{\psi} - \frac{1}{d}I ||_1 = \frac{1}{2} + \frac{1}{4}(1 - \frac{d-2}{d}).$$
 \section{}
 
 \end{document}
