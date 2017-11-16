@@ -101,9 +101,9 @@ Via the Gram-Schmidt there exists a pair of orthonormal vectors $\ket{a}$ and $\
 $$\ket{\phi} = \cos \theta \ket{a} + \sin \theta\ket{b}.$$
 Now we have that
 $$(\ket{\psi}\bra{\psi} - \bra{\phi}\ket{\phi})^2 = (1-\cos^2\theta)\ket{a}\bra{a} - \cos\theta\sin\theta(\ket{a}\bra{b} + \ket{b}\bra{a}) -\sin^2\theta\ket{b}\bra{b}$$
-So then
-$$||\ket{\psi}\bra{\psi} - \bra{\phi}\ket{\phi}||_1 = Tr\abs{\begin{bmatrix} 1 - \cos^2\theta & -\cos\theta\sin\theta \\ -\cos\theta\sin\theta & -\sin^2\theta\end{bmatrix}} = 2|\sin\theta| = 2\sqrt{1-\cos^2\theta}.$$
-Since $\ip{\psi}{\phi} = \cos\theta$ this show the desired equality.
+Therefore the eigenvectors of $(\ket{\psi}\bra{\psi} - \bra{\phi}\ket{\phi})^2$ are $(\pm\sec\theta - \tan\theta)\ket{a} + \ket{b}$ with eigenvalues $\pm\sin\theta$. So then
+$$||\ket{\psi}\bra{\psi} - \bra{\phi}\ket{\phi}||_1 = 2|\sin\theta| = 2\sqrt{1-\cos^2\theta}.$$
+Since $\ip{\psi}{\phi} = \cos\theta$ this shows the desired equality.
 \subsection{b}
 \paragraph{}
 The eigenvalues of $\ket{\psi}\bra{\psi} - \frac{1}{d}I$ are $1-\frac{1}{d}$ with multiplicity $1$ and $-\frac{1}{d}$ with multiplicity $d-1$.
@@ -113,5 +113,31 @@ $$F(\ket{\psi}\bra{\psi}, \frac{1}{d}I) = Tr\sqrt{(\ket{\psi}\bra{\psi})^\frac{1
 By the Holevo-Helstrom Theorem the optimal distinguishing probability between $\ket{\psi}\bra{\psi}$ and $\frac{1}{d}I$ given each with equal probability is
 $$\frac{1}{2} + \frac{1}{4}||\ket{\psi}\bra{\psi} - \frac{1}{d}I ||_1 = \frac{1}{2} + \frac{1}{4}(1 - \frac{d-2}{d}).$$
 \section{}
+\subsection{a}
+We have
+$$\cA_p(\ket{0}\bra{0}) = (1-p)\ket{0}\bra{0} + pI$$
+and
+$$\cA_p(\ket{1}\bra{1}) = (1-p)\ket{1}\bra{1} + pI$$
+So
+$$\cA_p(\ket{0}\bra{0}) - \cA_p(\ket{1}\bra{1})  = (1-p)(\ket{0}\bra{0} - \ket{1}\bra{1})$$
+with eigenvectors $\ket{0}$ and $\ket{1}$ with eigenvalues $1-p$ and $p-1$ respectively.
+\paragraph{}
+We follow the proof of the Holevo-Helstrom Theorem given in class. In our case our optimal measurement $\{\Pi_=, \Pi_-\}$ is
+$$\Pi_+ = \ket{0}\bra{0}$$
+and
+$$\Pi_- = \ket{1}\bra{1}.$$
+The optimal success probability is
+$$\frac{1}{2} + \frac{1}{4}||\cA_p(\ket{0}\bra{0}) - \cA_p(\ket{1}\bra{1})||_1 = \frac{1}{2} + \frac{1}{4}2(1-p) = \frac{1}{2} (2-p).$$
+\subsection{b}
+Now we have
+$$\cA_p(\ket{0}\bra{0}) - \cA_p(\ket{+}\bra{+}) = (1-p)(\ket{0}\bra{0} - \ket{+}\bra{+})$$
+with eigenvectors $\ket{a} := \begin{bmatrix} -1-\sqrt{2} \\ 1\end{bmatrix}$ and $\ket{b} :=\begin{bmatrix} -1 + \sqrt{2} \\ 1 \end{bmatrix}$ with eigenvalues $\frac{1-p}{\sqrt{2}}$ and $\frac{p-1}{\sqrt{2}}$ respectively.
+\paragraph{}
+So our optimal measurement $\{\Pi_=, \Pi_-\}$ is
+$$\Pi_+ = \ket{a}\bra{a}$$
+and
+$$\Pi_- = \ket{b}\bra{b}.$$
+The optimal success probability is
+$$\frac{1}{2} + \frac{1}{4}||\cA_p(\ket{0}\bra{0}) - \cA_p(\ket{+}\bra{+})||_1 = \frac{1}{2} +\frac{1-p}{2\sqrt{2}}. $$
 
 \end{document}
