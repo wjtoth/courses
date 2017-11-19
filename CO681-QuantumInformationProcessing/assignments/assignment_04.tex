@@ -150,4 +150,63 @@ $$E[X^2] = (1+1)1/4 + (4+4+9+9)1/8 = 15/4.$$
 $$H(X) = -\big( 2\cdot 1/4\log(1/4) + 4\cdot 1/8\log(1/8)  \big) = 0$$
 \subsection{d}
 $$H(X^2) = H(X) = 0.$$
+\section{}
+\subsection{a}
+\paragraph{}
+$$\cA_p(\rho) = (1-p)\rho + \frac{p}{2}I  = (1-p)\rho + \frac{p}{4}\big( \rho + X\rho X + Y\rho Y + Z \rho Z\big)$$
+So we can write $\cA_p(\rho)$ is Kraus form as
+$$\cA_p(\rho)= \sum_{i=0}^3 A_1 \rho A_1^\dagger$$
+where $A_0 = \frac{\sqrt{4-3p}}{2}I$, $A_1 = \frac{\sqrt{p}}{2}X$, $A_2= \frac{\sqrt{p}}{2}Y$, and $A_3 = \frac{\sqrt{p}}{2}Z$. If we let 
+$$U := \begin{bmatrix}
+A_0\\ A_1 \\ A_2\\ A_3
+\end{bmatrix}$$
+then 
+$$U\rho U^\dagger = \sum_{i,j=0}^3\ket{i}\bra{j} \otimes A_i\rho A_i^\dagger.$$
+where $\ket{0}, \dots, \ket{3}$ are the standard computational basis on $\C^4$. So then
+$$\cB_p(\rho) = Tr_2(U\rho U^\dagger) = B_0\rho B_0^\dagger + B_1 \rho B_1^\dagger$$
+where $B_0, B_1 \in \C^{4\times 2}$ satisfy
+$$(B_k)_{i,j} = (A_i)_{j,k}.$$
+More explicitly
+$$B_0 = \begin{bmatrix}
+\frac{\sqrt{4-3p}}{2} & 0 \\
+0 & \frac{\sqrt{p}}{2} \\
+0 & \frac{i\sqrt{p}}{2} \\
+\frac{\sqrt{p}}{2} & 0.
+\end{bmatrix}$$
+and
+$$B_1 = \begin{bmatrix}
+0 & \frac{\sqrt{4-3p}}{2} \\
+\frac{\sqrt{p}}{2} & 0 \\
+\frac{-i\sqrt{p}}{2} & 0 \\
+0 & \frac{-\sqrt{p}}{2}
+\end{bmatrix}$$
+So then we have
+$$\cB_p(I/2) = \frac{1}{2}(B_0 B_0^\dagger + B_1 B_1^\dagger) = \frac{1}{2}\big(\begin{bmatrix}
+1-\frac{3p}{4} & 0 & 0 & \frac{\sqrt{p}\sqrt{4-3p}}{4} \\
+0 & \frac{p}{4} & \frac{ip}{4} & 0 \\
+0 & \frac{ip}{4} & \frac{-p}{4} & 0 \\
+ \frac{\sqrt{p}\sqrt{4-3p}}{4} & 0 & 0 & \frac{p}{4}
+\end{bmatrix} + \begin{bmatrix}
+1-\frac{3p}{4} & 0 & 0 & \frac{-\sqrt{p}\sqrt{4-3p}}{4} \\
+0 &  \frac{p}{4} & \frac{-ip}{4} & 0 \\
+0 & \frac{-ip}{4} & \frac{-p}{4} & 0 \\
+\frac{-\sqrt{p}\sqrt{4-3p}}{4} & 0 & 0 & \frac{p}{4}
+\end{bmatrix}\big)$$
+So
+$$\cB_p(I/2) = \begin{bmatrix}
+1-\frac{3p}{4} & 0 & 0 & 0 \\
+0 & \frac{p}{4} & 0 & 0 \\
+0 & 0 & \frac{-p}{4} & 0 \\
+0 & 0 & 0 & \frac{p}{4}
+\end{bmatrix}.$$
+\subsection{b}
+\paragraph{}
+We have, obviously, 
+$$\cA_p(I/2) = I/2.$$
+And so
+$$I_c(I/2, \cA_p) = S(I/2) - S(\cB_p(I/2)) = -4\frac{1}{2}\log\frac{1}{2} + (1-\frac{3p}{4})\log(1-\frac{3p}{4}) + 2\frac{p}{4}\log\frac{p}{4} - \frac{p}{4}\log\frac{-p}{4}$$
+Simplifying somewhat gives
+$$I_c(I/2, \cA_p) = 2 +(1-\frac{3p}{4})\log(1-\frac{3p}{4}) +\frac{p}{2}\log\frac{p}{4} - \frac{p}{4}\log\frac{-p}{4}. $$
+Setting equal to $0$ and solving gives
+
 \end{document}
