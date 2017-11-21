@@ -94,6 +94,7 @@ So from part $1(a)$ we know the eigenvalues of $\rho-\sigma$ are $\pm \frac{1}{2
 Using that the trace norm is the sum of the eigenvalues in absolute value we see that
 $$||\rho-\sigma||_1 = \frac{1}{2}||r-r'||_2 + \frac{1}{2}||r-r'||_2 = ||r-r'||_2$$
 as desired.
+\newpage
 \section{}
 \subsection{a}
 \paragraph{}
@@ -112,6 +113,7 @@ For fidelity we have
 $$F(\ket{\psi}\bra{\psi}, \frac{1}{d}I) = Tr\sqrt{(\ket{\psi}\bra{\psi})^\frac{1}{2}\frac{1}{d}I (\ket{\psi}\bra{\psi})^\frac{1}{2} } = \sqrt{\frac{1}{d}}Tr\sqrt{(\ket{\psi}\bra{\psi})^\frac{1}{2}(\ket{\psi}\bra{\psi})^\frac{1}{2}} = \sqrt{\frac{1}{d}\ip{\psi}{\psi}} = \sqrt{\frac{1}{d}}.$$
 By the Holevo-Helstrom Theorem the optimal distinguishing probability between $\ket{\psi}\bra{\psi}$ and $\frac{1}{d}I$ given each with equal probability is
 $$\frac{1}{2} + \frac{1}{4}||\ket{\psi}\bra{\psi} - \frac{1}{d}I ||_1 = \frac{1}{2} + \frac{1}{4}(1 - \frac{d-2}{d}).$$
+\newpage
 \section{}
 \subsection{a}
 We have
@@ -139,6 +141,7 @@ and
 $$\Pi_- = \ket{b}\bra{b}.$$
 The optimal success probability is
 $$\frac{1}{2} + \frac{1}{4}||\cA_p(\ket{0}\bra{0}) - \cA_p(\ket{+}\bra{+})||_1 = \frac{1}{2} +\frac{1-p}{2\sqrt{2}}. $$
+\newpage
 \section{}
 Our distribution is 
 $$p(-1)=p(1) = 1/4 \quad\text{and}\quad p(-2)=p(2)=p(-3)=p(3)=1/8.$$
@@ -150,6 +153,7 @@ $$E[X^2] = (1+1)1/4 + (4+4+9+9)1/8 = 15/4.$$
 $$H(X) = -\big( 2\cdot 1/4\log(1/4) + 4\cdot 1/8\log(1/8)  \big) = 0$$
 \subsection{d}
 $$H(X^2) = H(X) = 0.$$
+\newpage
 \section{}
 \subsection{a}
 \paragraph{}
@@ -161,42 +165,38 @@ $$U := \begin{bmatrix}
 A_0\\ A_1 \\ A_2\\ A_3
 \end{bmatrix}$$
 then 
-$$U\rho U^\dagger = \sum_{i,j=0}^3\ket{i}\bra{j} \otimes A_i\rho A_i^\dagger.$$
-where $\ket{0}, \dots, \ket{3}$ are the standard computational basis on $\C^4$. So then
-$$\cB_p(\rho) = Tr_2(U\rho U^\dagger) = B_0\rho B_0^\dagger + B_1 \rho B_1^\dagger$$
-where $B_0, B_1 \in \C^{4\times 2}$ satisfy
-$$(B_k)_{i,j} = (A_i)_{j,k}.$$
-More explicitly
+$$\cB_p(\rho) = Tr_2(U\rho U^\dagger) = \sum_{i=0}^3I_4 \otimes \ket{i}(U\rho U^\dagger)I_4\otimes\bra{i} = B_0 \rho B_0^\dagger + B_1\rho B_1^\dagger.$$
+where
 $$B_0 = \begin{bmatrix}
 \frac{\sqrt{4-3p}}{2} & 0 \\
 0 & \frac{\sqrt{p}}{2} \\
-0 & \frac{i\sqrt{p}}{2} \\
+0 & \frac{-i\sqrt{p}}{2} \\
 \frac{\sqrt{p}}{2} & 0.
 \end{bmatrix}$$
 and
 $$B_1 = \begin{bmatrix}
 0 & \frac{\sqrt{4-3p}}{2} \\
 \frac{\sqrt{p}}{2} & 0 \\
-\frac{-i\sqrt{p}}{2} & 0 \\
+\frac{i\sqrt{p}}{2} & 0 \\
 0 & \frac{-\sqrt{p}}{2}
 \end{bmatrix}$$
 So then we have
 $$\cB_p(I/2) = \frac{1}{2}(B_0 B_0^\dagger + B_1 B_1^\dagger) = \frac{1}{2}\big(\begin{bmatrix}
 1-\frac{3p}{4} & 0 & 0 & \frac{\sqrt{p}\sqrt{4-3p}}{4} \\
 0 & \frac{p}{4} & \frac{ip}{4} & 0 \\
-0 & \frac{ip}{4} & \frac{-p}{4} & 0 \\
+0 & \frac{ip}{4} & \frac{p}{4} & 0 \\
  \frac{\sqrt{p}\sqrt{4-3p}}{4} & 0 & 0 & \frac{p}{4}
 \end{bmatrix} + \begin{bmatrix}
 1-\frac{3p}{4} & 0 & 0 & \frac{-\sqrt{p}\sqrt{4-3p}}{4} \\
 0 &  \frac{p}{4} & \frac{-ip}{4} & 0 \\
-0 & \frac{-ip}{4} & \frac{-p}{4} & 0 \\
+0 & \frac{-ip}{4} & \frac{p}{4} & 0 \\
 \frac{-\sqrt{p}\sqrt{4-3p}}{4} & 0 & 0 & \frac{p}{4}
 \end{bmatrix}\big)$$
 So
 $$\cB_p(I/2) = \begin{bmatrix}
 1-\frac{3p}{4} & 0 & 0 & 0 \\
 0 & \frac{p}{4} & 0 & 0 \\
-0 & 0 & \frac{-p}{4} & 0 \\
+0 & 0 & \frac{p}{4} & 0 \\
 0 & 0 & 0 & \frac{p}{4}
 \end{bmatrix}.$$
 \subsection{b}
@@ -204,9 +204,8 @@ $$\cB_p(I/2) = \begin{bmatrix}
 We have, obviously, 
 $$\cA_p(I/2) = I/2.$$
 And so
-$$I_c(I/2, \cA_p) = S(I/2) - S(\cB_p(I/2)) = -4\frac{1}{2}\log\frac{1}{2} + (1-\frac{3p}{4})\log(1-\frac{3p}{4}) + 2\frac{p}{4}\log\frac{p}{4} - \frac{p}{4}\log\frac{-p}{4}$$
+$$I_c(I/2, \cA_p) = S(I/2) - S(\cB_p(I/2)) = -2\frac{1}{2}\ln\frac{1}{2} + (1-\frac{3p}{4})\ln(1-\frac{3p}{4}) + \frac{3p}{4}\ln\frac{p}{4} $$
 Simplifying somewhat gives
-$$I_c(I/2, \cA_p) = 2 +(1-\frac{3p}{4})\log(1-\frac{3p}{4}) +\frac{p}{2}\log\frac{p}{4} - \frac{p}{4}\log\frac{-p}{4}. $$
-Setting equal to $0$ and solving gives
-
+$$I_c(I/2, \cA_p) = \ln 2 +(1-\frac{3p}{4})\ln(1-\frac{3p}{4}) +\frac{3p}{4}\ln\frac{p}{4} $$
+Setting equal to $0$ and attempting to solve numerically gives $p \approx 0.2523$.
 \end{document}
