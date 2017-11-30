@@ -77,7 +77,7 @@
 \section{}
 \subsection{a}
 \paragraph{}
-We have
+We have (leaving off normalization)
 \begin{align*}
 \ket{\phi^+} &= \ket{00} + \ket{11}\\
 \ket{\phi^-} &= \ket{00} - \ket{11} \\
@@ -85,31 +85,33 @@ We have
 \ket{\psi^-} &= \ket{10} - \ket{01}
 \end{align*}
 So then
-$$\ket{\phi^+}\bra{\phi^+} + \ket{\phi^-}\bra{\phi^-} + \ket{\psi^+}\bra{\psi^-} = \begin{bmatrix}
-1 & 0 & 0 &0 \\
+$$\ket{\phi^+}\bra{\phi^+} + \ket{\phi^-}\bra{\phi^-} + \ket{\psi^+}\bra{\psi^-} = \frac{1}{2}\begin{bmatrix}
+2 & 0 & 0 &0 \\
 0 & 1 & 1 & 0 \\
 0 & 1 & 1 & 0 \\
-0 &0 &0 &1
+0 &0 &0 &2
 \end{bmatrix}$$
 and 
-$$\ket{\psi^-}\bra{\psi^-} = \begin{bmatrix}
+$$\ket{\psi^-}\bra{\psi^-} =\frac{1}{2} \begin{bmatrix}
 0 & 0 &0 & 0\\
 0 & 1 & -1 & 0 \\
 0 & -1 & 1 & 0 \\
 0 &0 &0 &0
 \end{bmatrix}$$
 Hence our Werner state $\rho$ as a $4\times 4$ matrix is
-$$\rho = \begin{bmatrix}
-\frac{1-p}{3} & 0 & 0 &0 \\
-0 & \frac{1+2p}{3} & \frac{1-4p}{3} & 0 \\
-0 & \frac{1-4p}{3} & \frac{1+2p}{3} & 0 \\
-0 & 0 & 0 & \frac{1-p}{3}
+$$\rho = \frac{1}{6}\begin{bmatrix}
+2(1-p) & 0 & 0 &0 \\
+0 & 1+2p & 1-4p & 0 \\
+0 & 1-4p & 1+2p & 0 \\
+0 & 0 & 0 & 2(1-p)
 \end{bmatrix}$$
 The partial transpose of $\rho$ is 
-$$(I \otimes T)\rho = \begin{bmatrix}
-\frac{1-p}{3} & 0 & 0 &\frac{1-4p}{3} \\
-0 & \frac{1+2p}{3} & 0 & 0 \\
-0 & 0 & \frac{1+2p}{3} & 0 \\
-\frac{1-4p}{3} & 0 & 0 & \frac{1-p}{3}
+$$(I \otimes T)\rho = \frac{1}{6}\begin{bmatrix}
+2(1-p) & 0 & 0 &1-4p \\
+0 & 1+2p3 & 0 & 0 \\
+0 & 0 & 1+2p & 0 \\
+1-4p & 0 & 0 & 1-3p
 \end{bmatrix}$$
+\subsection{b}
+The eigenvalues $(I \otimes T)\rho$ are $\frac{1+2p}{6}$, $0$, $0$, and $\frac{3-6p}{6} = \frac{1-2p}{2}$. The least of which is $\frac{1-2p}{2}$. From our slides we know that $\rho$ is separable if and only if $(I \otimes T)\rho$ is positive semidefinite. This happens if and only if $\frac{1-2p}{2} \geq 0$, that is when $p \leq 1/2$.
 \end{document}
