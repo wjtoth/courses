@@ -117,7 +117,7 @@ $$(I \otimes T)\rho = \frac{1}{6}\begin{bmatrix}
 \end{bmatrix}$$
 \subsection{b}
 The eigenvalues $(I \otimes T)\rho$ are $\frac{1+2p}{6}$, $0$, $0$, and $\frac{3-6p}{6} = \frac{1-2p}{2}$. The least of which is $\frac{1-2p}{2}$. From our slides we know that $\rho$ is separable if and only if $(I \otimes T)\rho$ is positive semidefinite. This happens if and only if $\frac{1-2p}{2} \geq 0$, that is when $p \leq 1/2$.
-
+\newpage
 \section{}
 \subsection{a}
 \paragraph{}
@@ -167,6 +167,32 @@ Lastly,
 $$Tr(P_+ I \otimes X P_+) = Tr(P_+ I \otimes Z P_+) = Tr(P_+ X\otimes Z P_+) = 0.$$
 Therefore we have that the probability the swap test declare $\rho$ and $\sigma$ equal is
 $$Tr(P_+ \rho \otimes \sigma P_+) = \frac{3 + r_xr_x' + r_yr_y' + r_zr_z'}{4}.$$
+\newpage
 \section{}
 \paragraph{}
+We use throughout that $\ket{A}$ and $\ket{B}$ are orthogonal. We have that
+$$-HU_0HU_f = (2\ket{\theta}\bra{\theta} - I_2)(2\ket{B}\bra{B} - I_2) = 4\ip{\theta}{B}\ket{\theta}\bra{B} - 2\ket{B}\bra{B} - 2\ket{\theta}\bra{\theta} + I_2.$$
+Now we observe that
+$\ip{\theta}{B} = \cos\theta$ and that
+$$\ket{\theta}\bra{B} = \sin\theta\ket{A}\bra{B} + \cos\theta\ket{B}\bra{B}.$$
+Further that
+$$\ket{\theta}\bra{\theta} = \sin^2\theta\ket{A}\bra{A} + \sin\theta\cos\theta (\ket{A}\bra{B} + \ket{B}\bra{A}) + \cos^2\theta\ket{B}\bra{B}.$$
+Then we see that
+\begin{align*}
+-HU_0HU_f &= 4\sin\theta\cos\theta\ket{A}\bra{B} + 4\cos^2\theta\ket{B}\bra{B} -2 \ket{B}\bra{B} \\
+&-2\sin^2\theta\ket{A}\bra{A} -2\sin\theta\cos\theta(\ket{A}\bra{B} + \ket{B}\bra{A}) -2\cos^2\theta\ket{B}\bra{B} \\
+&+ \ket{A}\bra{A} + \ket{B}\bra{B}\\
+&= (1-2\sin^2\theta)\ket{A}\bra{A} +2\sin\theta\cos\theta\ket{A}\bra{B} - 2\sin\theta\cos\theta\ket{B}\bra{A} + (2\cos^2\theta-1)\ket{B}\bra{B}\\
+&= \cos2\theta \ket{A}\bra{A} + \sin2\theta\ket{A}\bra{B} -\sin2\theta\ket{B}\bra{A} +\cos2\theta\ket{B}\bra{B}
+\end{align*}
+as desired.
+\newpage
+\section{}
+\paragraph{}
+First observe that
+$$Tr(\rho) = \sum_j a_j Tr(E_j) = \frac{1}{d} \sum_j a_j$$
+and then that
+$$p(i) = Tr(\rho E_i) = ba_i + c \sum_{j\neq i} a_j = ba_i + c(dTr(\rho) - a_i) = ba_i + cd - ca_i.$$
+Solving for $a_i$ we see that
+$a_i = \frac{p(i) -cd}{b-c}.$
 \end{document}
