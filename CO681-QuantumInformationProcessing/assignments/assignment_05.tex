@@ -60,6 +60,9 @@
 
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}%
 \DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+\DeclareMathOperator{\swap}{SWAP}
+
 %END MACROS
 %Page style
 \pagestyle{fancy}
@@ -114,4 +117,56 @@ $$(I \otimes T)\rho = \frac{1}{6}\begin{bmatrix}
 \end{bmatrix}$$
 \subsection{b}
 The eigenvalues $(I \otimes T)\rho$ are $\frac{1+2p}{6}$, $0$, $0$, and $\frac{3-6p}{6} = \frac{1-2p}{2}$. The least of which is $\frac{1-2p}{2}$. From our slides we know that $\rho$ is separable if and only if $(I \otimes T)\rho$ is positive semidefinite. This happens if and only if $\frac{1-2p}{2} \geq 0$, that is when $p \leq 1/2$.
+
+\section{}
+\subsection{a}
+\paragraph{}
+Let $\ket{0}, \ket{1}, \dots, \ket{d-1}$ denote the computational basis of $\C^d$. We use $[d-1]$ as shorthand for $\{0,\dots, d-1\}$. Let $i, j \in [d-1]$. Then we have
+$$\swap(\ket{i}\ket{j} + \ket{j}\ket{i}) = \ket{j}\ket{i} + \ket{i}\ket{j} = \ket{i}\ket{j} + \ket{j}\ket{i}$$
+Hence $\ket{i}\ket{j} + \ket{j}\ket{i}$ is an eigenvector of $\swap$ with eigenvalue $1$. There are $d^2/2$ such vectors, and it is easy to see they are linearly independent. Let
+$$B_+ = \{\ket{i}\ket{j} + \ket{j}\ket{i} : i,j \in [d-1]\}$$
+Similarly we can observe that
+$$\swap(\ket{i}\ket{j} - \ket{j}\ket{i}) = \ket{j}\ket{i} - \ket{i}\ket{j} = -1(\ket{i}\ket{j} - \ket{j}\ket{i}).$$
+Hence $\ket{i}\ket{j} - \ket{j}\ket{i}$ is an eigenvector of $\swap$ with eigenvalue $-1$. Again there are $d^2/2$ such non-zero vectors. Let 
+$$B_- = \{\ket{i}\ket{j} - \ket{j}\ket{i} : i,j \in [d-1]\}\backslash \{0\}.$$
+One can easily verify that $B:= B_+ \cup B_-$ is a set of linearly independent vectors. Since $|B| = d^2$ this implies that $B$ forms a basis of $\C^d\otimes \C^d$. Thus we have shown that the eigenvalues of $\swap$ are exactly $\pm 1$ and more over if we define $P_+$ to be projector onto the span of $B_+$ and $P_-$ to be the projector onto the span of $B_-$ then 
+$$\swap = P_+ - P_-.$$
+\subsection{b}
+\paragraph{}
+We can simplify our description of $P_+$ somewhat. Observe that
+$$P_+ = \frac{1}{2}\sum_{i=0}^{d-1} \sum_{j \leq i} (\ket{i}\ket{j} + \ket{j}\ket{i})(\bra{i}\bra{j} + \bra{j}\bra{i}) =\frac{1}{2}\big( \sum_{i,j=0}^{d-1} \ket{i}\ket{j}\bra{i}\bra{j} + \sum_{i,j=0}^{d-1} \ket{i}\ket{j}\bra{j}\bra{i}\big) = \frac{1}{2}\big(I + \swap\big).$$
+Let $\ket{\psi}, \ket{\phi} \in \C^d$ be pure states. Then
+\begin{align*}
+P_+ \ket{\psi}\ket{\phi} &= \frac{1}{2}(\ket{\psi}\ket{\phi} + \ket{\phi}\ket{\psi})
+\end{align*}
+Hence 
+\begin{align*}
+Tr(P_+ \ket{\psi}\ket{\phi}\bra{\psi}\bra{\phi}P_+) &= \bra{\psi}\bra{\phi}P_+P_+ \ket{\psi}\ket{\phi}\\ &= \frac{1}{2}\big(\ip{\phi}{\phi}\ip{\psi}{\psi} + \ip{\phi}{\psi}\ip{\psi}{\phi})\\ &= \frac{1 + |\ip{\phi}{\psi}|^2}{2}
+\end{align*}
+Therefore the probability that the swap test declares $\ket{\psi}$ and $\ket{\phi}$ the same is $\frac{1 + |\ip{\phi}{\psi}|^2}{2}$.
+\subsection{c}
+\paragraph{}
+We have that
+\begin{align*}
+\rho\otimes\sigma = &\frac{1}{4}(I \otimes I &+ r_x' I \otimes X &+ r_y' I \otimes Y &+ r_z' I \otimes Z \\
+&r_x X\otimes I &+ r_xr_x' X\otimes X &+ r_xr_y' X\otimes Y &+ r_xr_z' X \otimes Z \\
+&r_y Y \otimes I &+ r_yr_x'Y\otimes X &+ r_yr_y' Y \otimes Y &+ r_yr_z' Y \otimes Z \\
+&r_z Z\otimes I &+ r_zr_x' Z\otimes X &+ r_zr_y' Z \otimes Y &+ r_zr_z' Z\otimes Z).
+\end{align*}
+We check the trace of the action of $P_+$ on the constituent terms of $\rho \otimes \sigma$. By symmetry of $\rho \otimes \sigma$, and the fact that $-iY = XZ$ it will suffice to check only $I\otimes I$, $X\otimes X$, $Z\otimes Z$, $I \otimes X$, $I\otimes Z$, and $X\otimes Z$. Using cyclic nature of trace and that $\swap$ is self-inverse, it suffices to understand happens when $\swap$ is applied to the above matrices. $\swap X\otimes X$ has non-zero diagonal entries $1$ only in second and third columns. Similarly $\swap Z\otimes Z$ has non-zero diagonal entries $1$ only in first and fourth columns. Further $\swap I \otimes X$ and $\swap X\otimes Z$ have no non-zero diagonal entries, and $\swap I \otimes Z$ has non-zero diagonal entries $1$ and $-1$.
+\paragraph{}
+Finally, using the above discussion, we calculate traces. First we have $Tr(P_+I\otimes I P_+) = Tr(P_+P_+) = \frac{12}{4} = 3$. Further
+\begin{align*}
+Tr(P_+ X\otimes X P_+) &= \frac{1}{4}Tr(X\otimes X + \swap X\otimes X + X\otimes X \swap + \swap X\otimes X \swap )\\
+&= \frac{1}{4}(0 + 2 + 2 + 0)\\
+&= 1.
+\end{align*}
+and similarly
+$$Tr(P_+ Z \otimes Z P_+) = \frac{1}{4}(0 + 2 + 2 + 0) = 1.$$
+Lastly,
+$$Tr(P_+ I \otimes X P_+) = Tr(P_+ I \otimes Z P_+) = Tr(P_+ X\otimes Z P_+) = 0.$$
+Therefore we have that the probability the swap test declare $\rho$ and $\sigma$ equal is
+$$Tr(P_+ \rho \otimes \sigma P_+) = \frac{3 + r_xr_x' + r_yr_y' + r_zr_z'}{4}.$$
+\section{}
+\paragraph{}
 \end{document}
