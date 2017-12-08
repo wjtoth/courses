@@ -2,3 +2,16 @@
 \paragraph{}
 In this paper we explore the ways in which quantum computing can be used to improve upon the best-known classical algorithms for a wealth of fundamental problems in combinatorial optimization. In Section \ref{sec:quantum-primitives} we will discuss the various quantum procedures which appear at the heart of the otherwise classical algorithms we present. Chief among these procedures is Grover's Search \cite{grover1996fast}. In the sections which follow we discuss quantum algorithms for matchings, network flows, shortest paths, and minimum spanning trees.
 \subsection{Two Models of Graphs}
+\paragraph{}
+The problems we will consider in later sections are problems on (un)directed graphs $G=(V,E)$. There are two common ways of modeling access to a graph's structure in our algorithms: the {\it adjacency model} and the {\it list model}, each with subtle different complexity consequences.
+\paragraph{}
+In the adjacency model $G$ is specified by its $V \times V$ adjacency matrix $A(G)$, abbreviated $A$ when the graph $G$ is clear from context. For any $i, j \in V$, we have
+$$A_{i,j} = \begin{cases}
+1, \text{if $(i,j) \in E$}\\
+0, \text{otherwise.}
+\end{cases}$$
+Notice that the diagonal of $A$ is all zeroes since we assume $G$ has no self-loops, and $A$ is symmetric when $G$ is undirected.
+\paragraph{}
+In the list model $G$ is specified by $|V|$ lists. Each list corresponds to a vertex $v \in V$ and the elements of the list are the neighbours of $v$. Notice how in this model adding vertices can be done in constant time, while querying adjacency is costly, but the reverse is true for the adjacency model.
+\paragraph{}
+Generally the list model performs better on sparse graphs, and the adjacency model performs better on dense graphs (those with $|E|$ approximately $|V|^2$). For a complete discussion on the tradeoffs between the two models see Cormen et al. \cite[pages 529-530]{cormen2009introduction}.
