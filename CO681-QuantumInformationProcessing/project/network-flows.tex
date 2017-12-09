@@ -1,7 +1,30 @@
-\section{Network Flows}
+\section{Network Flows}\label{sec:nf}
 
-\subsection{Layered Subgraphs}
-
+\subsection{Directed Graph Layering}
+\paragraph{}
+An important subproblem we will use in solving Network Flow problems, and again later in solving Matching problems is the computing of a {\it layering}. Given a connected directed graph $G = (V,E)$ and a source vertex $r \in V$ we are to find a labelling, which we call a layering, on the vertices, $\ell : V \rightarrow \N$ such that $\ell(r) = 0$ and for all $v\neq r$
+$$ \ell(v) = 1+ \min_{u:(u,v) \in E} \ell(u).$$
+\paragraph{Algorithm}
+We can compute a layering as follows:
+\begin{enumerate}
+\item Initialize $\ell(r) = 0$ and $\ell(v) = \infty$ for all $v \neq r$. Further initialize a queue $W = \{r\}$.
+\item While $W\neq \emptyset$
+	\begin{enumerate}
+	\item Pop $v$ off the head of the queue $W$
+	\item Find by Grover's Search all neighbours $w$ with $\ell(w) = \infty$.
+	\item Set $\ell(w) = \ell(v) + 1$ and append $w$ to $W$.
+	\end{enumerate} 
+\end{enumerate}
+\begin{theorem}\label{th:layering}
+The algorithm above computes a layering for $G=(V,E)$  in time $O(n^{3/2}\log n)$ in the adjacency model and in time $O(\sqrt{nm}\log n)$ in the list model, where $n = |V|$ and $m = |E|$.
+\end{theorem}
+\begin{proof}
+Clearly initialization takes time $O(n)$, and every vertex is processed at most once. In the adjacency model the processing of every vertex takes $O(\sqrt{n})$ by Theorem \ref{th:grovers}. The log-factor appears in accordance with Note \ref{note:log}.
+\paragraph{}
+In the list model, each vertex is processed in time $O(\sqrt{\frac{n_v}{d(v)}}d_v + \sqrt{d(v) + 1}) = O(\sqrt{n_vd(v)} + \sqrt{d_v + 1})$, where $d(v)$ is the out-degree of $v$, and $n_v$ is the number of neighbours of $v$ with $\ell(v)=\infty$ when $v$ is searched from. Using the Cauchy-Schwarz inequality we can bound the expected running time for all vertices by
+$$\sum_{v\in V} \sqrt{n_vd(v)} \leq \sqrt{\sum_{v\in V} n_v}\sqrt{\sum_{v \in V} d(v)} = O(\sqrt{nm}),$$
+and similarly for $\sum_{v \in V} \sqrt{d(v) + 1}$. Hence the claimed running time.
+\end{proof}
 \subsection{Integer Network Flow Algorithm}
 
 \subsection{Lower Bound}

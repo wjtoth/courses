@@ -48,4 +48,7 @@ recalling (learning?) that the last equality follows from a trigonometric identi
 $$ \frac{1}{2}\sum_{s=0}^\infty \frac{3^s}{4^{s+1}}\lambda^{s+c} < \frac{\lambda}{8-6\lambda}m_0 = \frac{3}{2} m_0. $$
 So the algorithm uses at most $3m_0 + \frac{3}{2}m_0 = O(\sqrt{\frac{N}{t}})$ Grover iterations in expectation.
 \end{proof}
+\begin{note}\label{note:log}
+Many of our algorithms in the sections to follow. Particularly in Section \ref{sec:nf} and Section \ref{sec:matching} will use a polynomial number of applications of Grover's search, say $n^d$. If we want all of our quantum subroutines to simultaneously output a correct answer with probability at least $1-\frac{1}{n}$, then we need the probability of failure for a given subroutine to be at most $\frac{1}{n^{d+1}}$. Repeating each subroutine a $\log n$ number of times will ensure this probability. Consequentially, $\log $ factors will appear in our runtimes. We will omit them from the analysis, and cite this note as explanation of their appearance.
+\end{note}
 \subsection{Minima Finding}
