@@ -52,3 +52,10 @@ So the algorithm uses at most $3m_0 + \frac{3}{2}m_0 = O(\sqrt{\frac{N}{t}})$ Gr
 Many of our algorithms in the sections to follow. Particularly in Section \ref{sec:nf} and Section \ref{sec:matching} will use a polynomial number of applications of Grover's search, say $n^d$. If we want all of our quantum subroutines to simultaneously output a correct answer with probability at least $1-\frac{1}{n}$, then we need the probability of failure for a given subroutine to be at most $\frac{1}{n^{d+1}}$. Repeating each subroutine a $\log n$ number of times will ensure this probability. Consequentially, $\log $ factors will appear in our runtimes. We will omit them from the analysis, and cite this note as explanation of their appearance.
 \end{note}
 \subsection{Minima Finding}
+\paragraph{}
+Consider the following {\it minima finding } problem, wherein we try to find $d$ smallest values of different types. We are give two functions: an objective $f: \{1, \dots, N\} \rightarrow \N \cup \{\infty\}$, and a type $g: \{1, \dots, N\} \rightarrow \N$. Let $|g| := | \{ g(i): i \in \{1,\dots, N\}\}|$. We are also given an integer $d \in \{, \dots, \min\{|g|, N\}\}$, and are to find $I \subseteq \{1, \dots, N\}$ such that:
+\begin{itemize}
+\item $|I| = d$,
+\item $g(i) \neq g(j)$ for all $i,j \in I$ with $i\neq j$,
+\item and for all $j \in \{1,\dots, N\}\backslash I$ and $i \in I$, if $f(j) < f(i)$ then there exists some $i' \in I$ such that $g(i') = g(j)$ and $f(i') \leq f(j)$.
+\end{itemize}
