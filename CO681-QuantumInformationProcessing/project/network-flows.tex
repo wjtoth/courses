@@ -26,5 +26,62 @@ $$\sum_{v\in V} \sqrt{n_vd(v)} \leq \sqrt{\sum_{v\in V} n_v}\sqrt{\sum_{v \in V}
 and similarly for $\sum_{v \in V} \sqrt{d(v) + 1}$. Hence the claimed running time.
 \end{proof}
 \subsection{Integer Network Flow Algorithm}
-
+\paragraph{}
+In the {\it Integer Network Flow} problem we are given a directed network $G=(V,E)$ with special vertices source $r$ and sink $s$, and arc capacities $\mu : E \rightarrow \Z_{\geq 0}$ bounded by $U$, i.e. for each $e \in E$, $\mu(e) \leq U$. Our goal is to find the a {\it flow} $x: E \rightarrow \Z_{\geq 0}$ from $r$ to $s$ satisfying capacities $\mu$ of largest value, i.e. we want to solve:
+\begin{align*}
+\max \sum_{(u,s): E} x(u,s) \\
+\text{s.t.} \sum_{(u,v) \in E} x(u,v) - \sum_{(v,u) \in E} x(v,u) &= 0 &\forall v \in V\backslash\{r,s\} \\
+0 \leq &x\leq \mu.
+\end{align*}
+The current best known classical algorithm, given in \cite{goldberg1998beyond}, runs in time $O(\min(n^{2/3}m,m^{3/2})\log U)$.
+\paragraph{}
+Given a network $G$ and a flow $x$ on $G$, we define the {\it residual} network $H$ as follows. The vertex set of $H$ is the same as that of $G$. Add ``forward" arc $(u,v)$ to $H$ if $ x(u,v) < \mu(u,v)$ and set the capacity of $(u,v)$ in $H$ to be $\mu_H(u,v) = \mu(u,v) - x(u,v)$. Also add (possibly parallel) ``backward" arc $(u,v)$ to $H$ if $x(v,u) > 0$, and set $\mu_H(u,v) = x(v,u)$. Omit any edges with $0$ capacity.
+\paragraph{}
+A {\it flow-augmenting path} $P$ on $G$ with respect to $x$ is an $r$-$s$ path in residual network $H$. It is called such because $x$ can increased by the minimum capacity on $P$ on each forward arc in $P$ and decreased by the minimum capacity on $P$ on each backward arc to obtain a flow of greater value on $G$. A {\it blocking flow} is a set of flow-augmenting paths on $H$ that hits (has an arc intersecting) every $r$-$s$ path in $H$.
+\paragraph{}
+In \cite{even1975network} Even and Tarjan present a network flow algorithm when $U=1$ wherein the idea of augmenting the current flow by blocking flows in layered residual networks until the layer depth reaches a certain bound, and then switching to augmenting by single augmenting paths is employed. We will also use this technique in our quantum algorithm. Even and Tarjan give the following lemma which we will employ in our analysis.
+\begin{lemma}\label{lemma:5}
+\cite{even1975network}\cite{ambainis2006quantum} Let $H$ be the residual network of $G$ with respect to flow $x$. Let $k$ be the depth of an optimal layering on $H$. The the value of the blocking flow is at most $\min((2n/k)^2,m,k)\cdot U$.
+\end{lemma}
+\begin{proof}
+See Lemma $5$ of \cite{ambainis2006quantum}.
+\end{proof}
+\paragraph{Algorithm}
+Let $k = \min(n^{2/3}U^{1/3}\sqrt{mU})$. Our quantum algorithm starting with flow $x=0$:
+\begin{enumerate}
+\item Compute a layering $\ell$ of the residual graph $H$.
+\item If depth of $\ell$ is at most $k$ compute a blocking flow as follows:
+	\begin{enumerate}
+	\item Mark all vertices as ``enabled".
+	\item Compute by depth-first Grover's search an $r$-$s$ path $p$ in $H$ using layering $\ell$ that only uses enabled vertices (quit if no such path). During the back-tracking phase of the search, mark all vertices with no path to $s$ as ``disabled".
+	\item Let $u_H$ be the minimum of $\mu_H$ along $p$. Augment $x$ on $G$ by $u_H$ along $p$.
+	\item Return to Step $2a$.
+	\end{enumerate}
+\item Otherwise compute by depth-first Grover's search an $r$-$s$ path $p$ with min capacity $u_H$ (quit if no such path). Augment $x$ on $G$ by $u_H$ along $p$.
+\item Return to Step $1$.
+\end{enumerate}
+\paragraph{}
+We present our analysis of the algorithm in the case $U\leq n^{1/4}$ and will show after how to give upper bounds when $U > n^{1/4}$.
+\begin{theorem}
+Suppose $U \leq n^{1/4}$. Our algorithm solves Integer Network Flow in expected time $$O(n^{13/6}\cdot U^{1/3}\log n)$$ in the adjacency model and expected time $$O(\min(n^{7/6}\sqrt{m}\cdot U^{1/3}, \sqrt{nU}m)\log n)$$ in the list model.
+\end{theorem}
+\begin{proof}
+We can compute $\ell$ in $O(\sqrt{nm}\log n)$ time using Theorem \ref{th:layering}. We compute the capacities of $H$ online in constant time as needed. Since the edges of $H$ are searched online using the layering $\ell$ our algorithm automatically ``deletes" saturated edges when their capacity is queried by Grover's search.
+\paragraph{Processing a vertex of the depth-first search}
+Let $v \in V$.  Let $a_v$ be the number of augmenting paths using $v$ and let $e_{v,i}$ be the number of outgoing edges $(v,\cdot)$ when $i$ augmenting paths remain with respect to $H$. Since every arc has capacity at most $U$, we have $e_{v,i} \geq \ceil{i/U}$. Thus the total time spent in expectation on Grover's searches at node $v$ of the depth-first search is
+$$\sum_{i=1}^{a_v} \sqrt{\frac{d(v)}{e_{v,i}}} \leq \sqrt{U}\cdot\sum_{i=1}^{a_v}\sqrt{d(v)/i} = O(\sqrt{Ua_vd(v)}).$$
+Let $c_v$ be the number of enabled vertices found from node $v$ of the depth-first search which do not lie on an augmenting path in $H$, and are hence disabled. In expectation $O(\sqrt{c_vd(v)})$ time is spent in Grover's searches for these vertices. Finally, it takes $O(\sqrt{d(v) + 1})$ time to discover there is no $r$-$s$ path in $H$ using $v$, at which point $v$ is marked ``disabled" and never returned to.
+\paragraph{Time to find a blocking flow}
+Let $j$ be the depth of layering $\ell$ on $H$ and let $A_j$ be the value of a blocking flow on $H$. Since the total number of augmenting paths through any vertex in a given layer is at most $A_j$, we have $\sum_{v \in V} a_v \leq jA_j$. Further we can observe that $\sum_{v \in V} c_v \leq n$ and $\sum_{v \in V} d(v) \leq m$.  Thus, using Cauchy-Schwarz, the total time in expectation for computing a blocking flow from $H$ is
+$$\sum_{v \in V}(\sqrt{Ua_v(d)} + \sqrt{c_vd(v)} + \sqrt{d(v)+1}) \leq \sqrt{U}\sqrt{\sum_{v\in V}a_v}\sqrt{\sum_{v\in V} d(v)} + 2\sqrt{nm}$$
+which is on the order of $O(\sqrt{jmA_jU} + \sqrt{nm})$.
+\paragraph{}
+So our algorithm performs at most $k$ iterations finding a blocking flow. Thus the total expected time before switching to finding single flow-augmenting paths is at most
+$$\sqrt{mU}\cdot\sum_{j=1}^k\sqrt{jA_j} + k\sqrt{nm}.$$
+\paragraph{Counting remaining flow-augmenting paths}
+If the algorithm has not yet terminated after $\ell$ reaches depth greater than $k$ then by Lemma \ref{lemma:5}, $H$ has a residual flow of size $O(\min((2n/k)^2,m,k)\cdot U)=O(k)$. Therefore the algorithm needs at most $O(k)$ more iterations to terminate. Since we now only search for one augmenting path, each iteration has complexity $O(\sqrt{jm}) = O(\sqrt{nm})$. Hence the total running time of our algorithm in expectation is
+$$O(\sqrt{mU}\cdot \sum_{j=1}^k\sqrt{jA_j} + k\sqrt{nm}) + O(k\sqrt{nm}).$$
+\paragraph{Final Bounding}
+We want to show $\sum_{j=1}^k\sqrt{jA_j} = O(k^{3/2})$. 
+\end{proof}
 \subsection{Lower Bound}
