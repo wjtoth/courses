@@ -21,7 +21,7 @@ The algorithm above computes a layering for $G=(V,E)$  in time $O(n^{3/2}\log n)
 \begin{proof}
 Clearly initialization takes time $O(n)$, and every vertex is processed at most once. In the adjacency model the processing of every vertex takes $O(\sqrt{n})$ by Theorem \ref{th:grovers}. The log-factor appears in accordance with Note \ref{note:log}.
 \paragraph{}
-In the list model, each vertex is processed in time $O(\sqrt{\frac{n_v}{d(v)}}d_v + \sqrt{d(v) + 1}) = O(\sqrt{n_vd(v)} + \sqrt{d_v + 1})$, where $d(v)$ is the out-degree of $v$, and $n_v$ is the number of neighbours of $v$ with $\ell(v)=\infty$ when $v$ is searched from. Using the Cauchy-Schwarz inequality we can bound the expected running time for all vertices by
+In the list model, each vertex is processed in time $$O(\sqrt{\frac{n_v}{d(v)}}d_v + \sqrt{d(v) + 1}) = O(\sqrt{n_vd(v)} + \sqrt{d_v + 1})$$ where $d(v)$ is the out-degree of $v$, and $n_v$ is the number of neighbours of $v$ with $\ell(v)=\infty$ when $v$ is searched from. Using the Cauchy-Schwarz inequality we can bound the expected running time for all vertices by
 $$\sum_{v\in V} \sqrt{n_vd(v)} \leq \sqrt{\sum_{v\in V} n_v}\sqrt{\sum_{v \in V} d(v)} = O(\sqrt{nm}),$$
 and similarly for $\sum_{v \in V} \sqrt{d(v) + 1}$. Hence the claimed running time.
 \end{proof}

@@ -59,3 +59,36 @@ Consider the following {\it minima finding } problem, wherein we try to find $d$
 \item $g(i) \neq g(j)$ for all $i,j \in I$ with $i\neq j$,
 \item and for all $j \in \{1,\dots, N\}\backslash I$ and $i \in I$, if $f(j) < f(i)$ then there exists some $i' \in I$ such that $g(i') = g(j)$ and $f(i') \leq f(j)$.
 \end{itemize}
+\paragraph{}
+We present a notion of the sort of indices we want to add to $I$, split into two subtypes. For any $j \in \{1, \dots, N\}$, we call $j$ {\it good for} $I$ if there exists some $i \in I$ such that $f(j) < f(i)$ and either
+\begin{itemize}
+\item {\it(Known Type)} $g(j) = g(i)$, or 
+\item {\it(Unknown Type)} $g(j) \not\in g(I)$.
+\end{itemize}
+We present the following algorithm for minima finding:
+\begin{enumerate}
+\item Initialize $I$ as a set of $d$ dummy indices of unique type with respect to $g$ and unique maximal value with respect to $f$
+\item Repeat until no good elements for $I$
+	\begin{enumerate}
+	\item Use Grover's Search to find a good element $j$ for $I$.
+	\item If $j$ is of Known type, replace $i \in I$ such that $f(j) < f(i)$ and $g(j) = g(i)$ with $j$
+	\item Otherwise (i.e. if $j$ is of Unknown type) let $i \in I$ be element of largest $f$-value. Replace $i$ with $j$.
+	\end{enumerate}
+\end{enumerate}
+\begin{lemma}\label{lemma:minima}Let $I \subseteq \{1,\dots, N\}$ such that $|I| = d$ and for all $i,j \in I$, $g(i) \neq g(j)$ with $t>0$ good elements for $I$. Then after $O(d)$ iterations of step $2$, in expectation, there are at most $\frac{3}{4}t$ good elements for $I$.
+\end{lemma}
+\begin{proof}
+See Lemma $4$ of D{\"u}rr et al. \cite{durr2004quantum}.
+\end{proof}
+\begin{theorem}\label{th:minima}
+The algorithm above solves the minima finding problem in expected time $O(\sqrt{dN})$.
+\end{theorem}
+\begin{proof}
+Let $t$ denote the number of good elements remaining for $I$ at a given iteration of the algorithm. From Lemma \ref{lemma:minima} and Theorem \ref{th:grovers}, we have that, if $t > 2d$ then there are at most $\frac{t}{2}$ good elements for $I$ after $O(d\sqrt{\frac{N}{t}})$ queries of $f$ in expectation. Hence for $t>2d$ the expected number of queries of $f$ until $t\leq 2d$ is
+$$O\big(d\big(\sqrt{\frac{N}{d}} + \sqrt{\frac{N}{2d}} + \sqrt{\frac{N}{4d}} + \dots\big)\big) = O(\sqrt{dN}).$$
+Then once the algorithm has $t \leq 2d$, the number of queries of $f$ needed in expectation to reach $t=0$ is
+$$O\big(\sum_{j=1}^{2d}\sqrt{\frac{N}{j}}\big) = O(\sqrt{dN})$$
+as desired.
+\end{proof}
+\paragraph{}
+Two special case of minima finding are the problems of Finding $d$ Smallest Values of a Function, and Find $d$ Elements of Different Type. By a reduction from distinguishing matrices to these special subproblems, they show in \cite{durr2004quantum} that Minima Finding requires $\Omega(\sqrt{dN})$ queries of $f$ and hence the algorithm we present is optimal. 
