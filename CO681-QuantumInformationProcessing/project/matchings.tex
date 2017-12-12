@@ -2,11 +2,30 @@
 \paragraph{}
 In a {\it maximum matching problem} we are given a graph $G=(V,E)$ and asked for find  $M\subseteq E$, maximizing $|M|$, such that every vertex of $(V,M)$ has degree at most $1$. \subsection{Bipartite Matching}
 \paragraph{}
-A {\it bipartite graph} is a graph where there exists a partition $A\cup B = V$ such that no vertices in $A$ are adjacent, and no vertices in $B$ are adjacent. A well known equivalent definition of a bipartite graph is one with no odd cycles. In bipartite graphs the best known classical algorithm takes time $O(n^\omega)$ \cite{mucha2004maximum} where $2\leq\omega\leq 2.4$ is the matrix multiplication constant and $n = |V|$, with the caveat that if $\omega = 2$ then algorithm a $\log n$ factor appears in the runtime.  We model our quantum algorithm on the following $O(n^{5/2})$-time classical algorithm \cite{hopkroft1973n5}:
+A {\it bipartite graph} is a graph where there exists a partition $A\cup B = V$ such that no vertices in $A$ are adjacent, and no vertices in $B$ are adjacent. A well known equivalent definition of a bipartite graph is one with no odd cycles. In bipartite graphs the best known classical algorithm takes time $O(n^\omega)$ \cite{mucha2004maximum} where $2\leq\omega\leq 2.4$ is the matrix multiplication constant and $n = |V|$, with the caveat that if $\omega = 2$ then algorithm a $\log n$ factor appears in the runtime.  Our quantum algorithm is inspired by the $O(n^{5/2})$-time classical algorithm in \cite{hopkroft1973n5}.
+\paragraph{}
+As in our study of Network Flows we will identify a notion of augmenting paths we can use to improve our matchings, and a residual graph structure which enables easy identification of such paths. For a graph $G$ and a matching $M$, we say a path $P$ in $G$ is {\it $M$-augmenting} if the endpoints of $P$ are not matched in $M$ and the edges of $P$ are alternately not in $M$ and in $M$. If we have such $P$ we can flip the matched edges in $M$ along $P$ (formally we replace $M$ with the symmetric difference of $M$ and $P$) to obtain a matching of larger size than $M$.
+\paragraph{}
+In bipartite graphs $M$-augmenting paths can easily be found using a {\it residual graph} structure. Construct a directed graph $H$ based on $G$ and $M$ as follows. The vertex set of $H$ is $A\cup B\cup \{r,s\}$ with source $r$ and sink $s$. For each edge $ab \in E$ with $a \in A$ and $b\in B$,  add arc $(a,b)$ to $H$ if $ab \not\in M$, otherwise add arc $(b,a)$. For each $a \in A$ that is not matched by $M$ add arc $(r,a)$ to $H$. Similarly for each $b \in B$ unmatched by $M$ add arc $(b,s)$. Now it is not hard to see that $r$-$s$ dipaths in $H$ correspond to $M$-augmenting paths in $G$.
+\paragraph{Algorithm}
+Our quantum algorithm for bipartite maximum matching is as follows:
 \begin{enumerate}
-\item
-\end{enumerate}
-
+\item Set $M = \emptyset$
+\item  Let $H$ be the residual graph with respect to $G$ and $M$. Compute a layering $\ell$ for $H$.
+\item Find by depth-first Grovers Search using $\ell$ a maximal set $S$ of vertex-disjoint $r$-$s$ paths in $H$.
+\item Augment $M$ by all paths in $S$. Note such paths all have the same minimal length.
+\item If $S\neq \emptyset$ Return to Step $2$. Otherwise output $M$ and quit.
+\end{enumerate} 
+\begin{theorem}
+Our quantum algorithm finds a maximum bipartite matching in expected time $O(n\sqrt{m+n}\log n)$ in the list model and $O(n^2\log n)$ in the adjacency model.
+\end{theorem}
+\begin{proof}
+First we bound the number of iterations of Step $2$ in the algorithm. Let $s$ be the size of a maximal matching $M$ in $G$ and let $s_i$ be the size of matching found by the algorithm after iteration $i$.  Let $j$ be the first iteration with $s_j \geq s-\sqrt{n}$. Since the algorithm finds at least one augmenting path each time it runs from Step $2$, there are at most $\sqrt{n}$ iterations remaining after iteration $j$.  Now in \cite{hopkroft1973n5} they give the following Lemma
+$$\text{If $M_1$ and $M_2$ are matchings of size $s_1$ and $s_2$ respectively ($s_1 < s_2$) then there exist $s_2-s_1$ vertex disjoint $M_1$-augmenting paths.}$$
+Applying this Lemma with $M_1 = M_j$ and $M_2 = M$ we see there are at least $\sqrt{n}$ vertex disjoint $M_j$-augmenting paths. Since the length of $M_i$-augmenting paths increase by one each iteration, the length of these $M_j$-augmenting paths is at least $j+2$. So therefore we have $j <\sqrt{n}$, and hence the total number of iterations of Step $2$ is at most $2\sqrt{n} = O(\sqrt{n})$.
+\paragraph{Bounding Time to Find all Augmenting Paths}
+We will show the bound for the adjacency model. The bounds for the list model follow by similar arguments, using as well the bounding techniques of the proof of Theorem \ref{th:layering}. The layer numbers for $H$ can be computed in time $O(n^{3/2}\log n)$ in the adjacency model by Theorem \ref{th:layering}. Our depth-first search proceeds from a vertex by searching all vertices with layer number $\ell$ one greater to find a descendant. Each vertex will thus join an augmenting path and be marked, or it does not belong to any such path. Each vertex is thus visited at most once and hence costs expected $O(\sqrt{n})$ time to be found and another $O(\sqrt{n})$ time to decide it has no remaining descendants. Therefore the desired runtime bound holds.
+\end{proof}
 \subsection{General Matching}
 
 \subsection{Quantum Adversary}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

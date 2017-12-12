@@ -41,7 +41,7 @@ A {\it flow-augmenting path} $P$ on $G$ with respect to $x$ is an $r$-$s$ path i
 \paragraph{}
 In \cite{even1975network} Even and Tarjan present a network flow algorithm when $U=1$ wherein the idea of augmenting the current flow by blocking flows in layered residual networks until the layer depth reaches a certain bound, and then switching to augmenting by single augmenting paths is employed. We will also use this technique in our quantum algorithm. Even and Tarjan give the following lemma which we will employ in our analysis.
 \begin{lemma}\label{lemma:5}
-\cite{even1975network}\cite{ambainis2006quantum} Let $H$ be the residual network of $G$ with respect to flow $x$. Let $k$ be the depth of an optimal layering on $H$. The the value of the blocking flow is at most $\min((2n/k)^2,m,k)\cdot U$.
+\cite{even1975network}\cite{ambainis2006quantum} Let $H$ be the residual network of $G$ with respect to flow $x$. Let $k$ be the depth of an optimal layering on $H$. Then the value of the residual flow is at most $\min((2n/k)^2,m,k)\cdot U$.
 \end{lemma}
 \begin{proof}
 See Lemma $5$ of \cite{ambainis2006quantum}.
@@ -82,6 +82,23 @@ $$\sqrt{mU}\cdot\sum_{j=1}^k\sqrt{jA_j} + k\sqrt{nm}.$$
 If the algorithm has not yet terminated after $\ell$ reaches depth greater than $k$ then by Lemma \ref{lemma:5}, $H$ has a residual flow of size $O(\min((2n/k)^2,m,k)\cdot U)=O(k)$. Therefore the algorithm needs at most $O(k)$ more iterations to terminate. Since we now only search for one augmenting path, each iteration has complexity $O(\sqrt{jm}) = O(\sqrt{nm})$. Hence the total running time of our algorithm in expectation is
 $$O(\sqrt{mU}\cdot \sum_{j=1}^k\sqrt{jA_j} + k\sqrt{nm}) + O(k\sqrt{nm}).$$
 \paragraph{Final Bounding}
-We want to show $\sum_{j=1}^k\sqrt{jA_j} = O(k^{3/2})$. 
+We want to show $\sum_{j=1}^k\sqrt{jA_j} = O(k^{3/2})$. We will divide the index sequence $1, \dots, k$ of summands into $\log k$ intervals of the form $S_i := \{2^i, 2^i + 1, \dots, 2^{i+1}-1\}$ of length $2^i$. After $k_i=\frac{k}{2^i}$ iterations the value of the residual flow on $H$ is at most 
+$$O(\min((n/k)^2\cdot 2^{2i}, m/k\cdot 2^i)\cdot U) \leq O(2^{2i}k) = O(k^2/k_i)$$
+by Lemma \ref{lemma:5}. Using Cauchy-Schwartz on each interval $S_i$ we observe that
+\begin{align*}
+\sum_{j=1}^k \sqrt{jA_j} &= \sum_{i=0}^{\log k} \sum_{j \in S_i} \sqrt{jA_j}\\
+ &\leq \sum_{i=0}^{\log k} \sqrt{2^i\cdot 2^{i+1}}\sqrt{\sum_{j\in S_i} A_j} \\
+ &\leq \sqrt{2}\sum_{i=0}^{\log k} 2^i\sqrt{kk_i} \\
+ &= O(k^{3/2}).
+ \end{align*}
+ Hence the total expected running time of our algorithm is $O(k\sqrt{m}(\sqrt{kU} + \sqrt{n}))$. Since $U\leq n^{1/4}$, we have $kU \leq n$. Therefore the running time in the list model is
+ $$O(\min(n^{7/6}\sqrt{m}\cdot U^{1/3}, \sqrt{nU})\log n)$$
+ with the log factor appearing by Note \ref{note:log}. In the adjacency model the desired runtime appears by setting $m=n^2$ in the above.
 \end{proof}
-\subsection{Lower Bound}
+\paragraph{}
+When $U > n^{1/4}$ we can obtain a runtime bound of $O(\min(n^{7/6}\sqrt{m},\sqrt{n}m)\cdot U \log n)$ using the same analysis as above, but with a slightly modified algorithm: that is, needing to change $k$ to $\min(n^{2/3}, \sqrt{m})$. The speedup of our quantum network flow algorithm is best felt for dense graphs, i.e. those with many edges. When $m = \Omega(n^{1+\epsilon})$ for some $\epsilon >0$ and $U$ is small our algorithm gives a polynomial speedup over the best known classical algorithm.
+\paragraph{}
+The authors also present a lower bound via a reduction from deciding the majority on a bit sequence and using the max-flow min-cut theorem. In some sense the gap between the upper and lower bounds remains large. We state without proof their result here.
+\begin{theorem}
+\cite{ambainis2006quantum} A quantum algorithm for Integer Network Flow with capacities bounded by $U=n$ has quantum query complexity $\Omega(n^2)$.
+\end{theorem}
