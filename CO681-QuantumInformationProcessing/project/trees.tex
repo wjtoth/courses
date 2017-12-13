@@ -1,7 +1,81 @@
 \section{Trees}
 
 \subsection{Minimum Spanning Trees}
-
+\paragraph{}
+In the {\it Minimum Spanning Tree} problem we are given a graph $G=(V,E)$ and weights $w: E \rightarrow R_{\geq 0}$. Our goal is to find a spanning tree $(V,T)$ so that $$w(T) := \sum_{e \in T} w(e)$$ is minimized. While there are a wide array of algorithms for solving minimum spanning tree, we will concentrate our efforts on Boruvka's algorithm \cite{nevsetvril2001otakar} as it lends itself well to minima finding algorithm given in Section $2$.
+\paragraph{Algorithm}
+Boruvka's algorithm maintains a spanning forest at each iteration and adds to each component a minimum weight edge out of the component, merging trees in the forest as necessary. It is a classical exercise to verify the correctness of this algorithm. Our slight variation of Borubvka's algorithm, taking advantage of quantum searching, is as follows:
+\begin{enumerate}
+\item Let $T_1, T_2, \dots, T_k$ denote our spanning forest. Initialize $k= n$ and each $T_i$ to a single unique vertex $v_i$.
+\item While $k >1$ do:
+	\begin{enumerate}
+	\item For each $j \in \{1, \dots, k\}$ let $e_j = \arg\min\{w(uv): uv \in E, u \in V(T_j), v \not\in V(T_j)\}$ via Minima Finding Algorithm (we will make this precise). 
+	\item Add edges $e_j$ to $T_j$ for each $j$, merging trees as appropriate and setting $k$ to the number of connected components.
+	\end{enumerate}
+\item Return $T_1$.
+\end{enumerate}
+In the list model each edge $uv$ appears twice: once in the list for $u$ and again in the list for $v$. Thus we can think of $E$ as a set of directed edges such that $(u,v) \in E$ iff $(v,u) \in E$. To apply Minima Finding (Theorem \ref{th:minima}) in Step $2(a)$ we use objective function $f: E \rightarrow \R_\geq 0$ that does for each directed edge $(u,v)$
+$$f(u,v) = \begin{cases}
+w(u,v), &\text{ if $(u,v) \not\in T_j, \forall j\in \{1,\dots, k\}$} \\
+\infty, &\text{otherwise}.
+\end{cases}$$
+and we use type function $g: E\rightarrow \Z$ mapping each directed edge $(u,v)$ to the index, $j$, of the tree $T_j$ such that $u \in V(T_j)$.
+\begin{theorem}
+Our algorithm for Minimum Spanning Trees uses $O(\sqrt{nm}\log n)$ expected quantum queries in the list model, and $O(n^{3/2}\log n)$ in the adjacency model.
+\end{theorem}
+\begin{proof}
+\paragraph{}
+Each iteration sees $k$ decreased by a factor of $\frac{1}{2}$. Therefore there are $\log n$ iterations of Step $2$. Now applying Theorem \ref{th:minima} we see that each iteration needs $O(\sqrt{nm})$ expected queries to solve minima finding.
+\paragraph{}
+The number of queries in the adjacency model follows from the number of queries in the list model by viewing the adjacency matrix as a list model with $m = n^2$.
+\end{proof}
 \subsection{Shortest Path Trees}
-
-\subsection{Lower Bounds}
+\paragraph{}
+In the {\it shortest path} problem, you are given a directed graph $G=(V,E)$ with non-negative edges weights $w: E\rightarrow \R_{\geq 0}$, and a root vertex $r$. You are to compute a {\it shortest path tree} $T$ rooted at $r$. That is, for every $v \in V$, the path from $r$ to $v$ is a shortest path in $G$.
+\paragraph{Definitions}
+For vertices $u, v \in V$ we use $d(u,v)$ to denote the shortest path distance from $u$ to $v$. Further we denote border edges as $\delta(U) = \{(u,v ) \in E: u \in U, v\not\in U\}$ for $U \subseteq V$. The correctness of our algorithm to follow hinges on maintaining the invariant that every vertex in the tree discovered so far has a shortest path from $r$ using only tree arcs, and that at each iteration the edge $(u,v)$ added to the tree from the border edges is of cheapest cost $c_T(u,v) : = d(r,u) + w(u,v)$.
+\paragraph{Algorithm}
+Our algorithm is as follows:
+\begin{enumerate}
+\item Set $T \leftarrow \{r\}$, $\ell \leftarrow 1$, $P_1 \leftarrow \{v_0\}$.
+\item While $T$ does not span $V$:
+	\begin{enumerate}
+	\item Find a set $A_\ell$ of $|P_\ell|$ cheapest, with respect to $c_T$, border edges in $\delta(V(T))$ with disjoint target head vertices. We will make this precise using Minima Finding after the algorithm description.
+	\item Let $(u,v)$ be the minimal costed edge of $A_1 \cup \dots \cup A_\ell$ with $v\not\in P_1 \cup \dots \cup P_\ell$. Set $T \leftarrow T \cup \{(u,v)\}$, and $P_{\ell + 1} \leftarrow \{v\}$ and $\ell \leftarrow \ell + 1$.
+	\item If $\ell \geq 2$ and $|P_{\ell -1}| = |P_{\ell}|$ then merge $P_\ell$ into $P_{\ell -1}$ and set $\ell = \ell -1$.
+	\end{enumerate}
+\item Return $T$.
+\end{enumerate}
+\paragraph{}
+In Step $2(a)$ we find $A_\ell$ via Minima Finding (Theorem \ref{th:minima}). To this end define objective function $f:\delta(P_\ell) \rightarrow \Z$ so that 
+$$f(u,v) = \begin{cases}
+c_T(u,v), &\text{if } v\not\in T \\
+\infty, &\text{otherwise}
+\end{cases}$$
+and define the type function $g: \delta(P_\ell) \rightarrow V$ by $g(u,v) = v$. It is easy to see that solving this Minima Finding problem computes $A_\ell$. As in the Minimum Spanning Tree problem, the adjacency model complexity is easy to derive from the list model complexity, and so we only give the list model bound in the following theorem.
+\begin{theorem}
+Our algorithm solves shortest path with expected $O(\sqrt{nm}\log^{3/2}n)$ quantum queries in the list model.
+\end{theorem}
+\begin{proof}
+Consider iteration $\ell$ with tree $T$ found so far. The sets $P_1, P_2, \dots P_{\ell}$ partition $V(T)$, and their sizes are strictly decreasing powers of $2$. Since $\sum_{j=0}^{i-1} 2^j = 2^i - 1$, each $P_i$ is strictly larger that $\bigcup_{j=0}^{i-1} P_j$. Therefore, since $A_i$ contains  $|P_i|$ edges, at least one such edge has its target head vertex outside $P_1, \dots, P_\ell$ by pigeonhole principle.
+\paragraph{}
+Let $(u,v)$ be the cheapest, with respect to $c_T$ border edge of $T$ during this $\ell$-th iteration. Let $P_i$ be the set containing $u$. Then $A_i$ necessarily contains $(u,v)$ as so $(u,v)$ is selected to add to $T$ in Step $2(b)$ as desired. 
+\paragraph{Counting Queries}
+We count first the total queries for sets $P_i$ of some cardinality $s$. Suppose in Step $2(a)$ we making queries for some $P_\ell$ of size $s$. How many such $P_\ell$ of size $s$ can appear over the course of the algorithm? Since $V(T)$ is always a strict superset of the vertex set of the tree from the previous iteration, there are at most $n/s$ such $P_\ell$ over the entire operation of the algorithm. If we let $m_j = |\delta(P_j)|$ for any $j$ such that $|P_j| = s$ then the total queries done, in expectation, by Step $2(a)$ for cardinality $s$ sets is
+$$\sum_{j=1}^{n/s} \sqrt{sm_j}$$
+by Theorem \ref{th:minima}.
+In the worst case each $m_j = sm/n$ and then $\sum_j = m_j = m$. Therefore the total queries for size $s$ sets is $O(\sqrt{nm})$ for fixed $s$.
+\paragraph{}
+The algorithm uses $\log n$ distinct such $s$ and hence the total queries made is $O(\sqrt{n\log n m})$. As in Note \ref{note:log} we introduce a $\log n$ factor to account for error. Therefore we obtain the desired bound.
+\end{proof}
+\subsection{Lower Bound}
+\paragraph{}
+We conclude with a lower bound on both Minimum Spanning Tree and Shortest Path quantum queries.
+\begin{theorem}
+Minimum Spanning Tree and Shortest Path both require $\Omega(\sqrt{nm})$ queries.
+\end{theorem}
+\begin{proof}
+We proceed by a reduction from minima finding and then apply the $\Omega(\sqrt{dN})$ bound as mentioned in Note \ref{note:lb}, with $d = n$ and $N= kn$ for some fixed $k$, and $m = k(n+1)$. Let $M$ be an $n\times k$ matrix with positive entries. From the lower bound on Minima Finding, $\Omega(\sqrt{kn^2})$ quantum queries are required to find the minimum value in each row.
+\paragraph{}
+We construct a weighted graph $G=(V,E)$ from $M$. Let $V = \{r, v_1, \dots, v_k, u_1, \dots, u_n\}$. For each $v_i$ add arc $(r,v_i)$ to $E$ with weight $0$. For each $v_i, u_j$ add arc $(v_i, u_j)$ to $E$ with weight $M_{ji}$. Then every minimum spanning tree, and shortest path tree from $r$, will use all the $0$ weight edges from $r$ and connect every $u_j$ with only its minimal weighted edge.
+\end{proof}

@@ -81,7 +81,7 @@ We present the following algorithm for minima finding:
 See Lemma $4$ of D{\"u}rr et al. \cite{durr2004quantum}.
 \end{proof}
 \begin{theorem}\label{th:minima}
-The algorithm above solves the minima finding problem in expected time $O(\sqrt{dN})$.
+The algorithm above solves the minima finding problem using $O(\sqrt{dN})$ queries in expectation.
 \end{theorem}
 \begin{proof}
 Let $t$ denote the number of good elements remaining for $I$ at a given iteration of the algorithm. From Lemma \ref{lemma:minima} and Theorem \ref{th:grovers}, we have that, if $t > 2d$ then there are at most $\frac{t}{2}$ good elements for $I$ after $O(d\sqrt{\frac{N}{t}})$ queries of $f$ in expectation. Hence for $t>2d$ the expected number of queries of $f$ until $t\leq 2d$ is
@@ -90,5 +90,6 @@ Then once the algorithm has $t \leq 2d$, the number of queries of $f$ needed in 
 $$O\big(\sum_{j=1}^{2d}\sqrt{\frac{N}{j}}\big) = O(\sqrt{dN})$$
 as desired.
 \end{proof}
-\paragraph{}
+\begin{note}\label{note:lb}
 Two special case of minima finding are the problems of Finding $d$ Smallest Values of a Function, and Find $d$ Elements of Different Type. By a reduction from distinguishing matrices to these special subproblems, they show in \cite{durr2004quantum} that Minima Finding requires $\Omega(\sqrt{dN})$ queries of $f$ and hence the algorithm we present is optimal. 
+\end{note}
