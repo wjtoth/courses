@@ -1,0 +1,119 @@
+\documentclass[letterpaper,12pt,oneside,onecolumn]{article}
+\usepackage[margin=1in, bottom=1in, top=1in]{geometry} %1 inch margins
+\usepackage{amsmath, amssymb, amstext}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{theorem}
+\usepackage{tikz}
+\usepackage{tkz-berge}
+\usepackage[braket, qm]{qcircuit}
+\usepackage{hyperref}
+
+%Macros
+\newcommand{\A}{\mathbb{A}} \newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}} \newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+ 
+ 
+\newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}} \newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}} \newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}} \newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}} \newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}} \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}} \newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}} \newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}} \newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}} \newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}} \newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofof}[1]{{\bf Proof of #1:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofofnobox}[1]{{\bf#1:  }}{}\newenvironment{example}{{\bf Example:  }}{\hfill\rule{2mm}{2mm}}
+
+%\renewcommand{\thesection}{\lecnum.\arabic{section}}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}[fact]{Lemma}
+\newtheorem{theorem}[fact]{Theorem}
+\newtheorem{definition}[fact]{Definition}
+\newtheorem{corollary}[fact]{Corollary}
+\newtheorem{proposition}[fact]{Proposition}
+\newtheorem{claim}[fact]{Claim}
+\newtheorem{exercise}[fact]{Exercise}
+\newtheorem{note}[fact]{Note}
+\newtheorem{conjecture}[fact]{Conjecture}
+
+\newcommand{\size}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+%END MACROS
+%Page style
+\pagestyle{fancy}
+
+\listfiles
+
+\raggedbottom
+
+\lhead{CO 749 - \today}
+\rhead{W. Justin Toth - A1} %CHANGE n to ASSIGNMENT NUMBER ijk TO COURSE CODE
+\renewcommand{\headrulewidth}{1pt} %heading underlined
+%\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
+
+\begin{document}
+\section{}
+\paragraph{}
+Let $G$ be a graph of minimum degree at least $3$ satisfying all of the following:
+\begin{itemize}
+	\item Every triangle contains at most one vertex of degree three.
+	\item If two vertices of degree three are adjacent then they are in triangles.
+	\item No two distinct triangles share a common edge.
+\end{itemize}
+Suppose for a contradiction that $\abs{E(G)} < 5\abs{V(G)}/3$.
+\begin{claim}\label{1.1}
+	For every $v \in V(G)$, if $d(v) = 3$ then $v$ has at most one neighbour of degree $3$.
+\end{claim}
+\begin{proof}
+	Assume for a contradiction that there exist $u,v, w \in V(G)$ satisfying
+	$$d(u) = d(v) = d(w) = 3$$
+	and $uv, vw \in E(G)$, i.e. $u$ and $w$ are adjacent to $v$. But then, using the second property of $G$, $v$ is in a triangle. Denote this triangle by $C$. Since every triangle contains at most one vertex of degree three, $u$ and $w$ are not contained in $C$. But then since $d(v) = 3$, $v$ has at most one neighbour in $C$, a contradiction to $C$ being a $K_3$.
+\end{proof}
+\paragraph{}
+We proceed by a discharging argument. For each vertex $v \in V(G)$ set the initial charge as
+$$ch_0(v) = d(v) - 4$$
+and for each edge $e \in E(G)$ set the initial charge
+$$ch_0(e) = 1/3.$$
+Then our total charge is, using handshaking,
+\begin{align*}
+\sum_{v\in V(G)} ch_0(v) + \sum_{e \in E(G)} ch_0(e) &= \sum_{v \in V(G)} d(v) - 4|V(G)| + \frac{1}{3} |E(G)|\\ &=  \frac{7}{3}|E(G)| - 4|V(G)\\ &< \frac{35}{9}|V(G)| - \frac{36}{9}|V(G)|\\ &< 0
+\end{align*}
+with the first inequality following from our assumption that $|E(G)| < 5|V(G)|/3$.
+\paragraph{}
+Redistribute the charge, to obtain $ch_1$, according to the following Rules:
+\begin{enumerate}
+	\item If edge $uv$ contains precisely one vertex $u$ such that $d(u) = 3$ then $uv$ sends $1/3$ charge to $u$.
+	\item If edge $uv$ is such that $d(u) \geq 4$ and $d(v) \geq 4$ and $u,v$ are in a triangle with vertex $w$ then $uv$ sends $1/3$ charge to $w$.
+\end{enumerate}
+\paragraph{}
+Since vertices sends no charge, clearly every vertex $v \in V(G)$ with $d(v) \geq 4$ has $$ch_1(v) = ch_0(v) \geq 0.$$ Now we will show that if $v$ is a vertex with $d(v) = 3$ then $ch_1(v) \geq 0$. From Claim \ref{1.1} $v$ is adjacent with at most one vertex of degree $3$. If $v$ is adjacent with no degree three vertices then each edge incident with $v$ sends $\frac{1}{3}$ charge to $v$ by Rule $1$ and hence
+$$ch_1(v) = ch_0(v) + 3\cdot\frac{1}{3} = 0.$$
+On the other hand, if $v$ is adjacent with one degree three vertex then $v$ receives $\frac{2}{3}$ charge from incident edges by Rule $1$. The remaining needed $\frac{1}{3}$ is obtained from Rule $2$ as follows. Since $v$ is adjacent with a degree three vertices, $v$ lies in a triangle, and since every triangle contains at most one degree three vertex the edge containing the other two vertices of this triangle sends $\frac{1}{3}$ charge to $v$. Therefore $ch_1(v) \geq 0$.
+\paragraph{}
+It remains to verify that each edge $uv$ satisfies $ch_1(uv) \geq 0$. Edge $uv$ can satisfy at most one of Rule $1$ and Rule $2$. If $uv$ satisfies Rule $1$ it sends $\frac{1}{3}$ charge and so $ch_1(uv) = 0$. Instead if $uv$ satisfies Rule $2$ it can only do so for one triangle, since no two distinct triangles share a common edge. So $uv$ only sends $\frac{1}{3}$ charge by Rule $2$. Therefore $ch_1(uv) \geq 0$.
+\paragraph{}
+Therefore we have a contradiction as our total charge is negative but $ch_1$ of each object is non-negative.$\blacksquare$
+\end{document}

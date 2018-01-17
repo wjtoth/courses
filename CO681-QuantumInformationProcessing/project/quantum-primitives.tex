@@ -3,9 +3,9 @@
 In this section we present important quantum primitives to be used in our optimization algorithms in later sections. The centerpiece of these algorithms is Grover's search, first presented in \cite{grover1996fast} and rigorously analyzed in \cite{boyer1996tight}, whose presentation we will follow.
 \subsection{Grover's Search}
 \paragraph{}
-Let $T$ be  a table with with $N$ elements, where the $i$-th element is denoted $T[i]$. In a general {\it search problem} we are given $T$ and some $x$ in the universe from which the elements of $T$ are drawn, and are to find some $i \in \{0, \dots, N-1\}$ such that $T[i] = x$. Let $t= |\{ i \in \{0,\dots, N-1\} : T[i] = x\}$. Classically, it is easy to see that when $T$ is unsorted any algorithm which solves this problem with success probability at least $1/2$ will need to make at least $N/2t$ queries to $T$. In contrast, Grover's Quantum Search algorithm will need only $O(\sqrt{N/t})$ queries to have $1/2$ success probability. This is within a constant factor of optimal for a quantum algorithm 
+Let $T$ be  a table with with $N$ elements, where the $i$-th element is denoted $T[i]$. In a general {\it search problem} we are given $T$ and some $x$ in the universe from which the elements of $T$ are drawn, and are to find some $i \in \{0, \dots, N-1\}$ such that $T[i] = x$. Let $$t= |\{ i \in \{0,\dots, N-1\} : T[i] = x\}|.$$ Classically, it is easy to see that when $T$ is unsorted any algorithm which solves this problem with success probability at least $1/2$ will need to make at least $\frac{N}{2t}$ queries to $T$. In contrast, Grover's Quantum Search algorithm will need only $O(\sqrt{N/t})$ queries to have $1/2$ success probability. This is query number is within a constant factor of optimal for a quantum search algorithm 
 \paragraph{}
-Let $A = \{ i : T[i] = x\}$ and let $B = \{ i : T[i] \neq x \}$. Let $k, \ell \in \R$ satisfying $tk^2 + (N-t)\ell^2 = 1$.  We define the following general quantum register state
+Let $A = \{ i : T[i] = x\}$ and let $B = \{ i : T[i] \neq x \}$. Let $k, \ell \in \R$ satisfying $$tk^2 + (N-t)\ell^2 = 1.$$ We define the following general quantum register state
 $$\ket{\Phi(k,\ell)} = \sum_{i \in A} k \ket{i} + \sum{i \in B} \ell \ket{i}.$$
 Grover's Search begins with the state $$\ket{\Phi_0} := \sum_i \frac{1}{\sqrt{N}} \ket{i}$$
 and each iteration applies a transformation sending some $\ket{\Phi(k,\ell)}$ to
@@ -34,7 +34,7 @@ Grover's Search Algorithm above finds a solution in expected time $O(\sqrt{N/t})
 \begin{proof}
 The case where $t=0$ can be treated with an appropriate timeout, with arbitrarily small failure probability. The case $t > \frac{3}{4}N$ can be dismissed via classical sampling techniques in constant expected time. So we may assume $1\leq t\leq \frac{3}{4}N$.
 \paragraph{}
-Let choose $\theta$ so that $\sin^2\theta = \frac{t}{N}$. Since $t\leq \frac{3}{4}N$, if we let $m_0 = \frac{1}{sin(2\theta)}$ then
+Let us choose $\theta$ so that $\sin^2\theta = \frac{t}{N}$. Since $t\leq \frac{3}{4}N$, if we let $m_0 = \frac{1}{sin(2\theta)}$ then
 $$m_0 = \frac{N}{2\sqrt{(N-t)t}} < \sqrt{\frac{N}{t}}.$$
 Let $c = \ceil{\log_\lambda m_0}$. Observe that the algorithm sets $m =\lambda^{s-1}$ in iteration $s \leq \frac{3}{4}N$ of the main loop, and since $j$ is chosen randomly, the algorithm uses at most $\frac{1}{2} \lambda^{s-1}$ Grover iterations in expectation at iteration $s$. 
 \paragraph{}
@@ -44,16 +44,16 @@ Grover iterations in expectation. Since $m_0 = O(\sqrt{\frac{N}{t}})$ if the alg
 \paragraph{}
 Thus we may assume that algorithm uses at least $c$ iterations. The probability of success for $j$ Grover iterations from $\ket{\Phi_0}$ is $tk_j^2= \sin^2((2j+1)\theta)$. Since $j$ is chosen randomly the average success probability of step $2$ is
 $$\sum_{j=0}^{m-1}\frac{1}{m}\sin^2((2j+1)\theta) = \frac{1}{2m}\sum_{j=0}^{m-1}1 - \cos((2j+1)\theta) = \frac{1}{2} - \frac{\sin(4m\theta)}{4m\sin(2\theta)}$$
-recalling (learning?) that the last equality follows from a trigonometric identity. Since $m \geq \frac{1}{\sin(2\theta)}$ after the algorithm passes $c$ iterations, the above probability is at least $\frac{1}{4}$. Therefore the expected number of Grover iterations after the critical stage is
+recalling (learning?) that the last equality follows from a trigonometric identity. Since $m \geq \frac{1}{\sin(2\theta)}$ after the algorithm passes $c$ iterations, the above probability is at least $\frac{1}{4}$. Therefore the expected number of Grover iterations after $c$ iterations is
 $$ \frac{1}{2}\sum_{s=0}^\infty \frac{3^s}{4^{s+1}}\lambda^{s+c} < \frac{\lambda}{8-6\lambda}m_0 = \frac{3}{2} m_0. $$
 So the algorithm uses at most $3m_0 + \frac{3}{2}m_0 = O(\sqrt{\frac{N}{t}})$ Grover iterations in expectation.
 \end{proof}
 \begin{note}\label{note:log}
-Many of our algorithms in the sections to follow. Particularly in Section \ref{sec:nf} and Section \ref{sec:matching} will use a polynomial number of applications of Grover's search, say $n^d$. If we want all of our quantum subroutines to simultaneously output a correct answer with probability at least $1-\frac{1}{n}$, then we need the probability of failure for a given subroutine to be at most $\frac{1}{n^{d+1}}$. Repeating each subroutine a $\log n$ number of times will ensure this probability. Consequentially, $\log $ factors will appear in our runtimes. We will omit them from the analysis, and cite this note as explanation of their appearance.
+Many of our algorithms in the sections to follow will use a polynomial number of applications of Grover's search, say $n^d$. If we want all of our quantum subroutines to simultaneously output a correct answer with probability at least $1-\frac{1}{n}$, then we need the probability of failure for a given subroutine to be at most $\frac{1}{n^{d+1}}$. Repeating each subroutine a $\log n$ number of times will ensure this probability. Consequentially, $\log $ factors will appear in our runtimes. We will omit them from the analysis, and cite this note as explanation of their appearance.
 \end{note}
 \subsection{Minima Finding}
 \paragraph{}
-Consider the following {\it minima finding } problem, wherein we try to find $d$ smallest values of different types. We are give two functions: an objective $f: \{1, \dots, N\} \rightarrow \N \cup \{\infty\}$, and a type $g: \{1, \dots, N\} \rightarrow \N$. Let $|g| := | \{ g(i): i \in \{1,\dots, N\}\}|$. We are also given an integer $d \in \{, \dots, \min\{|g|, N\}\}$, and are to find $I \subseteq \{1, \dots, N\}$ such that:
+Consider the following {\it minima finding } problem, wherein we try to find $d$ smallest values of different types. We are give two functions: an objective $f: \{1, \dots, N\} \rightarrow \N \cup \{\infty\}$, and a type $g: \{1, \dots, N\} \rightarrow \N$. Let $|g| := | \{ g(i): i \in \{1,\dots, N\}\}|$. We are also given an integer $d \in \{1, \dots, \min\{|g|, N\}\}$, and are to find $I \subseteq \{1, \dots, N\}$ such that:
 \begin{itemize}
 \item $|I| = d$,
 \item $g(i) \neq g(j)$ for all $i,j \in I$ with $i\neq j$,
@@ -91,5 +91,5 @@ $$O\big(\sum_{j=1}^{2d}\sqrt{\frac{N}{j}}\big) = O(\sqrt{dN})$$
 as desired.
 \end{proof}
 \begin{note}\label{note:lb}
-Two special case of minima finding are the problems of Finding $d$ Smallest Values of a Function, and Find $d$ Elements of Different Type. By a reduction from distinguishing matrices to these special subproblems, they show in \cite{durr2004quantum} that Minima Finding requires $\Omega(\sqrt{dN})$ queries of $f$ and hence the algorithm we present is optimal. 
+Two special cases of minima finding are the problems of Finding $d$ Smallest Values of a Function, and Find $d$ Elements of Different Type. By a reduction from distinguishing matrices to these special subproblems, they show in \cite{durr2004quantum} that Minima Finding requires $\Omega(\sqrt{dN})$ queries of $f$ and hence the algorithm we present is optimal. 
 \end{note}
