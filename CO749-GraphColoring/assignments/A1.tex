@@ -116,4 +116,51 @@ On the other hand, if $v$ is adjacent with one degree three vertex then $v$ rece
 It remains to verify that each edge $uv$ satisfies $ch_1(uv) \geq 0$. Edge $uv$ can satisfy at most one of Rule $1$ and Rule $2$. If $uv$ satisfies Rule $1$ it sends $\frac{1}{3}$ charge and so $ch_1(uv) = 0$. Instead if $uv$ satisfies Rule $2$ it can only do so for one triangle, since no two distinct triangles share a common edge. So $uv$ only sends $\frac{1}{3}$ charge by Rule $2$. Therefore $ch_1(uv) \geq 0$.
 \paragraph{}
 Therefore we have a contradiction as our total charge is negative but $ch_1$ of each object is non-negative.$\blacksquare$
+
+\newpage
+\section{}
+\paragraph{}
+Assume Lemma $2$ is false. Let $G$ be a minimum counterexample. That is $G$ is a smallest planar graph satisfying:
+\begin{itemize}
+	\item The girth of $G$ is at least seven,
+	\item The minimum degree of $G$ is at least two, and
+	\item If $v$ is a degree $2$ vertex of $G$ with neighbours $u$ and $w$ then the degrees of $u$ and $w$ are each at least $4$.
+\end{itemize}  
+\paragraph{}
+Since the minimum degree is at least $2$, $G$ is not acyclic. So $G$ contains cycles, and each cycle is of length at least $7$. Hence every bounded face of $G$ is bounded by a cycle of length at least $7$ and the unbounded face is incident with at least $7$ edges.
+\paragraph{}
+We proceed by a discharging argument. For each vertex $v \in V(G)$ assign initial charge to $v$:
+$$ch_0(v) = 2d(v) - 6.$$
+For each face $f$ assign initial charge to $f$:
+$$ch_0(f) = |f| - 6.$$
+Then by our Lemma from class the sum of the initial charges is $-12$. By the girth and minimum degree of $G$, the charge of every face is at least $1$ and the charge of every vertex is non-negative except for degree $2$ vertices.
+\paragraph{}
+Discharge, establishing final charges $ch_1$ according to the following Rules:
+\begin{enumerate}
+	\item Each face $f$ sends $1$ charge to each incident vertex of degree $2$.
+	\item Each vertex of degree at least $4$ sends $\frac{1}{2}$ charge to each incident face.
+\end{enumerate}
+\paragraph{}
+If a vertex has degree at least $4$ then their initial charge is at least half their degree, so their final charge is non-negative after sending $\frac{1}{2}$ to each incident face. Degree $3$ vertices neither send nor receive charge and so their final charge is $0$.
+\paragraph{}
+If $v$ is vertex of degree $2$ then $v$ is incident with two faces, and so receives $2$ charge. Thus the final charge of $v$ is
+$$ch_1(v) = ch_0(v) + 2 = -2 + 2 = 0.$$
+Hence we have shown that the final charge of each vertex is non-negative. It remains to show the final charge of each face is non-negative to achieve the desired contradiction.
+\paragraph{}
+Let $f$ be a face of $G$. Let $q$ be the number of degree two vertices incident with $f$. Since the neighbours of any degree two vertex cannot be of degree two we observe that
+$$q \leq \floor{\frac{|f|}{2}}.$$
+Let $p$ be the number of vertices incident with $f$ of degree at least $4$. Since each degree two vertex has both neighbours of degree four, we have
+$$p \geq q.$$
+We have that $f$ loses $q$ charge by Rule $1$ and gains $\frac{p}{2}$ charge by Rule $2.$ Thus the final charge of $f$ is
+$$ch_1(f) = ch_0(f) -q + p \geq |f| -6 -\frac{q}{2} \geq \frac{3}{4}|f| - 6.$$
+So the final charge of $f$ is non-negative when $|f| \geq 8$.
+\paragraph{}
+Therefore we may assume that $|f| = 7$. In this case we may strengthen our bound on $p$ by observing that
+$p \geq q+1$
+by a parity argument. Indeed if $p = q$ then $f$ is a cycle of vertices alternating degree $2$ and degree $4$, but the number of vertices on $f$ is odd, so this cannot happen. Now we tighten our estimate of the final charge:
+$$ch_1(f) \geq |f| - 6 -\frac{q}{2} + 1 \geq \frac{3}{4}\cdot 7 - 6 + 1 \geq 0.$$
+Thus we have shown every face has non-negative final charge, a contradiction. $\blacksquare$
+
+\newpage
+\section{}
 \end{document}
