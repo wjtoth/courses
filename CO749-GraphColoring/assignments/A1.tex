@@ -227,5 +227,50 @@ But since no charge is added or lost during this process, this contradicts that 
 
 \newpage
 \section{}
-
+\paragraph{Stronger Result}
+We prove the same Lemma with a better lower bound: $$|V(G) \backslash V(C)| \geq 8|V(C)| - 48.$$ 
+\paragraph{Proof}
+Suppose not. Let $G$ be a minimum counterexample. Then $G$ is a $2$-connected plane graph with outer cycle $C$ such that $|V(G)\backslash V(C)| < 8|V(C)| - 48$ and $|V(G) \backslash V(C)| \geq 1$ satisfying
+\begin{itemize}
+	\item Every inner vertex has degree at least $6$, and
+	\item Every inner vertex of degree $6$ has one of the following:
+	\begin{itemize}
+		\item An incident inner face of length at least $4$,
+		\item An inner neighbour of degree at least $7$, or
+		\item A neighbour on $C$.
+	\end{itemize}
+\end{itemize}
+\paragraph{}
+We begin by observing that each $v \in V(C)$ has $d(v) \geq 3$. Indeed suppose there exists some $v \in V(C)$ such that $d(v) = 2$. Suppressing $v$ leads to a smaller counterexample than $G$, a contradiction. This follows since suppressing $v$ does not change the degree of inner vertices or the length of faces incident only with inner vertices.
+\paragraph{} 
+We proceed by a discharging argument. For each $v \in V(G)$ set the initial charge of $v$ to be
+$$ch_0(v) = d(v) - 6$$
+and for each face $f$ of $G$ set the initial charge of $f$ to be
+$$ch_0(f) = 2|f| - 6.$$
+Then by our Lemma from class the total sum of the charges is $-12$. We discharge according to the following Rules:
+\begin{enumerate}
+	\item Each inner face of length at least $4$ sends $\frac{1}{8}$ charge to each incident vertex.
+	\item Each inner vertex of degree at least $7$ sends $\frac{1}{8}$ charge to each adjacent vertex.
+	\item Each vertex on $C$ of degree at least $4$ sends $\frac{1}{8}$ charge to each adjacent vertex.
+\end{enumerate}
+\paragraph{}
+Each length $3$ face sends no charge and so has non-negative final charge. Each face $f$ of length at least $4$ sends at most $\frac{1}{8}|f|$ charge so its final charge is
+$$ch_1(f) \geq ch_0(f) -\frac{1}{8}|f| \geq \frac{15}{8}|f| - 6 \geq\frac{15}{2} - 6 \geq 0.$$
+Hence every face has non-negative charge.
+\paragraph{}
+We argue that every inner vertex has at least $\frac{1}{8}$ charge. Let $v$ be an inner vertex. If $d(v) \geq 7$ then $v$ sends $\frac{1}{8}d(v)$ charge. So the final charge of $v$ is 
+$$ch_1(v) = \frac{7}{8}d(v) - 6 \geq \frac{49}{8} - \frac{48}{8}  = \frac{1}{8}.$$
+Now suppose $d(v) = 6.$ Since $ch_0(v) = 0$ we need $v$, which sends no charge, to receive $\frac{1}{8}$ charge. We proceed by case analysis. If $v$ has an incident inner face of length at least $4$ then $v$ receives $\frac{1}{8}$ charge by Rule $1.$ Similarly if $v$ has an incident inner neighbour of degree at least $7$ then $v$ receives $\frac{1}{8}$ charge by Rule $2.$
+\paragraph{}
+So we may assume that every incident face to $v$ is a triangle, and every inner neighbour to $v$ is of degree $6$. Then we know $v$ is adjacent to a vertex $v_1$ on $C$. Label the neighbours of $v$ as $v_1, \dots, v_6$ in clockwise order from $v_1$ with respect to their drawing in $G$. If $d(v_1) \geq 4$ then $v$ receives $\frac{1}{8}$ charge from $v_1$. Otherwise $d(v_1) = 3$. Since every incident face to $v$ is a triangle this implies $v_2$ is on $C$.  Again, if $d(v_2) \geq 4$ then $v$ receives $\frac{1}{8}$ charge from $v_2$ and otherwise $d(v_2) = 3$. Repeating this argument for each $i \in \{3, \dots, 6\}$ we see that either $v_i$ sends $v$ $\frac{1}{8}$ charge or $d(v_i) = 3$ and $v_{i+1}$ (when $v_{i+1}$ exists) is on $C$. If we complete this process with $v$ receiving no charge then each neighbour of $v$ is a degree $3$ vertex on $C$. That is $G = G[\{v,v_1, \dots, v_6\}]$. But that is a contradiction since it would imply
+$$1 = |V(G) \backslash V(C)|  < 8|V(C)| - 48 = 8\cdot 6 - 48 = 0$$
+i.e. $1 < 0$.
+\paragraph{}
+Hence we have shown each inner vertex has final charge at least $\frac{1}{8}$. Now we claim each vertex $v$ on $C$ has final charge at least $-3$. Indeed if $d(v) = 3$ then $v$ sends no charge, and $ch_1(v) = ch_0(v) = -3$ as desired. Otherwise $d(v) \geq 4$ and $v$ sends $\frac{1}{8}d(v)$ charge to each adjacent vertex. Thus the final charge is
+$$ch_1(v) \geq \frac{7}{8}d(v) - 6 \geq \frac{7}{2} - 6 > -3.$$
+So our total charge is at least the charge of $C$ plus $-3$ times the number of vertices on $C$ plus $\frac{1}{8}$ the number of inner vertices. That is
+$$-12 \geq \frac{1}{8}|V(G)\backslash V(C)| + 2|V(C)| - 6 -3|V(C)|.$$
+Rearranging we see that
+$$8|V(C)| - 48 \geq |V(G) \backslash V(C)|$$
+contradicting that $|V(G)\backslash V(C)| < 8|V(C)| - 48.$ $\blacksquare$
 \end{document}
