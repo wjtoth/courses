@@ -163,4 +163,69 @@ Thus we have shown every face has non-negative final charge, a contradiction. $\
 
 \newpage
 \section{}
+\paragraph{Stronger Lemma}
+We will prove the following stronger result. If $G$ is a $2$-connected plane graph with outer cycle $C$ such that $|C| \leq 6$, and at most one degree $2$ vertices on $C$, and each inner vertex has degree at least $3$ then $G$ has either:
+\begin{itemize}
+	\item At inner face of length at most $4$, or
+	\item At inner face $f$ of length $5$ incident with $4$ inner vertices, each of which has an inner neighbour not incident with $f$.
+\end{itemize}
+\paragraph{Proof}
+Suppose not. Let $G$ be a minimum counterexample. Then each inner face of $G$ is of length at least $5$. Furthermore if $f$ is an inner face of $G$ of length $5$ with four degree $3$ inner vertices $v_1,v_2, v_3,v_4$ then there exists some $v_i$ such that $v_i$ has either:
+\begin{enumerate}
+	\item all of $v_i$'s neighbours are on $f$, or
+	\item $v_i$ has a neighbour on $C$.
+\end{enumerate}
+We claim that the first case cannont happen in a minimum counterexample. So suppose that $f$ is a length $5$ inner face with vertices $v_1,v_2, v_3, v_4, v_5$ appearing conesecutively in that order about the cycle bounding $f$, and $v_1, \dots, v_4$ have degree $3$, and without loss of generality $v_1$ is adjacent to $v_3$ or $v_4$. 
+\paragraph{}
+If $v_1$ is adjacent to $v_3$ then since $v_1, v_2$, and $v_3$ are of degree $3$, then $v_2$ is a cut vertex. Since $G$ is plane $v_2$'s third neighbour $v$ is not on $f$ but drawn in a disc bounded by $v_1,v_2,v_3$. But then the only paths to $v_1$ from $v$ use $v_2$, hence $v_2$ is a cut vertex, contradiction $2$-connectedness.
+\paragraph{}
+If $v_1$ is adjacent to $v_4$ then the subgraph $H$ consisting of the cycle bounding $f$ and the edge $v_1v_4$ is a smaller counterexample than $G$, contradicting minimality. Indeed the outer cycle if $H$ is $v_1v_4v_5$ of length $3 \leq 6$ with one degree $2$ vertex: $v_5$. The subgraph $H$ is $2$-connected, and the minimum degree among inner vertices is $3$.
+\paragraph{}
+Thus we have shown if $f$ is an inner face of $G$ of length $5$ with four degree $3$ inner vertices $v_1,v_2, v_3,v_4$ then there exists some $v_i$ such that $v_i$ has a neighbour on $C$.
+\paragraph{}
+We proceed by a discharging argument. For each vertex $v \in V(G)$ set the initial charge $ch_0$ to be
+$$ch_0(v) = 2d(v) -6$$
+and for each face $f$ set the initial charge to be
+$$ch_0(f) = |f| - 6.$$
+Then by our Lemma from class the sum of the initial charges is $-12$. We reassign charge, obtaining final charges $ch_1$ according to the following Rules:
+\begin{enumerate}
+	\item Each inner vertex of degree at least $4$ sends $\frac{1}{2}$ charge to each incident (inner) face.
+	\item Each vertex on $C$ of degree at least $3$ sends $\frac{1}{2}$ charge to each incident inner face of length $5$.
+	\item If $f$ is an inner face of length $5$ with an incident inner vertex $v$ of degree $3$ such that $v$ is adjacent to vertex $u$ on $C$ then $u$ sends $\frac{1}{2}$ charge to $f$.
+\end{enumerate}
+\paragraph{}
+Each inner vertex of degree $3$ sends no charge and so its final charge is non-negative. If $v$ is an inner vertex of degree at least $4$ then the final charge of $v$ satisfies
+$$ch_1(v) \geq ch_0(v) - \frac{d(v))}{2} = \frac{3}{2}d(v) - 6 \geq 0.$$
+Therefore each inner vertex has non-negative final charge.
+\paragraph{}
+Each face sends no charge, so each inner face of length at least $6$ immediately has non-negative final charge. Consider an inner face $f$ of length $5$ with bounding cycle consisting of vertices $v_1,v_2,v_3,v_4,v_5$. Since $ch_0(f) = -1$ we want to show $f$ receives at least $1$ charge. If $f$ is incident with at least $2$ inner vertices of degree at least $4$ then $f$ receives at least $1$ charge by Rule $1$ and so $ch_1(f) \geq 0$.
+\paragraph{}
+So we may assume $f$ is incident with at most $1$ inner vertex at of degree at least $4$. First suppose, without loss of generality, $v_5$ is the only inner vertex incident with $f$ of degree at least $4$. So $f$ receives $\frac{1}{2}$ charge from $v_5$. Observe that if $f$ shares a vertex with $C$, it necessarily shares a degree $3$ vertex. Then either 
+\begin{enumerate}
+	\item one of $v_1,\dots, v_4$ is on $C$ and of degree at least $3$, or
+	\item all of $v_1, \dots, v_4$ are inner vertices of degree $3$.
+\end{enumerate}
+In the first case $f$ receives $\frac{1}{2}$ from the vertex on $C$ by Rule $2$ and hence $ch_1(f) \geq 0$. In the second case there exists $v_i$ with $i \in \{1,\dots, 4\}$, such that $v_i$ is adjacent to $u$ on $C$. By Rule $3$, $f$ receives $\frac{1}{2}$ charge from $u$. Therefore $ch_1(f) \geq 0$. Thus in either case the final charge of $f$ is non-negative.
+\paragraph{}
+Now we may assume that $f$ is incident with no inner vertices of degree at least $4$. Now among $v_1, \dots, v_4$ there exists $i \in \{1,\dots, 4\}$ such that either:
+\begin{itemize}
+	\item $v_i$ is on $C$ of degree at least $3$, or
+	\item $v_i$ is adjacent with a vertex $u$ on $C$
+\end{itemize}
+In the former case $f$ receives $\frac{1}{2}$ from $v_i$ by Rule $2$and in the latter $f$ receives $\frac{1}{2}$ charge from $u$. Then among $\{v_1, \dots, v_5\} \backslash \{v_i\}$ there exists $j \in \{1,\dots, 5\}\backslash\{i\}$ such that either:
+\begin{itemize}
+	\item $v_j$ is on $C$ of degree at least $3$, or
+	\item $v_j$ is adjacent with a vertex $v$ on $C$
+\end{itemize}
+In the former case $f$ receives $\frac{1}{2}$ from $v_j$ by Rule $2$and in the latter $f$ receives $\frac{1}{2}$ charge from $v$. Finally, $f$ receives at least $1$ charge total, and hence $ch_1(f) \geq 0$.
+\paragraph{}
+Thus each inner vertex and each inner face has non-negative final charge. The vertex on $C$ of degree $2$ has final charge $-2$. We lower bound the charge of a vertex $v$ on $C$ of degree at least $3$. The vertex $v$ gives away at most $\frac{1}{2}(d(v) - 1)$ charge by Rule $2$ and at most $\frac{1}{2}(d(v) - 2)$ charge by Rule $3$. So the final charge of $v$ is
+$$ch_1(v) \geq 2d(v) - 6 - d(v) + \frac{3}{2} = d(v) - \frac{9}{2} \geq \frac{6}{2} - \frac{9}{2} = -\frac{3}{2}.$$
+Thus, using $|C| \leq 6$, our total final charge is at least
+$$|C| - 6 -\frac{3}{2}(|C| -1) - 2 = -\frac{1}{2}|C| - 6 -\frac{1}{2} \geq -3 -6 -\frac{1}{2} > -12$$
+But since no charge is added or lost during this process, this contradicts that the sum of charges is $-12$. $\blacksquare$
+
+\newpage
+\section{}
+
 \end{document}
