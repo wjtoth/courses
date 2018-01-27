@@ -85,4 +85,21 @@ We now construct a $5$-list-assignment $L'$ for which $G$ does not have an $L'$-
 Let $L'(v) = \{c_1, \dots, c_5\}$. For each $i \in \{1, \dots, 5\}$ and for each $u_i \in V(H_i)$ let $L'(u_i) = L(u) \cup \{c_i\}$. Since $|L(u)| \geq 4$, $|L'(u_i)|\geq 5$. Thus we have a $5$-list-assignment $L'$ for $G$.
 \paragraph{}
 Suppose for a constradiction $G$ has an $L'$-coloring $\phi$. Say $\phi(v) = c_i$. Then $\phi(u_i) \neq c_i$ for all $u_i \in V(H_i)$. Hence $\phi(u_i) \in L(u_i)$ for all $u_i \in V(H_i)$. That is, $\phi$ restricted to $H_i$ is an $L$-coloring of $H-_i$. But this contradicts that $H_i$ is not $L$-colorable. Therefore $G$ does not have an $L'$-coloring and hence is not $5$-list-colorable. $\blacksquare$
+
+\section{}
+\paragraph{}
+We opt to prove the BONUS Lemma, i.e. Lemma $3$:
+\textit{Let $G$ be a graph and for each vertex $v$ of $G$ let $r(v)$ be a non-negative integer. If $L$ is a list assignment of $G$ such that for every vertex $v$ of $G$
+$$|L(v)| \geq \frac{d(v) + 1}{r(v)+1},$$
+then $G$ has an $r(v)$-defective coloring}. This Lemma directly implies Lemma $2$ of this problem.
+\paragraph{}
+Consider a graph $G$, non-negative integers $r(v)$ for each $v \in V(G)$, and a list assignment $L$ of $G$ such that for each $v \in V(G)$
+$$|L(v)| \geq \frac{d(v) + 1}{r(v)+1}.$$
+Let $\phi$ be an improper $L$-coloring of $G$ minimizing the number of ``improper" edges $uv \in E(G)$ such that $\phi(u) = \phi(v)$. Suppose for a contradiction that $\phi$ is not an $r(v)$-defective coloring.
+\paragraph{}
+Then there exists a vertex $v$ such that the number of neighbours of $v$ receiving the same color as $v$ under $\phi$ is at least $r(v) + 1$. If there exists a color $c \in L(v)$ such that the number of neighbours of $v$ colored $c$ is at most $r(v)$ then we can construct a new coloring $\phi'$ by setting $\phi'(v) = c$ and $\phi'(u) = \phi(u)$ for all $u \neq v$. This coloring has $r(v)$ new improper edges, those between $v$ and its $c$-colored neighbours. But $\phi'$ switches $r(v) + 1$ edges which were improper under $\phi$, those between $v$ and its $\phi(v)$-colored neighbours, to proper edges. Hence $\phi'$ has fewer improper edges than $\phi$, a contradiction.
+\paragraph{}
+If such a color $c \in L(v)$ does not exist then  for each $c \in L(v)$ the number of neighbours of $v$ colored $c$ under $\phi$ is at least $r(v) + 1$. But then $v$ has at least
+$$|L(v)|(r(v) + 1) \geq d(v) + 1$$
+neighbours, a contradiction. Therefore $\phi$ is an $r(v)$-defective coloring $\blacksquare$
 \end{document}
