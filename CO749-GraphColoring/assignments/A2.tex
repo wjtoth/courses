@@ -86,6 +86,7 @@ Let $L'(v) = \{c_1, \dots, c_5\}$. For each $i \in \{1, \dots, 5\}$ and for each
 \paragraph{}
 Suppose for a constradiction $G$ has an $L'$-coloring $\phi$. Say $\phi(v) = c_i$. Then $\phi(u_i) \neq c_i$ for all $u_i \in V(H_i)$. Hence $\phi(u_i) \in L(u_i)$ for all $u_i \in V(H_i)$. That is, $\phi$ restricted to $H_i$ is an $L$-coloring of $H-_i$. But this contradicts that $H_i$ is not $L$-colorable. Therefore $G$ does not have an $L'$-coloring and hence is not $5$-list-colorable. $\blacksquare$
 
+\newpage
 \section{}
 \paragraph{}
 We opt to prove the BONUS Lemma, i.e. Lemma $3$:
@@ -102,4 +103,46 @@ Then there exists a vertex $v$ such that the number of neighbours of $v$ receivi
 If such a color $c \in L(v)$ does not exist then  for each $c \in L(v)$ the number of neighbours of $v$ colored $c$ under $\phi$ is at least $r(v) + 1$. But then $v$ has at least
 $$|L(v)|(r(v) + 1) \geq d(v) + 1$$
 neighbours, a contradiction. Therefore $\phi$ is an $r(v)$-defective coloring $\blacksquare$
+
+\newpage
+\section{}
+\paragraph{}
+We prove a slightly more general result allowing $m(v)$ to take the value $0$. This will make induction easier when we wish to delete from a list of size $2$. For such a $v$, $L(v)= \emptyset$ and the desired $S(v) = \emptyset$. Everything else is exactly as stated in the problem.
+\paragraph{}
+Suppose not. Let $G$ be a counterexample satisfying:
+\begin{enumerate}
+	\item $\sum_{v \in V(G)} m(v)$ is minimized, and subject to that
+	\item if possible $G(c)$ is connected for each $c \in L(G)$, and subject to that possibility
+	\item $|L(G)|$ is minimized.
+\end{enumerate}
+\begin{claim}
+	\begin{enumerate}
+		\item For all $c \in L(G)$, $G(c)$ is connected.
+		\item For every pair of distinct colors $c,c' \in L(G)$, $G(c) \neq G(c')$.
+		\item For every pair of distinct colors $c, c' \in L(G)$, if $V(G(c)) \cap V(G(c')) = \emptyset$ then $G[V(G(c))\cup V(G(c'))]$ is disconnected.
+	\end{enumerate}
+\end{claim}
+\begin{proof}
+	\paragraph{} For (1.). While there exists a color $c \in L(G)$ such that $G(c)$ has at least two connected components $G_1$ and $G_2$ do the following:
+		\subparagraph{}
+		Let $c'$ be a new color not contained in $L(G)$. For each $v \in V(G_2)$ let $$L'(v) = (L(v)\cup \{c'\}) \backslash \{c\}.$$ For each $v \in V(G) \backslash V(G_2)$ let $L'(v) = L(v)$. Replace $L$ with $L'$.
+	\paragraph{}
+	We claim that every iteration of the above preserves the property of $(G,m,L)$ being a counterexample, but decreases the ``disconnectivity". i.e. the sum over $c \in L(G)$ such that $G(c)$ is disconnected, of the number of connected components in $G(c)$.
+	\paragraph{}
+	It is clear the disconnectivity decreases. We add a new color $c'$ for which $G(c')$ is connected, and $G(c)$ loses one connected component, and the number of connected components of $G(c'')$ is not affected for any other color $c'' \in L(G)$.
+	\paragraph{}
+	To verify that the new lists, say $L'$, also admit a counterexample with $G$ and $m$, suppose to contrary there are $S'(v) \subseteq L'(v)$ of size $m(v)$ for each $v \in V(G)$ and $S'(u) \cap S'(v) = \emptyset$ for all $uv \in E(G)$. For each $v \in V(G)$ let $$S(v) = \begin{cases} S'(v)\cup \{c\} \backslash \{c'\}, &\text{if } v \in V(G_2) \text{ and } c' \in S'(v) \\
+	S'(v), &\text{otherwise}.\end{cases} $$
+	Then $S(v) \subseteq L(v)$ and $|S(v)| = m(v)$ for each $v \in V(G)$. Further, for each $uv \in E(G)$, $S(u) \cap S(v) = \emptyset$. To see this, observe that if $S(u) \cap S(v) \neq \emptyset$ then by our choice of $S'$, $S(u) \cap S(v) = \{c\}$ and, since $G(c)$ was disconnected, $u, v \in V(G_2)$. But then, $S'(u) \cap S'(v) = \{c'\}$, a contradiction.
+	\paragraph{}
+	So the above algorithm will terminate when the ``disconnectivity" reaches $0$ and we will have found a connected counterexample with the same value for $\sum_{v} m(v)$ as $G$. This contradicts our choice of $G$ if there exists color $c$ such that $G(c)$ is disconnected. Therefore $G(c)$ is connected for all $c \in L(G)$.
+	\paragraph{}For (2.). Suppose for a contradiction there exist distinct colors $c,c' \in L(G)$ such that $G(c) = G(c')$. Construct new lists $L'$ such that for each $v \in V(G)$
+	$$ L'(v) = \begin{cases}
+	L(v) \backslash \{c,c'\}, &\text{ if } v \in V(G(c)) \\
+	L(v), &\text{otherwise.}
+		\end{cases}$$
+	Let $m'(v) = m(v) - 1$ if $v \in V(G(c))$ (this is well-defined since such $m(v) \geq 2$) and let $m'(v) = m(v)$ otherwise.  By the minimality of $G$, there exist for each $v \in V(G)$, a set $S'(v)\subseteq L'(v)$ of size $m'(v)$. These sets satisfy $S'(u) \cap S'(v) = \emptyset$ for all $uv \in E(G)$. Order the vertices of $G(c)$ as $v_1, \dots, v_k$ with respect to some orientation of $G$. Construct sets $S(v)$ as follows. If $v \in V(G) \backslash V(G(c))$ set $S(v) = S'(v)$. If $v_i \in V(G(c))$ and $i$ is even set $S(v) = S'(v) \cup \{c\}$. If $v_i \in V(G(c))$ and $i$ is odd set $S(v) = S'(v) \cup \{c'\}$. Since $c$ and $c'$ do not appear in sets outside $G(c)$, and we alternate $c$ and $c'$ along $G(c)$, we have $S(u) \cap S(v) = \emptyset$ for all $uv \in E(G)$. But this contradicts that $(G,m,L)$ is a counterexample. Hence for distinct colors $c$ and $c'$, $G(c) \neq G(c')$.
+	
+\end{proof}
+	
 \end{document}
