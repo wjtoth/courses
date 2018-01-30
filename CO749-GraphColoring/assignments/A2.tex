@@ -119,7 +119,7 @@ Suppose not. Let $G$ be a counterexample satisfying:
 	\begin{enumerate}
 		\item For all $c \in L(G)$, $G(c)$ is connected.
 		\item For every pair of distinct colors $c,c' \in L(G)$, $G(c) \neq G(c')$.
-		\item For every pair of distinct colors $c, c' \in L(G)$, if $V(G(c)) \cap V(G(c')) = \emptyset$ then $G[V(G(c))\cup V(G(c'))]$ is disconnected.
+		\item For every pair of distinct colors $c, c' \in L(G)$, we have $V(G(c)) \cap V(G(c')) \neq \emptyset$ (we strengthened this claim).
 	\end{enumerate}
 \end{claim}
 \begin{proof}
@@ -142,7 +142,21 @@ Suppose not. Let $G$ be a counterexample satisfying:
 	L(v), &\text{otherwise.}
 		\end{cases}$$
 	Let $m'(v) = m(v) - 1$ if $v \in V(G(c))$ (this is well-defined since such $m(v) \geq 2$) and let $m'(v) = m(v)$ otherwise.  By the minimality of $G$, there exist for each $v \in V(G)$, a set $S'(v)\subseteq L'(v)$ of size $m'(v)$. These sets satisfy $S'(u) \cap S'(v) = \emptyset$ for all $uv \in E(G)$. Order the vertices of $G(c)$ as $v_1, \dots, v_k$ with respect to some orientation of $G$. Construct sets $S(v)$ as follows. If $v \in V(G) \backslash V(G(c))$ set $S(v) = S'(v)$. If $v_i \in V(G(c))$ and $i$ is even set $S(v) = S'(v) \cup \{c\}$. If $v_i \in V(G(c))$ and $i$ is odd set $S(v) = S'(v) \cup \{c'\}$. Since $c$ and $c'$ do not appear in sets outside $G(c)$, and we alternate $c$ and $c'$ along $G(c)$, we have $S(u) \cap S(v) = \emptyset$ for all $uv \in E(G)$. But this contradicts that $(G,m,L)$ is a counterexample. Hence for distinct colors $c$ and $c'$, $G(c) \neq G(c')$.
-	
+	\paragraph{} For (3.). Suppose for a contradiction  there exist distinct colors $c,c' \in L(G)$, such that $V(G(c)) \cap V(G(c')) = \emptyset$. Construct new lists $L'(v)$ for each $v \in V(G)$ as follows. If $v \in V(G) \backslash V(G(c'))$ then set $L'(v) = L(v)$. Otherwise, i.e. $v \in V(G(c'))$ set $L'(v) = L(v) \cup \{c\} \backslash \{c'\}.$ Then for each $v \in V(G(c'))$, we have $|L'(v)|  = |L(v)| + 1 - 1 = m(v)$, since $V(G(c))$ and $V(G(c'))$ are disjoint. But $L'(G) = L(G) \backslash \{c\}$ so by minimality there exist sets $S'(v) \subseteq L'(v)$ for each $v \in V(G)$ such that $|S'(v)| = m(v)$, satisfying $S'(u) \cap S'(v) = \emptyset$ for each $uv \in E(G)$.
+	\paragraph{}
+	For each $v \in V(G)$ construct $S(v)$ so that
+	$$S(v) = \begin{cases}
+		S'(v) \cup \{c'\}\backslash \{c\}, &\text{ if } v \in V(G(c')) \text{ and } c \in S'(v) \\
+		S'(v), &\text{ otherwise}.
+	\end{cases}$$
+	Then each set $S(v) \subseteq L(v)$ is of size $m(v)$ and for each edge $uv \in E(G)$, $S(u) \cap S(v) = \emptyset$. To verify disjointness, suppose for a contradiction $S(u) \cap S(v) \neq \emptyset$ for some edge $uv$. Since $S'(u) \cap S'(v) = \emptyset$, $S(u) \cap S(v) = \{c'\}$. But then $u,v \in V(G(c'))$ and so $S'(u) \cap S(v) = \{c\}$ since $c'$ is only added to $S(u), S(v)$ if $c \in S'(u), S'(v)$. But this contradicts disjointness of $S'(u), S'(v)$. So sets $S(v)$ for $v \in V(G)$ violate that $(G,m,L)$ is a counterexample, a contradiction.
 \end{proof}
-	
+	\begin{claim}
+		If $c \neq c' \in L(G)$ such that $G(c), G(c')$ are paths, then there does not exist a component $P$ of $G(c) \cap G(c')$ with an even number of vertices such that one end of $P$ is an end of $G(c)$ and the other end of $P$ is an end of $G(c')$.
+	\end{claim}
+	\begin{proof}
+		\paragraph{} Suppose for a contradiction such $P$ exists. Order the vertices of $P$ as $v_1, \dots, v_k$ so that $v_1$ is an end of $G(c)$ and $v_k$ is an end of $G(c')$. Construct new lists $L'(v)$ for each $v \in V(G)$ as follows. If $v \in V(P)$ let $L'(v) = L(v) \backslash \{c,c'\}$ and let $m'(v) = m(v) - 1$. Otherwise let $L'(v) = L(v)$ and $m'(v) = m(v)$. By minimality, there exist sets $S'(v) \subseteq L'(v)$ for each $v \in V(G)$ of size $m'(v)$, such that $S'(u) \cap S'(v) = \emptyset$ for each $uv \in E(G)$.
+		\paragraph{}
+		Construct sets $S(v)\subseteq L(v)$ for each $v \in V(G)$ as follows. If $v_i \in V(P)$ and $v_i$ is odd then set $S(v) = S'(v) \cup \{c\}$. If $v_i \in V(P)$ and $v_i$ is even set $S(v) = S'(v) \cup \{c'\}$. If $v \in V(G)\backslash V(P)$ set $S(v) = S'(v)$. Then $|S(v)| = m(v)$ for each $v \in V(G)$. Since we alternate adding $c$ and $c'$ along $P$ the sets $S(u)$ and $S(v)$ are disjoint for each edge $uv \in E(G)$. Since we did not change $S(u)$ and $S(v)$ for edges $uv$ with neither endpoint on $P$ they are also disjoint. It remains to consider two edges $u_1v_1$ and $v_ku_k$. Since $v_1$ is an end of $G(c)$ and $v_2 \in G(c)$ we have $c \not\in L(u_1)$ and hence, as $S'(u_1) \cap S'(v_1) = \emptyset$, $S(u_1)$ and $S(v_1)$ are disjoint. Similarly since $v_k$ is an edge of $G(c')$, and $k$ is even, $S(u_k)$ and $S(v_k)$ are disjoint. But then the sets $S(v)$ contradict that $(G,m,L)$ is a counterexample.
+	\end{proof}
 \end{document}
