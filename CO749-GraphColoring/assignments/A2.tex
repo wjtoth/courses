@@ -227,7 +227,11 @@ We will prove Claim $3.3$ from the previous problem. Suppose the Claim is false.
 	If $2\leq i \leq k-2$ then $v_i$ has the same chirality as $v_{i+1}$.
 \end{claim}
 \begin{proof}
-	TODO
+	We proceed by induction on $i$. If $i = 2$ then we observe that all colors of $L(v_3) - c$ are left for the same reason as for $v_2$, i.e. since there are no odd vertices left of $v_3$ that are not $v_1$.
+	\paragraph{}
+	So for induction we suppose $i>2$ and the claim holds for vertices $v_j$ with $2\leq j < i$. Then by a simple induction we can show since $v_2$ is left, all of $v_2\dots v_i$ are left. If $v_i$ is even then each left color of $v_i$ is a left color of $v_{i+1}$ since its corresponding path component cannot have its rigthmost vertex be $v_i$. Further any left color $c'$ of $v_{i+1}$ is a left color of $v_i$. To see this, observe by Claim $4.2$ a color is either left or right, and since $v_{i+1}$ is odd, if then $c'$-corresponding path component had leftmost vertex $v_{i+1}$ then $c'$ would be left. Hence $v_{i+1}$ has an odd number of left colors and so $v_{i+1}$ is left, as desired.
+	\paragraph{}
+	So we may assume that $v_i$ is odd. Then $v_{i+1}$ is even. So by a similar argument to the above, $v_i$ and $v_{i+1}$ have the same right colors. By Claim $4.3$, $v_i$ is not right so $v_{i+1}$ has an even number of right colors and hence is not right. Thus by Claim $4.3$, $v_{i+1}$ is left, as desired. By induction the Claim is proven.
 \end{proof}
 \paragraph{}
 To complete the proof we observe that Claim $4.4$ and Claim $4.5$ taken together yield a contradiction, since Claim $4.5$ shows $v_{2}$ and $v_{k-1}$ have the same chirality, but Claim $4.4$ shows they have different chirality. $\blacksquare$
