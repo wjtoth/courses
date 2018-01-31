@@ -181,10 +181,54 @@ For every edge $e=uv \in E(G)$, $L(u) = L(v)$.
 	TODO
 \end{proof}
 \paragraph{}
-We are now ready to complete the main proof. The argument is essentially the same as $2$-choosability of even cycles. From Claim $3.5$, let $L$ denote the constant list assigned to each vertex, i.e. $L = L(u)$ for each $u \in V(G)$. We know $|L|$ is even and we need to assign half its elements to each vertex.
+We are now ready to complete the main proof. The argument is essentially the same as $2$-colorability of even cycles. From Claim $3.5$, let $L$ denote the constant list assigned to each vertex, i.e. $L = L(u)$ for each $u \in V(G)$. We know $|L|$ is even and we need to assign half its elements to each vertex.
 \paragraph{}
  Let $S_1 \subseteq L$ be a subset of size $|L|/2$. Let $S_2 = L \backslash S_1$. Then $|S_1| = |S_2| = m(v)$ for any $v \in V(G)$. Enumerate the vertices about $G$ as $v_1, \dots, v_k$ with $k$ even. For each $v_i \in V(G)$, let $S(v) = S_1$ is $i$ is odd and $S(v) = S_2$ is $i$ is even. Since $G$ is an even cycle for any edge $v_iv_j \in E(G)$ exactly one of $i,j$ is odd and the other is even. Hence $S(v_i) \cap S(v_j) = \emptyset$, contradicting that $G$ is a counterexample.$\blacksquare$
 
 \newpage
 \section{}
+\paragraph{}
+We will prove Claim $3.3$ from the previous problem. Suppose the Claim is false. Then there exists $c \in L(G)$  such that $G(c)$ is a path $P=v_1\dots v_k$ with $k$ odd. Choose such $c$ so that $|V(P)|$ is minimized. We adopt the same notation and definitions as the problem statement.
+\begin{lemma}
+	For every $a,b \in L(G)$, if $|V(G(a))|$ is odd then we do not have $G(a) \subseteq G(b)$.
+\end{lemma}
+\begin{proof}
+	Suppose not. Then delete colors $a$ and $b$ from $L(v)$ for each $v \in V(G(a))$ to obtain lists $L'(v)$. For vertices $v$ off $G((a))$ let $L'(v) = L(v)$.  By minimality, there exist $S'(v) \subseteq L'(v)$, such that $|S'(v)| = \frac{1}{2}|L'(v)|$ for each $v \in V(G)$, and for each edge $uv \in E(G)$, $S'(u) \cap S'(v) = \emptyset$.
+	\paragraph{}
+	Enumerate the vertices of $G(a)$ as $v_1 \dots v_\ell$ with $\ell$ odd. For each $v_i \in V(G(a))$ let $S(v_i) = S'(v_i) \cup \{a\}$ if $i$ is odd, and $S(v_i) = S'(v_i) \cup \{b\}$ if $i$ is even. For each $v \in V(G)\backslash V(G(a))$ let $S(v) = S'(v)$. Then $|S(v)| = \frac{1}{2} |L(v)|$ for each $v \in V(G)$. 
+	\paragraph{}
+	Let $uv \in E(G)$. If $u,v \not\in V(G(a))$ then $S(u) \cap S(v) = S'(u) \cap S'(v) = \emptyset$. If $u,v \in V(G(a))$ then $S(u) \cap S(v) = S'(u) \cap S'(v) \cap \{a\} \cap \{b\} = \emptyset$. If $u \in V(G(a))$ and $v \not\in V(G(a))$ then either $u = v_1$ or $u = v_\ell$. In either case $S(u) = S'(u) \cup \{a\}$. Since $v \not\in V(G(a))$, $a \not\in L(v)$ and so $S(u) \cap S'(v) = \emptyset$ as desired. But then the sets $S(v)$ contradict that $G$ is a counterexample.
+\end{proof}
+\begin{claim}
+	For every $v \in V(P)$ and $c' \in L(v) -c$, $c'$ is exactly one of left at $v$ or right at $v$.
+\end{claim}
+\begin{proof}
+	Let $P'$ be the component of $G(c') \cap P$ containing $v$. By Lemma $4.1$, since $P$ is odd, at least one endpoint of $P'$ is a vertex $v_i$ such that $2\leq i\leq k-1$.
+	\paragraph{}
+	Case $1$: $v_i$ is even. We want to show the other endpoint of $P'$ is odd and not equal to $v_1$ or $v_k$. If the other endpoint of $P'$ is $v_1$ or $v_k$ then $G(c')$ with $G(c)$ contradicts Claim $3.2$ of Problem $3$.  If the other endpoint of $P'$ is even then $G(c') \subseteq G(c)$ and $|V(G(c'))|$ is odd, contradicting Lemma $4.1$.
+	\paragraph{}
+	Case $2$: $v_i$ is odd. We want to show the other endpoint of $P'$ is not an odd vertex $v_j$ with $2\leq j \leq k-1$. Suppose not. Then $G(c') \subseteq G(c)$ and $|V(G(c'))|$ is odd, contradicting Lemma $4.1$. Hence the Claim is proven.
+\end{proof}
+\begin{claim}
+	If $2\leq i \leq k-2$ then $v_i$ is either left or right but not both.
+\end{claim}
+\begin{proof}
+	Let $A$ be the set of left colors at $v_i$ and $B$ be the set of right colors at $v_i$. By Claim $4.2$, $(A,B)$ is a partition of $L(v_i) - c$. Since $|L(v_i)|$ is even, $|L(v_i)-c|$ is odd, and so exactly one of $|A|$ or $|B|$ is odd as $|A| + |B| = |L(v_i)-c|$.
+\end{proof}
+\begin{claim}
+	All of the following hold: $|V(P)| > 1$, $v_2$ is left, and $v_{k-1}$ is right.
+\end{claim}
+\begin{proof}
+	First suppose for a contradiction that $|V(P)| = 1$. Let $c' \in L(G) -c$. From Claim $3.1$ $(3.)$ we have that $V(G(c)) \cap V(G(c')) \neq \emptyset$. Therefore $G(c) \subseteq G(c')$, but since $|V(G(c))|$ is odd, this contradicts Lemma $4.1$. Thus $|V(P)| > 1$. So vertices $v_2$ and $v_{k-1}$ exist.
+	\paragraph{}
+	We will show all colors of $L(v_2) - c$ are left. A similar argument shows all colors of $L(v_{k-1})-c$ are right, by replacing $v_2$ with $v_{k-1}$, $v_1$ with $v_k$ and interchaning left/right. Suppose $v_2$ has a right color $c'$. Let $P'$ be the component of $G(c') \cap P$ containing $v_2$. Then the leftmost vertex of $P'$ is odd, but not equal to $v_1$. But there is no odd vertex between $v_1$ and $v_2$, a contradiction.
+\end{proof}
+\begin{claim}
+	If $2\leq i \leq k-2$ then $v_i$ has the same chirality as $v_{i+1}$.
+\end{claim}
+\begin{proof}
+	TODO
+\end{proof}
+\paragraph{}
+To complete the proof we observe that Claim $4.4$ and Claim $4.5$ taken together yield a contradiction, since Claim $4.5$ shows $v_{2}$ and $v_{k-1}$ have the same chirality, but Claim $4.4$ shows they have different chirality. $\blacksquare$
 \end{document}
