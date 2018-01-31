@@ -157,6 +157,21 @@ Suppose not. Let $G$ be a counterexample satisfying:
 	\begin{proof}
 		\paragraph{} Suppose for a contradiction such $P$ exists. Order the vertices of $P$ as $v_1, \dots, v_k$ so that $v_1$ is an end of $G(c)$ and $v_k$ is an end of $G(c')$. Construct new lists $L'(v)$ for each $v \in V(G)$ as follows. If $v \in V(P)$ let $L'(v) = L(v) \backslash \{c,c'\}$ and let $m'(v) = m(v) - 1$. Otherwise let $L'(v) = L(v)$ and $m'(v) = m(v)$. By minimality, there exist sets $S'(v) \subseteq L'(v)$ for each $v \in V(G)$ of size $m'(v)$, such that $S'(u) \cap S'(v) = \emptyset$ for each $uv \in E(G)$.
 		\paragraph{}
-		Construct sets $S(v)\subseteq L(v)$ for each $v \in V(G)$ as follows. If $v_i \in V(P)$ and $v_i$ is odd then set $S(v) = S'(v) \cup \{c\}$. If $v_i \in V(P)$ and $v_i$ is even set $S(v) = S'(v) \cup \{c'\}$. If $v \in V(G)\backslash V(P)$ set $S(v) = S'(v)$. Then $|S(v)| = m(v)$ for each $v \in V(G)$. Since we alternate adding $c$ and $c'$ along $P$ the sets $S(u)$ and $S(v)$ are disjoint for each edge $uv \in E(G)$. Since we did not change $S(u)$ and $S(v)$ for edges $uv$ with neither endpoint on $P$ they are also disjoint. It remains to consider two edges $u_1v_1$ and $v_ku_k$. Since $v_1$ is an end of $G(c)$ and $v_2 \in G(c)$ we have $c \not\in L(u_1)$ and hence, as $S'(u_1) \cap S'(v_1) = \emptyset$, $S(u_1)$ and $S(v_1)$ are disjoint. Similarly since $v_k$ is an edge of $G(c')$, and $k$ is even, $S(u_k)$ and $S(v_k)$ are disjoint. But then the sets $S(v)$ contradict that $(G,m,L)$ is a counterexample.
+		Construct sets $S(v)\subseteq L(v)$ for each $v \in V(G)$ as follows. If $v_i \in V(P)$ and $v_i$ is odd then set $S(v) = S'(v) \cup \{c\}$. If $v_i \in V(P)$ and $v_i$ is even set $S(v) = S'(v) \cup \{c'\}$. If $v \in V(G)\backslash V(P)$ set $S(v) = S'(v)$. Then $|S(v)| = m(v)$ for each $v \in V(G)$. Since we alternate adding $c$ and $c'$ along $P$ the sets $S(u)$ and $S(v)$ are disjoint for each edge $uv \in E(G)$. Since we did not change $S(u)$ and $S(v)$ for edges $uv$ with neither endpoint on $P$ they are also disjoint. It remains to consider two edges $u_1v_1$ and $v_ku_k$ where $u_1, u_k \not\in V(P)$. Since $v_1$ is an end of $G(c)$ and $v_2 \in G(c)$ we have $c \not\in L(u_1)$ and hence, as $S'(u_1) \cap S'(v_1) = \emptyset$, $S(u_1)$ and $S(v_1)$ are disjoint. Similarly since $v_k$ is an edge of $G(c')$, and $k$ is even, $S(u_k)$ and $S(v_k)$ are disjoint. But then the sets $S(v)$ contradict that $(G,m,L)$ is a counterexample.
+	\end{proof}
+\begin{claim}
+	If $c \in L(G)$ then $|V(G(c))|$ is even.
+\end{claim}
+\begin{proof}
+	Deferred to Problem $4$.
+\end{proof}
+\begin{claim}
+	For every edge $e=uv \in E(G)$, $L(u) \subseteq L(v)$ or $L(v) \subseteq L(u)$.
+\end{claim}
+\begin{proof}
+	\paragraph{}
+	Suppose not. Then there exists an edge $e=uv \in E(G)$ such that $L(u)\backslash L(v) \neq \emptyset$ and $L(v)\backslash L(u) \neq \emptyset$. Let $c_u \in L(u) \backslash L(v)$ and let $c_v \in L(v)\backslash L(u)$. By our previous claims, both $G(c_u)$ and $G(c_v)$ are connected and non-disjoint, so they intersect in a path. Let $P = G(c_u) \cap G(c_v)$. Since $v \not\in G(c_u)$ (also note $u \not\in G(c_v)$), $P \neq G$, and we have $G(c_u) \cup G(c_v) = G$. Further one end of $P$ is in $G(c_u)$ and the other is in $G(c_v)$. Thus by Claim $3.2$, $|V(P)|$ is odd.
+	\paragraph{}
+	Since $|V(G)|$ is even,  and $|V(P)|$ is odd, we have that $|V(G) \backslash V(P)|$ is odd. Then since $V(G)\backslash V(P)$ is the disjoint union of $V(G(c_u))\backslash V(P)$ and $V(G(c_v)) \backslash V(P)$, precisely one of $|V(G(c_u))\backslash V(P)|$ or $|V(G(c_v))\backslash V(P)|$ is even and the other is odd. Say without loss of generality that $|V(G(c_u))\backslash V(P)|$ is even. Then $|V(G(c_u))| = |V(G(c_u))\backslash V(P)| + |V(P)|$ is odd. But this contradicts Claim $3.3$.
 	\end{proof}
 \end{document}
