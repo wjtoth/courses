@@ -174,4 +174,17 @@ Suppose not. Let $G$ be a counterexample satisfying:
 	\paragraph{}
 	Since $|V(G)|$ is even,  and $|V(P)|$ is odd, we have that $|V(G) \backslash V(P)|$ is odd. Then since $V(G)\backslash V(P)$ is the disjoint union of $V(G(c_u))\backslash V(P)$ and $V(G(c_v)) \backslash V(P)$, precisely one of $|V(G(c_u))\backslash V(P)|$ or $|V(G(c_v))\backslash V(P)|$ is even and the other is odd. Say without loss of generality that $|V(G(c_u))\backslash V(P)|$ is even. Then $|V(G(c_u))| = |V(G(c_u))\backslash V(P)| + |V(P)|$ is odd. But this contradicts Claim $3.3$.
 	\end{proof}
+\begin{claim}
+For every edge $e=uv \in E(G)$, $L(u) = L(v)$.
+\end{claim}
+\begin{proof}
+	TODO
+\end{proof}
+\paragraph{}
+We are now ready to complete the main proof. The argument is essentially the same as $2$-choosability of even cycles. From Claim $3.5$, let $L$ denote the constant list assigned to each vertex, i.e. $L = L(u)$ for each $u \in V(G)$. We know $|L|$ is even and we need to assign half its elements to each vertex.
+\paragraph{}
+ Let $S_1 \subseteq L$ be a subset of size $|L|/2$. Let $S_2 = L \backslash S_1$. Then $|S_1| = |S_2| = m(v)$ for any $v \in V(G)$. Enumerate the vertices about $G$ as $v_1, \dots, v_k$ with $k$ even. For each $v_i \in V(G)$, let $S(v) = S_1$ is $i$ is odd and $S(v) = S_2$ is $i$ is even. Since $G$ is an even cycle for any edge $v_iv_j \in E(G)$ exactly one of $i,j$ is odd and the other is even. Hence $S(v_i) \cap S(v_j) = \emptyset$, contradicting that $G$ is a counterexample.$\blacksquare$
+
+\newpage
+\section{}
 \end{document}
