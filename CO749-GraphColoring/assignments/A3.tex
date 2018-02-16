@@ -75,5 +75,24 @@
 %\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
 
 \begin{document}
-
+\section{}
+A $k$-critical graph $G$ is $m$-\emph{splittable} (with $2\le m \le k-1$) if for every vertex $z\in V(G)$ and every split of $z$ into vertices $z_1,\ldots, z_m$ of positive degree , the resulting graph has a $(k-1)$-coloring such that $z_1, \ldots, z_m$ have distinct colors. We say such $G$ is \emph{splittable} if $G$ is $m$-splittable for every $m$ such that $2\le m \le k-1$.
+\begin{lemma}
+	An Ore-composition of two splittable $k$-critical graphs is splittable $k$-critical.
+\end{lemma}
+\begin{proof}
+	Let $G_1$ and $G_2$ be two splittable $k$-critical graphs. Let $G$ be the Ore-composition of $G_1$ and $G_2$ obtained by deleting edge $xy \in E(G_1)$ and splitting vertex $z \in V(G_2)$ into $z_1$ and $z_2$ of positive degree and identifying $x$ with $z_1$ and $y$ with $z_2$. We denote the identified vertex for $x$ with $z_1$ as $z_x$, and for $y$ with $z_2$ as $z_y$ in $G$.
+	\paragraph{}
+	We first show that $G$ is $k$-critical. Suppose for a contradiction $G$ has a $(k-1)$-coloring $\phi$. If $\phi(z_x) \neq \phi(z_y)$ then $\phi$ restricted to $G_1$ (taking in the obvious manner $\phi(x) = \phi(z_x)$ and $\phi(y) = \phi(z_y)$) is a $(k-1)$-coloring of $G_1$. If $\phi(z_x) = \phi(z_y)$ then $\phi$ restricted to $G_2$, and takiing $\phi(z) = \phi(z_x) = \phi(z_y)$ yields a $(k-1)$-coloring of $G_2$. In either case we contradicted that $G_1$ and $G_2$ do not have a $(k-1)$-coloring. Therefore $G$ is not $(k-1)$-colorable.
+	\paragraph{}
+	To finish verifying that $G$ is $k$-critical we need to show that every strict subgraph of $G$ is $(k-1)$-colorable. Let $H \subseteq G$ be a strict subgraph of $G$. We proceed by case-distinction on $H$.
+		\subparagraph{} Case $1$: $z_x$ is not contained in $H$ and $z_y$ is not contained in $H$. Then $H$ is the disjoint union of a strict subgraph of $G_1$ and a strict subgraph of $G_2$. Since $G_1$ and $G_2$ are $k$-critical we can obtain a $(k-1)$-coloring of their respective strict subgraphs in $H$ and combine them to obtain a $(k-1)$-coloring of $H$.
+		\subparagraph{} Case $2:$ Exactly one of $z_x, z_y$ is in $H$. Without loss of generality say $z_x \in V(H)$ and $z_y \not\in V(H)$. Then treating $z_x$ as $x$ in $G_1$ and $z$ in $G_2$ we see that $H$ is the union of two strict subgraphs $H_1 \subseteq G_1$ and $H_2 \subseteq G_2$, overlapping only at $z_x$. We see $H_2$ is a strict subgraph since the degree of $z_1$ and $z_2$ are both positive. Again we invoke criticality of $G_1$ and $G_2$ to obtain $(k-1)$-colorings of $H_1$ and $H_2$, which we join into a $(k-1)$-coloring of $H$. Note we permute the coloring of $H_1$ so the two colorings agree at $z_x$ if necessary.
+		\subparagraph{} Case $3:$. Both $z_x$ and $z_y$ are in $H$. Let $G_2'$ denote the graph $G_2$ with $z$ split into $z_1$ and $z_2$. Then $H$ is the union of two subgraphs $H_1 \subseteq G_1$ and $H_2 \subseteq G_2'$ overlapping only at $\{z_x,z_y\}$. Since $H$ is a strict subgraph of $G$ one of $H_1$ or $H_2$ is a strict subgraph of $G_1-xy$ or $G_2'$ respectively.
+		\subparagraph{} First suppose $H_1$ is a strict subgraph of $G_1-xy$. Then invoking the criticality of $G_1$, we obtain that $H_1 + xy$ has a $(k-1)$-coloring $\phi_1$. Then $\phi_1$ is a $(k-1)$-coloring of $H_1$ where $\phi_1(x)\neq \phi_1(y)$. Since $G_2$ is $2$-splittable, there exists a $(k-1)$-coloring $\phi_2$ of $G_2'$. Note that $\phi_2(z_1) \neq \phi_2(z_2)$ for otherwise setting $\phi_2(z) = \phi_2(z_1) = \phi_2(z_2)$ yields a $(k-1)$-coloring of $G_2$. Hence we may permute the colors of $\phi_2$ so $\phi_2(z_1) = \phi_1(x)$ and $\phi_2(z_2) = \phi_1(y)$. Then the coloring obtained by combining $\phi_1$ and $\phi_2$ is a $(k-1)$-coloring of $H$.
+		\subparagraph{}
+		So we may assume $H_1$ is not a strict subgraph of $G_1-xy$, i.e. $H_1 = G_1-xy$. Then $H_2$ is a strict subgraph of $G_2'$. By identifying $z_x$ and $z_y$ as $z$ in $H_2$ we obtain a strict subgraph of $G_2$. By criticality of $G_2$, this subgraph has a $(k-1)$-coloring $\phi_2$. By setting $\phi_2(z_x) = \phi_2(z_y) = \phi_2(z)$ we obtain a $(k-1)$-coloring of $H_2$ wherein $z_x$ and $z_y$ receive the same color. Invoking criticality of $G_1$, we obtain a $(k-1)$-coloring $\phi_1$ of $H_1$ ($=G_1-xy$). Observe that $\phi_1(x) = \phi_1(y)$, for otherwise $\phi_1$ is a $(k-1)$-coloring of $G_1$. But then we may permute the colors of $\phi_2$ so $\phi_2(z_1) = \phi_1(x)$ and $\phi_2(z_2) = \phi_1(y)$. Again the coloring obtained by combining $\phi_1$ and $\phi_2$ is a $(k-1)$-coloring of $H$, as desired.
+	\paragraph{Splittability}
+	Thus we have shown that $G$ is $k$-critical. It remains to verify that $G$ is splittable.
+\end{proof}
 \end{document}
