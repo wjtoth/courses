@@ -102,4 +102,46 @@ A $k$-critical graph $G$ is $m$-\emph{splittable} (with $2\le m \le k-1$) if for
 	obtaining graph $G_2'$. Color $G_2'$ by splittability of $G_2$ obtaining $(k-1)$-coloring $\phi_2$. Setting $\phi_2(z_y) = \phi_2(z^i)$ we obtain a $(k-1)$-coloring of $(G-G_1) \cup \{z_x^1, \dots, z_x^m, z_y\}$. Since $\phi_1$ and $\phi_2$ give all the split vertices different colors, and give $z_y$ the same color $z_x^i$ we may permute $\phi_1$ and $\phi_2$ to agree on $\{z_x^1, \dots, z_x^m, z_y\}$ obtaining a $(k-1)$-coloring of $G'$.
 	\subparagraph{}Case $2:$ $\phi_1(x^i) \neq \phi_2(y)$ for all $i \in \{1,\dots, m\}$. Notice in this case $m < k-1$ by the pidgeonhole principle since $\phi_1$ assigns different colors to each split vertex. Split $z$ in $G_2$ into $z^1, \dots, z^m, z^{m+1}$ with neighbours $N(z^i) = N(z_x^i) \cap V(G_2)$ for $i \leq m$ and set $N(z^{m+1}) = N(z_y) \cap V(G_2)$. Applying splitability we obtain a $(k-1)$-coloring $\phi_2$. Now both $\phi_1$ and $\phi_2$ give $\{z_x^1, \dots, z_x^m, z_y\}$ different colors, so we may permute their colors to agree on $\{z_x^1, \dots, z_x^m, z_y\}$, and join the colorings to obtain a coloring of $G'$, as desired.
 	\end{proof}
+\begin{corollary}
+	If $G$ is a $k$-Ore graph then $G$ is splittable $k$-critical.
+\end{corollary}
+\begin{proof}
+	Suppose not. Let $G$ be a minimum counterexample. Then $G$ cannot be the Ore-composition of two $k$-Ore graphs $G_1$, $G_2$, for otherwise $G_1$ and $G_2$ are splittable $k$-critical by minimality and hence $G$ is splittable $k$-critical by the previous Lemma.
+	\paragraph{}
+	Thus $G$ is isomorphic to $K_k$. It remains to show $K_k$ is splittable. Suppose we want to split vertex $v \in V(G)$ into $v_1, \dots, v_m$ with $2\leq m \leq k-1$ such that each $v_i$ has positive degree, obtaining graph $G'$. We can trivially color $G - v$ with $k-1$ colors, obtaining coloring $\phi$. Now we can extend $\phi$ to $G'$ since each $v_i$ has degree at most $k-2$ and hence $|\phi(N(v_i))| \leq k-2$ and there is a free color available to assign $v_i$. This contradicts that
+\end{proof}
+
+\section{}
+\subsection{a}
+\begin{lemma}
+	If $G$ is the Ore-composition of two graphs $G_1$ and $G_2$ then $\alpha(G) \leq \alpha(G_1) + \alpha(G_2)$.
+\end{lemma}
+\begin{proof}
+Let $G$ be the Ore-composition of graphs $G_1$ and $G_2$ obtained by deleting edge $xy \in E(G_1)$ and splitting vertex $z \in V(G_2)$ into $z_1$ and $z_2$ of positive degree and identifying $x$ with $z_1$ and $y$ with $z_2$. We denote the identified vertex for $x$ with $z_1$ as $z_x$, and for $y$ with $z_2$ as $z_y$ in $G$. Let $S \subseteq V(G)$ be an independent set in $G$ such that $|S| = \alpha (G)$. 
+Then treating $z_x$ as $x$ and $z_y$ as $z$ we can partition $S$ into two independent sets $S_1\subseteq V(G_1)$ and $S_2\subseteq V(G_2)$ as $S_1 = V(G_1) \cap S$ and $S_2 = S\backslash S_1$. Thus
+$$\alpha(G) = |S| = |S_1| + |S_2| \leq \alpha(G_1) + \alpha(G_2)$$
+as desired.
+\end{proof}
+
+\subsection{b}
+\begin{lemma}
+	If $G$ is $k$-Ore then $\alpha(G) = \frac{v(G) - 1}{k-1}$.
+\end{lemma}
+\begin{proof}
+	We proceed by induction on $v(G)$. The smallest $k$-Ore graph is $K_k$, for which
+	$$\alpha(K_k) = 1 = \frac{k-1}{k-1} = \frac{v(G) -1}{k-1}.$$
+	So the base case for induction is satisfied.
+	\paragraph{}
+	So we consider a $k$-Ore graph $G$ that is the Ore-composition of $G_1$ and $G_2$ and suppose for induction that
+	$$\alpha(G_1) = \frac{v(G_1) - 1}{k-1} \quad\text{ and }\quad \alpha(G_2) = \frac{v(G_2) -1}{k-1}.$$
+	We observe from the previous Lemma, and induction, that
+	$$\alpha(G) \leq \alpha(G_1) + \alpha(G_2) = \frac{v(G_1) +v(G_2)- 2}{k-1} = \frac{v(G) + 1 - 2}{k-1} = \frac{v(G) - 1}{k-1}.$$
+	Thus $\alpha(G) \leq \frac{v(G) - 1}{k-1}$. To show $\alpha(G) \geq \frac{v(G) - 1}{k-1}$ it suffices to construct an independent set in $G$ of size $\frac{v(G) - 1}{k-1}$.
+	\paragraph{}
+	For $i \in \{1, \dots, 2\}$ let $S_i$ be in an independent set in $G_i$ satisfying $$|S_i| = \alpha(G_i) = \frac{v(G_i) - 1}{k-1}.$$ We use the same notion as the above problems for $x,y, z, z_x, z_y$. Since $xy \in E(G_1)$, $|\{x,y\} \cap S_1| \leq 1$. Without loss of generality suppose $y \not\in S_1$. Treating $x$ as $z_x$ and $z$ as $z_y$ we observe that
+	$$S := S_1 \cup S_2$$
+	is an independent set of $G$ of size $|S_1| + |S_2|$. But then we see that
+	$$|S| = |S_1| + |S_2| =  \frac{v(G_1) +v(G_2)- 2}{k-1} = \frac{v(G) - 1}{k-1}.$$
+	Thus $\alpha(G) \geq \frac{v(G) - 1}{k-1}$, and therefore by induction the Lemma is proven.
+\end{proof}
 \end{document}
