@@ -144,4 +144,14 @@ as desired.
 	$$|S| = |S_1| + |S_2| =  \frac{v(G_1) +v(G_2)- 2}{k-1} = \frac{v(G) - 1}{k-1}.$$
 	Thus $\alpha(G) \geq \frac{v(G) - 1}{k-1}$, and therefore by induction the Lemma is proven.
 \end{proof}
+
+\subsection{c}
+\paragraph{}
+From our work in class it suffices to show $c\alpha(R') \leq c\alpha(R) + c\alpha(W) - c\alpha(K_{|X|}) + c$ for $c \geq 0$. Since we know the core is always non-empty, $\alpha(K_{|X|}) = 1$ and so the problem reduces to showing
+$$\alpha(R') \leq \alpha(R) + \alpha(W).$$
+Let $S$ be an independent set of $G[R']$ such that $|S| = \alpha(R')$. Since $R'= V(W) \cup R - \{v_1, \dots, v_{k-1}\}$, where $\{v_1, \dots, v_{k-1}\}$ are the set of color-identified vertices, as in the usual definition. So we have
+$$|S| \leq |S\cap (V(W) - \{v_1, \dots, v_k\}| + |S\cap R|$$
+On the one hand $S\cap (V(W) - \{v_1, \dots, v_k\})$ is an independent set in $W$ and $S \cap R$ is an indepenent set in $G[R]$, so then
+$$ \alpha(R') = |S| \leq |S\cap (V(W) - \{v_1, \dots, v_k\}| + |S\cap R| \leq \alpha(W) + \alpha(R)$$
+as desired. $\blacksquare$
 \end{document}
