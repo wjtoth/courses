@@ -154,4 +154,49 @@ $$|S| \leq |S\cap (V(W) - \{v_1, \dots, v_k\}| + |S\cap R|$$
 On the one hand $S\cap (V(W) - \{v_1, \dots, v_k\})$ is an independent set in $W$ and $S \cap R$ is an indepenent set in $G[R]$, so then
 $$ \alpha(R') = |S| \leq |S\cap (V(W) - \{v_1, \dots, v_k\}| + |S\cap R| \leq \alpha(W) + \alpha(R)$$
 as desired. $\blacksquare$
+\section{}
+\subsection{a}
+\begin{lemma}
+If $G$ is the Ore-composition of $G_1$ and $G_2$ then
+$$T_k(G) \geq T_k(G_1-e) + T_k(G_2 - z) \geq T_k(G_1) + T_k(G_2) - 2$$
+where $e = xy$ is the replaced edge of $G_1$ and $z$ is the split vertex of $G_2$.
+\end{lemma}
+\begin{proof}
+Let $H_1 \subseteq G_1- e$ be the subgraph of $G_1 - e$ which achieves the optimum in 
+$$T_k(G_1-e) := \max_{H \subseteq G_1 - e} T_k(H).$$
+Similarly let $H_2 \subseteq G_2 - z$ be the subgraph of $G_2 - z$ which achieves the optimum in $T_k(G_2 - z)$. Then $H_1 \cup H_2$ is a disjoint union of cliques in $G$. So we have
+$$T_k(G_1-e) + T_k(G_2 - z) = T_k(H_1) + T_k(H_2) = T_k(H_1 \cup H_2) \leq T_k(G).$$
+So the first inequality of the lemma is proven.
+\paragraph{}
+Now let $H_1' \subseteq G_1$ be the subgraph of $G_1$ which achieves the optimum in $T_k(G_1)$, and let $H_2' \subseteq G_2$ be the subgraph of $G_2$ which achieves the optimum in $T_k(G_2)$. If $|e \cap V(H'_1)| \leq 1$ then $H'_1$ is a subgraph of $G_1 - e$ and so $T_k(G_1) \leq T_k(G_1-e)$. Otherwise, i.e. $ e\in E(H'_1)$ then $H'_1 - x$ is a subgraph of $G_1 - e$, and $T_k(H'_1-x) = T_k(H'_1) - 1$. Thus 
+$$T_k(G_1 - e) \geq T_k(H'_1-x) \geq T_k(H'_1) - 1 =T_k(G_1) - 1.$$
+Similarly $H'_2 - z$ is a subgraph of $G_2 - v$ and $T_k(H'_2-z) \geq T_k(H'_2) - 1$. So 
+$$T_k(G_2 - z) \geq T_k(H'_2 - z) \geq T_k(H'_2) - 1 = T_k(G_2) - 1.$$
+Summing our inequalities above we obtain
+$$T_k(G_1 - e) + T_k(G_2 - z) \geq T_k(G_1) + T_k(G_2) - 2$$
+as desired.
+\end{proof}
+\subsection{b}
+\begin{lemma}
+If $G$ is $k$-Ore and $G \neq K_k$ then $T_k(G) \geq 2+ \frac{v(G) - 1}{k-1}$.
+\end{lemma}
+\begin{proof}
+Suppose not and let $G$ be a minimum counterexample. Since $G$ is $k$-Ore and $G\neq K_k$ there exist $k$-Ore graphs $G_1$ and $G_2$ such that $G$ is the Ore-composition of $G_1$ and $G_2$. We proceed by case distinction on if $G_1, G_2$ are $K_k$ or not. If neither $G_1$ nor $G_2$ are $K_k$ then by minimality of $G$,
+$$T_k(G_i) \geq 2 + \frac{v(G_i) - 1}{k-1}$$
+for $i =1,2$. But then combining with the inequality
+$$T_k(G) \geq T_k(G_1) + T_k(G_2) - 2$$
+from the previous Lemma, we see that
+$$T_k(G) \geq 2 + \frac{v(G_1) - 1}{k-1} + 2 + \frac{v(G_2) - 1}{k-1} -2 \geq 2 + \frac{v(G)-1}{k-1}$$
+as desired, using that $v(G_1) + v(G_2) -1 = v(G)$.
+\paragraph{}
+If $G_1 = K_k$ and $G_2 \neq K_k$ then using the first inequality from the previous Lemma we have
+$$T_k(G) \geq T_k(G_1-e) + T_k(G_2-z) \geq 2 + T_k(G_2-z)$$
+Since $T_k(G_2-z) \geq T_k(G_2) - 1$, 
+$$T_k(G) \geq 1 + T_k(G_2) \geq \frac{k-1}{k-1} + \frac{v(G_2)-1}{k-1} + 2= \frac{v(G_1) + v(G_2) - 2}{k-1} +2 = \frac{v(G) - 1}{k-1} +2$$
+The proof for $G_2 = K_k$ and $G_1 \neq K_k$ follows similarly.
+\paragraph{}
+If $G_1 = K_k$ and $G_2 = K_k$ then 
+$$T_k(G) \geq T_k(G_1-e) + T_k(G_2 - z) = 2  + 2 = \frac{2(k-1)}{k-1} + 2 = \frac{v(G_1) + v(G_2) -2}{k-1} + 2 = \frac{v(G) -1}{k-1} + 2$$
+as desired.
+\end{proof}
 \end{document}
