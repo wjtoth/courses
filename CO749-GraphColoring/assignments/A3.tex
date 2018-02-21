@@ -111,6 +111,7 @@ A $k$-critical graph $G$ is $m$-\emph{splittable} (with $2\le m \le k-1$) if for
 	Thus $G$ is isomorphic to $K_k$. It remains to show $K_k$ is splittable. Suppose we want to split vertex $v \in V(G)$ into $v_1, \dots, v_m$ with $2\leq m \leq k-1$ such that each $v_i$ has positive degree, obtaining graph $G'$. We can trivially color $G - v$ with $k-1$ colors, obtaining coloring $\phi$. Now we can extend $\phi$ to $G'$ since each $v_i$ has degree at most $k-2$ and hence $|\phi(N(v_i))| \leq k-2$ and there is a free color available to assign $v_i$. This contradicts that
 \end{proof}
 
+\newpage
 \section{}
 \subsection{a}
 \begin{lemma}
@@ -154,6 +155,7 @@ $$|S| \leq |S\cap (V(W) - \{v_1, \dots, v_k\}| + |S\cap R|$$
 On the one hand $S\cap (V(W) - \{v_1, \dots, v_k\})$ is an independent set in $W$ and $S \cap R$ is an indepenent set in $G[R]$, so then
 $$ \alpha(R') = |S| \leq |S\cap (V(W) - \{v_1, \dots, v_k\}| + |S\cap R| \leq \alpha(W) + \alpha(R)$$
 as desired. $\blacksquare$
+\newpage
 \section{}
 \subsection{a}
 \begin{lemma}
@@ -198,5 +200,37 @@ The proof for $G_2 = K_k$ and $G_1 \neq K_k$ follows similarly.
 If $G_1 = K_k$ and $G_2 = K_k$ then 
 $$T_k(G) \geq T_k(G_1-e) + T_k(G_2 - z) = 2  + 2 = \frac{2(k-1)}{k-1} + 2 = \frac{v(G_1) + v(G_2) -2}{k-1} + 2 = \frac{v(G) -1}{k-1} + 2$$
 as desired.
+\end{proof}
+\subsection{c}
+\paragraph{}
+It suffices to show
+$$T_k(R) + T_k(W) - T_k(K_{|X|}) \leq T_k(R') + |X|.$$
+Let $H_R \subseteq G[R]$ be a disjoint union of cliques attaining the maximum in $T_k(R)$. Let $H_W \subseteq W$ be a disjoint union of cliques attaining the maximum in $T_k(W)$. If a vertex in $X$ is deleted from a clique in $H_W$ then the value of $T_k$ for the resulting graph will decrease by at most one. Hence $T_k(H_W - X) \geq T_k(H_W) - |X|$. But then $H_R \cup (H_W - X)$ is a disjoint union of cliques in $G[R']$. So we have
+\begin{align*}
+T_k(R) + T_k(W) - T_k(K_{|X|}) &\leq T_k(H_R) + T_k(H_W)\\ &\leq T_k(H_R) + T_k(H_W - X) - |X|\\ &\leq T_k(H_R \cup (H_W-X)) - |X|\\ &\leq T_k(R') - |X|\end{align*}
+as desired. $\blacksquare$
+\newpage
+\section{}
+\paragraph{}
+Let $k \geq 4$. Let $p(G) = (k-1)v(G) - 2e(G)$. Then $p(G) \leq 0$ if $G$ is $k$-critical since the minimum degree of $G$ is $k-1$. Let $G$ be a counterexample to the potential version of Brooks' Theorem. That is, $G$ is $k$-critical, $G\neq K_k$, and $p(G) = 0$. Since $p(G) = 0$, we have that $G$ is $(k-1)$-regular.
+\begin{claim}
+If $R \subset V(G)$ then $p(R) \geq k-1$.
+\end{claim}
+\begin{proof}
+Suppose not and let $R$ be a counterexample with maximum number of vertices. Then $R$ has an extension $R'$ with extender $W$ and core $X$. By the potential-extension lemma,
+$$p(R') \leq p(R) + p(W) - p(K_{|X|})$$
+Now $$p(R) =  (k-1)|R| - 2e(R) \geq (k-|R|)|R|$$
+which is at least $k-1$ when $1 \leq |R| \leq k-1$. Hence $|R| \geq k$, and since $G$ is not equal to $K_k$ and $G$ is $(k-1)$-regular, $G[R]$ is not a clique of size at least $k$. Therefore $W$ is a strict subgraph of $G$, and so by minimality of $G$,
+$$p(W) \leq -1.$$
+By the same reasoning as above for $R$, $$p(K_{|X|}) \geq k-1.$$
+Thus we have
+$$p(R') \leq p(R) + p(W) - p(K_{|X|}) \leq (k-2)  - 1 -(k-1) \leq - 2$$
+By maximality of $R$, $p(R') \geq k-1$ contradicting the above.
+\end{proof}
+\begin{claim}
+If $z$ is a vertex with two non-adjacent neighbours $x,y$ then there exists a $(k-1)$-clique $H$ in $G\backslash \{x,y,z\}$ such that $N(x) \cap V(H)$, $N(y) \cap V(H)$ partition $V(H)$.
+\end{claim}
+\begin{proof}
+
 \end{proof}
 \end{document}
