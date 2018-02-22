@@ -231,6 +231,20 @@ By maximality of $R$, $p(R') \geq k-1$ contradicting the above.
 If $z$ is a vertex with two non-adjacent neighbours $x,y$ then there exists a $(k-1)$-clique $H$ in $G\backslash \{x,y,z\}$ such that $N(x) \cap V(H)$, $N(y) \cap V(H)$ partition $V(H)$.
 \end{claim}
 \begin{proof}
-
+Let $G'$ be the graph obtained from $G$ by identifying vertices $x$ and $y$ (deleting parallel edges if necessary) as vertex $v_{xy}$ and deleting vertex $z$. If $G'$ has a $(k-1)$-coloring $\phi'$ then $\phi'$ can be extending to a $(k-1)$-coloring of $G$ by assigning $\phi'(x ) = \phi'(y) = \phi'(v_{xy})$, then assigning $z$ a color not present on the neighbours of $z$. Such a color exists since $G$ is $(k-1)$-regular and two neighbours of $z$, $x$ and $y$, receive the same color under $\phi'$.
+\paragraph{}
+Thus $G'$ is not $(k-1)$-colorable. So $G'$ has a $k$-critical subgraph $K'$. Then $v_{xy} \in V(K')$ for otherwise $K'$ is a $k$-critical strict subgraph of $G$, contradicting that $G$ is $k$-critical. By minimality of $G$ we have
+$$p(K') \leq 0$$
+with equality if and only if $K'$ is $K_k$. Let $K$ be the graph $K' - v_{xy} + \{x,y\}$. Then $K$ is a strict subgraph of $G$, since $z \not\in V(K)$. So by the previous claim
+$$k-1 \leq p(G[V(K')]) \leq p(K')$$
+Now we observe that
+$$p(K) = p(K') + (k-1) - 2|E(v_{xy}, N(x) \cap N(y) \cap V(K'))|$$
+Since $K$ has more vertex that $K'$, and parallel edges were deleted in obtaining $G'$. Combining inequalities we see that
+$$k-1 \leq p(K) \leq 0 + (k-1) - 2|E(v_{xy}, N(x) \cap N(y) \cap V(K'))|$$
+and hence 
+$$|E(v_{xy}, N(x) \cap N(y) \cap V(K'))| \leq 0.$$
+Since $|E(v_{xy}, N(x) \cap N(y) \cap V(K'))|$ is non-negative this implies $|E(v_{xy}, N(x) \cap N(y) \cap V(K'))| = 0$ and thus
+$N(x)\cap N(y) \cap V(K') = \emptyset$. Furthermore the displayed inequalities are tight, implying that $K'$ is isomorphic to $K_k$. Letting $H = K'-v_{xy}$ we obtain the desired clique of the claim.
 \end{proof}
+
 \end{document}
