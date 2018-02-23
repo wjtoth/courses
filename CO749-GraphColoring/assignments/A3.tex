@@ -246,5 +246,11 @@ $$|E(v_{xy}, N(x) \cap N(y) \cap V(K'))| \leq 0.$$
 Since $|E(v_{xy}, N(x) \cap N(y) \cap V(K'))|$ is non-negative this implies $|E(v_{xy}, N(x) \cap N(y) \cap V(K'))| = 0$ and thus
 $N(x)\cap N(y) \cap V(K') = \emptyset$. Furthermore the displayed inequalities are tight, implying that $K'$ is isomorphic to $K_k$. Letting $H = K'-v_{xy}$ we obtain the desired clique of the claim.
 \end{proof}
+\paragraph{}
+Since $G$ is not $K_k$, there exists a vertex $z$ with tow non-adjacent neighbbours $x,y$. Invoking the previous Claim we obtain a clique $H$ in $G\backslash\{x,y,z\}$ such that $N(x) \cap V(H)$, $N(y) \cap V(H)$ partition $V(H)$. Now let $G'$ be the graph obtained from $G$ by adding edge $xy$ and deleting $H$. If $G'$ has a $(k-1)$-coloring $\phi'$ then we claim $\phi'$ can be extended to a $(k-1)$-coloring of $G$. Since $G$ is $(k-1)$-regular and the neighbours of $x$ and $y$ partition $V(H)$, every vertex of $H$ is adjacent with every other vertex of $H$, and precisely one of $x$ or $y$. Let $v_x \in N(x) \cap V(H)$ and let $v_y \in N(y) \cap V(H)$. Assign $\phi'(v_x) = \phi'(y)$ and $\phi'(v_y) = \phi'(x)$. Assign the remaining $k-3$ colors (those not equal to $\phi'(x)$ or $\phi'(y)$) to the $k-3$ vertices of $H - \{v_x, v_y\}$ so each receives a unique color. This yields a $(k-1)$-coloring of $G$, hence $G'$ is not $(k-1)$-colorable.
+\paragraph{}
+Since $G'$ is not $(k-1)$-colorable, $G'$ contains a $k$-critical subgraph $W$. Then $xy \in E(W)$, for otherwise $W$ is a $k$-critical subgraph of $G$, contradicting that $G$ is $k$-critical. Now, using Claim $4.1$, we observe that
+$$p(W) = p(G[V(W)]) - 2 \geq k-1 - 2 = k-3 \geq 1 $$
+with the last inequality following since $k \geq 4$. But on the other hand $p(W) \leq 0$ since $W$ is $k$-critical. Then we have $1 \leq 0$, a contradiction. $\blacksquare$
 
 \end{document}
