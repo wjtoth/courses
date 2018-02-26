@@ -119,7 +119,12 @@ A $k$-critical graph $G$ is $m$-\emph{splittable} (with $2\le m \le k-1$) if for
 \end{lemma}
 \begin{proof}
 Let $G$ be the Ore-composition of graphs $G_1$ and $G_2$ obtained by deleting edge $xy \in E(G_1)$ and splitting vertex $z \in V(G_2)$ into $z_1$ and $z_2$ of positive degree and identifying $x$ with $z_1$ and $y$ with $z_2$. We denote the identified vertex for $x$ with $z_1$ as $z_x$, and for $y$ with $z_2$ as $z_y$ in $G$. Let $S \subseteq V(G)$ be an independent set in $G$ such that $|S| = \alpha (G)$. 
-Then treating $z_x$ as $x$ and $z_y$ as $z$ we can partition $S$ into two independent sets $S_1\subseteq V(G_1)$ and $S_2\subseteq V(G_2)$ as $S_1 = V(G_1) \cap S$ and $S_2 = S\backslash S_1$. Thus
+\paragraph{}
+We claim that we can always partition $S$ into $S_1$ and $S_2$ where $S_1$ is an independent set in $G_1$ and $S_2$ is an independent set in $G_2$. We proceed by case distinction:
+\subparagraph{} Case $1:$ $\{z_x,z_y\} \cap S = \emptyset$. Then trivially $S_1 = S \cap V(G_1)$ and $S_2 = S\cap V(G_2) = S \backslash S_1$.
+\subparagraph{} Case $2:$ $|\{z_x,z_y\} \cap S| \leq 1$. Without loss of generality we may assume $x \in S$ and  $y \not\in S$. Then treating $z_x$ as $x$ we can partition as before: $S_1 = (S \cap V(G_1)) \cup \{x\}$ and $S_2 = S\cap V(G_12)$.
+\subparagraph{} Case $3:$ $\{z_x, z_y\} \subseteq S$. Then for all $v \in S\cap V(G_2)$, $v$ is not adjacent to $z$, for otherwise $v$ would be adjacent to one of $z_x, z_y$ contradicting that $S$ is an independent $S$. So treating $z_x$ as $x$ and $z_y$ as $z$, we can partition $S$ into $$S_1 = ((S\backslash\{z_x,z_y\})\cap V(G_1)) \cup \{x\}$$ and $$S_2 = ((S\backslash\{z_x,z_y\})\cap V(G_2)) \cup \{z\}.$$
+Now using our claim we see that
 $$\alpha(G) = |S| = |S_1| + |S_2| \leq \alpha(G_1) + \alpha(G_2)$$
 as desired.
 \end{proof}
@@ -139,7 +144,7 @@ as desired.
 	$$\alpha(G) \leq \alpha(G_1) + \alpha(G_2) = \frac{v(G_1) +v(G_2)- 2}{k-1} = \frac{v(G) + 1 - 2}{k-1} = \frac{v(G) - 1}{k-1}.$$
 	Thus $\alpha(G) \leq \frac{v(G) - 1}{k-1}$. To show $\alpha(G) \geq \frac{v(G) - 1}{k-1}$ it suffices to construct an independent set in $G$ of size $\frac{v(G) - 1}{k-1}$.
 	\paragraph{}
-	For $i \in \{1, \dots, 2\}$ let $S_i$ be in an independent set in $G_i$ satisfying $$|S_i| = \alpha(G_i) = \frac{v(G_i) - 1}{k-1}.$$ We use the same notion as the above problems for $x,y, z, z_x, z_y$. Since $xy \in E(G_1)$, $|\{x,y\} \cap S_1| \leq 1$. Without loss of generality suppose $y \not\in S_1$. Treating $x$ as $z_x$ and $z$ as $z_y$ we observe that
+	For $i \in \{1, \dots, 2\}$ let $S_i$ be in an independent set in $G_i$ satisfying $$|S_i| = \alpha(G_i) = \frac{v(G_i) - 1}{k-1}.$$ We use the same notation as in the above problems for $x,y, z, z_x, z_y$. Since $xy \in E(G_1)$, $|\{x,y\} \cap S_1| \leq 1$. Without loss of generality suppose $y \not\in S_1$. Treating $x$ as $z_x$ and $z$ as $z_y$ we observe that
 	$$S := S_1 \cup S_2$$
 	is an independent set of $G$ of size $|S_1| + |S_2|$. But then we see that
 	$$|S| = |S_1| + |S_2| =  \frac{v(G_1) +v(G_2)- 2}{k-1} = \frac{v(G) - 1}{k-1}.$$
