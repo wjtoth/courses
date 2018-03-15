@@ -110,4 +110,41 @@ Therefore by Lemma \ref{lemma:bipartite-cc}
 $$c(H') \geq \frac{(k-1)v(G) - e(G)}{{k\choose 2}}$$
 as desired.
 \end{proof}
+\begin{corollary}
+There exists $\epsilon >0$, $\alpha > 0$ such that both of the following hold for all $m \in \{3,4,5\}$:
+\begin{enumerate}
+\item If $G$ is a planar graph have girth at least $m$ then $G$ has at least $2^{\epsilon v(G)}$ distinct $(8-m)$-colorings.
+\item If $G$ embeds on a surface $S$, has girth at least $m$, and is $(8-m)$-colorable then $G$ has  at least $2^{\epsilon v(G) - \alpha g(S)}$ distinct $(8-m)$-colorings.
+\end{enumerate}
+\end{corollary}
+\begin{proof}
+\paragraph{}
+Choose parameters
+$$\epsilon = \frac{(7-m)(m-2) - m}{(m-2){(8-m) \choose 2}}$$
+and
+$$\alpha = \frac{m}{(m-2){(8-m) \choose 2}}$$
+It is not hard to see for $m \in \{3,4,5\}$ both $\epsilon$ and $\alpha$ are strictly greater than $0$.
+\paragraph{}
+By Grotzsch's Theorem, planar graphs of girth $m$ are $(8-m)$-colorable for $m \in \{3,4,5\}$. Further $g(S) = 0$ if $S$ is the plane $S_0$. So it will suffice to prove the second claim of the Corollary. Let $G$ be a graph which embeds on a surface $S$, has girth at least $m$, and is $(8-m)$-colorable. From the previous Lemma, $G$ has at least
+$$2^{\frac{(7-m)v(G) - e(G)}{{(8-m)\choose 2}}}$$
+distinct $(8-m)$-colorings. Since each edge is incident with $2$ faces and each face contains at least $m$ edges we have
+$$f(G) \leq \frac{2}{m}e(G)$$
+Applying Euler's formula for general surfaces
+$$ v(G) - e(G) + f(G) = 2- g(S)$$
+to the left hand side of the above inequality, we see that
+$$ e(G) - v(G) + 2-g(S) \leq \frac{2}{m}e(G).$$
+Simplifying we observe that
+$$e(G) \leq \frac{m}{m-2}(v(G) - 2 + g(S))$$
+Therefore we have that
+\begin{align*}
+(7-m)v(G) - e(G) &\geq (7-m)v(G) -\frac{m}{m-2}(v(G) - 2 + g(S))\\
+&= \frac{(7-m)(m-2) - m}{m-2}v(G) + \frac{m}{m-2} (2-g(S)) \\
+&\geq \frac{(7-m)(m-2) - m}{m-2}v(G) - \frac{m}{m-2} (g(S))
+\end{align*}
+Therefore
+$$\frac{(7-m)v(G) - e(G)}{{(8-m)\choose 2}} \geq \epsilon v(G) - \alpha g(S)$$
+and hence $G$ has at least
+$$2^{\epsilon v(G) - \alpha g(S)}$$
+distinct colorings, as desired.
+\end{proof}
 \end{document}
