@@ -147,4 +147,54 @@ and hence $G$ has at least
 $$2^{\epsilon v(G) - \alpha g(S)}$$
 distinct colorings, as desired.
 \end{proof}
+\section{}
+\paragraph{}
+We may use the following theorems.
+\begin{theorem}\label{th:g-e-choosable}
+	If $G$ is a graph and $e\in E(G)$ such that $G-e$ is planar then $G$ is $5$-list-colorable.
+\end{theorem}
+\begin{theorem}\label{th:closeness}
+	There exists $r>0$ such that the following holds:
+	
+	Let $G$ be a connected plane graph with $S\subseteq V(G)$ such that $G$ is $S$-critical with respect to some $5$-list-assignment $L$. If $S$ has at least two components then there exists two distinct components $S_1,S_2$ of $S$ such that
+	$$d(S_1,S_2) \leq r(|V(S_1)| + |V(S_2)|).$$
+\end{theorem}
+\paragraph{}
+We will prove the following theorem
+\begin{theorem}
+	There exists $d>0$ such that the following holds:
+	
+	Let $G$ be a graph and $F \subset E(G)$ such that $G-F$ is planar. If for every two distinct edges $e_1, e_2 \in F$ we have $d(e_1, e_2) \geq d$ then $G$ is $5$-list-colorable.
+\end{theorem}
+\begin{proof}
+Choose $d = 4r^2+2r+1$ where $r$ is as in Theorem \ref{th:closeness}.
+\paragraph{}
+Suppose the theorem is false. Let $(G,F)$ be a minimal counterexample with respect to $|V(G)| + |E(G)| + |F|$.
+\paragraph{}
+Label the elements of $F$ as $\{e_1=u_1v_1, \dots, e_k = u_kv_k\}$. For each $e_i \in F$ let $P_i$ be a $u_i-v_i$ path of length at most $2r$ in $G-F$, provided such a path exists, and let $P_i$ be the empty graph otherwise. Let $S\subset G$ be the graph consisting of $V(F)$ and $\bigcup_{i=1}^k P_i$.
+\paragraph{}
+Hence we claim $S$ consists of a disjoint union of path components $P_i$ for $i \in \{1,\dots, k\}$ as well as disjoint vertex components $u_j$, $v_j$ where there is no $u_j-v_j$ path of length at most $2r$ in $G-F$. To see this, suppose $P_i$ and $P_j$ intersect at a vertex $x$ for $i\neq j$. Without loss of generality say $d(u_i,x) \leq d(v_i,x)$ and $d(u_j, x) \leq d(v_j, x)$. Then $d(u_i, x) \leq r$ and $d(u_j,x) \leq r$. So we have
+$$d(u,i,u,j) \leq r + r = 2r < d$$
+a contradiction. The argument follows similarly if a disjoint vertex component intersects a path component.
+\paragraph{}
+Now we claim that $S$ has at least two components. By our previous argument it suffices to show $|F| \geq 2$. Indeed by Theorem \ref{th:g-e-choosable} if $|F| \leq 1$ then $G$ is $5$-list-colorable, a contradiction.
+\paragraph{}
+Now we claim $G$ is $S$-critical. Let $H$ be a proper subgraph of $G$ containing $S$. By minimality of $G$, since $H-F$ is planar, and the distances between vertices in $H$ is at least their distance in $G$, $H$ is $5$-list-colorable. Let $\phi$ be a $5$-list-coloring of $H$. If $\phi$ extends to $G$ then $G$ is $5$-list-colorable, a contradiction. Hence $\phi$ does not extend. Thus $G$ is $S$-critical.
+\paragraph{}
+In order to apply Theorem \ref{th:closeness} with $G-F$ and $S$ it remains to verify $G-F$ is connected. Suppose $G-F$ is disconnected. Then there exist  $u_i,v_i \in F$ such that $u_i$ and $v_i$ lie in distinct components of $G-F$. Re-embed on the plane, if necessary, the components of $G-F$ containing $u_i$ and $v_i$ so $u_i$ and $v_i$ lie incident to the outer face. Then join $u_i$ and $v_i$ by their edge $e_i$ drawn as a curve in the outer face. Hence $G - (F\backslash \{e_i\})$ is planar. But then $(G, F\backslash\{e_i\})$ is a smaller counterexample than $(G,F)$ contradicting minimality.
+\paragraph{}
+By Theorem \ref{th:closeness} there exist distinct components $S_1$ and $S_2$ such that there is in $G-F$ is
+$$d(S_1,S_2) \leq r(|V(S_1)| + |V(S_2)|).$$
+First consider the case that $S_1 = u_i$ and $S_2=v_j$ are single vertex components. Then we have
+$$d(u,v) \leq r(1+1) = 2r.$$
+So if $i=j$ this contradicts that $u$ and $v$ are not joined by a path in $S$, and if $i\neq j$ this contradicts that
+$$d(e_i,e_j) \geq d > 2r.$$
+Now consider the case that $S_1 =P_i$ and $S_2 = P_j$ are path components. Then there exist $x_i$ on $P_i$ and $x_j$ on $P_j$ such that
+$$d(x_i, x_j) \leq r(|V(S_1)| + |V(S_2)|) \leq r(2r + 2r) = 4r^2.$$
+Without loss of generality say $d(u_i,x_i) \leq d(v_i,x_i)$ and $d(u_j, x_i) \leq d(v_j, x_i)$. Then $d(u_i, x_i) \leq r$ and $d(u_j,x_i) \leq r$. So we have
+$$d(u_i,u_j) \leq r + 4r^2 + r = 4r^2 + 2r < d$$
+contradicting that $d(e_i,e_j) \geq d.$ The argument where $S_1$ is a path component and $S_2$ is a vertex component follows similarly.
+\paragraph{}
+Therefore in any case we obtain a contradiction, as desired.
+\end{proof}
 \end{document}
