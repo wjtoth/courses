@@ -171,7 +171,7 @@ We will prove the following theorem
 \begin{proof}
 Choose $d = 4r^2+2r+1$ where $r$ is as in Theorem \ref{th:closeness}.
 \paragraph{}
-Suppose the theorem is false. Let $(G,F)$ be a minimal counterexample with respect to $|V(G)| + |E(G)| + |F|$.
+Suppose the theorem is false. Let $(G,F,L)$ be a minimal counterexample with respect to $|V(G)| + |E(G)| + |F|$. Here $L$ denotes a $5$-list-assignment.
 \paragraph{}
 Label the elements of $F$ as $\{e_1=u_1v_1, \dots, e_k = u_kv_k\}$. For each $e_i \in F$ let $P_i$ be a $u_i-v_i$ path of length at most $2r$ in $G-F$, provided such a path exists, and let $P_i$ be the empty graph otherwise. Let $S\subset G$ be the graph consisting of $V(F)$ and $\bigcup_{i=1}^k P_i$.
 \paragraph{}
@@ -219,5 +219,23 @@ We will prove the following lemma, under the assumption that a minimum counterex
 	Suppose not. Let $(G,S,L)$ be a minimum counterexample, minimizing $v(G|S)$. We may assume $G$ has a vertex $v$ in $V(G)\backslash V(S)$ with at least three neighbours in $S$.
 	\paragraph{}
 	 
+\end{proof}
+
+\section{}
+\paragraph{}
+We may use the following theorem.
+\begin{theorem}\label{th:four}
+	There exists $\delta_0 >0$ such that for every $\delta \in (0,\delta_0]$, there exists $\epsilon \in (0,\delta)$ such that if $G$ is a $4$-critical graph then
+	$$e(G) \geq \frac{(5+\epsilon)v(G) - 2 - \delta T(G)}{3},$$
+	where $T(G)$ is the maximum number of vertex disjoint $\leq 4$-cycles in $G$.
+\end{theorem}
+We will probve the following theorem.
+\begin{theorem}
+	There exists $c>0$ such that the following holds:
+	
+	Let $G$ be a planar graph having girth at least five and let $S$ be a subgraph of $G$. If $G$ is $S$-critical for $3$-coloring then $|V(G)| \leq c|V(S)|$.
+\end{theorem}
+\begin{proof}
+	
 \end{proof}
 \end{document}
