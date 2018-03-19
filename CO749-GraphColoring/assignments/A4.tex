@@ -61,6 +61,8 @@
 
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}%
 \DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+\DeclareMathOperator{\defi}{def}
 %END MACROS
 %Page style
 \pagestyle{fancy}
@@ -196,5 +198,26 @@ $$d(u_i,u_j) \leq r + 4r^2 + r = 4r^2 + 2r < d$$
 contradicting that $d(e_i,e_j) \geq d.$ The argument where $S_1$ is a path component and $S_2$ is a vertex component follows similarly.
 \paragraph{}
 Therefore in any case we obtain a contradiction, as desired.
+\end{proof}
+
+\section{}
+We may use the following theorem.
+\begin{theorem}\label{th:def}
+	There exists $c>0$ such that the following holds:
+	
+	Let $G$ be a plane graph, let $S$ be a connected subgraph of $G$, and let $L$ be a $5$-list-assignment for $G$. If $G$ is $S$-critical with respect to $L$ then
+	$$v(G|S) \leq c(\defi(G|S) - 1),$$
+	where $\defi(G|S) = e(G|S) - 3v(G|S).$
+\end{theorem}
+We will prove the following lemma, under the assumption that a minimum counterexample $G$ has a vertex in $V(G)\backslash V(S)$ with at least three neighbours in $S$.
+\begin{lemma}
+	Let $G$ be a plane graph with connected subgraph $S$ and let $L$ be a $5$-list-assignment for $G$. If $\phi$ is an $L$-coloring of $S$ that extends to an $L$-coloring of $G$ then
+	$$\log_2 E(\phi) \geq (v(G|S) - (c+1)\defi(G|S))/9,$$
+	where $E(\phi)$ is the number of extensions of $\phi$ to $G$ and $c$ is the constant of Theorem \ref{th:def}.
+\end{lemma}
+\begin{proof}
+	Suppose not. Let $(G,S,L)$ be a minimum counterexample, minimizing $v(G|S)$. We may assume $G$ has a vertex $v$ in $V(G)\backslash V(S)$ with at least three neighbours in $S$.
+	\paragraph{}
+	 
 \end{proof}
 \end{document}
