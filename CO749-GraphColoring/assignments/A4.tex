@@ -227,9 +227,50 @@ We will prove the following lemma, under the assumption that a minimum counterex
 	\end{align*}
 	Since $\phi$ has at least one extension to $G$ if $|N(v) \cap V(S)| \geq 4$ and $\log_2(1) = 0$, and $\phi$ has at least two extensions to $G$ if $|N(v) \cap V(S)| = 3$ (as at least two colors in $v$'s list are not used at neighbours) and $\log_2(2) = 1 > \frac{1}{9}$, the desired bound holds.
 	\paragraph{}
-	Therefore we may assume that $v(G|S) \geq 2$. Consider the case that $|N(v) \cap V(S)| \geq 4$. Let $\phi'$ be the extension of $\phi$ to $G$, restricted to $H$. Then $\phi'$ is an $L$-coloring of $H$ which extends to $G$. By minimality, 
+	Therefore we may assume that $v(G|S) \geq 2$. Consider the case that $|N(v) \cap V(S)| \geq 4$. Let $\phi'$ be an extension of $\phi$ to $G$, restricted to $H$. Then $\phi'$ is an $L$-coloring of $H$ which extends to $G$. By minimality, 
 	$$\log_2 E(\phi') \geq \frac{v(G|H) - (c+1)\defi(G|H)}{9}$$
-	Now $v(G|H) = v(G|S) - 1$.
+	Now $v(G|H) = v(G|S) - 1$. So we see that
+	\begin{align*}
+	\frac{v(G|H) - (c+1)\defi(G|H)}{9} &= \frac{v(G|S) - 1 -(c+1)\defi(G|S) +(c+1)|N(v)\cap V(S)| - 3(c+1)}{9} \\
+	&\geq \frac{v(G|S) - 1 -(c+1)\defi(G|S) +(c+1)4 - 3(c+1)}{9}\\
+	&\geq \frac{v(G|S) -(c+1)\defi(G|S)}{9}.
+	\end{align*}
+	Hence since $E(\phi) \geq E(\phi')$ this yields the desired bound.
+	\paragraph{}
+	Thus we may assume that $|N(v) \cap V(S)| = 3$. Yet again we distinguish cases. First suppose there exists $\phi_1$ and $\phi_2$ distinct $L$-colorings of $H$, extended from $\phi$, which extend to $G$. Without loss of generality suppose $E(\phi_1) \leq E(\phi_2)$. Then, using minimality,
+	\begin{align*}
+	\log_2E(\phi) &\geq \log_2(E(\phi_1) + E(\phi_2)) \\
+	&\geq \log_2(2E(\phi_1))\\
+	&= 1 + \log_2(E(\phi_1))\\
+	&\geq 1+ \frac{v(G|H) - (c+1)\defi(G|H)}{9}\\
+	&= 1 + \frac{v(G|S) - 1 -(c+1)\defi(G|S) +(c+1)|N(v)\cap V(S)| - 3(c+1)}{9}\\
+	&= 1 + \frac{v(G|S) -(c+1)\defi(G|S)}{9} + \frac{-1}{9} \\
+	&\geq \frac{v(G|S) -(c+1)\defi(G|S)}{9}.
+	\end{align*}
+	Thus yielding the desired bound.
+	\paragraph{}
+	Therefore, finally, we suppose without loss of generality $\phi_1$ and $\phi_2$ are distinct $L$-colorings of $H$ and $\phi_1$ extends to $G$, but $\phi_2$ does not. This is last case to consider as at least one $L$-coloring of $H$ must extend to $G$ as $\phi$ does.
+	\paragraph{}
+	Let $G' \subseteq G$ be a subgraph of $G$ that is $H$-critical with respect to $\phi_2$. Such $G'$ exists since $\phi_2$ does not extend to $G$. By Theorem \ref{th:def} $$v(G'|H) \leq c(\defi(G'|H) -1).$$
+	Let $\phi'$ now denote the restriction of an extension of $\phi$ to $G$ to $G'$. That is, $\phi'$ is an $L$-coloring of $G'$ that extends to $G$. So by minimality
+	$$\log_2(E(\phi')) \geq \frac{v(G|G') - (c+1)\defi(G|G')}{9}.$$
+	It is easy to see that $v(\cdot)$ and $\defi(\cdot)$ satisfy the ``chain rule", that is
+	$$\defi(G|H) = \defi(G|G') + \defi(G'|H)$$
+	and
+	$$v(G|S) - 1 = v(G|H) = v(G|G') + v(G'|H).$$
+	We make one final observation before the final bound
+	$$\defi(G|H) = \defi(G|S) |N(v)\cap V(S)| -3 = \defi(G|S) $$
+	Now we see that
+	\begin{align*}
+	\log_2E(\phi) &\geq \log_2E(\phi')\\
+	&\geq \frac{v(G|G') - (c+1)\defi(G|G')}{9} \\
+	&= \frac{v(G|S) -1 -v(G'|H) -(c+1)\defi(G|H) + (c+1)\defi(G'|H)}{9}\\
+	&=\frac{v(G|S) -1 -v(G'|H) -(c+1)\defi(G|S) + (c+1)\defi(G'|H)}{9}\\
+	&\geq \frac{v(G|S) -(c+1)\defi(G|S) +\defi(G'|H) + c - 1}{9} \\
+	&\geq \frac{v(G|S) -(c+1)\defi(G|S) +v(G'|H)/c + 1 + c - 1}{9}\\
+	&\geq \frac{v(G|S) -(c+1)\defi(G|S)}{9},
+	\end{align*}
+	as desired.
 \end{proof}
 
 \section{}
