@@ -216,9 +216,20 @@ We will prove the following lemma, under the assumption that a minimum counterex
 	where $E(\phi)$ is the number of extensions of $\phi$ to $G$ and $c$ is the constant of Theorem \ref{th:def}.
 \end{lemma}
 \begin{proof}
-	Suppose not. Let $(G,S,L)$ be a minimum counterexample, minimizing $v(G|S)$. We may assume $G$ has a vertex $v$ in $V(G)\backslash V(S)$ with at least three neighbours in $S$.
+	Suppose not. Let $(G,S,L, \phi)$ be a minimum counterexample, minimizing $v(G|S)$. We may assume $G$ has a vertex $v$ in $V(G)\backslash V(S)$ with at least three neighbours in $S$. Let $H = S+v$. 
 	\paragraph{}
-	 
+	We first consider the case that $v(G|S) = 1$, i.e. $G = S + v$.
+	\begin{align*}
+	\frac{v(G|S) - (c+1)\defi(G|S)}{9} &= \frac{1 - (c+1)e(G|S) +3(c+1)}{9} \\
+	&\begin{cases}
+		=\frac{1}{9}, &\text{if $|N(v)\cap v(S)| = 3$}  \\
+		\leq\frac{1-(c+1)}{9} <0, &\text{if $|N(v) \cap V(S)| \geq 4$}	\end{cases}
+	\end{align*}
+	Since $\phi$ has at least one extension to $G$ if $|N(v) \cap V(S)| \geq 4$ and $\log_2(1) = 0$, and $\phi$ has at least two extensions to $G$ if $|N(v) \cap V(S)| = 3$ (as at least two colors in $v$'s list are not used at neighbours) and $\log_2(2) = 1 > \frac{1}{9}$, the desired bound holds.
+	\paragraph{}
+	Therefore we may assume that $v(G|S) \geq 2$. Consider the case that $|N(v) \cap V(S)| \geq 4$. Let $\phi'$ be the extension of $\phi$ to $G$, restricted to $H$. Then $\phi'$ is an $L$-coloring of $H$ which extends to $G$. By minimality, 
+	$$\log_2 E(\phi') \geq \frac{v(G|H) - (c+1)\defi(G|H)}{9}$$
+	Now $v(G|H) = v(G|S) - 1$.
 \end{proof}
 
 \section{}
