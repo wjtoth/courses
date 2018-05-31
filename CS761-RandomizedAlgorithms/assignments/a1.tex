@@ -96,6 +96,12 @@ $$(1-\frac{2(k-1)}{n})(1-\frac{2(k-1)}{n-1})(1-\frac{2(k-1)}{n-2})\dots(1-\frac{
 as desired.
 \end{proof}
 \paragraph{}
-Using this lemma, we observe that if we repeat Karger's algorithm $t$ times, and take the best cut we find, then our failure probability is at most TODO gonna get $O(n^{2k})$ not $O(n^k)$.
+Using this lemma, we observe that if we repeat Karger's algorithm $t$ times, and take the best cut we find, then our failure probability is at most 
 $$\big(1 -  \frac{2(k-1)}{n(n-1)\dots(n-2(k-1)+1)}\big)^t \leq e^\frac{-2(k-1)t}{n(n-1)\dots(n-2(k-1)+1)}.$$
+So we can achieve a fixed failure probability of at most $\epsilon \in (0,1)$ if we take 
+$$t = \ceil{\frac{\ln(\epsilon)}{-2(k-1)}}n(n-1)\dots(n-2(k-1)+1) \leq n^{ck}\cdot n^{2(k-1)+1} \leq n^{O(k)}$$
+for some fixed constant $c$ depending on $\epsilon$.
+
+\newpage
+\section{}
 \end{document}
