@@ -104,4 +104,47 @@ for some fixed constant $c$ depending on $\epsilon$.
 
 \newpage
 \section{}
+\paragraph{}
+Let $i > m$. Let $H(i)$ be the event that you hire candidate $i$. Let $B(i)$ be the event that candidate $i$ is the best candidate. Then $E_i = H(i) \cap B(i)$. So using Bayes formula we see that
+$$Pr(E_i) = Pr(H(i) \mid B(i)) \cdot Pr(B(i)).$$
+Now since the candidates are distributed uniformly at random $Pr(B(i)) = \frac{1}{n}$.
+\begin{lemma}
+Let $F(i)$ be the event that the best candidate among the first $i$ candidates appears in the first $m$ candidates. Then
+$$Pr(H(i) \mid B(i)) = Pr(F(i-1)).$$
+\end{lemma}
+\begin{proof}
+\paragraph{}
+Given that $i$ is the best candidate, we hire $i$ if and only if we reject the first $i-1$ candidates. If we reject the first $i-1$ candidates then the best candidate among the first $i-1$ appears in the first $m-1$ candidates. Otherwise, it would not be rejected when it appears, as it is better than all previously seen candidates. On the other hand if the best candidates among the first $i-1$ appears in the first $m$ candidates, then we will reject the first $i-1$ candidates as none of them are better than a candidate which appears in the first $m$. Thus $H(i)$ happens given $B(i)$ if and only if $F(i-1)$ happens, i.e. the claim holds.
+\end{proof}
+\paragraph{}
+Using this lemma we have
+$$Pr(H(i) \mid B(i)) = Pr(F(i-1)) = \frac{m}{i-1}$$
+since there are $m$ chances among $i-1$ that the best candidate among the first $i-1$ appears in the first $m$.
+Therefore $Pr(E_i) = \frac{m}{n(i-1)}$.
+\paragraph{}
+Now the event $E$ is the disjoint union of events $E_1, \dots, E_n$. So we observe 
+$$Pr(E) = Pr(\bigcup_{i} E_i) = \sum_{i} Pr(E_i) = \frac{m}{n}\sum_{i=m+1}^n \frac{1}{i-1}$$
+with the last equality following from our previous observations and the fact that $Pr(E_i) = 0$ for $i \leq m$.
+\paragraph{}
+We want to show that $Pr(E)$ can get arbitrarily close to $\frac{1}{e}$ for an appropriate choice of $m$. First we see that
+$$Pr(E) =  \frac{m}{n}\sum_{i=m+1}^n \frac{1}{i-1} = \frac{m}{n}(\sum_{j=1}^{n-1}\frac{1}{j} - \sum_{j=1}^{m-1}\frac{1}{j}) =\frac{m}{n}(H_{n-1} - H_{m-1}).$$
+Using that $\ln(n) \leq H_n \leq \ln(n+1)$ we have
+$$Pr(E) \geq \frac{m}{n}(\ln(n-1) - \ln(m)) = \frac{m}{n}\ln(\frac{n-1}{m}).$$
+If we choose $m = \frac{n-1}{e}$ then
+$$Pr(E) \geq \frac{1}{e}\cdot\frac{n-1}{n}\ln(e) = \frac{1}{e}\cdot\frac{n-1}{n}$$
+and taking the limit as $n$ tends to $\infty$ yields
+$$\lim_{n\rightarrow \infty} Pr(E) \geq \frac{1}{e}.$$
+\newpage
+\section{}
+\paragraph{}
+Let $X$ be a random variable counting the number of cycles in a random permutation. Let $X_i$ be a random variable counting the number of cycles of length $i$ in a permutation. Then $X = \sum_i X_i$. So by linearity of expectation
+$$E[X] = \sum_i E[X_i].$$
+Now let $X_i^j$ be an indicator variable for $j \in {n\choose i}$ forms a length $i$ cycle in the random permutation. Then 
+$$Pr(X^j_i) = \frac{(i-1)!(n-i)!}{n!}$$
+since there are $n!$ permutations, and $(i-1)!(n-i)!$ permutations where $j$ forms a length $i$ cycle. To see this, consider a permutation where $j$ forms a length $i$ cycle. There are $(i-1)!$ ways to arrange the elements of $j$ in a length $i$ cycle, and $(n-i)!$ ways to permute the other elements. Therefore
+$$E[X_i] = \sum_{j \in {n\choose i}}E[X_i^j] = {n\choose i} \frac{(i-1)!(n-i)!}{n!} = \frac{1}{i}.$$
+Then
+$$E[X] = \sum_{i=1}^n E[X_i] = \sum_{i=1}^n \frac{1}{i} = H_n.$$
+\newpage
+\section{}
 \end{document}
