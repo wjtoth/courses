@@ -147,4 +147,17 @@ Then
 $$E[X] = \sum_{i=1}^n E[X_i] = \sum_{i=1}^n \frac{1}{i} = H_n.$$
 \newpage
 \section{}
+\paragraph{}
+We want to apply a Chernoff bound. So we will need to measure our run time in terms of some independent coin flips. If we can bound, for each element $x$ of our array, the depth of recursion before it is assigned a singleton array, then we can bound the runtime. Let $x$ be an element of our input array. Define $\ell_{x,i}$ to be the length of the array $x$ is assigned to at recursion depth $i$ of our quicksort algorithm. Note that our algorithm terminates at recursion depth $i$ if $\ell_{x,i}=1$ for all $x$.
+\paragraph{}
+Let $X_{x,i}$ be an indicator random variable indicating $1$ if $\ell_{x,i+1} \leq \frac{3}{4}\ell_{x,i}$, and taking value $0$ otherwise. Intuitively, $X_{x,i}$ indicates that we make a good split of the array containing $x$ at depth $i$ when quicksort is called on that array segment. Let $S_{x,i}$ be the array containing $x$ at recursion depth $i$. If our algorithm selects any element the interval $[\frac{\ell_{x,i}}{4}, \frac{3\ell_{x,i}}{4}]$ from the sorted version $S_{x,i}$ then $\ell_{x,i+1} \leq \frac{3}{4}\ell_{x,i}$. That means choosing one of at least $\frac{1}{2}$ the elements of $S$ as the pivot will yield to a good split, i.e.
+$$Pr(X_{x,i}) \geq \frac{1}{2}.$$
+So we can think of $X_{x,i}$ as a fair coin flip. Further each $X_{x,i+1}$ is independent of $X_{x,i}$ for all $i$.
+\paragraph{}
+Let $X_{x} = \sum_{i=1}^{k} X_{x,i}$ where $k=100\ln(n)$. Then if $X_{x} \geq d$ the length of the array containing $x$ at recursion depth $k$ is at most $\frac{3}{4}^d n$. If we want this to be a singleton then we need $$d = \frac{\ln(n)}{\ln{4/3}} \leq 4\ln(n) < 50\ln(n) = \frac{k}{2}$$
+So now observing $E[X_{x}] =\frac{k}{2}$ we apply a Chernoff bound (for the lower tail, with $\mu = \frac{k}{2}$ and $\delta = \frac{1}{2}$)
+$$Pr(X_{x} \leq \frac{1}{2}\frac{k}{2}) \leq e^{-\frac{k}{2}\frac{1}{8}} \leq e^{\frac{-50\ln(n)}{8}} \leq \frac{1}{n^6}$$
+Applying the union bound we see that
+$$Pr(\bigcup_x(X_{x} \leq \frac{1}{2}\frac{k}{2})) \leq \sum_{x} Pr(X_{x} \leq \frac{1}{2}\frac{k}{2})  \leq \frac{1}{n^5}.$$
+Therefore with inverse polynomial probability, there is some element that is not in a singleton array after recursion depth of $100 \ln(n)$. Since each level of the recursion takes $n$ time, we see that with high probability the quicksort algorithm terminates in $100n\ln(n)$ time.
 \end{document}
