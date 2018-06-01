@@ -160,4 +160,30 @@ $$Pr(X_{x} \leq \frac{1}{2}\frac{k}{2}) \leq e^{-\frac{k}{2}\frac{1}{8}} \leq e^
 Applying the union bound we see that
 $$Pr(\bigcup_x(X_{x} \leq \frac{1}{2}\frac{k}{2})) \leq \sum_{x} Pr(X_{x} \leq \frac{1}{2}\frac{k}{2})  \leq \frac{1}{n^5}.$$
 Therefore with inverse polynomial probability, there is some element that is not in a singleton array after recursion depth of $100 \ln(n)$. Since each level of the recursion takes $n$ time, we see that with high probability the quicksort algorithm terminates in $100n\ln(n)$ time.
+
+\newpage
+\section{}
+\subsection{a}
+\paragraph{}
+\begin{align*}
+M_{X^2}(t) &= E[e^{tX^2}] \\
+&= \int_{-\infty}^\infty e^{tx^2}f(x)dx \\
+&=\int_{-\infty}^\infty \frac{1}{\sqrt{2\pi}}e^{tx^2-\frac{1}{2}x^2}dx \\
+&= \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi}}e^{\frac{-1}{2}(1-2t)x^2}dx \\
+&= \frac{1}{\sqrt{1-2t}}\int_{-\infty}^\infty \frac{1}{\sqrt{2\pi}}e^{z^2}dz &\text{Taking $z=\sqrt{1-2t}x$} \\
+&= \frac{1}{\sqrt{1-2t}} &\text{Using $\int_{-\infty}^\infty f(x)dx = 1$}.
+\end{align*}
+\subsection{b}
+\paragraph{}
+Using Taylor expansion we have
+\begin{align*}
+E[X^4] = M_{X^2}^{(2)}(0).
+\end{align*}
+Now observe that
+$$M_{X^2}^{(2)}(t) = \frac{3}{(1-2t)^{5/2}}$$
+and so
+$$M_{X^2}^{(2)}(0) = 3.$$
+Therefore $E[X^4] = 3$.
+\subsection{c}
+
 \end{document}
