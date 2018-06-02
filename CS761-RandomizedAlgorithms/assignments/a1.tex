@@ -186,5 +186,16 @@ $$M_{X^2}^{(2)}(0) = 3.$$
 Therefore $E[X^4] = 3$.
 \subsection{c}
 \paragraph{}
-TODO Applying Hoeffding extension seems to work.
+We have the following
+\begin{align*}
+Pr(Y > 1+\epsilon) &= Pr(\sum_{i=1}^kX_i^2 > k(1+\epsilon))\\
+&=Pr(e^{t\sum_{i=1}X_i^2} > e^{tk(1+\epsilon)})\\
+&\leq \frac{E[e^{t\sum_{i=1}X_i^2}]}{e^{tk(1+\epsilon)}} \\
+&= \frac{\Pi_{i=1}^kE[e^{t\sum_{i=1}^kX_i^2}]}{e^{tk(1+\epsilon)}} &\text{by independence}\\
+&=M_{X^2}(t)^ke^{-tk(1+\epsilon)}\\
+&=\sqrt{1-2t}^{-k}e^{-tk(1+\epsilon)} \\
+&= (1-2t)^{-k/2}e^{-tk(1+\epsilon)}\\
+&= \frac{1}{1-2t}^{k/2}e^{-tk(1+\epsilon)}
+\end{align*}
+
 \end{document}
