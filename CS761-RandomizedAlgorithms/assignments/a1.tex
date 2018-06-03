@@ -15,8 +15,8 @@
 \newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
 \newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
- 
- 
+
+
 \newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
 \newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
 \newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
@@ -75,25 +75,25 @@
 \paragraph{}
 We modify Karger's algorithm as follows:
 \begin{enumerate}
-\item While there are more than $\bf{k}$ vertices in the graph
+	\item While there are more than $\bf{k}$ vertices in the graph
 	\begin{itemize}
 		\item Pick an edge uniformly at random and contract the two endpoints.
 	\end{itemize}
-\item Output the edges between the remaining $k$ vertices.
+	\item Output the edges between the remaining $k$ vertices.
 \end{enumerate}
 \begin{lemma}
-Let $G=(V,E)$ be a graph. The probability that the algorithm outputs a minimum $k$-way cut in $G$ is at least $$\frac{2(k-1)}{n(n-1)\dots(n-2(k-1)+1)}$$ where $n = |V|$.
+	Let $G=(V,E)$ be a graph. The probability that the algorithm outputs a minimum $k$-way cut in $G$ is at least $$\frac{2(k-1)}{n(n-1)\dots(n-2(k-1)+1)}$$ where $n = |V|$.
 \end{lemma}
 \begin{proof}
-Let $F\subseteq E$ be a minimum $k$-way cut in $G$. Let $G^i=(V^i,E^i)$ be the contracted graph at iteration $i$ of Karger's algorithm. By our stopping condition $|V^i| \geq k$. Since a cut in the contracted graph at each iteration is a cut in the original graph, the minimum $k$-way cut value of $G^i$ is at least $|F|$.
-\paragraph{}
-Let $S\subseteq V^i$ such that $|S|=k-1$. Then $\sum_{v \in S} |\delta(v)| \geq |F|$, for otherwise we have a cut $\bigcup_{v\in S} \delta(v)$ of size smaller than $F$ in $G^i$. Thus by partitioning the vertices of $G^i$ into sets of size $k-1$ we see that
-$$|E^i| \geq \floor{\frac{(n-i+1)|F|}{2(k-1)}}.$$
-Hence the probably that we pick an edge to contract in iteration $i$ from $F$ is at most
-$$ \frac{|F|}{\frac{(n-i+1)|F|}{2(k-1)}} \leq \frac{2(k-1)}{n-i+1}.$$
-Therefore the probability that $F$ survives until the end of the algorithm is at least
-$$(1-\frac{2(k-1)}{n})(1-\frac{2(k-1)}{n-1})(1-\frac{2(k-1)}{n-2})\dots(1-\frac{2(k-1)}{k+1}) = \frac{2(k-1)}{n(n-1)\dots(n-2(k-1)+1)}$$
-as desired.
+	Let $F\subseteq E$ be a minimum $k$-way cut in $G$. Let $G^i=(V^i,E^i)$ be the contracted graph at iteration $i$ of Karger's algorithm. By our stopping condition $|V^i| \geq k$. Since a cut in the contracted graph at each iteration is a cut in the original graph, the minimum $k$-way cut value of $G^i$ is at least $|F|$.
+	\paragraph{}
+	Let $S\subseteq V^i$ such that $|S|=k-1$. Then $\sum_{v \in S} |\delta(v)| \geq |F|$, for otherwise we have a cut $\bigcup_{v\in S} \delta(v)$ of size smaller than $F$ in $G^i$. Thus by partitioning the vertices of $G^i$ into sets of size $k-1$ we see that
+	$$|E^i| \geq \floor{\frac{(n-i+1)|F|}{2(k-1)}}.$$
+	Hence the probably that we pick an edge to contract in iteration $i$ from $F$ is at most
+	$$ \frac{|F|}{\frac{(n-i+1)|F|}{2(k-1)}} \leq \frac{2(k-1)}{n-i+1}.$$
+	Therefore the probability that $F$ survives until the end of the algorithm is at least
+	$$(1-\frac{2(k-1)}{n})(1-\frac{2(k-1)}{n-1})(1-\frac{2(k-1)}{n-2})\dots(1-\frac{2(k-1)}{k+1}) = \frac{2(k-1)}{n(n-1)\dots(n-2(k-1)+1)}$$
+	as desired.
 \end{proof}
 \paragraph{}
 Using this lemma, we observe that if we repeat Karger's algorithm $t$ times, and take the best cut we find, then our failure probability is at most 
@@ -109,12 +109,12 @@ Let $i > m$. Let $H(i)$ be the event that you hire candidate $i$. Let $B(i)$ be 
 $$Pr(E_i) = Pr(H(i) \mid B(i)) \cdot Pr(B(i)).$$
 Now since the candidates are distributed uniformly at random $Pr(B(i)) = \frac{1}{n}$.
 \begin{lemma}
-Let $F(i)$ be the event that the best candidate among the first $i$ candidates appears in the first $m$ candidates. Then
-$$Pr(H(i) \mid B(i)) = Pr(F(i-1)).$$
+	Let $F(i)$ be the event that the best candidate among the first $i$ candidates appears in the first $m$ candidates. Then
+	$$Pr(H(i) \mid B(i)) = Pr(F(i-1)).$$
 \end{lemma}
 \begin{proof}
-\paragraph{}
-Given that $i$ is the best candidate, we hire $i$ if and only if we reject the first $i-1$ candidates. If we reject the first $i-1$ candidates then the best candidate among the first $i-1$ appears in the first $m-1$ candidates. Otherwise, it would not be rejected when it appears, as it is better than all previously seen candidates. On the other hand if the best candidates among the first $i-1$ appears in the first $m$ candidates, then we will reject the first $i-1$ candidates as none of them are better than a candidate which appears in the first $m$. Thus $H(i)$ happens given $B(i)$ if and only if $F(i-1)$ happens, i.e. the claim holds.
+	\paragraph{}
+	Given that $i$ is the best candidate, we hire $i$ if and only if we reject the first $i-1$ candidates. If we reject the first $i-1$ candidates then the best candidate among the first $i-1$ appears in the first $m-1$ candidates. Otherwise, it would not be rejected when it appears, as it is better than all previously seen candidates. On the other hand if the best candidates among the first $i-1$ appears in the first $m$ candidates, then we will reject the first $i-1$ candidates as none of them are better than a candidate which appears in the first $m$. Thus $H(i)$ happens given $B(i)$ if and only if $F(i-1)$ happens, i.e. the claim holds.
 \end{proof}
 \paragraph{}
 Using this lemma we have
@@ -186,16 +186,47 @@ $$M_{X^2}^{(2)}(0) = 3.$$
 Therefore $E[X^4] = 3$.
 \subsection{c}
 \paragraph{}
-We have the following
+Let $t$ be a value to be chosen later. We have the following
 \begin{align*}
-Pr(Y > 1+\epsilon) &= Pr(\sum_{i=1}^kX_i^2 > k(1+\epsilon))\\
-&=Pr(e^{t\sum_{i=1}X_i^2} > e^{tk(1+\epsilon)})\\
-&\leq \frac{E[e^{t\sum_{i=1}X_i^2}]}{e^{tk(1+\epsilon)}} \\
-&= \frac{\Pi_{i=1}^kE[e^{t\sum_{i=1}^kX_i^2}]}{e^{tk(1+\epsilon)}} &\text{by independence}\\
-&=M_{X^2}(t)^ke^{-tk(1+\epsilon)}\\
-&=\sqrt{1-2t}^{-k}e^{-tk(1+\epsilon)} \\
-&= (1-2t)^{-k/2}e^{-tk(1+\epsilon)}\\
-&= \frac{1}{1-2t}^{k/2}e^{-tk(1+\epsilon)}
+Pr(Y > 1+\epsilon) &= Pr(e^{tY}> e^{t(1+\epsilon)} \\
+&\leq E[e^{tY}]\cdot e^{-t(1+\epsilon)}  &\text{Using Markov's inequality} \\
+&= (\Pi_{i=1}^k E[e^{\frac{t}{k}X_i^2}])e^{-t(1+\epsilon)} &\text{Using independence of $X_i^2$'s} \\
+&=(\frac{1}{1-\frac{2}{k}t})^{\frac{k}{2}}e^{-t(1+\epsilon)} &\text{by $5a$}.
+\end{align*}
+Taking $t=\frac{k}{2}\frac{\epsilon}{1+\epsilon}$ we have
+\begin{align*}
+Pr(Y>1+\epsilon) &\leq (1 - \frac{\epsilon}{1+\epsilon})^\frac{-k}{2}e^{\frac{-k}{2}\epsilon}\\
+&=e^{-\frac{k}{2}(\ln(1-\frac{\epsilon}{1+\epsilon}) + \epsilon)}
 \end{align*}
 
+\newpage
+\section{}
+\paragraph{}
+We apply the following theorem from Lecture $4$ (here $H$ is the graph obtain by the uniform sampling algorithm):
+\begin{theorem}
+	Set $p=\frac{9\ln n}{\epsilon^2 c}$ where $c$ is the min-cut value of $G$. Then $H$ is a $(1\pm \epsilon)$-cut-approximator of $G$ with $O(p\cdot |E(G)|)$ edges with probability $1-\frac{4}{n}$.
+\end{theorem}
+We suppose that $G$ is a complete graph where each edge has the same weight, say $w$. In $G$ the value of a cut $\delta(S)$ is
+$$w|\delta(S)| = w|S|(n-|S|)$$
+and this function is minimized when $|S| = 1$, i.e. $S$ is a singleton. Therefore the minimum value of a cut in $G$ is $c = w(n-1)$. Therefore applying the above theorem we have
+$$|E(H)| \leq O(p|E(G)|) = O(\frac{9\ln n}{\epsilon^2 w (n-1)}n(n-1)) \leq O(\frac{n\ln n}{\epsilon^2})$$
+as desired.
+\paragraph{Part 2}
+Now we consider an unweighted complete graph $G$. Suppose for a contradiction the uniform sampling algorithm can obtain a  $(1\pm \epsilon)$-cut-approximator $H$ of $G$ with $o(n\ln n)$ edges. To achieve this our sampling probability $p$ can be at most $\frac{\ln n}{c n}$ for some constant $c>1$. Heuristically, lets take
+$$p= \frac{\ln n}{100 n}.$$
+Now let $v \in V(G)$. Then the probability that the degree of $v$ in $H$ is $0$ is
+$$Pr(d_H(v) = 0) = (1- \frac{\ln n}{100n})^{n-1}$$
+since the the degree of $v$ is $0$ in $H$ if and only if every one of the $n-1$ edges incident with $v$ is not sampled by the algorithm. So now we bound the probability that this does not happen at any vertex of the graph. Heuristically we treat the events $d_H(v) = 0$ over $v \in V$ as independent events. Then
+\begin{align*}
+Pr(d_H(v) \geq 1, \forall v \in V) &= \Pi_{v\in V} (1-Pr(d_H(v) = 0)) \\
+&=(1-(1- \frac{\ln n}{100n})^{n-1})^n \\
+&\leq e^{-n(1- \frac{\ln n}{100n})^{n-1}} &\text{using $1+x \leq e^x$} \\
+\end{align*} 
+So with extremely low probability $d_H(v) \geq 1$, for all $v \in V$. Hence, with high probability there exists $v \in V$ with $d_H(v) = 0$. Therefore for the cut $\delta(v)$, 
+$$w(\delta_H(v)) = 0$$
+while 
+$$(1\pm \epsilon)\delta_G(v) = (1\pm \epsilon)(n-1)$$
+so when $0 <\epsilon < 1$ and $n\geq 2$, $H$ utterly fails to be a $(1\pm \epsilon)$-cut-approximator of $G$.
+\newpage
+\section{}
 \end{document}
