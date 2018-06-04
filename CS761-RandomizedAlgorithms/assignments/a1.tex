@@ -8,7 +8,7 @@
 \usepackage{theorem}
 \usepackage{tikz}
 \usepackage{tkz-berge}
-
+\usepackage{bbm}
 %Macros
 \newcommand{\A}{\mathbb{A}} \newcommand{\C}{\mathbb{C}}
 \newcommand{\D}{\mathbb{D}} \newcommand{\F}{\mathbb{F}}
@@ -185,11 +185,11 @@ and so
 $$M_{X^2}^{(2)}(0) = 3.$$
 Therefore $E[X^4] = 3$.
 \subsection{c}
-(Collaboration with Sharat, Harry and Logan)
+($\textbf{Collaboration}$ with Sharat, Harry and Logan)
 \paragraph{}
 Let $t$ be a value to be chosen later. We have the following
 \begin{align*}
-Pr(Y > 1+\epsilon) &= Pr(e^{tY}> e^{t(1+\epsilon)} \\
+Pr(Y > 1+\epsilon) &= Pr(e^{tY}> e^{t(1+\epsilon)} )\\
 &\leq E[e^{tY}]\cdot e^{-t(1+\epsilon)}  &\text{Using Markov's inequality} \\
 &= (\Pi_{i=1}^k E[e^{\frac{t}{k}X_i^2}])e^{-t(1+\epsilon)} &\text{Using independence of $X_i^2$'s} \\
 &=(\frac{1}{1-\frac{2}{k}t})^{\frac{k}{2}}e^{-t(1+\epsilon)} &\text{by $5a$}.
@@ -261,20 +261,30 @@ $$Pr(\text{$i$ and $j$ in different regions}) = \sum_{\ell = 1}^t Pr(\text{$r_\e
 as desired.
 \subsection{c}
 \paragraph{}
-We remove all edges incident to $s_i$ when we do not delete all edges on some $s_i-t_j$ path for some $j$. For all edges on some $s_i-t_j$ path to be preserved, necessarily $v_{s_i}$ and $v_{t_j}$ lie in the same region. Since $v_{s_i}$ and $v_{t_j}$ are orthogonal the probability they are not separated by some $r_\ell$ is 
-$$1- \frac{\pi}{2}\frac{1}{\pi} = \frac{1}{2}.$$
-So the probability they not separated by any $r_\ell$ is
+Fix some sink $s_i$. Let $T = \{t_j: (s_i,t_j) \text{ is a source-sink pair}\}$. We remove all edges incident to $s_i$ in the second phase of the algorithm when we do not delete all edges on some $s_i-t_j$ path for some $t_j \in T$. For all edges on some $s_i-t_j$ path to be preserved, necessarily $v_{s_i}$ and $v_{t_j}$ lie in the same region. Since $v_{s_i}$ and $v_{t_j}$ are orthogonal, by the constraints of the vector program, the angle between them is $\frac{\pi}{2}$. Hence the probability they are not separated by some $r_\ell$ is 
+$$1- \frac{\pi}{2}\cdot \frac{1}{\pi} = \frac{1}{2}.$$
+So the probability they not separated by any $r_\ell$ for $\ell \in [t]$ is
 $$(\frac{1}{2})^t.$$
-Now there are at most $\Delta$ sinks $t_j$ incident on $s_i$ and so we have
-$$Pr(\text{delete all edges on $s_i$}) \leq \sum_{j=1}^tPr(\text{$s_i-t_j$ path survives}) \leq \frac{\Delta}{2^t}$$
+Now $|T| \leq \Delta$ and so we have
+$$Pr(\text{delete all edges on $s_i$}) \leq \sum_{t_j \in T}Pr(\text{$s_i-t_j$ path survives}) \leq \sum_{t_j \in T}\frac{1}{2^t} \leq \frac{\Delta}{2^t}$$
 as desired.
 \subsection{d}
 \paragraph{}
-Let $X$ be a random variable counting the number of edges removed. Let $X_{ij}^1$ be an indicator variable indicating that $ij$ is removed in the first phase. Let $X_{s_i}^2$ be an indicator variable indicating that all edges incident to $s_i$ are removed in the second phase.
-Then 
-\begin{align*}
-E[X] &= \sum_{ij \in E} Pr(X^1_{ij}) + \sum_{ij\in E} Pr(X^2_{s_i}) \\
-&= \sum_{ij \in E} t\sqrt{1-v_iv_j} + \sum_{s_i} Pr(X^2_{s_i}) \\
-&=
-\end{align*}
+Let $X$ be a random variable counting the number of edges removed. Let $X_{ij}^1$ be an indicator variable indicating that edge $ij \in E$ is removed in the first phase. Let $X_{s_i}^2$ be an indicator variable indicating that all edges incident to source $s_i$ are removed in the second phase. By linearity of expectation we have
+$$E[X] = \sum_{ij \in E} Pr(X_{ij}^1) + \sum_{i \in [k]}Pr(X_{s_i}^2).$$
+Now by $7c)$, $Pr(X_{s_i}^2) \leq \frac{\Delta}{2^t}$, so
+$$ \sum_{i \in [k]}Pr(X_{s_i}^2) \leq k\frac{\Delta}{2^t} = k\Delta 2^{-\ceil{\log_2(\Delta /\epsilon)}} \leq k\epsilon \leq \epsilon |E|.$$
+Thus
+$$E[X] \leq \sum_{ij \in E} Pr(X_{ij}^1) + \epsilon |E|.$$
+From $7b)$, $Pr(X_{ij}^1) \leq t\sqrt{1-v_i\cdot v_j}$, so we have
+$$\sum_{ij \in E} Pr(X_{ij}^1) \leq t\sum_{ij \in E} \sqrt{1-v_i\cdot v_j}$$
+Let $\mathbbm{1} \in \R^E$ be the vector of all ones. Let $q \in \R^E$ be the vector whose entries are defined by $q_{ij} = \sqrt{1-v_i\cdot v_j}$. Then 
+$$\sum_{ij \in E} Pr(X_{ij}^1) \leq t \langle\mathbbm{1}, q_{ij} \rangle \leq t \sqrt{\langle \mathbbm{1}, \mathbbm{1}\rangle \langle q,q\rangle}$$
+with the last inequality following from Cauchy-Schwarz. Now we see
+$$\sqrt{\langle \mathbbm{1}, \mathbbm{1}\rangle \langle q,q\rangle} = \sqrt{|E|}\sqrt{\sum_{ij \in E} (1-v_i\cdot v_j)} = \sqrt{|E|}\sqrt{\epsilon |E|} = \sqrt{\epsilon}|E|$$
+with the second equality following from the observation that $\sum_{ij \in E}(1-v_i\cdot v_j)$ is the objective function of the vector program. Hence, using the definition of $t$,
+$$\sum_{ij \in E} Pr(X_{ij}^1) \leq t\sqrt{\epsilon}|E| = O(\log_2(\Delta/\epsilon)\sqrt{\epsilon}|E|)$$
+and so
+$$E[X] \leq O(\log_2(\Delta/\epsilon)\sqrt{\epsilon}|E|) + \epsilon |E| = O (\sqrt{\epsilon}|E| + \sqrt{\epsilon}\log(\Delta/\epsilon)|E|)$$
+as desired.
 \end{document}
