@@ -241,4 +241,40 @@ $$(1\pm \epsilon)\delta_G(v) = (1\pm \epsilon)(n-1)$$
 so when $0 <\epsilon < 1$ and $n\geq 2$, $H$ utterly fails to be a $(1\pm \epsilon)$-cut-approximator of $G$.
 \newpage
 \section{}
+\subsection{a}
+\paragraph{}
+Let $F$ be an optimal multicut. Let $e_1 \dots e_n$ be an orthonormal basis of $\R^n$. Let $K_1, \dots, K_c$ be the connected components of $G-F$, with $c\leq n$. For all $i \in [c]$ and $j \in V(K_i)$ assign $v_j = e_i$. Now the norm of each $v_i$ is equal to $1$ and since $s_i$ and $t_i$ are in different components of $G-F$ by feasibility of $F$ we have $v_{s_i}\cdot v_{t_i} = 0$ as we started with an orthonormal basis and assigned $v_{s_i}$ and $v_{t_i}$ different basis vectors. Therefore our solution $\{v_j \in \R^n: j \in V\}$ is feasible for the vector program. 
+\paragraph{}
+Notice $v_i\cdot v_j = 0$ if and only if $i$ and $j$ are in different connect components of $G-F$. Otherwise, i.e. if $i$ and $j$ are in the same $K_\ell$ then $v_i\cdot v_j = 1$. So we have
+$$\sum_{ij\in E} (1-v_i\cdot v_j) = \sum_{ij \in F} 1 = |F|.$$
+Hence the optimal value of the vector program is at most the optimal value of a multicut, and therefore is a relaxation of the minimum multicut problem.
+\subsection{b}
+\paragraph{}
+The vertices $i$ and $j$ of edge $ij$ are in different regions if and only if there exists some $r_\ell$ such that $v_i\cdot r_\ell  \geq 0$ and $ v_j \cdot r_\ell < 0$ or vice versa. For any given $r_\ell$ this occurs, as in the maximum cut problem from our notes, with probability $\frac{\theta}{\pi}$ where $\theta$ is the angle between $v_i$ and $v_j$.
+\paragraph{}
+Using our inequality from the hint we have
+$$\frac{\theta}{\pi} \leq \sqrt{\frac{1-\cos(\theta)}{2}}$$
+Since $v_i$ and $v_j$ are of norm $1$, $\cos(\theta) = v_i\cdot v_j$. Thus
+$$\frac{\theta}{\pi} \leq \sqrt{1-v_i\cdot v_j}.$$
+Now we have
+$$Pr(\text{$i$ and $j$ in different regions}) = \sum_{\ell = 1}^t Pr(\text{$r_\ell$ separates $v_i$, $v_j$}) \leq \sum_{\ell = 1}^t \sqrt{1-v_i\cdot v_j} = t\sqrt{1-v_i\cdot v_j}$$
+as desired.
+\subsection{c}
+\paragraph{}
+We remove all edges incident to $s_i$ when we do not delete all edges on some $s_i-t_j$ path for some $j$. For all edges on some $s_i-t_j$ path to be preserved, necessarily $v_{s_i}$ and $v_{t_j}$ lie in the same region. Since $v_{s_i}$ and $v_{t_j}$ are orthogonal the probability they are not separated by some $r_\ell$ is 
+$$1- \frac{\pi}{2}\frac{1}{\pi} = \frac{1}{2}.$$
+So the probability they not separated by any $r_\ell$ is
+$$(\frac{1}{2})^t.$$
+Now there are at most $\Delta$ sinks $t_j$ incident on $s_i$ and so we have
+$$Pr(\text{delete all edges on $s_i$}) \leq \sum_{j=1}^tPr(\text{$s_i-t_j$ path survives}) \leq \frac{\Delta}{2^t}$$
+as desired.
+\subsection{d}
+\paragraph{}
+Let $X$ be a random variable counting the number of edges removed. Let $X_{ij}^1$ be an indicator variable indicating that $ij$ is removed in the first phase. Let $X_{s_i}^2$ be an indicator variable indicating that all edges incident to $s_i$ are removed in the second phase.
+Then 
+\begin{align*}
+E[X] &= \sum_{ij \in E} Pr(X^1_{ij}) + \sum_{ij\in E} Pr(X^2_{s_i}) \\
+&= \sum_{ij \in E} t\sqrt{1-v_iv_j} + \sum_{s_i} Pr(X^2_{s_i}) \\
+&=
+\end{align*}
 \end{document}
