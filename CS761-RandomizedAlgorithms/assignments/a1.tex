@@ -185,6 +185,7 @@ and so
 $$M_{X^2}^{(2)}(0) = 3.$$
 Therefore $E[X^4] = 3$.
 \subsection{c}
+(Collaboration with Sharat, Harry and Logan)
 \paragraph{}
 Let $t$ be a value to be chosen later. We have the following
 \begin{align*}
@@ -198,7 +199,18 @@ Taking $t=\frac{k}{2}\frac{\epsilon}{1+\epsilon}$ we have
 Pr(Y>1+\epsilon) &\leq (1 - \frac{\epsilon}{1+\epsilon})^\frac{-k}{2}e^{\frac{-k}{2}\epsilon}\\
 &=e^{-\frac{k}{2}(\ln(1-\frac{\epsilon}{1+\epsilon}) + \epsilon)}
 \end{align*}
-
+Therefore it suffices to show $$\ln(1+\epsilon) + \epsilon \geq \frac{\epsilon^2}{4}.$$
+This is equivalent to showing
+$$\epsilon^2 - 4\epsilon +4\ln(1+\epsilon) \leq 0$$
+for $0 \leq \epsilon \leq 1$.
+Let $f(\epsilon) = \epsilon^2 - 4\epsilon +4\ln(1+\epsilon)$. We want to take the derivative, showing $f(\epsilon)$ is decreasing on the interval $[0,1]$.
+We compute
+$$f'(\epsilon) = 2\epsilon - 4 + \frac{4}{1+\epsilon} = \frac{2\epsilon(\epsilon-1)}{1+\epsilon} \leq 0$$
+where the last inequality follows since $\epsilon \leq 1$. So $f'(\epsilon) \leq 0$ on $[0,1]$ and so therefore $f(\epsilon)$ is a continuous decreasing function on $[0,1]$.
+\paragraph{}
+Therefore we can bound $f(\epsilon)$ on $[0,1]$ by $f(1)$. We have
+$$f(1) = 1 - 4 + 4\ln(2) = -3 + 4\ln(2) \leq -3 +2.8 <0$$
+and so $f(\epsilon) \leq 0$ as desired.
 \newpage
 \section{}
 \paragraph{}
