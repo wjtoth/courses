@@ -103,7 +103,12 @@ as desired. $\blacksquare$
 %Problem 2
 \newpage
 \section{}
-
+\paragraph{}
+Suppose we have $n$ items to be hashed into $n$ bins. Let $h$ be a hash function chosen from a $k$-universal family. We $\textit{overload}$ the notation ${n \choose k}$ to mean both the number of ways to choose $k$ elements from $n$, and the set of subsets of $[n]$ of size $k$. Which version we use will always be clear from context. Define a $k$-collision to be the event that $k$ distinct items are hashed to the same bin. For a $\textit{set}$ $S \in {n\choose k}$ let $X_S$ be the random indicator variable which is $1$ when $h(x) = h(y)$ for all $x,y \in S$, and $X_S$ is $0$ otherwise.
+\paragraph{}
+Let $X$ be a random variable counting the number of $k$-collisions when our $n$ items are hased using $h$ chosen from a $k$-universal family. Then $X = \sum_{S \in {n\choose k}} X_S$ and so we have
+$$E[X] = E[\sum_{S \in {n\choose k}} X_S] = \sum_{S \in {n\choose k}} E[X_S] = \sum_{S \in {n \choose k}} Pr(|h(S)| = 1) \leq  \sum_{S \in {n \choose k}} \frac{1}{n^{k-1}}$$
+where the inequality follows since $h$ is a $k$-universal hash function, and $S$ is a set of size $k$.
 %Problem 3
 \newpage
 \section{}
