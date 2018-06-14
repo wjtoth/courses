@@ -108,7 +108,26 @@ Suppose we have $n$ items to be hashed into $n$ bins. Let $h$ be a hash function
 \paragraph{}
 Let $X$ be a random variable counting the number of $k$-collisions when our $n$ items are hased using $h$ chosen from a $k$-universal family. Then $X = \sum_{S \in {n\choose k}} X_S$ and so we have
 $$E[X] = E[\sum_{S \in {n\choose k}} X_S] = \sum_{S \in {n\choose k}} E[X_S] = \sum_{S \in {n \choose k}} Pr(|h(S)| = 1) \leq  \sum_{S \in {n \choose k}} \frac{1}{n^{k-1}}$$
-where the inequality follows since $h$ is a $k$-universal hash function, and $S$ is a set of size $k$.
+where the inequality follows since $h$ is a $k$-universal hash function, and $S$ is a set of size $k$. So then
+$$E[X] \leq {n\choose k} \frac{1}{n^{k-1}}.$$
+Therefore if we let $t = 2n^{1-k}{n\choose k}$ then by Markov's inequality
+$$Pr(X \geq t) \leq Pr(X \geq 2E[X]) \leq \frac{1}{2}.$$
+\paragraph{}
+Now let $Y$ be the maximum number of items hashed into a single bin. Then $X \geq {Y \choose k}$ and so
+$$Pr({Y\choose k}\geq t) \leq Pr(X \geq t) \leq \frac{1}{2}$$
+Which implies that 
+$$Pr(Y \geq (2n)^{\frac{1}{k}}) \leq \frac{1}{2}.$$
+That is, with probability at most $\frac{1}{2}$, the maximum load is larger than $(2n)^{\frac{1}{k}}$. 
+\paragraph{}
+We want to find the smallest $k$ for which 
+$$Pr(Y \leq 3\ln n / \ln \ln n) \geq \frac{1}{2}.$$
+Thus we need to choose the smallest $k$ satisfying
+$$(2n)^{\frac{1}{k}} \leq \frac{3\ln n}{\ln \ln n}.$$
+Rearranging we see that setting 
+$$k \geq \frac{\ln2 + \ln n}{\ln(3) + \ln\ln n - \ln\ln\ln n}$$
+would do the job. Hence the smallest choice of $k$ will be the first integer greater than this value, i.e.
+$$k = \ceil{\frac{\ln2 + \ln n}{\ln(3) + \ln\ln n - \ln\ln\ln n}}.$$
+$\blacksquare$
 %Problem 3
 \newpage
 \section{}
