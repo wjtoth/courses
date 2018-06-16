@@ -131,11 +131,13 @@ $\blacksquare$
 %Problem 3
 \newpage
 \section{}
+I discussed this problem with Sharat.
+
 \paragraph{}
 Suppose we have a list $L$ of $n$ distinct numbers, whose sorted list would we $\{x_1,\dots, x_n\}$. We want to find a $k$-approximate median. I.e. we want to return some $x \in [x_{\frac{n}{2} - k}, x_{\frac{n}{2} + k}]\cap L$. Consider sampling $m$ numbers from $L$ and returning the median $c$ of these $m$ numbers as the true median of $L$.
 \paragraph{}
 Let $L'$ be list of $m$ sampled numbers. For each $i \in L'$ let $X_{i,<}$ be an indicator variable for the event that $i \in \{x_1, \dots, x_{\frac{n}{2} -k -1}\}$. Then, since we sample without replacement,
-$$Pr(X_{i, <} =1) = (\frac{n}{2} -k -1) / n = \frac{1}{2} - \frac{k+1}{n}$$
+$$Pr(X_{i, <} =1) = (\frac{n}{2} -k -1) / n = \frac{n-2k-2}{2n}$$
 Let $X_<$ be the number of elements in $L'$ which lie in $\{x_1, \dots, x_{\frac{n}{2} -k -1}\}$. Then $X_< = \sum_{i \in L'} X_{i,<}$.
 Let $X_>$ be the number of elements in $L'$ which lie in $\{x_{\frac{n}{2} + k + 1}, \dots, x_n\}$. Since we sample uniformly and
 	$$|\{x_{\frac{n}{2} + k + 1}e, \dots, x_n\}| =  |\{x_1, \dots, x_{\frac{n}{2} -k -1}\}| = \frac{n}{2} - k - 1$$
@@ -144,10 +146,14 @@ we observe that $X_<$ and $X_>$ have the same distribution.
 Now we see that $c$ fails to be a $k$-approximate median for $L$ if and only if $X_< \geq \frac{m}{2}$ or $X_> \geq \frac{m}{2}$. Since $X_<$ and $X_>$ have the same distribution, the probability of failure is thus
 $$2Pr(X_< \geq \frac{m}{2}).$$
 We plan to bound this using a Chernoff bound. First we compute the expectation,
-$$E[X_<] = \sum_{i\in L'} Pr(X_{i,<} = 1)  = \sum_{i \in L'} (\frac{1}{2} - \frac{k+1}{n}) = \frac{m(n-2(k+1))}{2n}.$$
+$$E[X_<] = \sum_{i\in L'} Pr(X_{i,<} = 1)  = \sum_{i \in L'} \frac{n-2k-2}{2n} = \frac{m(n-2(k+1))}{2n}.$$
 So 
-$$Pr(X_< \geq \frac{m}{n}) = Pr(X_< \geq (1+\delta) E[X_<])$$
-where $$\delta = \frac{2}{\frac{n-2(k+1)}{2}}-1=\frac{4-(n-2(k+1))}{n-2(k+1)}$$
+$$Pr(X_< \geq \frac{m}{2}) = Pr(X_< \geq (1+\delta) E[X_<])$$
+where $$\delta =\frac{2(k+1)}{n-2(k+1)}.$$
+We proceed by assuming $k < \frac{n}{4}-1$ so that $0<\delta <1$. Ultimately we are interested in results on how many samples $m$ we need to take to obtain a certain quality of approximation, and so bounding $k$ is reasonable.
+\paragraph{}
+Since $0 < \delta < 1$, and $X_<$ is a sum of independent random coin flips, we can apply the second Chernoff bound from Theorem on page $4$ of Lecture $2$, obtaining
+$$Pr(X_< \geq \frac{m}{2}) < \exp(\frac{-\delta^2E[X_<]}{3}).$$
 %Problem 4
 \newpage
 \section{}
