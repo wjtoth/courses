@@ -153,11 +153,36 @@ where $$\delta =\frac{2(k+1)}{n-2(k+1)}.$$
 We proceed by assuming $k < \frac{n}{4}-1$ so that $0<\delta <1$. Ultimately we are interested in results on how many samples $m$ we need to take to obtain a certain quality of approximation, and so bounding $k$ is reasonable.
 \paragraph{}
 Since $0 < \delta < 1$, and $X_<$ is a sum of independent random coin flips, we can apply the second Chernoff bound from Theorem on page $4$ of Lecture $2$, obtaining
-$$Pr(X_< \geq \frac{m}{2}) < \exp(\frac{-\delta^2E[X_<]}{3}).$$
+$$Pr(X_< \geq \frac{m}{2}) < \exp(\frac{-\delta^2E[X_<]}{3}) = \exp(\frac{-2(k+1)^2m}{3n(n-2(k+1))}).$$
+Hence the probability of failure is at most
+$$2\exp(\frac{-2(k+1)^2m}{3n(n-2(k+1))})$$
+To succeed with probability at least $0.9999$ we want this value to be at most $10^{-5}$. So it will suffice to choose $m$ and $k$ to satisfy
+$$\exp(\frac{-2(k+1)^2m}{3n(n-2(k+1))}) \leq 10^{-6}$$
+Rearranging yields the expression
+$$(k+1)^2m \geq 9\ln(10) n^2 - 18\ln(10) n(k+1)$$
+Dropping the non-positive term on the left-hand side, as this can only improve our probability of success, gives us the following expression for the trade-off between $m$ and $k$:
+$$(k+1)^2m = 9\ln(10)n^2 = \Omega(n^2).$$
+\paragraph{}
+If we want $k \leq \epsilon n$ for small $\epsilon$ (say $<\frac{1}{4}$) then we need $m$ to satisfy
+$$(\epsilon n+ 1)^2 m = 9\ln(10)n^2$$
+i.e. 
+$$m = \frac{9\ln(10)n^2}{(\epsilon n + 1)^2}.$$
+\paragraph{}
+Similarly if we want $k \leq n^{1-\eta}$ for $\eta \leq \frac{1}{2}$ then we take (again assuming desired $k$ is less than $\frac{1}{4}n-1$)
+$$m =  \frac{9\ln(10)n^2}{(n^{1-\eta} + 1)^2}.$$
+$\blacksquare$
 %Problem 4
 \newpage
 \section{}
-
+\paragraph{}
+We assume that the determinant of an $n \times n$ matrix where each element is an entry of $\F[x]$ of degree at most $d$ can be computed in $O(dn^\omega)$ field operations.
+\subsection{a}
+Let $G=(U\cup V, E)$ be a bipartite graph where each edge is coloured either red or blue. We may assume $|V| = |U|$ by adding dummy vertices as needed. Let $k \in \Z$ be such that $1 \leq k \leq |E|$. We construct an $n\times n$ matrix $A$ of indeterminants as follows: for every edge $uv \in E$ set
+$$A_{uv} = \begin{cases}
+x_{uv}, \text{if $uv$ is coloured blue} \\
+rx_{uv}, \text{if $uv$ is coloured red}
+\end{cases}$$
+with indeterminants $x_{uv}$ for each edge $uv$ and indeterminant $r$.
 %Problem 5
 \newpage
 \section{}
