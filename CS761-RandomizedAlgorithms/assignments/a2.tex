@@ -177,12 +177,29 @@ $\blacksquare$
 \paragraph{}
 We assume that the determinant of an $n \times n$ matrix where each element is an entry of $\F[x]$ of degree at most $d$ can be computed in $O(dn^\omega)$ field operations.
 \subsection{a}
-Let $G=(U\cup V, E)$ be a bipartite graph where each edge is coloured either red or blue. We may assume $|V| = |U|$ by adding dummy vertices as needed. Let $k \in \Z$ be such that $1 \leq k \leq |E|$. We construct an $n\times n$ matrix $A$ of indeterminants as follows: for every edge $uv \in E$ set
+Let $G=(U\cup V, E)$ be a bipartite graph where each edge is coloured either red or blue. We may assume $|V| = |U|$ by adding dummy vertices as needed. Let $k \in \Z$ be such that $1 \leq k \leq |E|$. We construct an $n\times n$ matrix $A$, where $|A| = n$, of indeterminants as follows: for every pair of vertices $u \in U$, $v\in V$ set
 $$A_{uv} = \begin{cases}
-x_{uv}, \text{if $uv$ is coloured blue} \\
-rx_{uv}, \text{if $uv$ is coloured red}
+x_{uv}, \text{if $uv$ is in $E$ and is coloured blue} \\
+rx_{uv}, \text{if $uv$ is in $E$ and is coloured red} \\
+0, \text{otherwise}.
 \end{cases}$$
-with indeterminants $x_{uv}$ for each edge $uv$ and indeterminant $r$.
+with indeterminants $x_{uv}$ for each edge $uv$ and indeterminant $r$. For a perfect matching $M$ on $G$ define $s(M)$ to be the sign of the permutation that sends $i$ to $j$ if $ij \in M$. Also define $c_M$ to be the number of edges coloured red in $M$. Let $\cM$ be the set of perfect matchings on $G$. Then we observe that
+$$\det(A) = \sum_{\text{permutations } \sigma}\text{sign}(\sigma) \Pi_{i=1}^n A_{i,\sigma(i)} = \sum_{M \in \cM} s(M) r^{c_M}\Pi_{uv \in M}x_{uv}.$$
+Let $\cM_\ell$ be the set of perfect matchings on $G$ with $\ell$ red edges. Then we can rearrange the determinant of $A$ as
+$$\det(A) = \sum_{\ell = 1}^n (\sum_{M \in \cM_\ell} s(M)\Pi_{uv \in M}x_{uv})r^\ell.$$
+As in the proof of Edmonds' theorem from Lecture $8$ the coefficient of the term corresponding to $r^k$ is not identically zero if and only there is a perfect matching in $G$ with $k$ red edges. This coefficient is a polynomial in variables $x_{uv}$ over $uv \in E$, of degree $n$. So if we substitute values into the variables $x_{uv}$, $uv \in E$, drawn independently and uniformly at random from a finite field $\F$ then by the Schwartz-Zippel Lemma this coefficient will be $0$ with probability at most $\frac{n}{|\F|}$. Choose $\F$ so that this probability is as low as desired.
+\paragraph{}
+Then after choosing random values for entries $x_{uv}$, $A$ becomes a matrix whose entries are in $\F[r]$ with degree at most $1$. So in $O(n^\omega)$ field operations we can compute $\det(A)$. Then we query the coefficient of the $k$-th term, which will always be $0$ if there are no perfect matchings with $k$ red edges, and with high probability will be non-zero if there is a perfect matching with $k$ red edges. $\blacksquare$.
+\subsection{b}
+\paragraph{}
+Now we suppose that each edge $uv \in E$ has an associated weight $w_{uv}$, and the maximum weight of an edge is $W$. We use a similar idea to the previous problem, this time creating our $n\times n$ matrix $A$ as follows: for each pair $u \in U$, $v\in V$ set
+$$A_{uv} = \begin{cases}
+	x_{uv}r^{w_{uv}}, &\text{if $uv \in E$} \\
+	0, &\text{otherwise.}
+	\end{cases}$$
+Let $w^*$ be the maximum weight of a perfect matching on $G$. Let $\cM^\ell$ be the set of perfect matchings on $G$ of weight $\ell$. Now $\det(A)$ is a polynomial of the form
+$$\det(A) = \sum_{\ell = 1}^{w^*} (\sum_{M \in \cM^\ell} s(M)\Pi_{uv \in M}x_{uv})r^\ell.$$
+As previously argued, if we choose large enough $\F$ then drawing the values for $x_{uv}$, $uv \in E$, from $\F$ uniformly independently at random, then by Schwartz-Zippel the coefficient on $r^{w^*}$ in the determinant polynomial will be non-zero with high probability. After assigning values to each $x_{uv}$, $A$ is matrix whose entries are in $\F[r]$ with degree at most $W$. So we can compute $\det(A)$ in O$(Wn^\omega)$ field operations. Querying the degree of the leading term in the resulting polynomial will give the maximum weight of a perfect matching on $G$ with high probability. $\blacksquare$
 %Problem 5
 \newpage
 \section{}
