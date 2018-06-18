@@ -203,4 +203,31 @@ As previously argued, if we choose large enough $\F$ then drawing the values for
 %Problem 5
 \newpage
 \section{}
+\paragraph{}
+Let $G=(V,E)$ be a directed acyclic graph and let $s \in V$ be the only vertex with indegree zero. Let $\F$ be a field such that $|\F| = \Theta(\text{poly}|V|)$. Suppose $s$ has $d$ out-going edges, and to edge $i$ out-going from $s$ we assign the $i$-th standard basis vector of $\F^d$. Apply a topological ordering to the vertices of $G$, and so then $V = \{s=v_1, v_2, \dots, v_n\}$ where $v_iv_j \in E$ implies $j>i$. We refer to the algorithm described in the presentation of question $5$ in the homework as the ``edge connectivity algorithm" or simply ``the algorithm".
+\paragraph{}
+Each edge $e$ is sending a linear combination of $e_1, \dots, e_d$ of the form $a=c_1e_1 + \dots + c_d e_d$. we call $(c_1,\dots,c_d)$ the global encoding vector of edge $e$. Further if edge $e=uv$ and $u$ has indegree $\ell$ then $a$ is a random linear combination of the $\ell$ incoming messages $a_1 \dots a_\ell$ to $u$. So $a = b_1^{(e)} a_1 + \dots + b_\ell^{(e)} a_\ell$. We call $\{b_i^{(e)}\}$ the local encoding coefficients of edge $e$.
+\paragraph{Claim}
+For each vertex $v_i \in V$, for each outgoing edge $e$ of $v_i$, each entry $c_j$ of $e$'s global encoding vector is a multivariate polynomial of the local encoding coefficients of total degree at most $i-1$.
+
+\begin{proof}
+	We proceed by induction on $i$. Since $s=v_1$ sends $e_j$ on its $j$-th outgoing edge the base case is true.
+	
+	In the inductive step, consider an edge $e=v_iv_j$. Let $a_1 \dots a_\ell$ be the global encoding vectors of incoming edges to $v_i$. Then each $a_i$ is a polynomial in the local encoding coefficients of degree at most $i-2$ by induction. Now, the global encoding vector for $e$ is
+	$$b_1^{(e)}a_1 + \dots + b_\ell^{(e)}a_\ell$$
+	which is a sum of multivariate polynomials of degree at most $i-1$, and hence is a polynomial of degree at most $i-1$ as desired.
+\end{proof}
+\paragraph{}
+For vertex $t \in V\backslash \{s\}$ with $\ell$ incoming arcs, let $(c_{i1}, \dots, c_{id})$ be the global encoding vector of the $i$-th incoming edge to $t$. Then we can define the $\ell \times d$ receiver matrix $C$, whose entries are multivariate polynomails over $\F$, where entry $C_{ij} = c_{ij}$ for all $i,j$.
+\paragraph{}
+Let $C'$ be the largest non-singular submatrix of $C$. The size of $C'$ corresponds to the rank of $C$. So if $\det(C')$ is not $0$ after assigning values to its entries, then the rank of $C$ will be preserved. Since $\det(C')$ is not identically $0$, by Schwartz-Zippel the probability that $\det(C') =0$ after assigning random values for the local encoding coefficients is at most 
+$$\frac{dn}{|\F|}$$
+Since our Claim implies that the entries of $C'$ are each of degree at most $n$ and so $\det(C')$ is a polynomial of degree at most $dn$. Since $d\leq n$, if we take $|\F| \geq n^4$ this probability of failure is at most 
+$$\frac{1}{n^2}.$$
+So by the union bound, the probability that the rank of the receiver matrix for each vertex is preserved is at least
+$$1-\frac{1}{n}.$$
+\paragraph{}
+It remains to show that the rank of $C$ is equal to the edge connectivity of $t$. Suppose the edge-connectivity of $t$ is $k$. On the one hand there are $k$ edge-disjoint paths to $t$. If we set the message on each edge of the $i$-th such path to be $e_i$ and the message on every other edge to be $0$ then $C$ will contain (possibly up to permuting the rows) the size $k$ identity matrix, and hence as a matrix of polynomials, the rank of $C$ is at least $k$. On the other hand, by the max-flow min-cut theorem there is an $s$-$t$ cut with exactly $k$ edges. So every row of $C$ is a linear combination of the $k$ vectors along that cut. Hence the rank of $C$ is at most $k$. Therefore the rank of $C$ is equal to $k$. So we have shown the edge-connectivity algorithm works with high probability when you choose a finite field $\F$ so that $|F| \geq n^4 = \Theta(\text{poly}(n))$. $\blacksquare$
+\paragraph{Implementation}
+We now present an efficient implementation.
 \end{document}
