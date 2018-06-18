@@ -229,5 +229,17 @@ $$1-\frac{1}{n}.$$
 \paragraph{}
 It remains to show that the rank of $C$ is equal to the edge connectivity of $t$. Suppose the edge-connectivity of $t$ is $k$. On the one hand there are $k$ edge-disjoint paths to $t$. If we set the message on each edge of the $i$-th such path to be $e_i$ and the message on every other edge to be $0$ then $C$ will contain (possibly up to permuting the rows) the size $k$ identity matrix, and hence as a matrix of polynomials, the rank of $C$ is at least $k$. On the other hand, by the max-flow min-cut theorem there is an $s$-$t$ cut with exactly $k$ edges. So every row of $C$ is a linear combination of the $k$ vectors along that cut. Hence the rank of $C$ is at most $k$. Therefore the rank of $C$ is equal to $k$. So we have shown the edge-connectivity algorithm works with high probability when you choose a finite field $\F$ so that $|F| \geq n^4 = \Theta(\text{poly}(n))$. $\blacksquare$
 \paragraph{Implementation}
-We now present an efficient implementation.
+We now present an efficient implementation. For each vertex $v \in V$ we replace $v$ with a super-concentrator of size
+$$O(\text{in-degree}(v) + \text{out-degree}(v)\}) = O(\deg(v))$$
+where $\deg(v)$ is the number of edges incident to $v$ in the underlying undirected graph to $G$. Since the size of the super-concentrator we replace each vertex with is an upper-bound on the number of edge-disjoint paths in $G$ which can use that vertex, we preserve edge-connectivity after this transformation. From the notes, the encoding at each vertex can be done in $O(d)$ time after the transformation. The number of vertices in the new graph is 
+$$\sum_{v \in V} O(\deg(v)) = O(2|E|) = O(|E|)$$
+by the handshaking-lemma. So the entire encoding can be done in $O(d|E|)$ time.
+\paragraph{}
+Using the random matrix rank algorithm for Lecture $9$ we can compute the rank of the matrix associated with each vertex in time
+$$O(d\cdot \deg(v) + \min\{d,\deg(v)\}^\omega)$$
+where $\omega$ is the matrix multiplication constant, with high probability. Summing over vertices $v \in V$, we can compute all the edge connectivities in time
+$$O(d|E| + |V|d^\omega).$$
+Thus our implementation will succeed in computing the edge-connectivity from $s$ to $t$ for each $t \in V$ with high probability, in time
+$$O(d|E| +|V|d^{\omega}).$$
+$\blacksquare$
 \end{document}
