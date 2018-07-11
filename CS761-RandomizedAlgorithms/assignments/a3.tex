@@ -1,0 +1,302 @@
+\documentclass[letterpaper,12pt,oneside,onecolumn]{article}
+\usepackage[margin=1in, bottom=1in, top=1in]{geometry} %1 inch margins
+\usepackage{amsmath, amssymb, amstext}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{theorem}
+\usepackage{tikz}
+\usepackage{tkz-berge}
+\usepackage[braket, qm]{qcircuit}
+\usepackage{hyperref}
+
+%Macros
+\newcommand{\A}{\mathbb{A}} \newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}} \newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+ 
+ 
+\newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}} \newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}} \newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}} \newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}} \newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}} \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}} \newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}} \newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}} \newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}} \newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}} \newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofof}[1]{{\bf Proof of #1:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofofnobox}[1]{{\bf#1:  }}{}\newenvironment{example}{{\bf Example:  }}{\hfill\rule{2mm}{2mm}}
+
+%\renewcommand{\thesection}{\lecnum.\arabic{section}}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}[fact]{Lemma}
+\newtheorem{theorem}[fact]{Theorem}
+\newtheorem{definition}[fact]{Definition}
+\newtheorem{corollary}[fact]{Corollary}
+\newtheorem{proposition}[fact]{Proposition}
+\newtheorem{claim}[fact]{Claim}
+\newtheorem{exercise}[fact]{Exercise}
+\newtheorem{note}[fact]{Note}
+\newtheorem{conjecture}[fact]{Conjecture}
+
+\newcommand{\size}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+%END MACROS
+%Page style
+\pagestyle{fancy}
+
+\listfiles
+
+\raggedbottom
+
+\lhead{\today}
+\rhead{W. Justin Toth - CS 761 - A3} %CHANGE n to ASSIGNMENT NUMBER ijk TO COURSE CODE
+\renewcommand{\headrulewidth}{1pt} %heading underlined
+%\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
+
+\begin{document}
+\section{}
+\paragraph{}
+Let $G$ be a graph with $m$ edges and $n$ vertices, where $m \geq 4n$. Fix an embedding of $G$ in the plane. Let $t$ be the number of crossings in this embedding of $G$. Sample vertices of $G$, each with probability $p=\frac{4n}{m}$ independently and uniformly at random. This choice of $p$ is a proper probability since $m \geq 4n$.  Let $S$ be the resulting vertex set, and let $G' = G[S]$. Let $n'$ be a random variable counting the number of vertices of $G'$. Let $m'$ be a random variable counting the number of edges of $G'$. Let $t'$ be a random variable such that
+$$t' = m' - 3n'+ 6.$$
+By our naive observation about crossing number, $G'$ has at least $t'$ crossings. Now we take expectation:
+$$E[t'] = E[m' -3n' + 6] = E[m'] -3E[n'] + 6 = m(\frac{4n}{m})^2 -3n\frac{4n}{m} +6.$$
+This last equality follows since each vertex of $G$ is sampled with probability $p$, and each edge with probability $p^2$. On the other hand, observing that each crossing of $G$ is sampled with probability $p^4$, as each crossing involves four distinct vertices, we have
+$$E[t'] = t(\frac{4n}{m})^4.$$
+Combining the equations above we see that
+$$ t(\frac{4n}{m})^4 = m(\frac{4n}{m})^2 -3n\frac{4n}{m} +6 \geq m(\frac{4n}{m})^2 -3n\frac{4n}{m}$$
+and hence
+\begin{align*}
+t &\geq m(\frac{4n}{m})^{-2} -3n(\frac{4n}{m})^{-3} \\
+&=\frac{4nm^3 - 3nm^3}{64n^3}\\
+&= \frac{m^3}{64n^2}
+\end{align*}
+as desired.$\blacksquare$
+\newpage
+%Problem 2
+\section{}
+\paragraph{}
+Suppose (reasonably) that $0 < \epsilon < 1$. We generate $m = \frac{2^kk\log(n)}{\epsilon^2}$ random vectors $y^{(1)}, \dots, y^{(m)} \in \{0,1\}^n$ independently and uniformly at random. 
+\paragraph{}
+Fix $S\subseteq [n]$ such that $|S|=k$. Let $b \in \{0,1\}^n$. Let $Y_i$ be a $0$-$1$ indicator random variable indicating $1$ iff $y^{(i)}_j = b_j$ for all $j \in S$. Let $Y = \sum_{i} Y_i$. Since $y(i)$ was generated uniformly at random, 
+$$Pr(Y_i = 1) = \frac{1}{2^k}$$
+from which we see that
+$$E[Y] = \frac{m}{2^k}.$$
+\paragraph{}
+Now we observe that $|Y- E[Y]| > \frac{m\epsilon}{2^k}$ if and only if $|\frac{Y}{m} - \frac{1}{2^k}| > \frac{\epsilon}{2^k}$ which in turn holds if and only if $$|Pr((\bigcap_{i\in S} X_i = b_i) - \frac{1}{2^k}|>\frac{\epsilon}{2^k}$$
+since $Y$ counts the number of successful $y^(i)$'s for choosing $X$ and there are $m$ such choices. We adopt the the strictly stronger requirement for $\epsilon$-almost $k$-wise independence whose failure condition is the above inequality.
+\paragraph{}
+We have
+$$Pr(|Y-E[Y]| > \frac{m\epsilon}{2^k}) =  Pr(Y > (1+\epsilon)E[Y]) < \exp(-\epsilon^2\frac{m}{3\cdot2^k})$$
+where the last inequality follows from the second Chernoff bound in Lecture $2$ under the reasonable assumption that $0 < \epsilon < 1$.
+\paragraph{}
+Thus we have bounded the failure probability for a single fixed $S$. We apply the union bound over all subsets of $n$ of size $k$ to obtain that our choice of $y$'s fails with probability at most
+$${n\choose k} \exp(-\epsilon^2\frac{m}{3\cdot2^k})$$
+which, by our choice of $m$, is at most
+$${n\choose k} e^{-k\log n} = \frac{{n\choose k}}{n^k} < 1.$$
+Since this failure probability is strictly smaller than $1$ we have shown the desired existence result. $\blacksquare$
+\subsection{Derandomization of Color Coding}
+\paragraph{}
+Suppose we want to decide if a graph $G=(V,E)$ has a path of length at least $\ell$. Let $n=|V|\log\ell$ and let $k = \ell\log\ell$. Let $\epsilon = \frac{1}{2}\frac{1}{\ell^\ell}$. Choose $m = O(\frac{2^kk\log(n)}{\epsilon^2})$ as in the previous section of the this problem. Our algorithm proceeds as follows:
+\begin{enumerate}
+    \item Generate strings $y^{(1)}. \dots, y^{(m)} \in \{0,1\}^n$ from which we will sample $\epsilon$-almost $k$-wise independent random bits.
+    \item For each $i = 1\dots m$
+        \begin{enumerate}
+            \item Set $X=y^{(i)}$. Divide $X$ into $|V|$ blocks of $\log\ell$ bits.
+            \item For each $v \in V$ assign the color $c\in [\ell]$ which is encoded by the $\log\ell$ bits of the $v$-th block of $X$ to $v$. 
+            \item Use the Dynamic Programming subroutine of Lecture $3$ to decide of $G$ has a $\ell$-length colorful path. If so, return True.
+        \end{enumerate}
+    \item Return False if no color path was found.
+\end{enumerate}
+\paragraph{}
+Suppose $G$ has a path $P$ of length $\ell$. For a given coloring drawn from random bits $X$ in Step $2(b)$ we want to analyze the probability that $P$ is colorful. Let $S_\ell$ denote the set of permutations of $\ell$ colors. Let $b(S_\ell) = \{ \ell\log\ell \text{ size bitstrings encoding } \sigma : \sigma \in S_\ell\}$. Note that $X$ is $\ell\log\ell$-wise independent ($\epsilon$-almost). Now we have
+\begin{align*}
+    Pr(P\text{ is colorful}) &= \sum_{b \in b(S_\ell)} Pr(X_i = b_i, \forall i) \\
+    &\geq \sum_{b \in b(S_\ell)} (\frac{1}{2^{\ell\log\ell}}-\epsilon) \\
+    &=\frac{\ell!}{\ell^\ell} - \epsilon\ell! \\
+    &> 0 &\text{(by our choice of $\epsilon$).}
+\end{align*}
+Since this probability is strictly positive, there exists some $y^{(i)}$, $i\in[m]$, for which coloring $G$ based on $X = y^{(i)}$ will yield colorful $P$. Hence if such $P$ exists, our algorithm will discover it after running over all choices of $y^(i)$. Otherwise it correctly returns that no such $P$ exists.
+\paragraph{}
+It remains to bound the running time. We assume we are given the strings for Step $1$ and so Step $2$ is the main working step we need to bound. There will be at most $m$ iterations of Step $2$ and each iteration will be dominated in runtime in terms of the cost of running the dynamic program ($\text{cost}_DP$). So our runtime is
+$$m\cdot\text{cost}_{DP} = O(\frac{2^kk\log(n)}{\epsilon^2})\cdot O(\ell2^\ell|E||V|) = O(\ell^{4\ell} \ell^2\log\ell\cdot\log(|V|\log\ell)|V||E
+|)$$
+and therefore we obtain a deterministic Fixed Parameter Tractable algorithm.$\blacksquare$
+\newpage
+%Problem 3
+\section{}
+\paragraph{}
+Let $G$ be a graph in $G_{n,p}$ where $p = \frac{1}{n}$. Let $X$ be a random variable counting the number of triangles in $G$. For any $i,j,k \in V(G)$ define $X_{i,j,k}$ to be an indicator variable, indicating that $ijk$ induce a $K_3$ in $G$. So then $X = \sum_{i,j,k \in V(G)} X_{i,j,k}$. Observe that
+$$ E[X] = \sum_{i,j,k \in V(G)} Pr(X_{i,j,k}=1) = \sum_{i,j,k \in V(G)} \frac{1}{n^3} = {n\choose 3}\frac{1}{n^3} \leq \frac{n^3}{6n^3}= \frac{1}{6}$$
+Therefore by Markov's inequality
+$$Pr(X \geq 1) \leq \frac{E[X]}{1} = \frac{1}{6}$$
+as desired.
+\paragraph{}
+For the second part of this problem, we will use the Conditional Expectation Inequality, from section $6.6$ of the main course reference textbook: Probability and Computing. Theorem $6.10$ therein states: Let $Y = \sum_{i=1}^n Y_i$, where each $Y_i$ is a $0-1$ random variable. Then
+$$Pr(Y>0) \geq \sum_{i=1}^n \frac{Pr(Y_i = 1)}{E[Y \mid Y_i = 1]}.$$
+\paragraph{}
+Since $X = \sum_{i,j,k \in V(G)} X_{i,j,k}$ and each $X_{i,j,k}$ is a $0-1$ random variable this inequality applies to our setting. Since $XS$ is integer valued it says that
+$$Pr(X \geq 1) = Pr(X > 0) \geq \frac{1}{n^3}\sum_{i,j,k \in V(G)}\frac{1}{E[X\mid X_{i,j,k}=1]}.$$
+Now we need to compute $E[X\mid X_{i,j,k}=1]$ for any $i,j,k$. Let $a,b,c \in V(G)$. We have three cases: Case $(1)$ $\{a,b,c\} = \{i,j,k\}$, Case $(2)$  $|\{a,b,c\} \cap \{i,j,k\}| = 2$, and Case $(3)$ $|\{a,b,c\} \cap \{i,j,k\}| \leq 1$.
+\paragraph{}
+In Case $(1)$, $Pr(X_{a,b,c} =1 \mid X_{i,j,k} = 1) = 1$.
+\paragraph{} 
+In Case $(2)$, $Pr(X_{a,b,c} =1 \mid X_{i,j,k} = 1) = \frac{1}{n^2}.$ This follows since $abc$ shares $1$ edges with $ijk$. There are $3$ ways to choose the overlapping edge, and $n$ ways to choose the non-intersecting vertex of $abc$, so there are $3n$ choices for $abc$ which manifest this case.
+\paragraph{}
+In Case $(3)$, $Pr(X_{a,b,c} =1 \mid X_{i,j,k} = 1) = \frac{1}{n^3}$ since $abc$ shares no edges with $ijk$. There are ${(n-3) \choose 3} + 3{(n-2)\choose 2}$ ways to manifest this case.
+\paragraph{}
+Putting all this together we obtain
+$$E[X \mid X_{i,j,k} = 1] = 1 + 3n\frac{1}{n^2} + \Bigg({(n-3) \choose 3} + 3{(n-2)\choose 2}\Bigg)\frac{1}{n^3} \leq 1 + \frac{3}{n} +  \frac{1}{6} + \frac{3}{2n}.$$
+Hence 
+$$E[X\mid X_{i,j,k}] = \frac{7}{6} + \Omega(\frac{1}{n}).$$
+So combining with our Conditional Expectation Inequality we see that
+$$Pr(X \geq 1) \geq \frac{1}{n^3}{n \choose 3}\frac{1}{\frac{7}{6} + \Omega(\frac{1}{n})}.$$
+Taking the limit $n\rightarrow \infty$ yields
+$$\lim_{n\rightarrow \infty} Pr(X \geq 1) \geq \frac{1}{6} \frac{1}{\frac{7}{6} + 0} = \frac{1}{7}$$
+as desired.$\blacksquare$
+\newpage
+%Problem 4
+\section{}
+\paragraph{}
+The notion of Hamming distance is very helpful for thinking about these problems. For any $x \in \{0,1\}^n$ we define $|x|$ to be the number of bits set to $1$ in $x$. We always take addition of binary strings as addition modulo $2$. The Hamming distance between binary strings $x$ and $y$ is defined to be $|x+y|$.
+\subsection{a}
+\paragraph{}
+First suppose that $Ax$ has at least $2pn+1$ non-zero bits for all $x\neq 0$. Suppose the encoder sends $Ax$ through the noisy channel and we receive the vector $y$. To decode we do the following:
+\begin{enumerate}
+    \item For each $x' \in \{0,1\}^m$ compute $y' = Ax'$.
+    \item Over all such $y'$ choose the one which minimizes the Hamming distance to $y$. Output the corresponding $x'$ as the decoded message.
+\end{enumerate}
+We will show $Ax$ is the unique string with Hamming distance $\leq pn$ to $y$. Clearly its Hamming distance satisfies this bound from the definition of our noisy channel. Now suppose there exists some $x' \neq x$ (with $x' \neq 0$) such that $|Ax' +y| \leq pn$. Then observe that
+$$|A(x + x')| = |Ax + Ax'| = |Ax + y + y + Ax'| \leq |Ax + y| + |Ax' + y| \leq pn + pn = 2pn.$$
+But this contradicts that $A(x+x')$ has at least $2pn+1$ non-zero bits (noting that $x+x' \neq 0$ since $x\neq x'$ and $x' \neq 0$).
+\paragraph{}
+Now for the converse suppose there exists some $x\neq 0$ such that $|Ax| \leq 2pn$. We claim that no decoder can distinguish between $x$ and $0$. When the encoder sends $Ax$ through the noisy channel we can flip the first $pn$ non-zero bits of $Ax$ giving the decoder vector $y$ with at most $pn$ non-zero bits. Now if the encoder were to send $A0 = 0$ through the noisy channel we flip at most $pn$ bits of $0$ to obtain vector $y$. Hence with this adversarial strategy the decoder sees the same encoded vector for message $x$ and message $0$, so the best success probability the decoder can have over all messages is $\frac{1}{2}$.$\blacksquare$
+\subsection{b}
+\paragraph{}
+For this section we assume reasonably that $0<p<\frac{1}{4}$.
+\paragraph{}
+Let $\epsilon > 0$. Fix $m=(1-H(2p) - \epsilon)n$. Let $x \in \{0,1\}^m$ such that $x\neq 0$. Let $A_i$ be the $i$-th row of $A$. The probability that $A_ix=1$ is $\frac{1}{2}$ by the principle of deferred decisions; there is some $j$ such that $x_j = 1$, and so flipping $A_{ij}$ (which is either $0$ or $1$ each with probability $\frac{1}{2}$) can flip $A_ix$. Thus
+$$Pr(|Ax| =k) = {n\choose k}(\frac{1}{2})^k(1-\frac{1}{2})^{n-k} = {n\choose k}\frac{1}{2^n}.$$
+Now we want to bound the probability that $|Ax| \leq 2pn$:
+$$Pr(|Ax| \leq 2pn) = \sum_{k=0}^{2pn}Pr(|Ax| = k) = \frac{1}{2^n}\sum_{k=0}^{2pn}{n\choose k} \leq \frac{1}{2^n}(2pn+1){n\choose 2pn} \leq \frac{2pn+1}{2^n}2^{nH(2p)}.$$
+The last inequality follows by applying the Lemma from Lecture $12$ which states
+$${n\choose nq} \leq 2^{nH(q)}$$
+where $0<q<1$, with $q=2p$. Note that $0<2p<1$ since $0<p<\frac{1}{4}$.
+\paragraph{}
+Now we apply the union bound:
+$$Pr(\exists x\in\{0,1\}^m\backslash\{0\}: |Ax|\leq 2pn) \leq 2^{m}(2pn+1)2^{nH(2p)-n} = 2^{-\epsilon n }(2pn+1)$$
+since there are $2^{m}-1\leq 2^m$ such strings $x$, and our last equality follows from the choice of $m$. Now we observe that this bound on the failure probability is strictly smaller than $1$ for sufficiently large $n$. Therefore there exists a matrix $A$ such that 
+$$\forall x \in \{0,1\}^m\backslash\{0\}, \quad |Ax| \geq 2pn+1.$$
+For this particular matrix $A$ we apply the result from $4(a)$, showing the receiver can always decode the message.$\blacksquare$
+\subsection{c}
+\paragraph{}
+Let $\epsilon > 0$. Fix $N$ large enough that $\frac{2^{n(1+\epsilon)}}{n+1} > 2^n$ for any $n \geq N$. Let $n \geq N$, and let $m \geq (1 - H(p) + \epsilon)n$. If the adversary can use their $pn$ bit flips to create a collision between two different encoded messages then this is a barrier to perfect decoding.
+\paragraph{}
+If the encoder sends $Ax$ through the channel for intended message $x \in \{0,1\}^m$ then there are
+$$\sum_{k=0}^{pn}{n\choose k} $$
+distinct strings in $\{0,1\}^n$ to which the adversary can map $Ax$. Using the Lemma from the first page of Lecture $12$ on ${n\choose np}$ we can lower bound this number:
+$$\sum_{k=0}^{pn}{n\choose k} \geq {n\choose np} \geq \frac{2^{nH(p)}}{n+1}.$$
+Let $B(x)$ denote the set of strings the adversary can map $Ax$ to when $Ax$ is sent through the noisy channel. Thus we have shown $|B(x)| \geq \frac{2^{nH(p)}}{n+1}$. We assume for a contradiction that $B(x)$ and $B(x')$ are disjoint for $x\neq x'$.
+\paragraph{}
+There are $2^m$ distinct messages that the encoder could want to send through the channel. 
+From disjointness
+$$|\cup_{x\in\{0,1\}^m}B(x)| = \sum_{x \in \{0,1\}^m}|B(x)|$$
+and we have
+$$\sum_{x \in \{0,1\}^m}|B(x)| \geq \sum_{x\in\{0,1\}^m}\frac{2^{nH(p)}}{n+1} \geq 2^m\frac{2^{nH(p)}}{n+1} = 2^{(1-H(p)+\epsilon)n}\frac{2^{nH(p)}}{n+1} = 2^{n(1+\epsilon)}{n+1} > 2^n$$
+where the last inequality follows since $n \geq N$. So
+$$ |\cup_{x\in\{0,1\}^m}B(x)| >2^n,$$
+but on the other hand
+$$\bigcup_{x\in\{0,1\}^m}B(x) \subseteq \{0,1\}^n$$
+and hence, since there are $2^n$ strings in $\{0,1\}^n$, 
+$$|\cup_{x\in\{0,1\}^m}B(x)| \leq 2^n,$$
+a contradiction. Therefore there exists some $x,x'$ with $x\neq x'$ and $B(x) \cap B(x') \neq \emptyset$. The adversary can make $x$ and $x'$ indistinguishable and hence perfect decoding is not possible. $\blacksquare$
+\newpage
+%Problem 5
+\section{}
+\paragraph{}
+Let $G = (V,E)$ be a graph. Suppose each $v \in V$ is associated with a list of colors $S(v)$ such that $|S(v)| = 32r$ with $r\geq 1$. Further suppose for each $v \in V$ and each $c \in S(v)$ there exists at most $r$ neighbours $u \in N(v)$ such that $c$ is in $S(u)$.
+\paragraph{}
+Let $\phi$ be a vertex coloring obtained by assigning each vertex a color from $S(v)$ independently and uniformly at random. For any $e=uv \in E$ and $c \in S(u) \cap S(v)$ define the event $A_{e,c}$ to be the event that $\phi(u) = \phi(v) = c$. Let $X_{e,c}$ be a $0$-$1$ indicator variable for event $A_{e,c}$. Let $\cA := \{A_{e,c} : e=uv \in E, c \in S(u) \cap S(v)\}$ be the set of ``bad events".
+\paragraph{}
+Since $\phi(u)$ and $\phi(v)$ are chosen independently and uniformly at random, and $|S(u)| = |S(v)| = 32r$,
+$$p := Pr(A_{uv,c}) = Pr(\phi(u)=c)\cdot Pr(\phi(v)=c) = \frac{1}{(32r)^2}.$$
+Among events in $\cA$, the event $A_{uv,c}$ depends on the events $A_{e', c'}$ for any $e' \in \delta(u)$ and $c' \in S(u)$ and the events $A_{e'', c''}$ for any $e'' \in \delta(v)$ and $c'' \in S(v)$. Since there are at most $r$ neighbours of $u$ (respectively $v$) which share a color with $u$ (resp. $v$), and there are $32r$ colors in $u$'s (resp. $v$'s) list, there are at most $32r^2$ such events $A_{e',c'}$ and $32r$ such events $A_{e'',c''}$. Hence $A_{e,c}$ depends on at most $64r^2$ other events in $\cA$. 
+\paragraph{}
+Thus $d\leq 64r^2$ and so
+$$4dp \leq 4 \cdot 64r^2 \frac{1}{(32r)^2} = \frac{1}{4} < 1$$
+and thus by Lovasz's Local Lemma, the probability that no event $\cA$ happens is strictly positive. That is, there exists a proper list-coloring of $G$. $\blacksquare$
+\subsection*{Polynomial Time Algorithm}
+\paragraph{}
+We say event $A_{uv,c}$ is not satisfied if $\phi(u) = \phi(v) = c$. Our algorithm is as follows (it is basically as in the $3$SAT algorithm from lecture):
+\begin{enumerate}
+    \item Fix an ordering of the events in $\cA$ ($|\cA| \leq 32rm$ so this can be done in polynomial time)
+    \item Color vertices of $G$ independently and uniformly at random from their lists
+    \item For each $A_{uv, c} \in \cA$ (in order)
+        \begin{enumerate}
+            \item If $A_{uv,c}$ is not satisfied: Fix($A_{uv,c}$)
+        \end{enumerate}
+\end{enumerate}
+The process Fix($A_{uv,c}$) does:
+\begin{enumerate}
+    \item Randomly color $u$ and $v$ independently and uniformly at random from their lists
+    \item While there is an event $A_{e', c'} \in \cA$ that $A_{e,c}$ depends on, and $A_{e',c'}$ is not satisfied, choose the first such $A_{e',c'}$ to appear in our fixed ordering of $\cA$ and call Fix($A_{e',c'}$)
+\end{enumerate}
+\paragraph{Analysis}
+Once we call Fix($A_{e,c}$) and return to the main loop, $A_{e,c}$ will remain satisfied after each subsequent Fix($A_{e',c'}$) from the main loop. This follows by the recursive definition of the Fix procedure and the fact that changing colors on from $c'$ on $e'$ can only cause events which $A_{e', c'}$ to become unsatisfied. Hence if the algorithm terminates it solves the problem.
+\paragraph{Random bits}
+Let $t$ be the number of times the algorithm runs the Fix procedure. The algorithm uses $n\log(32r)$ bits to set the initial coloring and $2\log(32r)$ bits to recolor a pair of vertices each time a Fix is called. So in total the algorithm uses $(n+2t)\log(32r)$ random bits.
+\paragraph{Encoding}
+As in Lecture $11$ Page $8$ we construct trace the recursion tree of the algorithm. We encode as follows:
+\begin{enumerate}
+    \item Use a $0$ bit plus $\log(32rm)$ bits to represent going from the root to an event $A_{e,c}$. The $\log(32rm)$ bits encode which clause to go to.
+    \item Use a $0$ bit plus $\log(d)$ bits (where $d$ is the dependency number calculated in the previous section of this problem) to represent going from the current event to the next event lower in the recursion tree.
+    \item Use a $1$ bit to represent going up in the recursion tree. A $1$ bit at the root indicates that the algorithm terminates.
+    \item When the algorithm terminates we can remember the $n\log(32r)$ bits indicating the coloring.
+\end{enumerate}
+It should be clear from the description we can fully recover the execution of the algorithm from this encoding.
+\paragraph{Compression}
+We now count how many bits we used:
+\begin{itemize}
+    \item By our prior note, the main root only calls $32rm$ Fix procedures. So we use only 
+    $$2\cdot32rm + \log(32rm)32rm$$
+    bits to encode Steps $1$ and $3$.
+    \item There are $t$ steps in the algorithms so we need at most $$ t(\log(d) + 2)$$
+    bits for steps $2$ and $3$.
+    \item Finally we need $n\log(32r)$ bits for step $4$.
+\end{itemize}
+Thus, since random bits cannot be compressed, if we can recover the original random bits from the encoding scheme we must have
+\begin{align*}
+    64rm + \log(32rm)32rm +t(\log(d) + 2) +n\log(32r)\\
+    \geq (n+2t)\log(32r)
+\end{align*}
+Thus we have
+$$(2\log(32r) -\log(d) -2)t \leq 64rm + \log(32rm)32rm.$$
+Recalling that $d = 32r^2$ we have
+$$2\log(32r) -\log(d) - 2 =\log(\frac{1024r^2}{4\cdot32r^2}) \geq 1.$$
+Hence $$t \leq 64rm + \log(32rm)32rm$$
+which is to say that $t$ is called a polynomial number of times, and hence the randomized algorithm terminates in polynomial time with a proper list coloring of $G$.
+\paragraph{Decoding}
+It remains to verify that we can recover the original random bits from the encoding scheme. Let $b^v$ be a vector of $\log(32r)$ random bits used to encode the color of vertex $v$ at the start of the algorithm. Let $r_i$ and $q_i$ be vectors of $\log(32r)$ random bits used to encode the recoloring of the two vertices at the $i$-th call to Fix.
+\paragraph{}
+The algorithm will maintain $n$ variables for the current assignment, initially $b^1,\dots, b^n$. When the algorithm Fixes event $A_{e,c}$ then the current bits corresponding to the assignment do not satisfy this event. There is only one way for event $A_{e,c}$ to not be satisfied: if $e=uv$ and $\phi(u) = \phi(v) = c$. When the algorithm Fixes this event we learn the value of those bits for the colors of $u$ and $v$ at that point in the execution. We then know the algorithm replaces their assignment with $r_i$ and $q_i$ (if $A_{e,c}$ is the $i$-th event to be Fixed). We can repeat this procedure for each event tracing the execution of the algorithm through the recursion tree. Hence we can recover all the random bits used by the encoding algorithm.
+\end{document}
