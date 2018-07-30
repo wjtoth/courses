@@ -141,7 +141,18 @@ Thus the running time $\tilde{O}(|E|)$ as desired.$\blacksquare$
 \newpage
 %Problem 2
 \section{}
-
+\paragraph{}
+Consider an instance $I$ of $k$SAT with $n$ variables $x_1,\dots,x_n$ and $m$ clauses $C_1, \dots, C_m$. We solve it using the following generalization of Sch\"oning's Algorithm:
+\begin{enumerate}
+	\item Repeat up to $N$ times, terminating if all clauses of $I$ are satisfied:
+	\begin{enumerate}
+		\item Start with a random initial assignment
+		\item Repeat up to $kn$ steps, terminating if all clauses satisfied: switch the value of a random variable in an unsatisfied clause.
+	\end{enumerate}
+	\item Return a satisfying assignment if it is found; otherwise return ``unsatisfiable".
+\end{enumerate}
+\paragraph{}
+Let $S$ be a satisfying assignment. Let $A_i$ be the assignment in the $i$-th step of the algorithm. Let $X_i$ be the number of variables that have the same value in $A_i$ and $S$. If $X_i = n$ then $A_i = S$ and hence we are done.
 \newpage
 %Problem 3
 \section{}
