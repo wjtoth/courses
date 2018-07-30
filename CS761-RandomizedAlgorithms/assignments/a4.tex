@@ -91,7 +91,7 @@ An $s-t$ path in $D_x$ is called an \emph{augmenting path}. It is an easy observ
 Our algorithm will maintain an integral flow in every step, and a weighting on the residual digraph so that (an auxiliary graph closely related to) the residual digraph is weighted-Eulerian. This will allow us to efficiently use random walks to identify augmenting paths for our flow. Due to our fractional flow $x_f$ we know that we will always be able to find such a path while the value of $x$ is less than $k$, as we are sure $x$ is not maximum.
 \paragraph{}
 We will need one more auxiliary graph before we describe the algorithm. Let $D'_x$ be the digraph obtained from $D_x$ by adding a special vertex $b$, and two arcs: $tb$ and $bs$. It is immediate that $D_x$ has an augmenting path if and only if $D_x'$ as cycle containing $b$.
-\paragraph{}
+\paragraph{Weighting}
 If $x$ is an integral $s-t$ flow on $G$ we can define an Eulerian weighting on $D'_x$ as follows. For every forward arc $uv \in E(D_x)$ let $w(uv) = x_f(uv)$. For every backward arc $vu \in E(D_x)$ let $w(vu) = 1- x_f(uv)$. Let $k'$ be the value of $x$. Let $w(tb) = w(bs) = k-k'$.
 \begin{claim}
 Let $x_0=0,x_1, \dots, x_{k-1}\in \{0,1\}^E$ be integral $s-t$ flows on $G$ such that $x_{i+1}$ is obtained from $x_i$ by augmenting $x_i$ along an augmenting path in $D_{x_i}$. Let $w_0,w_1,\dots, w_{k-1}$ be the weightings of each respective $D'_{x_i}$. Then for all $i$
@@ -102,7 +102,9 @@ We proceed by induction on $i$. In the base case $i = 0$. Then $D_{x_i} = G$ and
 $$w_i(\delta^{out}(s)) = x_f(\delta^{out}(s)) = k = w_i(bs) = w_i(\delta^{in}(s)).$$
 The proof of the claim follows similarly for vertex $t$. By definition the claim always holds for vertex $b$. Hence we have proven the base case.
 \paragraph{}
-Now in the inductive step we suppose the claims holds for $x_0, \dots, x_{i-1}$ and consider $x_i$ with $i \geq 1$. Let $P$ be the augmenting path used to obtain $x_i$ from $x_{i-1}$. If $v \not\in V(P) \cup \{b\}$ then by induction the claim already holds at $v$. Further by definition the claim always holds at $b$. So it remains to verify the claim on vertices of $P$. Let $v \in V(P)\backslash\{s,t\}$. Suppose $uv, vx \in E(P)$. Then we have
+Now in the inductive step we suppose the claims holds for $x_0, \dots, x_{i-1}$ and consider $x_i$ with $i \geq 1$. Let $P$ be the augmenting path used to obtain $x_i$ from $x_{i-1}$. The digraph $D'_{x_i}$ is obtained from $D'_{x_{i-1}}$ by flipping the orientation of every arc along $P$.
+
+\paragraph{} If $v \not\in V(P) \cup \{b\}$ then by induction the claim already holds at $v$. Further by definition the claim always holds at $b$. So it remains to verify the claim on vertices of $P$. Let $v \in V(P)\backslash\{s,t\}$. Suppose $uv, vx \in E(P)$. Then we have
 \begin{align*}
 w_i(\delta^{in}(v)) &= w_{i-1}(\delta^{in}(v)) -x_f(uv) + 1-x_f(vx)\\
 &=w_{i-1}(\delta^{out}(v)) + 1-x_f(uv) -x_f(vx) \\
@@ -112,20 +114,47 @@ So the claim holds for all such $v$. For vertex $s$, let $sy \in E(P)$. We have
 $$w_i(\delta^{in}(s)) = w_{i-1}(\delta^{in}(s)) -1 + 1-x_f(sy) = w_{i-1}(\delta^{out}(s)) -x_f(sy) = w_i(\delta^{out}(s))$$
 and so the claim holds for $s$. The proof for $t$ follows similarly to the proof for $s$.
 \end{proof}
+\paragraph{Algorithm}
+We initialize our algorithm with integral flow $x = 0$. Our algorithm iterates the following step until our flow $x$ has value $k$ (which it then returns). Let $w$ be the associated weighting on $D'_{x} = G + \{tb,bs\}$. Perform a random walk on $D'_x$ starting from $b$ with transition probability of arc $uv$, $P_{uv}$ equal to 
+$$P_{uv} = \frac{w(uv)}{w(\delta^{out}(u))}.$$
+End this random walk when you return to $b$. The walk has identified an augmenting path $P$. Augment flow of $x$ along $P$ and repeat.
 \paragraph{}
-We initialize our algorithm with integral flow $x = 0$ and 
+The expected time to find an augmenting path in any iteration is equal to $H_{b,b}$, the hitting time of $b,b$. We have that $H_{b,b} = \frac{1}{\pi_b}$ where $\pi_b$ is the probability of being in $b$ in the stationary distribution.
+\begin{claim}
+	Let $W_x = w(E(D'_x))$. For any $v \in V(D'_x)$, $\pi_v = \frac{w(\delta^{out}(v))}{W_x}$.
+\end{claim}
+\begin{proof}
+	We calculate
+	$$\pi_v = \sum_{u: uv \in E(D'_x)} \pi_uP_{uv} = \sum_{u:uv \in E(D'_x)} \frac{w(\delta^{out}(u))}{W_x}\frac{w(uv)}{w(\delta^{out}(u))} = \frac{w(\delta^{in}(v))}{W_x} = \frac{w(\delta^{out}(v))}{W_x} = \pi_v$$
+	with the second last equality following from out previous Claim. Since 
+	$$\sum_{v \in V(D'_x)} \pi_v = \sum_{v\in V(D'_x)} \frac{w(\delta^{out}(v))}{W_x} = \frac{W_x}{W_x} = 1$$
+	this is the unique stationary distribution.
+\end{proof}
+\paragraph{}
+From this Claim above we see that $H_{b,b} = \frac{W_x}{w(\delta^{out}(b))}$ at each iteration of the algorithm.
+In iteration $i$, $w(\delta^{out}(b)) = w(bs) = k-i$ since $i$ is the value of flow $x$ in iteration $i$. Since $w(e)$ is at most $1$ for each $e$ in the edge set of $G$, and $w(e) \leq k\leq |E(G)|$ for $bs, tb$. Hence $W_x \leq 2m$ where $m = |E(G)|$. Therefore in iteration $i$,
+$$H_{b,b} \leq \frac{2m}{k-i}.$$
+\paragraph{}
+So the total expected running time is at most
+$$\sum_{i=0}^k\frac{m}{k-i} = m\log k \leq m\log m.$$
+Thus the running time $\tilde{O}(|E|)$ as desired.$\blacksquare$
+\newpage
 %Problem 2
 \section{}
 
+\newpage
 %Problem 3
 \section{}
 
+\newpage
 %Problem 4
 \section{}
 
+\newpage
 %Problem 5
 \section{}
 
+\newpage
 %Problem 6
 \section{}
 \end{document}
