@@ -182,7 +182,21 @@ $$O(\sqrt{n}(\frac{2}{d})^n) = o(\sqrt{n}2^n).$$
 \newpage
 %Problem 3
 \section{}
-
+Let $G$ be a $d$-regular graph. We may assume $G$ is connected. Let $n = |V(G)|$ and $m = |E(G)|$. We invoke the Theorem from Page $7$ of Lecture $15$ which states that 
+$$C(G) \leq 2e^3mR(G)\ln n + n$$
+where $C(G)$ is the cover time of $G$ and $R(G):=\max_{u,v\in V(G)} R_{uv}$ (as in the notes, $R_{uv}$ denotes the effective resistance of $u,v$). Since $m = nd$, using this Theorem it will suffice to show that
+$$R(G) = O(n/d)$$
+to obtain the desired result. First observe that $R_{u,v}$ is at most the length of a shortest $u-v$-path. Let $P=x_o=u, x_1, \dots, x_\ell=v$ be a $u-v$-path. Then, via alternating sums,
+$$\phi(u) - \phi(v) = \sum_{i=0}^{\ell-1} \phi(x_i) -\phi(x_{i+1}) \leq \sum_{i=0}^{\ell-1}r_{x_ix_{i+1}} \leq \ell.$$
+Thus to show that $R(G) = O(n/d)$ it will suffice to show that for any $u,v \in V(G)$, the length of a shortest $u-v$-path is at most $O(n/d)$.
+\paragraph{}
+Suppose for a contradiction there exists $u,v \in V(G)$ such that the length of any $u-v$-path is at least $4n/d$. Let $P=x_o=u, x_1, \dots, x_\ell=v$ be a shortest $u-v$-path. We observe two things. First, observe that for any $i \in \{0,\dots, \ell-3\}$, if $x_i$ and $x_{j}$, where $j \geq i+3$ with addition taken modulo $\ell$, have a common neighbour $x$ not on $P$ then we can replace the component $x_i,\dots, x_j$ of $P$ with $x_i, x, x_{j}$ to obtain a shorter $u-v$-path than $P$, a contradiction. Hence no such $x_i$ and $x_{j}$ have a common neighbour not on $P$. Similarly observe that for any $x_i, x_j$ on $P$ with $j \geq i+2$ we cannot have $x_i$ and $x_j$ adjacent. 
+\paragraph{}
+Therefore, if we let $T\subset V(P)$ be the set of every third vertex on $P$ then every pair of vertices in $T$ do not have a common neighbour or adjacency between them. Since $G$ is $d$-regular, every vertex of $T$ has $d$ neighbours, and since they have no common neighbours or adjacencies
+$$n \geq d|T| =d\frac{|V(P)|}{3} \geq \frac{4}{3}n > n.$$
+Clearly this is a contradiction.
+\paragraph{}
+Thus we have shown every pair of vertices in $G$ has a path of length at most $4n/d = O(n/d)$, as desired. $\blacksquare$
 \newpage
 %Problem 4
 \section{}
