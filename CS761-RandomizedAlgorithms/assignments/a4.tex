@@ -142,12 +142,12 @@ Thus the running time $\tilde{O}(|E|)$ as desired.$\blacksquare$
 %Problem 2
 \section{}
 \paragraph{}
-Consider an instance $I$ of $k$SAT with $n$ variables $x_1,\dots,x_n$ and $m$ clauses $C_1, \dots, C_m$. We solve it using the following generalization of Sch\"oning's Algorithm:
+Consider an instance $I$ of $k$SAT with $n$ variables $x_1,\dots,x_n$ and $m$ clauses $C_1, \dots, C_m$. We may assume that $k$ is odd, otherwise replace $k$ with $k+1$ and add a dummy variable to each clause of $I$ if necessary. Solve $I$ using the following generalization of Sch\"oning's Algorithm:
 \begin{enumerate}
 	\item Repeat up to $N$ times, terminating if all clauses of $I$ are satisfied:
 	\begin{enumerate}
 		\item Start with a random initial assignment
-		\item Repeat up to $3n$ steps, terminating if all clauses satisfied: switch the value of a random variable in an unsatisfied clause.
+		\item Repeat up to $kn$ steps, terminating if all clauses satisfied: switch the value of a random variable in an unsatisfied clause.
 	\end{enumerate}
 	\item Return a satisfying assignment if it is found; otherwise return ``unsatisfiable".
 \end{enumerate}
@@ -156,18 +156,29 @@ Let $S$ be a satisfying assignment. Let $A_i$ be the assignment in the $i$-th st
 \paragraph{}
 We can view our algorithm as a random walk with states $0$ to $n$ denoting the value of $X_i$ when we are in that state. If we are in state $X_i$ at iteration $i$ we transition to state $X_i+1$ with probability $\frac{1}{k}$ and to state $X_i-1$ with probability $\frac{k-1}{k}$.
 \paragraph{}
-Suppose we have assignment $A_i$ at iteration $i$ with $j$ mismatches with $S$, i.e. $X_i = n-j$. Then we reach state $n$ in $3j$ steps provided there are $j$ steps back and $2j$ steps forward among these $3j$ steps. This happens with probability
-$${3j\choose j}(\frac{k-1}{k})^j(\frac{1}{k})^{2j}.$$
-This is a lower bound on reaching $n$ in $3n$ steps.
+Suppose we have assignment $A_i$ at iteration $i$ with $j$ mismatches with $S$, i.e. $X_i = n-j$. Let $a = (k-1)/2$. We reach state $n$ in $kj$ steps provided there are $aj$ steps back and $(a+1)j$ steps forward among these $kj$ steps. This happens with probability
+$${kj\choose j}(\frac{k-1}{k})^{aj}(\frac{1}{k})^{(a+1)j}.$$
+This is a lower bound on reaching $n$ in $kn$ steps.
 \paragraph{}
 We invoke Stirling's formula:
-$$\sqrt{2\pi m}\frac{m}{e}^m \leq m! \leq 2\sqrt{2\pi m}\frac{m}{e}^m$$
+$$\sqrt{2\pi m}(\frac{m}{e})^m \leq m! \leq 2\sqrt{2\pi m}(\frac{m}{e})^m$$
 to obtain a better estimate. Observe
-$${3j\choose j} \geq \frac{\sqrt{2\pi 3j}}{4\sqrt{2\pi 2j}\sqrt{2\pi j}}\frac{3j}{e}^{3j}\frac{e}{2j}^{2j}\frac{e}{j}^j = \frac{c}{\sqrt{j}}\frac{27}{4}^j$$
-where $c = \frac{\sqrt{3}}{8\sqrt{\pi}}$ (a constant).
+$${kj\choose j} \geq \frac{\sqrt{2\pi kj}}{4\sqrt{2\pi aj}\sqrt{2\pi (a+1)j}}(\frac{kj}{e})^{kj}(\frac{e}{aj})^{aj}(\frac{e}{(a+1)j})^{(a+1)j} = \frac{c}{\sqrt{j}}(\frac{k^k}{a^a(a+1)^{a+1}})^j$$
+where $c = \frac{\sqrt{k}}{4\sqrt{2\pi a(a+1)}}$ (a constant when $k$ is constant).
 \paragraph{}
 There our probability of reaching $n$ starting with $j$ mismatches is at least
-$$\frac{c}{\sqrt{j}}\frac{27}{4}^j(\frac{k-1}{k})^j(\frac{1}{k})^{2j}$$
+$$\frac{c}{\sqrt{j}}(\frac{k^k}{a^a(a+1)^{a+1}})^j(\frac{k-1}{k})^{aj}(\frac{1}{k})^{(a+1)j} = \frac{c}{\sqrt{j}}\frac{(k-1)^{aj}}{a^{aj}(a+1)^{(a+1)j}} = \frac{c}{\sqrt{j}}\frac{(2a)^{aj}}{a^{aj}(a+1)^{(a+1)j}},$$
+and hence we obtain a lower bound on the probability of reaching $n$ from $j$ mismatches of
+$$\frac{c}{\sqrt{j}}\frac{2^{aj}}{(a+1)^{(a+1)j}}.$$
+Therefore the probability of the algorithm finding a satisfying assignment in $kn$ steps is at least
+\begin{align*}
+\sum_{j=0}^n\frac{c}{\sqrt{j}}\frac{2^{aj}}{(a+1)^{(a+1)j}} {n\choose j}\frac{1}{2^n} &\geq \frac{c}{\sqrt{n}}\frac{1}{2^n}\sum_{j=0}^n{n\choose j}\frac{2^{aj}}{(a+1)^{(a+1)j}} \\
+&=\frac{c}{\sqrt{n}}\frac{1}{2^n}(1+\frac{2^a}{(a+1)^{a+1}})^n &\text{by the binomial theorem}
+\end{align*}
+Hence the expected runtime of the algorithm is at most
+$$\frac{\sqrt{n}2^n}{c}(1+\frac{2^a}{(a+1)^{a+1}})^{-n},$$
+a function of $n$ and $k$ (since $a$ and $c$ are functions of $k$). When $k\geq 3$ is constant, $\frac{2^a}{(a+1)^{a+1}}$ is a positive constant smaller than $1$, call it $d$. Then our expected runtime is at most
+$$O(\sqrt{n}(\frac{2}{d})^n) = o(\sqrt{n}2^n).$$
 \newpage
 %Problem 3
 \section{}
