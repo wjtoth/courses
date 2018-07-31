@@ -147,12 +147,27 @@ Consider an instance $I$ of $k$SAT with $n$ variables $x_1,\dots,x_n$ and $m$ cl
 	\item Repeat up to $N$ times, terminating if all clauses of $I$ are satisfied:
 	\begin{enumerate}
 		\item Start with a random initial assignment
-		\item Repeat up to $kn$ steps, terminating if all clauses satisfied: switch the value of a random variable in an unsatisfied clause.
+		\item Repeat up to $3n$ steps, terminating if all clauses satisfied: switch the value of a random variable in an unsatisfied clause.
 	\end{enumerate}
 	\item Return a satisfying assignment if it is found; otherwise return ``unsatisfiable".
 \end{enumerate}
 \paragraph{}
 Let $S$ be a satisfying assignment. Let $A_i$ be the assignment in the $i$-th step of the algorithm. Let $X_i$ be the number of variables that have the same value in $A_i$ and $S$. If $X_i = n$ then $A_i = S$ and hence we are done.
+\paragraph{}
+We can view our algorithm as a random walk with states $0$ to $n$ denoting the value of $X_i$ when we are in that state. If we are in state $X_i$ at iteration $i$ we transition to state $X_i+1$ with probability $\frac{1}{k}$ and to state $X_i-1$ with probability $\frac{k-1}{k}$.
+\paragraph{}
+Suppose we have assignment $A_i$ at iteration $i$ with $j$ mismatches with $S$, i.e. $X_i = n-j$. Then we reach state $n$ in $3j$ steps provided there are $j$ steps back and $2j$ steps forward among these $3j$ steps. This happens with probability
+$${3j\choose j}(\frac{k-1}{k})^j(\frac{1}{k})^{2j}.$$
+This is a lower bound on reaching $n$ in $3n$ steps.
+\paragraph{}
+We invoke Stirling's formula:
+$$\sqrt{2\pi m}\frac{m}{e}^m \leq m! \leq 2\sqrt{2\pi m}\frac{m}{e}^m$$
+to obtain a better estimate. Observe
+$${3j\choose j} \geq \frac{\sqrt{2\pi 3j}}{4\sqrt{2\pi 2j}\sqrt{2\pi j}}\frac{3j}{e}^{3j}\frac{e}{2j}^{2j}\frac{e}{j}^j = \frac{c}{\sqrt{j}}\frac{27}{4}^j$$
+where $c = \frac{\sqrt{3}}{8\sqrt{\pi}}$ (a constant).
+\paragraph{}
+There our probability of reaching $n$ starting with $j$ mismatches is at least
+$$\frac{c}{\sqrt{j}}\frac{27}{4}^j(\frac{k-1}{k})^j(\frac{1}{k})^{2j}$$
 \newpage
 %Problem 3
 \section{}
