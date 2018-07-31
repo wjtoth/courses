@@ -15,8 +15,8 @@
 \newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
 \newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
- 
- 
+
+
 \newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
 \newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
 \newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
@@ -71,149 +71,196 @@
 %\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
 
 \begin{document}
-%Problem 1
-\section{}
-\paragraph{}
-Let $G=(V,E)$ be a directed graph, let $s,t\in V$ be source and sink vertices respectively and let $k$ be a positive integer. We may assume that $\delta^{in}(s) = \delta^{out}(t) = \emptyset$. Let $x_f \in [0,1]^E$ be a fractional $s-t$ flow on $G$ of value $k$. That is, $x_f$ satisfies the equations
-$$ x_f(\delta^{out}(s)) = x_f(\delta^{in}(t)) = k$$
-and
-$$x_f(\delta^{in}(v)) = x_f(\delta^{out}(v))$$
-for all $v \in V\backslash\{s,t\}$.
-\paragraph{}
-We're going to need some concepts from network flow theory before we move on. Lucky our flow being $0$-$1$ simplifies things quite a bit. Given a digraph $D$ and a flow $x \in \{0,1\}^E$ we define the residual digraph $D_x$ as follows: 
-\begin{itemize}
-\item$V(D_x) = V(D)$
-\item for every arc $uv \in E(D)$ if $x(uv) = 0$ add arc $uv$ to $E(D_x)$. We call such arcs ``forward" arcs.
-\item for every arc $uv \in E(D)$ if $x(uv) = 1$ add arc $vu$ to $E(D_x)$. we call such arcs ``backward" arcs.
-\end{itemize} 
-An $s-t$ path in $D_x$ is called an \emph{augmenting path}. It is an easy observation to see that if $x$ is a flow of value $k$ and $P$ is an augmenting path in $D_x$, then we can obtain a flow of value $k+1$ by increasing $x(e)$ from $0$ to $1$ for every forward arc in $P$, and decreasing $x(e)$ from $1$ to $0$ for every backward arc in $P$. Using the max-flow min-cut theorem we can see that if there is no augmenting path in $D_x$ then $x$ is a maximum flow. Simply take the cut $S$ defined by vertices reachable from $s$ in $D_x$ (this is an $s-t$ cut since $t$ is not reachable). Since there is no augmenting paths, all forward arcs in $\delta^{out}(S)$ are saturated (have $x$-value $1$). So the value of $x$ is at least (and hence equal to) the capacity of cut $S$, implying that $x$ is a maximum flow.
-\paragraph{}
-Our algorithm will maintain an integral flow in every step, and a weighting on the residual digraph so that (an auxiliary graph closely related to) the residual digraph is weighted-Eulerian. This will allow us to efficiently use random walks to identify augmenting paths for our flow. Due to our fractional flow $x_f$ we know that we will always be able to find such a path while the value of $x$ is less than $k$, as we are sure $x$ is not maximum.
-\paragraph{}
-We will need one more auxiliary graph before we describe the algorithm. Let $D'_x$ be the digraph obtained from $D_x$ by adding a special vertex $b$, and two arcs: $tb$ and $bs$. It is immediate that $D_x$ has an augmenting path if and only if $D_x'$ as cycle containing $b$.
-\paragraph{Weighting}
-If $x$ is an integral $s-t$ flow on $G$ we can define an Eulerian weighting on $D'_x$ as follows. For every forward arc $uv \in E(D_x)$ let $w(uv) = x_f(uv)$. For every backward arc $vu \in E(D_x)$ let $w(vu) = 1- x_f(uv)$. Let $k'$ be the value of $x$. Let $w(tb) = w(bs) = k-k'$.
-\begin{claim}
-Let $x_0=0,x_1, \dots, x_{k-1}\in \{0,1\}^E$ be integral $s-t$ flows on $G$ such that $x_{i+1}$ is obtained from $x_i$ by augmenting $x_i$ along an augmenting path in $D_{x_i}$. Let $w_0,w_1,\dots, w_{k-1}$ be the weightings of each respective $D'_{x_i}$. Then for all $i$
-$$w_i(\delta^{out}(v)) = w_i(\delta^{in}(v))$$ for all $v \in V(D'_{x_i})$.
-\end{claim}
-\begin{proof}
-We proceed by induction on $i$. In the base case $i = 0$. Then $D_{x_i} = G$ and $D'_{x_i} = G + \{bs, tb\}$. We have $w_i(e) = x_f(e)$ for all $e \in E(D_{x_i})$ and since $x_f$ is a flow the claim holds for all $v \in V(D_{x_i})\backslash\{s,t\}$. For vertex $s$,
-$$w_i(\delta^{out}(s)) = x_f(\delta^{out}(s)) = k = w_i(bs) = w_i(\delta^{in}(s)).$$
-The proof of the claim follows similarly for vertex $t$. By definition the claim always holds for vertex $b$. Hence we have proven the base case.
-\paragraph{}
-Now in the inductive step we suppose the claims holds for $x_0, \dots, x_{i-1}$ and consider $x_i$ with $i \geq 1$. Let $P$ be the augmenting path used to obtain $x_i$ from $x_{i-1}$. The digraph $D'_{x_i}$ is obtained from $D'_{x_{i-1}}$ by flipping the orientation of every arc along $P$.
-
-\paragraph{} If $v \not\in V(P) \cup \{b\}$ then by induction the claim already holds at $v$. Further by definition the claim always holds at $b$. So it remains to verify the claim on vertices of $P$. Let $v \in V(P)\backslash\{s,t\}$. Suppose $uv, vx \in E(P)$. Then we have
-\begin{align*}
-w_i(\delta^{in}(v)) &= w_{i-1}(\delta^{in}(v)) -x_f(uv) + 1-x_f(vx)\\
-&=w_{i-1}(\delta^{out}(v)) + 1-x_f(uv) -x_f(vx) \\
-&=w_i(\delta^{out}(v)).
-\end{align*}
-So the claim holds for all such $v$. For vertex $s$, let $sy \in E(P)$. We have
-$$w_i(\delta^{in}(s)) = w_{i-1}(\delta^{in}(s)) -1 + 1-x_f(sy) = w_{i-1}(\delta^{out}(s)) -x_f(sy) = w_i(\delta^{out}(s))$$
-and so the claim holds for $s$. The proof for $t$ follows similarly to the proof for $s$.
-\end{proof}
-\paragraph{Algorithm}
-We initialize our algorithm with integral flow $x = 0$. Our algorithm iterates the following step until our flow $x$ has value $k$ (which it then returns). Let $w$ be the associated weighting on $D'_{x} = G + \{tb,bs\}$. Perform a random walk on $D'_x$ starting from $b$ with transition probability of arc $uv$, $P_{uv}$ equal to 
-$$P_{uv} = \frac{w(uv)}{w(\delta^{out}(u))}.$$
-End this random walk when you return to $b$. The walk has identified an augmenting path $P$. Augment flow of $x$ along $P$ and repeat.
-\paragraph{}
-The expected time to find an augmenting path in any iteration is equal to $H_{b,b}$, the hitting time of $b,b$. We have that $H_{b,b} = \frac{1}{\pi_b}$ where $\pi_b$ is the probability of being in $b$ in the stationary distribution.
-\begin{claim}
-	Let $W_x = w(E(D'_x))$. For any $v \in V(D'_x)$, $\pi_v = \frac{w(\delta^{out}(v))}{W_x}$.
-\end{claim}
-\begin{proof}
-	We calculate
-	$$\pi_v = \sum_{u: uv \in E(D'_x)} \pi_uP_{uv} = \sum_{u:uv \in E(D'_x)} \frac{w(\delta^{out}(u))}{W_x}\frac{w(uv)}{w(\delta^{out}(u))} = \frac{w(\delta^{in}(v))}{W_x} = \frac{w(\delta^{out}(v))}{W_x} = \pi_v$$
-	with the second last equality following from out previous Claim. Since 
-	$$\sum_{v \in V(D'_x)} \pi_v = \sum_{v\in V(D'_x)} \frac{w(\delta^{out}(v))}{W_x} = \frac{W_x}{W_x} = 1$$
-	this is the unique stationary distribution.
-\end{proof}
-\paragraph{}
-From this Claim above we see that $H_{b,b} = \frac{W_x}{w(\delta^{out}(b))}$ at each iteration of the algorithm.
-In iteration $i$, $w(\delta^{out}(b)) = w(bs) = k-i$ since $i$ is the value of flow $x$ in iteration $i$. Since $w(e)$ is at most $1$ for each $e$ in the edge set of $G$, and $w(e) \leq k\leq |E(G)|$ for $bs, tb$. Hence $W_x \leq 2m$ where $m = |E(G)|$. Therefore in iteration $i$,
-$$H_{b,b} \leq \frac{2m}{k-i}.$$
-\paragraph{}
-So the total expected running time is at most
-$$\sum_{i=0}^k\frac{m}{k-i} = m\log k \leq m\log m.$$
-Thus the running time $\tilde{O}(|E|)$ as desired.$\blacksquare$
-\newpage
-%Problem 2
-\section{}
-\paragraph{}
-Consider an instance $I$ of $k$SAT with $n$ variables $x_1,\dots,x_n$ and $m$ clauses $C_1, \dots, C_m$. We may assume that $k$ is odd, otherwise replace $k$ with $k+1$ and add a dummy variable to each clause of $I$ if necessary. Solve $I$ using the following generalization of Sch\"oning's Algorithm:
-\begin{enumerate}
-	\item Repeat up to $N$ times, terminating if all clauses of $I$ are satisfied:
+	%Problem 1
+	\section{}
+	\paragraph{}
+	Let $G=(V,E)$ be a directed graph, let $s,t\in V$ be source and sink vertices respectively and let $k$ be a positive integer. We may assume that $\delta^{in}(s) = \delta^{out}(t) = \emptyset$. Let $x_f \in [0,1]^E$ be a fractional $s-t$ flow on $G$ of value $k$. That is, $x_f$ satisfies the equations
+	$$ x_f(\delta^{out}(s)) = x_f(\delta^{in}(t)) = k$$
+	and
+	$$x_f(\delta^{in}(v)) = x_f(\delta^{out}(v))$$
+	for all $v \in V\backslash\{s,t\}$.
+	\paragraph{}
+	We're going to need some concepts from network flow theory before we move on. Lucky our flow being $0$-$1$ simplifies things quite a bit. Given a digraph $D$ and a flow $x \in \{0,1\}^E$ we define the residual digraph $D_x$ as follows: 
+	\begin{itemize}
+		\item$V(D_x) = V(D)$
+		\item for every arc $uv \in E(D)$ if $x(uv) = 0$ add arc $uv$ to $E(D_x)$. We call such arcs ``forward" arcs.
+		\item for every arc $uv \in E(D)$ if $x(uv) = 1$ add arc $vu$ to $E(D_x)$. we call such arcs ``backward" arcs.
+	\end{itemize} 
+	An $s-t$ path in $D_x$ is called an \emph{augmenting path}. It is an easy observation to see that if $x$ is a flow of value $k$ and $P$ is an augmenting path in $D_x$, then we can obtain a flow of value $k+1$ by increasing $x(e)$ from $0$ to $1$ for every forward arc in $P$, and decreasing $x(e)$ from $1$ to $0$ for every backward arc in $P$. Using the max-flow min-cut theorem we can see that if there is no augmenting path in $D_x$ then $x$ is a maximum flow. Simply take the cut $S$ defined by vertices reachable from $s$ in $D_x$ (this is an $s-t$ cut since $t$ is not reachable). Since there is no augmenting paths, all forward arcs in $\delta^{out}(S)$ are saturated (have $x$-value $1$). So the value of $x$ is at least (and hence equal to) the capacity of cut $S$, implying that $x$ is a maximum flow.
+	\paragraph{}
+	Our algorithm will maintain an integral flow in every step, and a weighting on the residual digraph so that (an auxiliary graph closely related to) the residual digraph is weighted-Eulerian. This will allow us to efficiently use random walks to identify augmenting paths for our flow. Due to our fractional flow $x_f$ we know that we will always be able to find such a path while the value of $x$ is less than $k$, as we are sure $x$ is not maximum.
+	\paragraph{}
+	We will need one more auxiliary graph before we describe the algorithm. Let $D'_x$ be the digraph obtained from $D_x$ by adding a special vertex $b$, and two arcs: $tb$ and $bs$. It is immediate that $D_x$ has an augmenting path if and only if $D_x'$ as cycle containing $b$.
+	\paragraph{Weighting}
+	If $x$ is an integral $s-t$ flow on $G$ we can define an Eulerian weighting on $D'_x$ as follows. For every forward arc $uv \in E(D_x)$ let $w(uv) = x_f(uv)$. For every backward arc $vu \in E(D_x)$ let $w(vu) = 1- x_f(uv)$. Let $k'$ be the value of $x$. Let $w(tb) = w(bs) = k-k'$.
+	\begin{claim}
+		Let $x_0=0,x_1, \dots, x_{k-1}\in \{0,1\}^E$ be integral $s-t$ flows on $G$ such that $x_{i+1}$ is obtained from $x_i$ by augmenting $x_i$ along an augmenting path in $D_{x_i}$. Let $w_0,w_1,\dots, w_{k-1}$ be the weightings of each respective $D'_{x_i}$. Then for all $i$
+		$$w_i(\delta^{out}(v)) = w_i(\delta^{in}(v))$$ for all $v \in V(D'_{x_i})$.
+	\end{claim}
+	\begin{proof}
+		We proceed by induction on $i$. In the base case $i = 0$. Then $D_{x_i} = G$ and $D'_{x_i} = G + \{bs, tb\}$. We have $w_i(e) = x_f(e)$ for all $e \in E(D_{x_i})$ and since $x_f$ is a flow the claim holds for all $v \in V(D_{x_i})\backslash\{s,t\}$. For vertex $s$,
+		$$w_i(\delta^{out}(s)) = x_f(\delta^{out}(s)) = k = w_i(bs) = w_i(\delta^{in}(s)).$$
+		The proof of the claim follows similarly for vertex $t$. By definition the claim always holds for vertex $b$. Hence we have proven the base case.
+		\paragraph{}
+		Now in the inductive step we suppose the claims holds for $x_0, \dots, x_{i-1}$ and consider $x_i$ with $i \geq 1$. Let $P$ be the augmenting path used to obtain $x_i$ from $x_{i-1}$. The digraph $D'_{x_i}$ is obtained from $D'_{x_{i-1}}$ by flipping the orientation of every arc along $P$.
+		
+		\paragraph{} If $v \not\in V(P) \cup \{b\}$ then by induction the claim already holds at $v$. Further by definition the claim always holds at $b$. So it remains to verify the claim on vertices of $P$. Let $v \in V(P)\backslash\{s,t\}$. Suppose $uv, vx \in E(P)$. Then we have
+		\begin{align*}
+		w_i(\delta^{in}(v)) &= w_{i-1}(\delta^{in}(v)) -x_f(uv) + 1-x_f(vx)\\
+		&=w_{i-1}(\delta^{out}(v)) + 1-x_f(uv) -x_f(vx) \\
+		&=w_i(\delta^{out}(v)).
+		\end{align*}
+		So the claim holds for all such $v$. For vertex $s$, let $sy \in E(P)$. We have
+		$$w_i(\delta^{in}(s)) = w_{i-1}(\delta^{in}(s)) -1 + 1-x_f(sy) = w_{i-1}(\delta^{out}(s)) -x_f(sy) = w_i(\delta^{out}(s))$$
+		and so the claim holds for $s$. The proof for $t$ follows similarly to the proof for $s$.
+	\end{proof}
+	\paragraph{Algorithm}
+	We initialize our algorithm with integral flow $x = 0$. Our algorithm iterates the following step until our flow $x$ has value $k$ (which it then returns). Let $w$ be the associated weighting on $D'_{x} = G + \{tb,bs\}$. Perform a random walk on $D'_x$ starting from $b$ with transition probability of arc $uv$, $P_{uv}$ equal to 
+	$$P_{uv} = \frac{w(uv)}{w(\delta^{out}(u))}.$$
+	End this random walk when you return to $b$. The walk has identified an augmenting path $P$. Augment flow of $x$ along $P$ and repeat.
+	\paragraph{}
+	The expected time to find an augmenting path in any iteration is equal to $H_{b,b}$, the hitting time of $b,b$. We have that $H_{b,b} = \frac{1}{\pi_b}$ where $\pi_b$ is the probability of being in $b$ in the stationary distribution.
+	\begin{claim}
+		Let $W_x = w(E(D'_x))$. For any $v \in V(D'_x)$, $\pi_v = \frac{w(\delta^{out}(v))}{W_x}$.
+	\end{claim}
+	\begin{proof}
+		We calculate
+		$$\pi_v = \sum_{u: uv \in E(D'_x)} \pi_uP_{uv} = \sum_{u:uv \in E(D'_x)} \frac{w(\delta^{out}(u))}{W_x}\frac{w(uv)}{w(\delta^{out}(u))} = \frac{w(\delta^{in}(v))}{W_x} = \frac{w(\delta^{out}(v))}{W_x} = \pi_v$$
+		with the second last equality following from out previous Claim. Since 
+		$$\sum_{v \in V(D'_x)} \pi_v = \sum_{v\in V(D'_x)} \frac{w(\delta^{out}(v))}{W_x} = \frac{W_x}{W_x} = 1$$
+		this is the unique stationary distribution.
+	\end{proof}
+	\paragraph{}
+	From this Claim above we see that $H_{b,b} = \frac{W_x}{w(\delta^{out}(b))}$ at each iteration of the algorithm.
+	In iteration $i$, $w(\delta^{out}(b)) = w(bs) = k-i$ since $i$ is the value of flow $x$ in iteration $i$. Since $w(e)$ is at most $1$ for each $e$ in the edge set of $G$, and $w(e) \leq k\leq |E(G)|$ for $bs, tb$. Hence $W_x \leq 2m$ where $m = |E(G)|$. Therefore in iteration $i$,
+	$$H_{b,b} \leq \frac{2m}{k-i}.$$
+	\paragraph{}
+	So the total expected running time is at most
+	$$\sum_{i=0}^k\frac{m}{k-i} = m\log k \leq m\log m.$$
+	Thus the running time $\tilde{O}(|E|)$ as desired.$\blacksquare$
+	\newpage
+	%Problem 2
+	\section{}
+	\paragraph{}
+	Consider an instance $I$ of $k$SAT with $n$ variables $x_1,\dots,x_n$ and $m$ clauses $C_1, \dots, C_m$. We may assume that $k$ is odd, otherwise replace $k$ with $k+1$ and add a dummy variable to each clause of $I$ if necessary. Solve $I$ using the following generalization of Sch\"oning's Algorithm:
 	\begin{enumerate}
-		\item Start with a random initial assignment
-		\item Repeat up to $kn$ steps, terminating if all clauses satisfied: switch the value of a random variable in an unsatisfied clause.
+		\item Repeat up to $N$ times, terminating if all clauses of $I$ are satisfied:
+		\begin{enumerate}
+			\item Start with a random initial assignment
+			\item Repeat up to $kn$ steps, terminating if all clauses satisfied: switch the value of a random variable in an unsatisfied clause.
+		\end{enumerate}
+		\item Return a satisfying assignment if it is found; otherwise return ``unsatisfiable".
 	\end{enumerate}
-	\item Return a satisfying assignment if it is found; otherwise return ``unsatisfiable".
-\end{enumerate}
-\paragraph{}
-Let $S$ be a satisfying assignment. Let $A_i$ be the assignment in the $i$-th step of the algorithm. Let $X_i$ be the number of variables that have the same value in $A_i$ and $S$. If $X_i = n$ then $A_i = S$ and hence we are done.
-\paragraph{}
-We can view our algorithm as a random walk with states $0$ to $n$ denoting the value of $X_i$ when we are in that state. If we are in state $X_i$ at iteration $i$ we transition to state $X_i+1$ with probability $\frac{1}{k}$ and to state $X_i-1$ with probability $\frac{k-1}{k}$.
-\paragraph{}
-Suppose we have assignment $A_i$ at iteration $i$ with $j$ mismatches with $S$, i.e. $X_i = n-j$. Let $a = (k-1)/2$. We reach state $n$ in $kj$ steps provided there are $aj$ steps back and $(a+1)j$ steps forward among these $kj$ steps. This happens with probability
-$${kj\choose j}(\frac{k-1}{k})^{aj}(\frac{1}{k})^{(a+1)j}.$$
-This is a lower bound on reaching $n$ in $kn$ steps.
-\paragraph{}
-We invoke Stirling's formula:
-$$\sqrt{2\pi m}(\frac{m}{e})^m \leq m! \leq 2\sqrt{2\pi m}(\frac{m}{e})^m$$
-to obtain a better estimate. Observe
-$${kj\choose j} \geq \frac{\sqrt{2\pi kj}}{4\sqrt{2\pi aj}\sqrt{2\pi (a+1)j}}(\frac{kj}{e})^{kj}(\frac{e}{aj})^{aj}(\frac{e}{(a+1)j})^{(a+1)j} = \frac{c}{\sqrt{j}}(\frac{k^k}{a^a(a+1)^{a+1}})^j$$
-where $c = \frac{\sqrt{k}}{4\sqrt{2\pi a(a+1)}}$ (a constant when $k$ is constant).
-\paragraph{}
-There our probability of reaching $n$ starting with $j$ mismatches is at least
-$$\frac{c}{\sqrt{j}}(\frac{k^k}{a^a(a+1)^{a+1}})^j(\frac{k-1}{k})^{aj}(\frac{1}{k})^{(a+1)j} = \frac{c}{\sqrt{j}}\frac{(k-1)^{aj}}{a^{aj}(a+1)^{(a+1)j}} = \frac{c}{\sqrt{j}}\frac{(2a)^{aj}}{a^{aj}(a+1)^{(a+1)j}},$$
-and hence we obtain a lower bound on the probability of reaching $n$ from $j$ mismatches of
-$$\frac{c}{\sqrt{j}}\frac{2^{aj}}{(a+1)^{(a+1)j}}.$$
-Therefore the probability of the algorithm finding a satisfying assignment in $kn$ steps is at least
-\begin{align*}
-\sum_{j=0}^n\frac{c}{\sqrt{j}}\frac{2^{aj}}{(a+1)^{(a+1)j}} {n\choose j}\frac{1}{2^n} &\geq \frac{c}{\sqrt{n}}\frac{1}{2^n}\sum_{j=0}^n{n\choose j}\frac{2^{aj}}{(a+1)^{(a+1)j}} \\
-&=\frac{c}{\sqrt{n}}\frac{1}{2^n}(1+\frac{2^a}{(a+1)^{a+1}})^n &\text{by the binomial theorem}
-\end{align*}
-Hence the expected runtime of the algorithm is at most
-$$\frac{\sqrt{n}2^n}{c}(1+\frac{2^a}{(a+1)^{a+1}})^{-n},$$
-a function of $n$ and $k$ (since $a$ and $c$ are functions of $k$). When $k\geq 3$ is constant, $\frac{2^a}{(a+1)^{a+1}}$ is a positive constant smaller than $1$, call it $d$. Then our expected runtime is at most
-$$O(\sqrt{n}(\frac{2}{d})^n) = o(\sqrt{n}2^n).$$
-\newpage
-%Problem 3
-\section{}
-Let $G$ be a $d$-regular graph. We may assume $G$ is connected. Let $n = |V(G)|$ and $m = |E(G)|$. We invoke the Theorem from Page $7$ of Lecture $15$ which states that 
-$$C(G) \leq 2e^3mR(G)\ln n + n$$
-where $C(G)$ is the cover time of $G$ and $R(G):=\max_{u,v\in V(G)} R_{uv}$ (as in the notes, $R_{uv}$ denotes the effective resistance of $u,v$). Since $m = nd$, using this Theorem it will suffice to show that
-$$R(G) = O(n/d)$$
-to obtain the desired result. First observe that $R_{u,v}$ is at most the length of a shortest $u-v$-path. Let $P=x_o=u, x_1, \dots, x_\ell=v$ be a $u-v$-path. Then, via alternating sums,
-$$\phi(u) - \phi(v) = \sum_{i=0}^{\ell-1} \phi(x_i) -\phi(x_{i+1}) \leq \sum_{i=0}^{\ell-1}r_{x_ix_{i+1}} \leq \ell.$$
-Thus to show that $R(G) = O(n/d)$ it will suffice to show that for any $u,v \in V(G)$, the length of a shortest $u-v$-path is at most $O(n/d)$.
-\paragraph{}
-Suppose for a contradiction there exists $u,v \in V(G)$ such that the length of any $u-v$-path is at least $4n/d$. Let $P=x_o=u, x_1, \dots, x_\ell=v$ be a shortest $u-v$-path. We observe two things. First, observe that for any $i \in \{0,\dots, \ell-3\}$, if $x_i$ and $x_{j}$, where $j \geq i+3$ with addition taken modulo $\ell$, have a common neighbour $x$ not on $P$ then we can replace the component $x_i,\dots, x_j$ of $P$ with $x_i, x, x_{j}$ to obtain a shorter $u-v$-path than $P$, a contradiction. Hence no such $x_i$ and $x_{j}$ have a common neighbour not on $P$. Similarly observe that for any $x_i, x_j$ on $P$ with $j \geq i+2$ we cannot have $x_i$ and $x_j$ adjacent. 
-\paragraph{}
-Therefore, if we let $T\subset V(P)$ be the set of every third vertex on $P$ then every pair of vertices in $T$ do not have a common neighbour or adjacency between them. Since $G$ is $d$-regular, every vertex of $T$ has $d$ neighbours, and since they have no common neighbours or adjacencies
-$$n \geq d|T| =d\frac{|V(P)|}{3} \geq \frac{4}{3}n > n.$$
-Clearly this is a contradiction.
-\paragraph{}
-Thus we have shown every pair of vertices in $G$ has a path of length at most $4n/d = O(n/d)$, as desired. $\blacksquare$
-\newpage
-%Problem 4
-\section{}
-
-\newpage
-%Problem 5
-\section{}
-
-\newpage
-%Problem 6
-\section{}
-\subsection{a}
-\paragraph{}
-For this part it will suffice to show that the Markov chain is finite, irreducible, and aperiodic. Its state space is the set of all permutations on $[n]$ so indeed it is finite. If cards $i$ and $j$ are chosen to swap, yet $i=j$ then we transition to the same permutation, and therefore the Markov chain is aperiodic. To see that it is irreducible we have to show that any permutation can be reached from any other permutation by a series of transpositions (swaps). Let $\sigma_1, \sigma_2 \in S_n$. We can write $\sigma_1 = \tau_1 \circ \dots \circ \tau_k$ and $\sigma_2 = \tau'_1 \circ \dots \circ \tau'_\ell$ where each $\tau_i$ and $\tau'_j$ is a transposition. This is a basic result in group theory. So starting from $\sigma_1$ we if we make the sequence of transitions 
-$$\tau_1^{-1}, \dots, \tau_k^{-1},\tau'_\ell, \dots, \tau'_1$$
-then we reach $\sigma_2$ from $\sigma_1$.
-\subsection{b}
-\paragraph{}
-If we can demonstrate a coupling of the Markov chain with expected convergence time $O(n^2)$ then we know there exists a time $T = O(\frac{n^2}{\epsilon})$ where $\tau(\epsilon) \leq T$, at which point we can use the Coupling Lemma from Page $2$ of Lecture $18$ to achieve the desired results.
+	\paragraph{}
+	Let $S$ be a satisfying assignment. Let $A_i$ be the assignment in the $i$-th step of the algorithm. Let $X_i$ be the number of variables that have the same value in $A_i$ and $S$. If $X_i = n$ then $A_i = S$ and hence we are done.
+	\paragraph{}
+	We can view our algorithm as a random walk with states $0$ to $n$ denoting the value of $X_i$ when we are in that state. If we are in state $X_i$ at iteration $i$ we transition to state $X_i+1$ with probability $\frac{1}{k}$ and to state $X_i-1$ with probability $\frac{k-1}{k}$.
+	\paragraph{}
+	Suppose we have assignment $A_i$ at iteration $i$ with $j$ mismatches with $S$, i.e. $X_i = n-j$. Let $a = (k-1)/2$. We reach state $n$ in $kj$ steps provided there are $aj$ steps back and $(a+1)j$ steps forward among these $kj$ steps. This happens with probability
+	$${kj\choose j}(\frac{k-1}{k})^{aj}(\frac{1}{k})^{(a+1)j}.$$
+	This is a lower bound on reaching $n$ in $kn$ steps.
+	\paragraph{}
+	We invoke Stirling's formula:
+	$$\sqrt{2\pi m}(\frac{m}{e})^m \leq m! \leq 2\sqrt{2\pi m}(\frac{m}{e})^m$$
+	to obtain a better estimate. Observe
+	$${kj\choose j} \geq \frac{\sqrt{2\pi kj}}{4\sqrt{2\pi aj}\sqrt{2\pi (a+1)j}}(\frac{kj}{e})^{kj}(\frac{e}{aj})^{aj}(\frac{e}{(a+1)j})^{(a+1)j} = \frac{c}{\sqrt{j}}(\frac{k^k}{a^a(a+1)^{a+1}})^j$$
+	where $c = \frac{\sqrt{k}}{4\sqrt{2\pi a(a+1)}}$ (a constant when $k$ is constant).
+	\paragraph{}
+	There our probability of reaching $n$ starting with $j$ mismatches is at least
+	$$\frac{c}{\sqrt{j}}(\frac{k^k}{a^a(a+1)^{a+1}})^j(\frac{k-1}{k})^{aj}(\frac{1}{k})^{(a+1)j} = \frac{c}{\sqrt{j}}\frac{(k-1)^{aj}}{a^{aj}(a+1)^{(a+1)j}} = \frac{c}{\sqrt{j}}\frac{(2a)^{aj}}{a^{aj}(a+1)^{(a+1)j}},$$
+	and hence we obtain a lower bound on the probability of reaching $n$ from $j$ mismatches of
+	$$\frac{c}{\sqrt{j}}\frac{2^{aj}}{(a+1)^{(a+1)j}}.$$
+	Therefore the probability of the algorithm finding a satisfying assignment in $kn$ steps is at least
+	\begin{align*}
+	\sum_{j=0}^n\frac{c}{\sqrt{j}}\frac{2^{aj}}{(a+1)^{(a+1)j}} {n\choose j}\frac{1}{2^n} &\geq \frac{c}{\sqrt{n}}\frac{1}{2^n}\sum_{j=0}^n{n\choose j}\frac{2^{aj}}{(a+1)^{(a+1)j}} \\
+	&=\frac{c}{\sqrt{n}}\frac{1}{2^n}(1+\frac{2^a}{(a+1)^{a+1}})^n &\text{by the binomial theorem}
+	\end{align*}
+	Hence the expected runtime of the algorithm is at most
+	$$\frac{\sqrt{n}2^n}{c}(1+\frac{2^a}{(a+1)^{a+1}})^{-n},$$
+	a function of $n$ and $k$ (since $a$ and $c$ are functions of $k$). When $k\geq 3$ is constant, $\frac{2^a}{(a+1)^{a+1}}$ is a positive constant smaller than $1$, call it $d$. Then our expected runtime is at most
+	$$O(\sqrt{n}(\frac{2}{d})^n) = o(\sqrt{n}2^n).$$
+	\newpage
+	%Problem 3
+	\section{}
+	Let $G$ be a $d$-regular graph. We may assume $G$ is connected. Let $n = |V(G)|$ and $m = |E(G)|$. We invoke the Theorem from Page $7$ of Lecture $15$ which states that 
+	$$C(G) \leq 2e^3mR(G)\ln n + n$$
+	where $C(G)$ is the cover time of $G$ and $R(G):=\max_{u,v\in V(G)} R_{uv}$ (as in the notes, $R_{uv}$ denotes the effective resistance of $u,v$). Since $m = nd$, using this Theorem it will suffice to show that
+	$$R(G) = O(n/d)$$
+	to obtain the desired result. First observe that $R_{u,v}$ is at most the length of a shortest $u-v$-path. Let $P=x_o=u, x_1, \dots, x_\ell=v$ be a $u-v$-path. Then, via alternating sums,
+	$$\phi(u) - \phi(v) = \sum_{i=0}^{\ell-1} \phi(x_i) -\phi(x_{i+1}) \leq \sum_{i=0}^{\ell-1}r_{x_ix_{i+1}} \leq \ell.$$
+	Thus to show that $R(G) = O(n/d)$ it will suffice to show that for any $u,v \in V(G)$, the length of a shortest $u-v$-path is at most $O(n/d)$.
+	\paragraph{}
+	Suppose for a contradiction there exists $u,v \in V(G)$ such that the length of any $u-v$-path is at least $4n/d$. Let $P=x_o=u, x_1, \dots, x_\ell=v$ be a shortest $u-v$-path. We observe two things. First, observe that for any $i \in \{0,\dots, \ell-3\}$, if $x_i$ and $x_{j}$, where $j \geq i+3$ with addition taken modulo $\ell$, have a common neighbour $x$ not on $P$ then we can replace the component $x_i,\dots, x_j$ of $P$ with $x_i, x, x_{j}$ to obtain a shorter $u-v$-path than $P$, a contradiction. Hence no such $x_i$ and $x_{j}$ have a common neighbour not on $P$. Similarly observe that for any $x_i, x_j$ on $P$ with $j \geq i+2$ we cannot have $x_i$ and $x_j$ adjacent. 
+	\paragraph{}
+	Therefore, if we let $T\subset V(P)$ be the set of every third vertex on $P$ then every pair of vertices in $T$ do not have a common neighbour or adjacency between them. Since $G$ is $d$-regular, every vertex of $T$ has $d$ neighbours, and since they have no common neighbours or adjacencies
+	$$n \geq d|T| =d\frac{|V(P)|}{3} \geq \frac{4}{3}n > n.$$
+	Clearly this is a contradiction.
+	\paragraph{}
+	Thus we have shown every pair of vertices in $G$ has a path of length at most $4n/d = O(n/d)$, as desired. $\blacksquare$
+	\newpage
+	%Problem 4
+	\section{}
+	\paragraph{}
+	
+	\newpage
+	%Problem 5
+	\section{}
+	\paragraph{}
+	Consider a DNF formula $I$ with clauses $C_1, \dots, C_m$ and variables $x_1, \dots, x_n$. We adopt the notation from the problem statement and random process description, and further let $\text{Sat}$ denote the set of satisfying assignments for $I$. We begin by observing
+	$$E[P] = E[\frac{W}{N(\sigma)}] = W\cdot E[\frac{1}{N(\sigma)}] = W\sum_{\sigma \in \text{Sat}} Pr(\sigma \text{ is chosen})\frac{1}{N(\sigma)}$$
+	where the random event ``$\sigma$ is chosen" denotes the event that the random process chooses $\sigma$ to satisfy $C_i$. Since the process never chooses an assignment not in $\text{Sat}$ the sum ranges over $\sigma$ in Sat.
+	\paragraph{}
+	We now proceed to analyze $Pr(\sigma\text{ is chosen}).$ Let $X_i$ denote the event that the random process begins by choosing clause $C_i$. We have $Pr(X_i) = \frac{w_i}{W}$ by definition. Let $Y_{i,\sigma}$ denote the event that $\sigma$ is the assignment chosen to satisfy clause $C_i$. We have
+	$$Pr(Y_i\mid X_i) = \frac{p^{t_\sigma}(1-p)^{f_\sigma}}{p^{a_i}(1-p)^{b_i}} = \frac{p^{t_\sigma}(1-p)^{f_\sigma}}{w_i}$$
+	where $t_\sigma$ and $f_\sigma$ denote the number of variables $\sigma$ sets to True and False respectively. Let $\text{Sat}(i)$ denote the subset of $\text{Sat}$ which satisfy $C_i$. Since
+	$$\sigma\text{ is chosen} = \bigcup_i X_i \cap Y_i$$
+	and the events $X_i \cap Y_i$ and $X_j \cap Y_j$ are disjoint,
+	$$Pr(\sigma\text{ is chosen}) = \sum_{i \in [m]}Pr(X_i \cap Y_i) = \sum_{i:\sigma \in \text{Sat}(i)} Pr(X_i)Pr(Y_i\mid X_i) = \sum_{i: \sigma \in \text{Sat}(i)} \frac{w_i}{W} \frac{p^{t_\sigma}(1-p)^{f_\sigma}}{w_i}.$$
+	Hence we have
+	$$Pr(\sigma\text{ is chosen}) = \frac{N(\sigma)}{W}p^{t_\sigma}(1-p)^{f_\sigma}.$$
+	Substituting this probability into our expression for $E[P]$ we see that
+	$$E[P] = \sum_{\sigma \in \text{Sat}}p^{t_\sigma}(1-p)^{f_\sigma}.$$
+	Indeed this is precisely the probability that the DNF formula is satisfiable.
+	\paragraph{}
+	Let $\epsilon,\delta \in (0,1]$. We now proceed to obtain an $(\epsilon,\delta)$-approximation for the probability that the DNF formula is satisfiable. We will run the random process for $t$ trials (to be chosen later), and return the average outcome. Let $P_i = \frac{W}{N(\sigma_i)}$ be the outcome of trial $i$. Let $\mu = E[P_i]$ for all $i \in[t]$. We have previously shown that $\mu$ is precisely the probability that the DNF formula is satisfiable.
+	\paragraph{}
+	Since $N((\sigma_i))\in [1,m]$ we have $P_i \in [\frac{W}{m}, W]$, and we see that $\frac{P_i}{W} \in [\frac{1}{m}, 1]$. Our algorithm will return
+	$$\bar{P} := \frac{1}{t} \sum_{i=1}^t P_i.$$
+	To be an $(\epsilon,\delta)$-approximation we want to show
+	$$Pr(|\bar{P} - \mu|> \epsilon\mu) \leq \delta.$$
+	We define a change of variables, so that $X_i =\frac{P_i}{W}$ and $\bar{X} = \frac{1}{t}\sum_{i=1}^t X_i$. Now showing our desired inequality for $(\epsilon,\delta)$-approximation is equivalent to showing
+	$$Pr(|\bar{X} - E[\bar{X}]| > \epsilon E[\bar{X}]) \leq \delta.$$
+	We now invoke the Hoeffding extension of our Chernoff Bound results in Lecture $2$, and sum both tails:
+	$$Pr(|\bar{X} - E[\bar{X}]| > \epsilon E[\bar{X}]) \leq 2\exp(-2t\epsilon^2(\frac{\mu}{W})^2) \leq 2\exp(-2t(\frac{\epsilon}{m})^2) $$
+	where the last inequality follows since $\frac{\mu}{W} \geq \frac{1}{m}$ (as each of $\frac{P_i}{W}$ is at least $\frac{1}{m}$).
+	Hence if we choose $t$ so that
+	$$t \geq \frac{-\ln(\frac{\delta}{2})}{2} \cdot (\frac{m}{\epsilon})^2$$
+	then we will obtain the desired probability bound so that our algorithm is an $(\epsilon,\delta)$-approximation.$\blacksquare$
+	\newpage
+	%Problem 6
+	\section{}
+	\subsection{a}
+	\paragraph{}
+	For this part it will suffice to show that the Markov chain is finite, irreducible, and aperiodic. Its state space is the set of all permutations on $[n]$ so indeed it is finite. If cards $i$ and $j$ are chosen to swap, yet $i=j$ then we transition to the same permutation, and therefore the Markov chain is aperiodic. To see that it is irreducible we have to show that any permutation can be reached from any other permutation by a series of transpositions (swaps). Let $\sigma_1, \sigma_2 \in S_n$. We can write $\sigma_1 = \tau_1 \circ \dots \circ \tau_k$ and $\sigma_2 = \tau'_1 \circ \dots \circ \tau'_\ell$ where each $\tau_i$ and $\tau'_j$ is a transposition. This is a basic result in group theory. So starting from $\sigma_1$ we if we make the sequence of transitions 
+	$$\tau_1^{-1}, \dots, \tau_k^{-1},\tau'_\ell, \dots, \tau'_1$$
+	then we reach $\sigma_2$ from $\sigma_1$.
+	\subsection{b}
+	\paragraph{}
+	If we can demonstrate a coupling of the Markov chain with expected convergence time $O(n^2)$ then we know there exists a time $T = O(\frac{n^2}{\epsilon})$ where $\tau(\epsilon) \leq T$, at which point we can use the Coupling Lemma from Page $2$ of Lecture $18$ to achieve the desired results.
+	\paragraph{}
+	We define our joint random process for the coupling now. Let $\sigma_1$ be the permutation state of the original Markov chain, and $\sigma_2$ the permutation for the copy. Our process proceeds in stages, where stage $i$ denotes that the two permutations agree in $i$ positions. At stage $i$ we have three different types of swaps. Suppose that the original Markov chain chooses to swap cards with values $a$ and $b$. Cases:
+	\begin{enumerate}
+		\item $a$ and $b$ are both in positions whose values agree in $\sigma_1$ and $\sigma_2$. Then the copy Markov chain will choose to swap $a$ and $b$ as well, preserving that we are in stage $i$.
+		\item Similarly if $a$ is in a position whose values agree in $\sigma_1$ and $\sigma_2$, and $b$ is not in such a position, then the copy Markov chain will choose to swap card $b$ into $a$'s position to preserve agreement and stay in stage $i$.
+		\item In final case: that $a$ and $b$ are both in non-agreement positions, we progress stages. The copy Markov chain looks at the state the original ends up in after the swap of $a$ and $b$ and chooses a non-agreement position uniformly at random, making a swap (between two non-agreement position cards) to increase the number of positions $\sigma_1$ and $\sigma_2$ agree on by at least $1$. That is, we progress at least to stage $i+1$.
+	\end{enumerate}
+	The random process ends when we are in stage $n$. This is a valid coupling since the copy Markov chain has probability of making any given swap $\frac{1}{n^2}$.
+	\paragraph{}
+	The probability that we improve from stage $i$ to stage $\geq i+1$ during a state transition in the random process is the same as the probability that two non-agreement positions are chosen for the swap. This occurs with probability
+	$$\frac{(n-i)^2}{n^2}.$$
+	Hence the expected number of transitions before we move from stage $i$ to stage $i+1$ is at most
+	$$\frac{n^2}{(n-i)^2}.$$
+	Therefore, using linearity of expectation, the expected number of transitions before we reach stage $n$ from stage $0$ is at most
+	$$\sum_{i=1}^n\frac{n^2}{(n-i)^2} \leq cn^2 = O(n^2)$$
+	where $c$ is a constant, $c \approx \frac{\pi^2}{6}$. Therefore the expected convergence time of our coupling is $O(n^2)$, and we invoke the Coupling Lemma to complete the proof.$\blacksquare$
 \end{document}
