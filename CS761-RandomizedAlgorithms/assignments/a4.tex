@@ -208,4 +208,12 @@ Thus we have shown every pair of vertices in $G$ has a path of length at most $4
 \newpage
 %Problem 6
 \section{}
+\subsection{a}
+\paragraph{}
+For this part it will suffice to show that the Markov chain is finite, irreducible, and aperiodic. Its state space is the set of all permutations on $[n]$ so indeed it is finite. If cards $i$ and $j$ are chosen to swap, yet $i=j$ then we transition to the same permutation, and therefore the Markov chain is aperiodic. To see that it is irreducible we have to show that any permutation can be reached from any other permutation by a series of transpositions (swaps). Let $\sigma_1, \sigma_2 \in S_n$. We can write $\sigma_1 = \tau_1 \circ \dots \circ \tau_k$ and $\sigma_2 = \tau'_1 \circ \dots \circ \tau'_\ell$ where each $\tau_i$ and $\tau'_j$ is a transposition. This is a basic result in group theory. So starting from $\sigma_1$ we if we make the sequence of transitions 
+$$\tau_1^{-1}, \dots, \tau_k^{-1},\tau'_\ell, \dots, \tau'_1$$
+then we reach $\sigma_2$ from $\sigma_1$.
+\subsection{b}
+\paragraph{}
+If we can demonstrate a coupling of the Markov chain with expected convergence time $O(n^2)$ then we know there exists a time $T = O(\frac{n^2}{\epsilon})$ where $\tau(\epsilon) \leq T$, at which point we can use the Coupling Lemma from Page $2$ of Lecture $18$ to achieve the desired results.
 \end{document}
