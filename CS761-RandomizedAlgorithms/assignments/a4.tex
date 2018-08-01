@@ -71,6 +71,8 @@
 %\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
 
 \begin{document}
+	\paragraph{}
+	I collaborated with Sharat, and discussed briefly with Harry and Logan.
 	%Problem 1
 	\section{}
 	\paragraph{}
@@ -204,8 +206,27 @@
 	Let $G=(V,E)$ be an undirected $d$-regular graph and $S\subseteq V$ a subset of vertices with $|S| \leq |V|/2$.
 	\subsection{a}
 	\paragraph{}
-	
-	
+	Let $t \geq 0$. We want to show the existence of a vertex $v$ in $S$ such that $\sum_{i\in S} p^t(i) \geq 1- t\phi(S)$ when the random walk is started with $p_0 =\chi_v$. \emph{Note:} I'm not sure if I got the quantifiers backwards for this problem. Sorry if I did, I hope the ideas are still worth some merit in this case.
+	\paragraph{}
+	Choose a vertex $u \in S$ uniformly at random to start the walk at. Then
+	$$E[\chi_Sp^t] = \sum_{u \in S} \chi_SW^t\chi_u \cdot\frac{1}{|S|} = \frac{1}{|S|}\chi_SW^t\chi_S.$$
+	Since $W^t = A^tD^{-t} = \frac{1}{d^t}A^t$, we thus have that
+	$$E[\chi_Sp^t] = \frac{1}{d^t|S|}\sum_{u,v\in S}w_t(\{u\},\{v\}) = \frac{1}{d^t|S|}w(S,S)$$
+	where we use $w_t(A,B)$ to denote the number of walks of length $t$ from any vertex in $A$ to any vertex in $B$ in $G$, for $A, B\subseteq V$.
+	\paragraph{}
+	We want
+	$$E[\chi_S p^t] \geq 1-t\phi(S)$$
+	and so using the above equation for this expection it would suffice to show (after rearranging)
+	$$w_t(S,S) \geq d^t|S| - td^{t-1}|\delta(S)|.$$
+	Since $G$ is $d$-regular, a length $t$ walk starting in $S$ and ending at any vertex in $V$ is uniquely determined by $d$ choices of which vertex to branch to next, from each vertex in the walk. Thus $w_t(S,V) = d^t|S|$. Hence our desired inequality is equivalent to showing
+	$$td^{t-1}|\delta(S)| \geq w_t(S,V) - w_t(S,S) = w_t(S,V\backslash S).$$
+	But it is not hard to see that the Left Hand Side is a generous overcounting of $w_t(S,V\backslash S).$ Indeed, the expression $td^{t-1}|\delta(S)|$ counts the number of walks which start in $S$ and use an edge of $\delta(S)$ in at least one of their $t$ positions, then have free choice of any of $d$ edges for each of their remaining $t-1$ positions. Therefore the inequality
+	$$td^{t-1}|\delta(S)| \geq w_t(S,V\backslash S)$$
+	holds, and so the equivalent statement
+	$$E[\chi_S p^t] \geq 1-t\phi(S)$$
+	holds as well.
+	\paragraph{}
+	Since we know $E[\chi_S p^t] \geq 1-t\phi(S)$ there must exist some vertex $v \in S$ for which $\chi_S p^t \geq 1-t\phi(S)$ when $p_0 = \chi_v$. For otherwise such an expectation could not be attained.$\blacksquare$
 	\subsection{b}
 	\paragraph{}
 	We may assume there exists a vertex $v$ in $S$ such if we start the random walk at $v$ then $\sum_{i \in S}p_t(i)\geq (1-\phi(S))^t$ for any $t\geq 0$.
