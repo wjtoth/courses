@@ -201,7 +201,44 @@
 	%Problem 4
 	\section{}
 	\paragraph{}
+	Let $G=(V,E)$ be an undirected $d$-regular graph and $S\subseteq V$ a subset of vertices with $|S| \leq |V|/2$.
+	\subsection{a}
+	\paragraph{}
 	
+	
+	\subsection{b}
+	\paragraph{}
+	We may assume there exists a vertex $v$ in $S$ such if we start the random walk at $v$ then $\sum_{i \in S}p_t(i)\geq (1-\phi(S))^t$ for any $t\geq 0$.
+	\paragraph{}
+	Suppose that $|S| \leq |V|^{0.99}$. We may also assume that $\phi(S)$ is small, say $\phi(S) < \frac{1}{2}$, for otherwise it easy to find a good approximation of $\phi(S)$. We start our random walk from vertex $v$, and proceed for $t$ (to be chosen later) steps. From our assumption that $\phi(S)<\frac{1}{2}$ and our strong lower bound we have
+	$$p_t(S) \geq (1-\phi(S))^t \geq \exp(-2\phi(S)t)$$
+	using that $(1-p)\geq \exp(-2p)$ for $p<\frac{1}{2}$.
+	We may also observe that
+	$$\pi(S) = \sum_{v\in S} \pi(v) = \sum_{v\in S} \frac{d}{2m} = |S|\frac{d}{2d|V|}\leq |V|^{-0.01}.$$
+	Hence
+	$$p_t(S) - \pi(S) \geq \exp(-2\phi(S)t) - |V|^{-0.01}.$$
+	If we choose 
+	$$t = \frac{0.01}{\phi(S)}\frac{\ln(2|V|)}{2}$$	
+	then
+	$$\exp(-2\phi(S)t) \geq 2|V|^{-0.01}$$
+	and so
+	$$p_t(S) - \pi(S) \geq |V|^{-0.01}.$$
+	\paragraph{}
+	Now let $S_k^i$ denote the of $k$ highest probability vertices at time step $i$. Define $\theta$ as
+	$$\theta:= \min_{i,k}\phi(S_k^i).$$
+	From Lovasz-Simonovits we have
+	\begin{align*}
+	p_t(S) - \pi(S) &\leq \sqrt{\text{vol}(S)}(1-\frac{1}{8}\theta^2)^t\\
+	&= \sqrt{d|S|}(1-\frac{1}{8}\theta^2)^t\\
+	&\leq \sqrt{d}|V|^{0.45}\exp(-t\frac{\theta^2}{8})\\
+	&\leq \sqrt{d}|V|^{0.45}\exp(-\frac{0.005}{8\phi(S)}\ln(2|V|)\theta^2)\\
+	&=2\sqrt{d}|V|^{0.45}|V|^{-\frac{0.005\theta^2}{8\phi(S)}}.
+	\end{align*}
+	Combining our lower and upper bound on $p_t(S)-\pi(S)$ we see that
+	$$\frac{1}{2}d^{-\frac{1}{2}}|V|^{-0.46} \leq |V|^{-\frac{0.005\theta^2}{8\phi(S)}}$$
+	Which implies there exists a small constant $c$ for which
+	$$\theta^2 \leq c\phi(S).$$
+	Hence $\theta = O(\sqrt{\phi(S)}).$ Thus one of the sets in $\{S^i_k\}$ over all $i,k$ have conductance $\theta=O(\sqrt{\phi(S)})$, giving the desired sparse cut.$\blacksquare$
 	\newpage
 	%Problem 5
 	\section{}
