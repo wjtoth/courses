@@ -1,0 +1,161 @@
+\documentclass[letterpaper,12pt,oneside,onecolumn]{article}
+\usepackage[margin=1in, bottom=1in, top=1in]{geometry} %1 inch margins
+\usepackage{amsmath, amssymb, amstext}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{theorem}
+\usepackage{tikz}
+\usepackage{tkz-berge}
+
+%Macros
+\newcommand{\A}{\mathbb{A}} \newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}} \newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+ 
+ 
+\newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}} \newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}} \newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}} \newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}} \newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}} \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}} \newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}} \newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}} \newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}} \newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}} \newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofof}[1]{{\bf Proof of #1:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofofnobox}[1]{{\bf#1:  }}{}\newenvironment{example}{{\bf Example:  }}{\hfill\rule{2mm}{2mm}}
+
+%\renewcommand{\thesection}{\lecnum.\arabic{section}}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}[fact]{Lemma}
+\newtheorem{theorem}[fact]{Theorem}
+\newtheorem{definition}[fact]{Definition}
+\newtheorem{corollary}[fact]{Corollary}
+\newtheorem{proposition}[fact]{Proposition}
+\newtheorem{claim}[fact]{Claim}
+\newtheorem{exercise}[fact]{Exercise}
+\newtheorem{note}[fact]{Note}
+\newtheorem{conjecture}[fact]{Conjecture}
+
+\newcommand{\size}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
+
+%END MACROS
+%Page style
+\pagestyle{fancy}
+
+\listfiles
+
+\raggedbottom
+
+\lhead{\today}
+\rhead{W. Justin Toth CS761-Randomized Algorithms Final Exam} %CHANGE n to ASSIGNMENT NUMBER ijk TO COURSE CODE
+\renewcommand{\headrulewidth}{1pt} %heading underlined
+%\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
+
+\begin{document}
+
+%Problem 1
+\section{}
+\paragraph{}
+Denote the applicants $A_1, \dots, A_n$ in the order which they appear according to the random permutation. Let $X_i$ be the $0$-$1$ indicator random variable for the event that we pay penalty $C$ for  $A_i$. Hence $X_i=1$ if and only if we hire $A_i$ and later fire $A_i$.
+\paragraph{}
+We hire $A_i$ if and only if $A_i$ is ranked highest among the first $A_1, \dots, A_i$ applicants. This happens with probability
+$$\frac{1}{i}$$
+since the ordering was chosen uniformly at random. Given that we hire $A_i$, we fire $A_i$ if and only if $A_i$ is not ranked highest among the following $A_i, \dots, A_n$ applicants. This happens with probability
+$$\frac{n-i}{n-i+1}.$$
+Since the events that $A_i$ is ranked first among the first $i$ candidates, and not ranked first among the last $n-i+1$ candidates are independent we have
+$$Pr(X_i) = \frac{n-i}{i(n-i+1)}.$$
+\paragraph{}
+Thus our expected total penalty is
+$$\sum_{i=1}^n C\cdot Pr(X_i) = C \sum_{i=1}^n\frac{n-i}{i(n-i+1)} = CS_n$$
+where $S_n$ denotes $\sum_{i=1}^n\frac{n-i}{i(n-i+1)}$. Now observe that
+$$S_n = n\sum_{i=1}^n\frac{1}{i(n-i+1)} - \sum_{i=1}^n\frac{1}{n-i+1}= n\sum_{i=1}^n\frac{1}{i(n-i+1)} - H_n =  n\sum_{i=1}^n\frac{1}{i(n-i+1)} - \log(n)$$
+where $H_n$ denotes the $n$-th harmonic number. Now since
+$$\int_{x=1}^n \frac{1}{x(n-x+1)} dx = \frac{2\log(n)}{n+1}$$
+we have that
+$$S_n \leq \frac{2n\log(n)}{n+1} -\log(n) = \frac{(n-1)\log(n)}{n+1}.$$
+Therefore our expected total payoff is at most
+$$C\cdot \frac{(n-1)\log(n)}{n+1}. \blacksquare$$
+%Problem 2
+\newpage
+\section{}
+Let $G$ be an undirected graph, and $C$ the size of a minimum cut in $G$. Let $\alpha \in \R_{\geq 1}$.
+\begin{lemma}\label{lemma:2}
+Let $F \subseteq E(G)$ be a cut such that $|F| \leq \alpha C$. Then the probability that $F$ is output by Karger's random contraction algorithm is at least
+$$\Omega({\frac{1}{n^{2\alpha}}}).$$
+\end{lemma}
+\begin{proof}
+We say the algorithm ``succeeds" if $F$ is output by the algorithm. The algorithm succeeds if and only if we never contract an edge of $F$. At each iteration of the algorithm, every subset of vertices in the contracted graph corresponds to a subset of vertices  in the original graph (by expanding contracted vertices), and hence the minimum cut value of contracted graph at iteration $i$ is at least $C$.
+\paragraph{}
+In particular the degree of each vertex in the contracted graph is at least $C$. So the number of edges in the $i$-th iteration is at least
+$$\frac{(n-i+1)C}{2}.$$
+So when we pick a random edge to contract in this iteration, the probability that we pick an edge of $F$ is at most
+$$\frac{|F|}{\frac{(n-i+1)C}{2}} \leq \frac{2\alpha}{n-i+1}$$
+using that $|F| \leq \alpha C.$ So the probability that the algorithm succeeds is at least
+$$\Pi_{i=1}^n(1-\frac{2\alpha}{n-i+1}) = \frac{2\alpha!}{n(n-1)\dots(n-2\alpha + 1)} = \Omega(\frac{1}{n^{2\alpha}})$$
+\end{proof}
+\begin{claim}
+The number of cuts in $G$ with at most $\alpha C$ edges is at most $O(n^{2\alpha})$.
+\end{claim}
+\begin{proof}
+Let $\cF$ be the set of cuts in $G$ with at most $\alpha C$ edges. For $F \in \cF$ let $X_F$ be the event that Karger's algorithm outputs $F$. By Lemma \ref{lemma:2}
+$$Pr(X_F) \geq \Omega(\frac{1}{n^{2\alpha}}).$$
+Now we see that, one the one hand
+$$Pr(\bigcup_{F \in \cF} X_F) \leq 1$$
+and on the other hand, as the events events $X_F$ are all disjoint (the algorithm only outputs one answer),
+$$Pr(\bigcup_{F \in \cF} X_F) = \sum_{F \in \cF} Pr(X_F) \leq \sum_{F \in \cF} \Omega(\frac{1}{n^{2\alpha}}) = |\cF|\Omega(\frac{1}{n^{2\alpha}}).$$
+Combining inequality and rearranging for $|\cF|$ we have
+$$|\cF| \leq O(n^{2\alpha})$$
+as desired.
+\end{proof}
+%Problem 3
+\newpage
+\section{}
+
+%Problem 4
+\newpage
+\section{}
+
+%Problem 5
+\newpage
+\section{}
+
+%Problem 6
+\newpage
+\section{}
+
+%Problem 7
+\newpage
+\section{}
+
+%Problem 8
+\newpage
+\section{}
+
+%Problem 9
+\newpage
+\section{}
+
+%Problem 10
+\newpage
+\section{}
+
+\end{document}
