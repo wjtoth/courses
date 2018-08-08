@@ -112,7 +112,7 @@ $$\frac{|F|}{\frac{(n-i+1)C}{2}} \leq \frac{2\alpha}{n-i+1}$$
 using that $|F| \leq \alpha C.$ So the probability that the algorithm succeeds is at least
 $$\Pi_{i=1}^n(1-\frac{2\alpha}{n-i+1}) = \frac{2\alpha!}{n(n-1)\dots(n-2\alpha + 1)} = \Omega(\frac{1}{n^{2\alpha}})$$
 \end{proof}
-\begin{claim}
+\begin{claim}\label{claim2}
 The number of cuts in $G$ with at most $\alpha C$ edges is at most $O(n^{2\alpha})$.
 \end{claim}
 \begin{proof}
@@ -126,6 +126,16 @@ Combining inequality and rearranging for $|\cF|$ we have
 $$|\cF| \leq O(n^{2\alpha})$$
 as desired.
 \end{proof}
+\paragraph{}
+If we repeat Karger's algorithm $t$ times waiting for a particular cut $F \in \cF$ (defined in above proof) we have a failure probability at most
+$$(1-\Omega(\frac{1}{n^{2\alpha}}))^t \leq \exp(\frac{t}{O(n^{2{\alpha}})})$$
+and hence we can make this failure probability small with a choice of $t \in O(n^{2\alpha})$ (the constant would depend on how good you want the success probability).
+\paragraph{}
+So we give the following randomized algorithm for enumerating all cuts of $G$ with at most $\alpha C$ edges. Since there are at most $O(n^{2\alpha})$ such cuts by Claim \ref{claim2}, and we are treating $\alpha$ as a constant, there exists some absolute constant $K \in O(n^{2\alpha})$ for which there are exactly $K$ cuts in $\cF$. Our algorithm proceeds as follows:
+\begin{enumerate}
+\item test
+%Todo: type: iterate K times, each iteration run Karger's to see a new cut in \cF. Print them all.
+\end{enumerate}
 %Problem 3
 \newpage
 \section{}
