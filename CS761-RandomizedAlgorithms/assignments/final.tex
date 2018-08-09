@@ -131,11 +131,30 @@ If we repeat Karger's algorithm $t$ times waiting for a particular cut $F \in \c
 $$(1-\Omega(\frac{1}{n^{2\alpha}}))^t \leq \exp(\frac{t}{O(n^{2{\alpha}})})$$
 and hence we can make this failure probability small with a choice of $t \in O(n^{2\alpha})$ (the constant would depend on how good you want the success probability).
 \paragraph{}
-So we give the following randomized algorithm for enumerating all cuts of $G$ with at most $\alpha C$ edges. Since there are at most $O(n^{2\alpha})$ such cuts by Claim \ref{claim2}, and we are treating $\alpha$ as a constant, there exists some absolute constant $K \in O(n^{2\alpha})$ for which there are exactly $K$ cuts in $\cF$. Our algorithm proceeds as follows:
+So we give the following randomized algorithm for enumerating all cuts of $G$ with at most $\alpha C$ edges. Let $k$ be some parameter to be chosen later. Our algorithm proceeds as follows:
 \begin{enumerate}
-\item test
-%Todo: type: iterate K times, each iteration run Karger's to see a new cut in \cF. Print them all.
+\item Let $\cL = \emptyset$.
+\item While fail$<k$
+	\begin{enumerate}
+	\item Repeat Karger's algorithm at most $t$ times hoping for a cut $F\in \cF\backslash \cL$.
+	\item If such $F$ is found, add $F$ to $\cL$ and set fail$=0$.
+	\item Otherwise set fail$=$fail$+1$.
+	\end{enumerate}
+\item Output $\cL$.
 \end{enumerate}
+\paragraph{}
+In words the algorithm uses the boosted version of Karger's to try to find a cut with at most $\alpha C$ edges that it has not seen before. It stops if it fails to find such a cut $k$ times in a row, and prints all the cuts found this way.
+\paragraph{}
+The algorithm fails if in some $i$-th round it does not find a cut $F \in \cF\backslash \cL$ $k$ times in a row, while $\cF \backslash \cL\neq \emptyset$. We know from \ref{claim2} there are at most $O(n^{2\alpha})$ such rounds $i$. Let $X_i$ be a random variable indicating failure in the $i$-th round. We can choose $t$ so that $t$ repetitions of Karger's algorithm finds $F \in \cF\backslash \cL$ (provided such $F$ exists) with high probability, say $0.99$.
+\paragraph{}
+Then the probability that we fail in the $i$-th round is
+$$(0.01)^k.$$
+So the probability we fail in some round is at most
+$$\frac{O(n^{2\alpha})}{100^k}.$$
+Since $\alpha$ is constant, we can choose $k \in O(\log n)$ to make this failure probability arbitrarily small. Let $T$ be the time to run Karger's algorithm once.  Since there are $O(n^{2\alpha})$ rounds our algorithm takes
+$$O(n^{2\alpha}ktT) = O(n^{4\alpha}\log n T)$$
+time.$ \blacksquare$
+
 %Problem 3
 \newpage
 \section{}
