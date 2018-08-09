@@ -188,7 +188,20 @@ Hence our algorithm succeeds with probability at least $\frac{1}{2}$ as desired.
 %Problem 5
 \newpage
 \section{}
-
+\paragraph{}
+Let $S_1$ and $S_2$ be multisets of positive integers. Let $|S_1| = |S_2| = n$ be the number of elements in each multiset. If the sets are of different sizes it is trivial to decide they are not equal. Let $h:[n] \rightarrow [cn]$ be a $2$-universal hash function chosen uniformly at random.
+\paragraph{}
+We're going to define multiset operations. They are exactly what you'd expect them to be, so feel free to skip this paragraph as I only add them for sake of completeness. Let $S_1\cap S_2$ denote the largest multiset that is a sub-multiset of $S_1$ and a sub-multiset of $S_2$. By sub-multiset I mean $A$ is a sub-multiset of $B$ ($A\subseteq B$) if and only if for every element $e$ of $A$, the number of times $e$ appears in $A$ is at most the number of times $e$ appears in $B$. We define multiset addition so that $A+B$ is the multiset of elements $e$ so that $e$ appears as many times as it does in $A$ plus as many times as it does in $B$. We also need multiset difference. For multisets $A$ and $B$ we define $A-B$ to be the unique multiset so to that $(A-B) + (A\cap B) = A$. My multiset equality, $A=B$, we meant that $A$ and $B$ have precisely the same elements appearing the same number of times.
+\paragraph{}
+If $S_1 = S_2$ then $h(S_1) = h(S_2)$ and so the algorithm never gives false negatives. Observe that $h(S_1) = h(S_1\cap S_2) + h(S_1-S_2)$ and $h(S_2) = h(S_1\cap S_2) + h(S_2-S_1)$. Hence the algorithm can only give a false positive if $h(S_1-S_2) = h(S_2 - S_1)$. We will bound the probability of failure by the probability of this happening. Let $d = |S_1-S_2| =|S_2-S_1|$. For $a \in S_1 - S_2$ and $b \in S_2 - S_1$ define $X_{a,b}$ to be the event that $h(a) = h(b)$. Further for each $a \in S_1 - S_2$ define
+$$X_a  = \bigcup_{b \in S_2 - S_1} X_{a,b}.$$
+Notice that $X_a$ is the disjoint union of events $X_{a,b}$. Let $X$ be a random variable counting the number of collisions between elements in $S_1-S_2$ and elements in $S_2-S_1$. We have
+$$E[X] = \sum_{a \in S_1 - S_2} E[X_a] = \sum_{a\in S_1 - S_2} \sum_{b \in S_2-S_1} Pr(h(a) = h(b)) \leq  \sum_{a\in S_1 - S_2} \sum_{b \in S_2-S_1} \frac{1}{cn} = \frac{d^2}{cn}.$$
+The inequality follows from $h$ being $2$-universal. For the algorithm to fail it is necessary to have $X \geq d$, for otherwise there are an insufficient number of collisions to have $h(S_1-S_2) = h(S_2-S_1)$. Therefore we can bound the probability of failure by $Pr(X  \geq d)$. By Markov's inequality we see that,
+$$Pr(X \geq d) \leq \frac{E[X]}{d} \leq \frac{d}{cn}.$$
+Hence our probability of failure is at most $\frac{d}{cn}$. Assuming we can hash in constant time and lookup in a hash table in constant time, the algorithm takes $O(n)$ time to hash each element in $S_1$ and $S_2$, then takes $O(cn)$ time to verify the $cn$ counters each associated with an entry of each of the two hash tables. Since we need $c \geq 1$ to avoid guaranteed collisions, this implies the algorithm runs in $O(cn)$ time with failure probability at most $\frac{d}{cn}$.
+\paragraph{}
+In the previous paragraph we demonstrated a trade-off between running time and failure probability with respect to choice of parameter $c$. To obtain a Monte Carlo algorithm, we need a failure probability which is independent of the input size. We make our extension by giving an explicit choice of $c$. Let $p \in (0,1)$. Then if we choose $c = \ceil{\frac{d}{pn}}$ then we obtain a failure probability at most $p$ and a running time $O(pd)$. $\blacksquare$
 %Problem 6
 \newpage
 \section{}
