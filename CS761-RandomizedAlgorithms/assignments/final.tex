@@ -170,6 +170,7 @@ Since we want
 $$Pr(\exists\text{a bin with at least $k$ balls}) \leq \frac{1}{2}$$
 we need to find $k$ such that
 $$n(\frac{e}{k})^k \leq \frac{1}{2}.$$
+
 %Problem 4
 \newpage
 \section{}
@@ -183,6 +184,7 @@ $$Pr(F(x)\text{ or } F(y)\text{ was modified}) \leq Pr(F(x) \text{ was modified}
 Therefore the probability of failure is at most
 $$\frac{2}{5} < \frac{1}{2}.$$
 Hence our algorithm succeeds with probability at least $\frac{1}{2}$ as desired. $\blacksquare$
+
 %Problem 5
 \newpage
 \section{}
@@ -190,7 +192,19 @@ Hence our algorithm succeeds with probability at least $\frac{1}{2}$ as desired.
 %Problem 6
 \newpage
 \section{}
-
+\paragraph{}
+Let $\cA$ be an algorithm which obtain an $(\epsilon, \frac{1}{4})$-approximation to some parameter $\mu$. That is, when $X$ is the output value of $\cA$,
+$$Pr(|X - \mu| \leq \epsilon\mu) \leq \frac{1}{4}.$$
+We want to show how to obtain an $(\epsilon,\delta)$-approximation to $\mu$. Suppose we perform $k = \ceil{\log(\frac{1}{\delta})}$ independent runs of $\cA$ and output the median. We may assume $k$ is even, if not replace $k$ with $k+1$. Let $X_1, \dots, X_k$ be random variables each denoting the output value of one run of $\cA$. Instead of ordering them by the order the trials happen, order them sorted by value, i.e.
+$$X_1 \leq X_2 \leq \dots\leq X_k.$$
+Our $(\epsilon,\delta)$-approximation algorithm outputs $X_\frac{k}{2}$, the median value of our independent trials. Let $X$ denote the output of our new algorithm. We observe that $|X - \mu|\leq \epsilon \mu$ if and only if 
+$$|X_i - \mu | \leq \epsilon \mu, \quad \forall i=1 \dots \frac{k}{2}.$$
+Therefore
+$$Pr(|X-\mu| \leq \epsilon \mu) = \Pi_{i=1}^\frac{k}{2} Pr(|X_i - \mu| \leq \epsilon \mu) \leq \frac{1}{4^\frac{k}{2}}.$$
+Since $k = \ceil{\log(\frac{1}{\delta})}$,
+$$\frac{1}{4^\frac{k}{2}} \leq \frac{1}{4^{\frac{1}{2}\log(\frac{1}{\delta})}} = \delta.$$
+Therefore
+$$Pr(|X-\mu| \leq \epsilon \mu) \leq \delta. \blacksquare$$
 %Problem 7
 \newpage
 \section{}
