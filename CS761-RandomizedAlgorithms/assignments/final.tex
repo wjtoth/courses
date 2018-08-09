@@ -158,11 +158,31 @@ time.$ \blacksquare$
 %Problem 3
 \newpage
 \section{}
-
+\paragraph{}
+We throw $n^{0.99}$ balls into $n$ bins uniformly at random. Using union bound, the probability that a bin has at least $k$ balls, for $k$ chosen later, is at most 
+$${n \choose k}(\frac{1}{n})^k.$$
+Using the bound ${n^{0.99}\choose k} <(\frac{n^{0.99}e}{k})^k$ this probability is at most
+$$(\frac{n^{0.99}e}{k})^k(\frac{1}{n})^k= \frac{e^k}{n^{0.0k}k^k}\leq \frac{e^k}{k^k}$$
+where the last inequality follows since we will choose $k \geq 0$ and since $n\geq 1$ this implies $n^\frac{k}{100} \geq 1$.
+Again invoking union bound
+$$Pr(\exists\text{a bin with at least $k$ balls}) \leq n\frac{e^k}{k^k} = n(\frac{e}{k})^k.$$ 
+Since we want
+$$Pr(\exists\text{a bin with at least $k$ balls}) \leq \frac{1}{2}$$
+we need to find $k$ such that
+$$n(\frac{e}{k})^k \leq \frac{1}{2}.$$
 %Problem 4
 \newpage
 \section{}
-
+\paragraph{}
+We always use addition, $+$, over the appropriate field (ie. $\F_n$ for inputs and $\F_m$ for outputs). Our algorithm is very simple. Given input $z$ choose $x \in \{0,\dots, n-1\}$ uniformly at random. Let $y = z-x$. Lookup $F(x)$ and $F(y)$ and return $F(x) + F(y)$.
+\paragraph{}
+If both $F(x)$ and $F(y)$ are not modified by our adversary then our return value satisfies
+$$F(x) + F(y) = F(x+y) = F(z)$$
+using the linearity of $F$ and the fact that $x+y = z$. So a necessary condition for our algorithm to fail is that one of $F(x)$ or $F(y)$ was modified by our adversary. For a uniform random element of the table, the probability of modification is at most $\frac{1}{5}$. Hence
+$$Pr(F(x)\text{ or } F(y)\text{ was modified}) \leq Pr(F(x) \text{ was modified}) + Pr(F(y)\text{ was modified}) \leq \frac{2}{5}.$$
+Therefore the probability of failure is at most
+$$\frac{2}{5} < \frac{1}{2}.$$
+Hence our algorithm succeeds with probability at least $\frac{1}{2}$ as desired. $\blacksquare$
 %Problem 5
 \newpage
 \section{}
