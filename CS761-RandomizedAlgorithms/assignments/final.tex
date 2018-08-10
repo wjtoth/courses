@@ -237,7 +237,46 @@ as desired.$\blacksquare$
 %Problem 8
 \newpage
 \section{}
-
+\subsection{a}
+\paragraph{}
+Suppose $s$ is a random $n$-bit string. Let $k \in [n]$ be a positive integer. Observe that a $k$-consecutive substring in $s$ is uniquely determined by the starting position of the substring.  Therefore there are at most $n$ potential $k$-consecutive substrings in $s$. Denote by $s(i)$ the substring $s_is_{i+1}\dots s_{i+k-1}$. For $s(i)$ to be $k$-consecutive, either bits of $s(i)$ are $0$ or all $1$. Thus,
+$$Pr(s(i) \text{ is $k$-consecutive}) = \frac{2}{2^k} = \frac{1}{2^{k-1}}.$$
+So by applying union bound, using there are at most $n$ such $s(i)$, the probability there exists a $k$-consecutive substring is at most
+$$\frac{n}{2^{k-1}}.$$
+To ensure there are no $k$-consecutive substrings with high probability we desire
+$$\frac{n}{2^{k-1}} < 0.01$$
+Hence we choose
+$$k = \log(100n) +1 = O(\log n)$$
+to achieve the desired result.$\blacksquare$
+\subsection{b}
+\paragraph{}
+We can model this problem via a random walk. Our states will be $S_0, S_1, \dots, S_k$. $S_0$ transitions to $S_1$ with probability $1$. For $i \in \{1,\dots, k-1\}$, $S_i$ transitions to $S_{i+1}$ with probability $\frac{1}{2}$, and transitions to $S_1$ with probability $\frac{1}{2}$. $S_k$ transitions to $S_k$ with probability $1$. To interpret the original problem as this random walk imagine starting in $S_0$ and reading the random bits of $s$. After reading $1$ bit, $b$, you move from $S_0$ to $S_1$, then as long as you keep seeing the same bit value as $b$ when you read the next bit of $s$ you advance from your current $S_i$ to $S_{i+1}$. But once you see the opposite value to $b$ you return to $S_1$, and treat $\bar{b}$ as the value you're looking for to advance. If at any time you reach $S_k$, you stop, having just read a $k$-consecutive substring of $s$. 
+\paragraph{}
+We want to bound the expected time to reach $S_k$ from $S_0$. For each $i = 0, \dots k$ let $h_i$ denote the expected number of steps to reach $S_k$. Clearly, $h_0 = h_1 + 1$ and $h_k = 0$. For $j \in [k-1]$ we develop the following recurrence:
+$$h_{k-j} = \frac{1}{2}(h_{k-j+1} + 1) + \frac{1}{2}h_1.$$
+We claim that for all $j \in [k-1]$, $h_{k-j} = \sum_{i=1}^j \frac{1}{2^i}(1+h_1)$. We proceed by induction. In the base case $j=1$. From our recurrence
+$$h_{k-1} = \frac{1}{2}(h_k+1) + \frac{1}{2}h_1 = \frac{1}{2}(1+h_1),$$
+using $h_k = 0$. So the base case holds. Now consider $j \in [k-1]\backslash\{1\}$ and suppose the claim holds for $h_{k-j+1}$. Then we have
+\begin{align*}
+h_{k-j} &= \frac{1}{2}(h_{k-j+1} + 1) + \frac{1}{2}h_1\\
+&= \frac{1}{2}( \sum_{i=1}^{j-1} \frac{1}{2^i}(1+h_1) + 1) + \frac{1}{2}h_1 \\
+&=\sum_{i=1}^{j-1}\frac{1}{2^{i+1}}(1+h_1) + \frac{1}{2} + \frac{1}{2}h_1\\
+&= \sum_{i=2}^{j}\frac{1}{2^{i}}(1+h_1) + \frac{1}{2} + \frac{1}{2}h_1 \\
+&= \sum_{i=1}^j \frac{1}{2^i}(1+h_1).
+\end{align*}
+Therefore the claim holds by induction.
+\paragraph{}
+So, using partial sums of the geometric series, we have that 
+$$h_1 = \sum_{i=1}^{k-1} \frac{1}{2^i}(1+h_1) = \frac{2^{k-1}-1}{2^{k-1}}(1+h_1).$$
+Rearranging we see that
+$$h_1 = 2^{k-1} - 1$$
+which implies that
+$$h_0 = 2^{k-1}.$$
+Let $X$ denote the number of bits needed before seeing a $k$-consecutive substring. By Markov's inequality, our equation for $h_0$ implies
+$$Pr(X \geq 100\cdot2^{k-1}) \leq 0.01.$$
+Thus with high probability, $0.99$ we find a $k$-consecutive substring with at most $100 \cdot 2^{k-1}$ bits. That is to say, setting $n = 100\cdot 2^{k-1}$ ensures a $k$-consecutive substring with high probability. Rearranging for $k$, we see that for
+$$k =\frac{n}{100}\log(n) + 1$$
+$s$ has a $k$-consecutive substring with high probability. $\blacksquare$
 %Problem 9
 \newpage
 \section{}
