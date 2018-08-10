@@ -222,21 +222,18 @@ $$Pr(|X-\mu| \leq \epsilon \mu) \leq \delta. \blacksquare$$
 \newpage
 \section{}
 \paragraph{}
-Choose $c = \min \{\frac{1}{5}, \}$.Let $U = \{u_1,\dots, u_n\}$ be a set of ground elements, and let $S_1, \dots, S_m \subseteq U$ be a set of subsets of $U$ such that $|S_i| = \frac{n}{2}$ for all $i\in [m]$. Consider a uniform random coloring of the elements of $U$ either red or blue. For each $i \in [n]$ let $R_i$ be an indicator random variable for the event that $u_i$ is colored red, and similarly let $B_i$ be an indicator random variable for the event that $u_i$ is colored blue. For each $j \in [m]$ let $R^j := \sum_{u_i \in S_j} R_i$, and similarly let $B^j := \sum_{u_i \in S_j} B_i$. Note that $B^j = |S_j| - R^j$.
+Choose $c = 1$. Let $U = \{u_1,\dots, u_n\}$ be a set of ground elements, and let $S_1, \dots, S_m \subseteq U$ be a set of subsets of $U$ such that $|S_i| = \frac{n}{2}$ for all $i\in [m]$. Consider a uniform random coloring of the elements of $U$ either red or blue. For each $i \in [n]$ let $R_i$ be an indicator random variable for the event that $u_i$ is colored red, and similarly let $B_i$ be an indicator random variable for the event that $u_i$ is colored blue. For each $j \in [m]$ let $$X^j := \sum_{u_i \in S_j} R_i - \sum_{u_i \in S_j} B_i.$$
+Then showing $S_j$ has between $\frac{n}{4} - c\sqrt{n\log m}$ and $\frac{n}{4} +c\sqrt{n\log m}$ red elements is equivalent to showing $$|X^j| \leq 2c\sqrt{n\log m}.$$
 \paragraph{}
-First we observe that $R^j$ is the sum of independent random variables with $E[R^j] = \sum_{u_i \in S_j} \frac{1}{2} = \frac{n}{4}$. Further observe that
- $$m \leq {n \choose n/2} \leq 2^{nH(1/2)} = 2^n$$
-using that each $S_j$ is of size $\frac{n}{2}$ and the Lemma from Page $1$ of Lecture $12$.  Hence 
-$$\frac{4c\sqrt{n\log m}}{n} \leq \frac{4c\sqrt{n^2}}{n}  = 4c < 1.$$
- So by Chernoff,
+For each $i \in [n]$ let $X_i$ be a random variable such that $X_i = 1$ if $u_i$ is red and $X_i = -1$ if $u_i$ is  blue. Since each $S_j$ has $\frac{n}{2}$ elements, each $X^j$ is the sum of exactly $\frac{n}{2}$ such $X_i$. Using Corollary $4.8$ in Probability and Computing by Mitzenmacher and Upfal we have
 \begin{align*}
-Pr(R^j \geq \frac{n}{4} + c\sqrt{n\log m}) &= Pr(R^j \geq (1+\frac{4c\sqrt{n\log m}}{n})\frac{n}{4})\\
- &\leq e^{-(\frac{4c\sqrt{n\log m}}{n})^2\frac{n}{12}} \\
- &= e^{-\frac{4c^2}{3}\log m}\\
- &=\frac{1}{m^{\frac{4c^2}{3}}}\\
- &!< \frac{1}{m}.
- \end{align*}
-
+Pr(|X^j| \geq 2c\sqrt{n\log m}) &\leq 2e^\frac{-(2c\sqrt{n\log m})^2}{2\frac{n}{2}} \\
+&= 2e^{-4c^2\log m}\\
+&=\frac{2}{m^4}\\
+&< \frac{1}{m} &\text{ (since $m \geq 2$, otherwise the problem is trivial)}.
+\end{align*}
+Then, applying a union bound,  the probability that there exists $j\in[m]$ such that $|X^j| \geq 2c\sqrt{n\log m}$ is strictly less than $1$. Thus with positive probability, for all $j\in [m]$ $$|X^j| \leq 2c\sqrt{n\log m}$$
+as desired.$\blacksquare$
 %Problem 8
 \newpage
 \section{}
