@@ -284,5 +284,23 @@ $s$ has a $k$-consecutive substring with high probability. $\blacksquare$
 %Problem 10
 \newpage
 \section{}
-
+\paragraph{}
+Let $G$ be a connected, undirected, non-bipartite graph. Consider a Markov Chain $M$ with state space $V(G) \times V(G)$ and transition probabilties:
+$$P_{ab, uv} = \begin{cases}
+\frac{1}{d(a)d(b)}, &\text{ if } u \in N(a)\text{ and } v \in N(b) \\
+0, &\text{otherwise}
+\end{cases}$$
+Then a state in $M$ represents a position $(a,b)$ where $a$ is the position of the cat and $b$ is the position of the mouse, and $P_{ab,uv}$ represents the probability of the cat being in position $u$ and the mouse being in position $v$ in the subsequent timestep. We can equivalently view $M$ as the Markov chain for a random walk on the graph $G'$ where $V(G') = V(G) \times V(G)$ and $\{(a,b), (u,v)\} \in E(G')$ if and only if $u \in N(a)$ and $v \in N(b)$.
+\paragraph{}
+Hence $|V(G')| = |V(G)|^2$ and 
+$$2|E(G')| = \sum_{u,v \in V(G)} d(u)d(v) = 4|E(G)|^2$$
+i.e. $|E(G')| = 2|E(G)|^2$. Note the cat catches the mouse when the random walk on $G'$ reaches vertex $(a,a)$ for some $a \in V(G)$. So if we upper bound $h_{x',y'}$ (the hitting time), for any $x', y' \in V(G')$ then we have successfully upper bounded the expected time for the cat to catch the mouse since it is simply $h_{x',y'}$ where $ux$ is the start state of the cat and mouse, and $y' = (a,a)$ for some $a \in V(G)$.
+\paragraph{}
+Using Lemma $7.15$ of Probability and Computing we see that 
+$$h_{a',b'} < 2|E(G')|$$
+provided that $a'b' \in E(G')$. Now consider any $x'=(a,b), y'=(u,v) \in V(G')$. Let $P_1$ be an $au$-path in $G$, which exists since $G$ is connected. Similarly let $P_2$ be a $bv$-path in $G$. Construct an $x'y'$-path $P$ in $G'$ by taking the sequence of vertices $(a,b) \dots (u,b)$ following $P_1$ in the first position and keeping $b$ fixed in the second position, then taking the sequence of vertices $(u,b) \dots (u,v)$ following $P_2$ in the second position and keeping $u$ fixed in the first. Then $|P_2|  = |P_1| + |P_2| \leq 2|V(G)|$.
+\paragraph{}
+As $P$ is an $x'y'$-path, $h_{x',y'}$ is upper bounded by the sum of hitting times on the edges of $P$. That is, we have
+$$h_{x',y'} \leq \sum_{a'b' \in E(P)} h_{a'b'} <  \sum_{a'b' \in E(P)} 2|E(G')| \leq 4|V(G)||E(G')| \leq 8|V(G)||E(G)|^2$$
+with the second inequality following from Lemma $7.15$. Thus we have shown an upper bound of $O(|V(G)|\cdot|E(G)|^2)$ on the expected time for the cat to catch the mouse.$\blacksquare$
 \end{document}
