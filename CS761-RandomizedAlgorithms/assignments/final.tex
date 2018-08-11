@@ -159,18 +159,27 @@ time.$ \blacksquare$
 \newpage
 \section{}
 \paragraph{}
-We throw $n^{0.99}$ balls into $n$ bins uniformly at random. Using union bound, the probability that a bin has at least $k$ balls, for $k$ chosen later, is at most 
-$${n \choose k}(\frac{1}{n})^k.$$
-Using the bound ${n^{0.99}\choose k} <(\frac{n^{0.99}e}{k})^k$ this probability is at most
-$$(\frac{n^{0.99}e}{k})^k(\frac{1}{n})^k= \frac{e^k}{n^{0.0k}k^k}\leq \frac{e^k}{k^k}$$
-where the last inequality follows since we will choose $k \geq 0$ and since $n\geq 1$ this implies $n^\frac{k}{100} \geq 1$.
-Again invoking union bound
-$$Pr(\exists\text{a bin with at least $k$ balls}) \leq n\frac{e^k}{k^k} = n(\frac{e}{k})^k.$$ 
-Since we want
-$$Pr(\exists\text{a bin with at least $k$ balls}) \leq \frac{1}{2}$$
-we need to find $k$ such that
-$$n(\frac{e}{k})^k \leq \frac{1}{2}.$$
-
+We throw $n^{0.99}$ balls into $n$ bins uniformly at random.  The probability that a given bin has $k$ balls is 
+$$p_k = {n^{0.99} \choose k} (\frac{1}{n})^k(1-\frac{1}{n})^{n^{0.99}-k} = \frac{1}{k!}\frac{n^{0.99}(n^{0.99}-1)\dots(n^{0.99} - k + 1)}{n^k}(1-\frac{1}{n})^{n^{0.99}-k}.$$
+This value is approximately
+$$p_k \approx \frac{e^{-n^{0.01}}(n^{0.01})^k}{k!}.$$
+In other words, the probability that a given has load at least $k$ is a Poisson random variable.  In Poisson, all bins can be treated as independent so the probability that no bin has load at least $k$ is at most
+$$(1-\frac{e^{-n^{0.01}}(n^{0.01})^k}{k!})^n\leq \exp(\frac{-e^{-n^{0.01}}n^{1 + \frac{k}{100}}}{k!})$$
+To translate the Poisson case back to the exact case, Theorem $5.7$ tells us our final probability will be effected by a factor of at most $e\sqrt{n^{0.99}}$. Since we want a final probability of at most $\frac{1}{2}$ we need to choose $k$ so that 
+$$\exp(\frac{-e^{-n^{0.01}}n^{1 + \frac{k}{100}}}{k!}) \leq \frac{1}{2e\sqrt{n^{0.99}}}$$
+Or equivalently
+$$\frac{-e^{-n^{0.01}}n^{1 + \frac{k}{100}}}{k!} \leq -\ln(2e\sqrt{n^{0.99}}).$$
+Equivalently yet again,
+$$k! \leq \frac{e^{-n^{0.01}}n^{1 + \frac{k}{100}}}{\ln(2e\sqrt{n^{0.99}})}$$
+From $(5.5)$ of Probability and Computing, 
+$$k! \leq k(\frac{k}{e})^k.$$
+So again we can rewrite our desired inequality as
+$$k(\frac{k}{e})^k \leq \frac{e^{-n^{0.01}}n^{1 + \frac{k}{100}}}{\ln(2e\sqrt{n^{0.99}})}$$
+and taking logarithms
+$$2k\ln(k) \leq \ln(e^{-n^{0.01}}n^{1 + \frac{k}{100}}) - \ln(\ln(2e\sqrt{n^{0.99}}) )= -n^{0.01} + (1+\frac{k}{100})\ln(n) - \ln(\ln(2e\sqrt{n^{0.99}})).$$
+Now if we move the $k$ over from the right hand side and multiply the constants through we get the desired inequality
+$$k(2\ln(k) - \frac{\ln(n)}{100}) \leq -n^{0.01} + \ln(n) - \ln(\ln(2e\sqrt{n^{0.99}})).$$
+I ran out of time, but I hope that solving this equation for $k$ would yield a decent bound.
 %Problem 4
 \newpage
 \section{}
@@ -206,7 +215,7 @@ In the previous paragraph we demonstrated a trade-off between running time and f
 \newpage
 \section{}
 \paragraph{}
-Let $\cA$ be an algorithm which obtain an $(\epsilon, \frac{1}{4})$-approximation to some parameter $\mu$. That is, when $X$ is the output value of $\cA$,
+Let $\cA$ be an algorithm which obtains an $(\epsilon, \frac{1}{4})$-approximation to some parameter $\mu$. That is, when $X$ is the output value of $\cA$,
 $$Pr(|X - \mu| \leq \epsilon\mu) \leq \frac{1}{4}.$$
 We want to show how to obtain an $(\epsilon,\delta)$-approximation to $\mu$. Suppose we perform $k = \ceil{\log(\frac{1}{\delta})}$ independent runs of $\cA$ and output the median. We may assume $k$ is even, if not replace $k$ with $k+1$. Let $X_1, \dots, X_k$ be random variables each denoting the output value of one run of $\cA$. Instead of ordering them by the order the trials happen, order them sorted by value, i.e.
 $$X_1 \leq X_2 \leq \dots\leq X_k.$$
@@ -284,6 +293,8 @@ $s$ has a $k$-consecutive substring with high probability. $\blacksquare$
 Consider a random walk that starts at a vertex $v \in V$ for $G=(V,E)$ an undirected graph, that stops when it reaches vertex $s$ or vertex $t$. Let $p(v)$ denote the probability that if the random walk starts at $v \in V$ then it reaches $s$ before $t$. It is easy to see that $p(s) = 1$ and $p(t) = 0$.
 \paragraph{}
 For $v \in G$ we argued in the Lecture $15$, Page $5$, that $h_{x,v} = \phi_{xv}$ for an appropriate flow.
+\paragraph{}
+Sorry I didn't have time for this problem. My vague idea was to draw a connection between hitting times and the desired probabilities, then relate them back to $\phi$ on some electrical network.
 %Problem 10
 \newpage
 \section{}
