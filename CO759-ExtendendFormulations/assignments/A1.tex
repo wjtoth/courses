@@ -99,14 +99,24 @@ and so $p$ is not injective and thus not an isomorphism.$\blacksquare$
 %Problem 3
 \section{}
 \paragraph{}
-Let $Q \subseteq \R^n$ be a polyhedron and $p:\R^n \rightarrow \R^d$ a linear map, so that $(Q,p)$ is an extension of a polytope $P \subseteq \R^d$. Let $V$ be the set of vertices of $Q$ and $R$ the set of extreme rays of $Q$. That is
-$$ Q = \conv{V} + \cone{R}.$$
-If $R = \emptyset$ we are done since $Q$ is itself a polytope. So suppose $R\neq \emptyset$. We claim that $p(r) = 0$ for all $r \in R$. Suppose not, that is there exists $r \in R$ for which $p(r) \neq 0$. 
+Let $Q \subseteq \R^n$ be a polyhedron and $p:\R^n \rightarrow \R^d$ a linear map, so that $(Q,p)$ is an extension of a polytope $P \subseteq \R^d$. If $Q$ is bounded, we are done, so we may assume that $Q$ is unbounded. Let $R$ be the recession cone of $Q$. We claim that $p(R) = 0$, for otherwise if $r \in R$ with $p(r) \neq 0$ then $p(r)$ is an unbounded direction in $P$ as $p(\lambda r) = \lambda p(r) \neq 0$ for all $\lambda  > 0$, contradicting that $P$ is a polytope. Let $L = R \cap (-R)$ be the lineality space of $Q$. By our previous claim $p(L) = 0$. We have that
+$$Q = L + (Q\cap L^\perp)$$
+where $L^\perp$ denotes the orthogonal complement of $L$. Thus
+$$P = p(Q) = p(L) + p(Q\cap L^\perp) = p(Q\cap L^\perp).$$
+Let $Q_1$ denote $Q\cap L^\perp$, so we have shown $p(Q_1) = P$, that is $(Q_1, p)$ is an extension of $p$. Since $Q_1$ was obtained from $Q$ by adding only equalities, $Q_1$ has no more facets than $Q$. Our choice of $Q_1$ ensures that $Q_1$ has a trivial lineality space, i.e. $Q_1$ is pointed. If $Q_1$ is bounded, we are done, so we may assume that $Q_1$ is unbounded. Let $R_1$ be the recession cone of $Q_1$ and $V_1$ be the vertices of $Q_1$. By our prior arguments neither $R_1$ nor $V_1$ are empty.
 \paragraph{}
-Let $v \in V$ if $V\neq \emptyset$ and choose $v = 0$ otherwise. Now, for all $\lambda \geq 0$ $v + \lambda r$ is in $Q$. But then observe that
-$$p(v + \lambda r) = p(v) + \lambda p(r)$$
-is in $P$. Since $p(r) \neq 0$ this implies that $p(r)$ is an unbounded direction in $P$, contradicting that $P$ is a polytope (and hence bounded). 
-%Problem 4
+Let $c \in \R^n$ be a vector such that $c^Tr \geq 1$ for all $r \in R_1$. Such a $c$ exists since $R_1 \neq \emptyset$ and the lineality space of $Q_1$ is empty (clearly $c$ so that $c^Tr >0$ exists, and we simply scale $c$). Let $\beta \in \R$ be chosen so that $c^Tv < \beta$ for all $v \in V_1$. Since $V_1$ is finite, such $\beta$ exists. We choose $Q_2$ as
+$$Q_2 = Q_1 \cap \{x \in \R^n : c^Tx = \beta\}.$$
+We claim that $Q_2$ is bounded and that $p(Q_2) = P$. Let $\alpha = \min\{c^Tv : v \in V_1\}$. Let $x \in Q_2$. There exist $\lambda \geq 0$, $\sum_{v \in V_1} \lambda_v = 1$ and $\gamma \geq 0$ such that
+$$x = \sum_{v \in V_1} \lambda_v v + \sum_{r \in R_1} \gamma_r r_1.$$
+So
+$$\beta = c^Tx =  \sum_{v \in V_1} \lambda_v c^Tv + \sum_{r \in R_1} \gamma_r c^Tr_1 \geq \alpha + \sum_{r \in R_1} \gamma_r c^Tr_1\geq \alpha + \sum_{r \in R_1} \gamma_r$$
+and thus $$\sum_{r \in R_1} \gamma_r \leq \beta -\alpha.$$
+Hence our choice of coefficients $\gamma$ on the vectors of $R_1$ is bounded, and so $Q_2$ is bounded.
+\paragraph{}
+It remains to verify that $p(Q_2) = P$. Similarly to the argument for $R$, we see that $p(R_1) = 0$. Hence $P = p(Q_1) = p(\conv{V_1}).$ So it will suffice to show that for every $x \in \conv{V_1}$ there exists $\lambda \geq 0$ and $r \in R_1$ such that $c^T(x + \lambda r) = \beta.$ Let $r$ be any vector in $R_1$ (since $R_1 \neq \emptyset$ this choice is well-defined). Choose $\lambda = (\beta - c^Tx)/c^Tr$. Since $\beta-c^Tx >0$ and $c^Tr >0$ by our choice of $\beta$ and $c$, we have $\lambda \geq 0$. Now we have
+$$c^T(x + \lambda r) = c^Tx + \beta - c^Tx = \beta$$
+as desired. $\blacksquare$
 \section{}
 \paragraph{}
 
