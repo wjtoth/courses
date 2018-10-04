@@ -117,8 +117,22 @@ Hence our choice of coefficients $\gamma$ on the vectors of $R_1$ is bounded, an
 It remains to verify that $p(Q_2) = P$. Similarly to the argument for $R$, we see that $p(R_1) = 0$. Hence $P = p(Q_1) = p(\conv{V_1}).$ So it will suffice to show that for every $x \in \conv{V_1}$ there exists $\lambda \geq 0$ and $r \in R_1$ such that $c^T(x + \lambda r) = \beta.$ Let $r$ be any vector in $R_1$ (since $R_1 \neq \emptyset$ this choice is well-defined). Choose $\lambda = (\beta - c^Tx)/c^Tr$. Since $\beta-c^Tx >0$ and $c^Tr >0$ by our choice of $\beta$ and $c$, we have $\lambda \geq 0$. Now we have
 $$c^T(x + \lambda r) = c^Tx + \beta - c^Tx = \beta$$
 as desired. $\blacksquare$
+
+%Problem 4
 \section{}
 \paragraph{}
+Let $P \subseteq \R^d$ be a full-dimensional polytope with $0_d$ in its interior.
+\subsection*{Sufficiency}
+\paragraph{}
+Suppose that $Q\subseteq \R^n$ is a polyhedron with at most $f$ facets, and $p:\R^n \rightarrow \R^d$ is an affine map so that $(Q,p)$ defines an extension of $P$. We define the \emph{polar} of $P$ as follows
+$$P^* := \{x \in \R^d : y^Tx \leq 1, \forall y \in P\}.$$
+From the previous Problem we may assume that $Q$ is a polytope. Suppose that there is a matrix $A \in \R^{d\times n}$ and $b \in \R^d$ such that $p(x) = Ax + b$ for all $x \in Q$. We claim that we may assume $b = 0$. Since $P$ is full-dimensional, $A$ as full row rank $d$. Thus $A$ has right inverse $A^{-1}_R$. Let $Q_1 = Q + \{-A^{-1}_Rb\}$. Then for all $x \in Q$,
+$A(x + A^{-1}_Rb) = Ax  + b  = p(x).$ So the linear map which sends $x$ to $Ax$ maps $Q_1$ to $P$. Since $Q_1$ is a translation of $Q$ it has the same number of facets as $Q$. Thus we may assume $p$ is a linear map, i.e. $b=0$.
+\paragraph{}
+Let $Q' = Q^*$ and let $\cL' = \text{rowspace}(A)$. We claim $P^*$ is linearly isomorphic to $Q' \cap \cL'$. Since $Q'$ is the polar dual of $Q$, the number of vertices of $Q'$ is equal to the number of facets of $Q$: $f$.
+\subsection*{Necessity}
+\paragraph{}
+Suppose that $Q'\subseteq \R^{n'}$ is a polytope with at most $f$ vertices, and $\cL \subseteq R^{n'}$ is an affine space such that $P^*$ is linearly isomorphic to $Q' \cap \cL'$.
 
 %Problem 5
 \section{}
