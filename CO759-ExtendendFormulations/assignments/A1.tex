@@ -126,14 +126,31 @@ Let $P \subseteq \R^d$ be a full-dimensional polytope with $0_d$ in its interior
 \paragraph{}
 Suppose that $Q\subseteq \R^n$ is a polyhedron with at most $f$ facets, and $p:\R^n \rightarrow \R^d$ is an affine map so that $(Q,p)$ defines an extension of $P$. We define the \emph{polar} of $P$ as follows
 $$P^* := \{x \in \R^d : y^Tx \leq 1, \forall y \in P\}.$$
-From the previous Problem we may assume that $Q$ is a polytope. Suppose that there is a matrix $A \in \R^{d\times n}$ and $b \in \R^d$ such that $p(x) = Ax + b$ for all $x \in Q$. We claim that we may assume $b = 0$. Since $P$ is full-dimensional, $A$ as full row rank $d$. Thus $A$ has right inverse $A^{-1}_R$. Let $Q_1 = Q + \{-A^{-1}_Rb\}$. Then for all $x \in Q$,
+From the previous Problem we may assume that $Q$ is a polytope. Suppose that there is a matrix $A \in \R^{d\times n}$ and $b \in \R^d$ such that $p(x) = Ax + b$ for all $x \in Q$. We claim that we may assume $b = 0$. Since $P$ is full-dimensional, $A$ has full row rank $d$. Thus $A$ has right inverse $A^{-1}_R$. Let $Q_1 = Q + \{-A^{-1}_Rb\}$. Then for all $x \in Q$,
 $A(x + A^{-1}_Rb) = Ax  + b  = p(x).$ So the linear map which sends $x$ to $Ax$ maps $Q_1$ to $P$. Since $Q_1$ is a translation of $Q$ it has the same number of facets as $Q$. Thus we may assume $p$ is a linear map, i.e. $b=0$.
 \paragraph{}
-Let $Q' = Q^*$ and let $\cL' = \text{rowspace}(A)$. We claim $P^*$ is linearly isomorphic to $Q' \cap \cL'$. Since $Q'$ is the polar dual of $Q$, the number of vertices of $Q'$ is equal to the number of facets of $Q$: $f$.
+Let $Q' = Q^*$ and let $\cL' = \text{rowspace}(A)$. Since $Q'$ is the polar dual of $Q$, the number of vertices of $Q'$ is equal to the number of facets of $Q$: $f$. We claim $P^*$ is linearly isomorphic to $Q' \cap \cL'$. Let $c \in P^*$. Then $A^Tc \in \text{rowspace}(A) = \cL'$. Further for any $x \in Q$,
+$$ A^Tcx = c^TAx \leq 1$$
+since $Ax$ is in $P$ and $c \in P^*$. Thus $A^Tc \in Q' \cap \cL'$. On the other hand, let $g \in Q' \cap \cL'$. Since $g \in \cL'$ there exists $c \in \R^d$ such that $g = A^Tc$. We claim $c$ is in $P^*$ showing $A^T$ is a surjective map from $P^*$ to $Q' \cap \cL'$. Let $y \in P$. Then there exists $x \in Q$ such that $Ax = y$. We have, using that $g \in Q^*$, 
+$$1 \geq g^T x = c^TAx = c^Ty.$$
+Thus $c \in P^*$. It remains to show the map $A^T$ is injective. Let $c_1,c_2 \in P^*$ such that $A^Tc_1 = A^Tc_2.$ As discussed earlier $A$ has a right inverse $A^{-1}_R$. Multiplying $c_1^T A = c_2^T A$ on both sides by $A^{-1}_R$ we have
+$$c_1^TAA^{-1}_R = c_2^TAA^{-1}_R$$
+and thus $c_1^T = c_2^T$. Therefore $A^T$ is an injective map, and so $P^*$ is linearly isomorphic to $Q' \cap \cL'$, as desired.
 \subsection*{Necessity}
 \paragraph{}
-Suppose that $Q'\subseteq \R^{n'}$ is a polytope with at most $f$ vertices, and $\cL \subseteq R^{n'}$ is an affine space such that $P^*$ is linearly isomorphic to $Q' \cap \cL'$.
-
+Suppose that $Q'\subseteq \R^{n}$ is a polytope with at most $f$ vertices, and $\cL' \subseteq R^{n}$ is an affine space such that $P^*$ is linearly isomorphic to $Q' \cap \cL'$. Let $q: P^* \rightarrow Q'\cap\cL'$ be a linear map defining the isomorphism between $P^*$ and $Q'\cap \cL'$. Then $q$ is described by a matrix $A \in \R^{n\times d}$ so that $q(x) = Ax$ for all $x \in P^*$. Since $P$ is a polytope, $P$ is bounded. That is to say, there exists some $\epsilon > 0$ for which $P$ is contained in the $||\cdot||_2$-norm ball of radius $\epsilon$. Then if we let $e_1, \dots, e_d$ be the standard basis of $\R^d$, we see that $e_i^T x \leq \epsilon$ for all $x \in P$. Hence for all $i \in [d]$, $\frac{1}{\epsilon}e_i$ is in $P^*$. This shows that $P^*$ is full-dimensional, and thus $Q'\cap \cL'$ is full-dimensional. Therefore $A$ has full column rank $d$, and so $A$ has a left inverse $A^{-1}_L \in \R^{d\times n}$.
+\paragraph{}
+Let $Q = (Q')^*$, and let $p: \R^n \rightarrow \R^d$ be the linear map defined by $p(x) = A^Tx$ for all $x \in Q$. We claim that $(Q,p)$ is an extension of $P$. Since $Q$ is the polar of $Q'$, and $Q'$ has at most $f$ vertices, we have that $Q$ has at most $f$ facets. Thus the claim suffices to complete the proof.
+\paragraph{}
+We want to show $p(Q) = P$. Since $0$ is contained in the interior of $P$, $(P^*)^* = P$. Let $x \in Q$, and let $y \in P^*$. Then
+$$p(x)^Ty = x^T(Ay) \leq 1$$
+since $Ay$ is in $Q' \cap \cL'$ and $x$ is in the polar of $Q'$. Thus $p(Q) \subseteq (P^*)^* = P$. 
+\paragraph{}
+It remains to verify that every $x \in P$ has $\bar{x}$ in $Q$ for which $p(\bar{x}) = x$. Indeed let $x \in P$ and choose $\bar{x}^T = x^TA^{-1}_L$. Then
+$$p(\bar{x}) = (AA^{-1}_L)^Tx = x$$
+as desired. Finally we need to verify that $\bar{x}$ is in $Q$. Let $y \in Q'$, we have
+$$ \bar{x}^Ty = x^TA^{-1}_L y \leq 1$$
+with the inequality following from $x \in P =(P^*)^*$ and $A^{-1}_L$ being the inverse map to $q$ (and thus $A^{-1}_Ly$ is in $P^*$). Therefore we have shown $(Q,p)$ is an extension of $P$ with at most $f$ facets.$\blacksquare$
 %Problem 5
 \section{}
 \paragraph{}
