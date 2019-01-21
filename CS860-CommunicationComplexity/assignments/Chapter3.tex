@@ -1,0 +1,321 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{fullpage}
+\usepackage[usenames]{xcolor}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{exercise}{Exercise}
+\newtheorem{problem}{Problem}
+\newtheorem{challenge}{Challenge Problem}
+\newtheorem{open}{Open Problem}
+\theoremstyle{plain}
+
+\newcommand{\argmin}{\mathrm{argmin}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+\newcommand{\cost}{\mathrm{cost}}
+\newcommand{\disc}{\mathrm{disc}}
+\newcommand{\discu}{\mathrm{disc_u}}
+\newcommand{\Disj}{\textsc{Disj}}
+\newcommand{\Eq}{\textsc{Eq}}
+\newcommand{\GT}{\textsc{GT}}
+\newcommand{\IP}{\textsc{IP}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\replacethistext}[1]{\textcolor{red}{#1}}
+
+\newcommand{\exercises}{\bigskip \noindent\rule{8cm}{0.4pt} \medskip}
+
+
+
+\title{Communication complexity: Chapter 3 \\ Distributional communication complexity}
+\author{Eric Blais and Justin Toth}
+
+
+\begin{document}
+
+\maketitle
+
+
+Functions can become much easier to compute in the communication complexity setting when we allow the protocols to make some errors. We can define this formally using the notion of \emph{distributional communication complexity}. We first explore this notion in its most natural setting, which corresponds to the uniform distribution.
+
+\begin{definition}[Protocol error]
+Fix any $\epsilon \ge 0$. A protocol $\pi$ \emph{computes} $f$ \emph{with error at most $\epsilon$ under the uniform distribution} if it correctly outputs the value $f(x,y)$ for at least an $1-\epsilon$ fraction of all inputs, i.e., if
+\[
+\Pr_{(x,y)}[ \pi(x,y) \neq f(x,y)] \le \epsilon
+\]
+when $(x,y)$ is drawn uniformly at random from $\calX \times \calY$.
+\end{definition}
+
+\begin{definition}[Uniform distributional complexity]
+For any $\epsilon \ge 0$, the \emph{$\epsilon$-error distributional communication complexity} of $f : \mathcal{X} \times \mathcal{Y} \to \{0,1\}$ with respect to the uniform distribution,
+\[
+D_\epsilon^{\mathrm{unif}}(f),
+\]
+is the minimum communication cost of a protocol that computes $f$ with error at most $\epsilon$ under the uniform distribution.
+\end{definition}
+
+\exercises
+
+\begin{exercise}
+Show that $D_0^{\mathrm{unif}}(f) = D(f)$ and that for every $\epsilon > 0$, 
+$D_\epsilon^{\mathrm{unif}}(f) \le D(f)$.
+\end{exercise}
+
+\begin{exercise}
+Show that every $f : \mathcal{X} \times \mathcal{Y} \to \{0,1\}$ satisfies
+$D_{1/2}^{\mathrm{unif}}(f) = 0$.
+\end{exercise}
+
+
+\newpage \section{Equality III}
+
+The $\epsilon$-error distributional complexity of functions can sometimes be dramatically smaller than their deterministic complexity.
+
+\begin{theorem}
+For any $\epsilon \ge \frac1{2^n}$, $D_\epsilon^{\mathrm{unif}}(\textsc{Equality}) = 0$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage \section{Uniform discrepancy}
+
+The \emph{uniform discrepancy} of a function is a different way to measure how large ``nearly $f$-monochromatic'' rectangles can be. For this measure, it is convenient to represent the function with a $\pm1$-valued (instead of $\{0,1\}$-valued) matrix.
+
+\begin{definition}[$\pm 1$-Matrix of a function]
+The \emph{$\pm 1$-matrix} $M^\pm_f$ corresponding to the function $f : \calX \times \calY \to \{0,1\}$ is the $|\calX| \times |\calY|$-dimensional $\{-1,1\}$-valued matrix with rows indexed by $\calX$ and columns indexed by $\calY$ defined by
+\[
+\big(M^{\pm}_f\big)_{x,y} = (-1)^{f(x,y)}
+\]
+for every $x \in \calX$ and $y \in \calY$.
+\end{definition}
+
+\begin{definition}[Uniform discrepancy]
+The \emph{uniform discrepancy} of $f : \calX \times \calY \to \{0,1\}$ is
+\[
+\discu(f) = \max_{A \subseteq \calX, B \subseteq \calY} \frac{1}{|\calX| \, |\calY|} \left| \sum_{x \in A, y \in B} \big(M^{\pm}_f\big)_{x,y} \right|.
+\]
+\end{definition}
+
+We can use the uniform discrepancy to bound deterministic communication complexity.
+
+\begin{theorem}
+For every function $f : \calX \times \calY \to \{0,1\}$,
+\[
+\chi(f) \ge \discu(f)^{-1}
+\] 
+and so $D(f) \ge \log_2 \frac1{\discu(f)}$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage \section{Uniform discrepancy bound}
+
+We can also use uniform discrepancy to bound the uniform distributional  communication complexity of functions.
+
+\begin{lemma}
+For every function $f : \calX \times \calY \to \{0,1\}$ and every $0 \le \epsilon < \frac12$, 
+\[
+D_\epsilon^{\mathrm{unif}}(f) \ge \log_2 \left( \frac{1-2\epsilon}{\discu(f)} \right).
+\]
+\end{lemma}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage \section{Inner product III}
+
+The discrepancy method can be used to give optimal bounds on the distributional communication complexity of the inner product function over the uniform distribution.
+
+\begin{theorem}
+$\discu(\IP) \le 2^{-n/2}$ and, as a result, $D_\epsilon^{\mathrm{unif}}(\IP) \ge \Omega(n)$ for every $\epsilon < \frac12$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage \section{Distributional complexity}
+
+The definitions we have seen so far in this chapter all generalize to arbitrary distributions over the domain of the function.
+
+\begin{definition}[Protocol error]
+Fix any $\epsilon \ge 0$. A protocol \emph{computes} $f : \calX \times \calY \to \{0,1\}$ \emph{with error at most $\epsilon$ under the distribution $\mu$ on $\calX \times \calY$} if it correctly outputs the value $f(x,y)$ for at least a $1-\epsilon$ measure of all inputs in $\mu$, i.e., if
+\[
+\Pr_{(x,y) \sim \mu}[ \pi(x,y) \neq f(x,y) ] \le \epsilon.
+\]
+\end{definition}
+
+\begin{definition}[Distributional complexity]
+For any $\epsilon \ge 0$, the \emph{$\epsilon$-error distributional communication complexity} of $f : \calX \times \calY \to \{0,1\}$ with respect to the distribution $\mu$ on $\calX \times \calY$,
+\[
+D_\epsilon^{\mu}(f),
+\]
+is the minimum communication cost of a protocol that computes $f$ with error at most $\epsilon$ under the distribution $\mu$.
+\end{definition}
+
+\begin{definition}[$\mu$-Discrepancy]
+For any distribution $\mu$ on $\calX \times \calY$, 
+the \emph{$\mu$-discrepancy} of $f : \calX \times \calY \to \{0,1\}$ is
+\[
+\disc_\mu(f) = \max_{A \subseteq \calX, B \subseteq \calY} 
+\left| \mu\big( (A \times B) \cap f^{-1}(0) \big) - \mu\big( (A \times B) \cap f^{-1}(1)\big) \right|.
+\]
+\end{definition}
+
+\begin{theorem}
+For every function $f : \calX \times \calY \to \{0,1\}$ and every distribution $\mu$ over $\calX \times \calY$, 
+\[
+\chi(f) \ge \disc_\mu(f)^{-1}
+\] 
+and so $D(f) \ge \log_2 \frac1{\disc_\mu(f)}$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\exercises
+
+\begin{exercise}
+Show that when $\mu$ is the uniform distribution over $\calX \times \calY$, the definitions of $\mu$-discrepancy and uniform discrepancy are equivalent.
+\end{exercise}
+
+\begin{exercise}
+Show that for every distribution $\mu$, $D^\mu_\epsilon(f) \le D(f)$.
+\end{exercise}
+
+
+\newpage \section{Discrepancy bound}
+
+The $\mu$-discrepancy of a function can be used to give lower bounds on its $\mu$-distributional communication complexity.
+
+\begin{lemma}
+For every function $f : \calX \times \calY \to \{0,1\}$, every distribution $\mu$ on $\calX \times \calY$, and every $0 \le \epsilon < \frac12$,
+\[
+D_\epsilon^{\mu}(f) \ge \log_2 \left( \frac{1-2\epsilon}{\disc_\mu(f)} \right).
+\]
+\end{lemma}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage \section{Equality IV}
+
+Using the discrepancy bound, we can show that there are distributions for which the equality function requires Alice and Bob to exchange \emph{some} bits of communication to obtain a non-trivial error.
+
+\begin{theorem}
+There exists a distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$ for which 
+$
+\disc_\mu(\Eq) \ge \frac18
+$
+and so
+\[
+D^\mu_\epsilon(\Eq) \ge 1
+\]
+for every $\epsilon \le \frac38$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+
+\newpage \section{Equality V (Bonus)}
+
+Show that the bound in the last section is essentially tight in that the distributional communication complexity of the equality function is constant when $\epsilon$ is a positive constant.
+
+\begin{theorem}
+For every distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$ and every constant $\epsilon > 0$,
+\[
+D^\mu_{1/4}(\Eq) = O(1).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here, if you complete it.}
+\end{proof}
+
+
+
+\newpage \section{Corruption bound}
+
+The \emph{corruption bound} is another powerful technique for proving lower bounds in distributional communication complexity.
+
+\begin{lemma}
+Fix a function $f : \calX \times \calY \to \{0,1\}$ and a distribution
+$\mu$ on $\calX \times \calY$.
+If there exist parameters $\alpha, \beta > 0$ for which
+every rectangle $R \subseteq \calX \times \calY$ satisfies 
+\[
+\mu(R \cap f^{-1}(0)) \ge \alpha \cdot \mu(R) - \beta
+\]
+then
+\[
+D^\mu_\epsilon(f) \ge \log\left( \frac{\alpha \cdot \mu(f^{-1}(1)) - \epsilon}{\beta}\right).
+\]
+\end{lemma}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+
+\newpage \section{Set Disjointness II}
+
+The corruption bound can be used to prove a strong lower bound on the distributional communication complexity of the set disjointness function. The key claim that is used to obtain this result is the following combinatorial statement.
+
+\begin{proposition}[\textsc{Bonus}]
+Every rectangle $R = A \times B \subseteq 2^{[n]} \times 2^{[n]}$
+that satisfies 
+\[
+\Pr_{(S,T) \in R}[ S \cap T = \emptyset ] \ge 1-\alpha
+\]
+has size bounded by
+\[
+|A| \le 2^{-\delta \sqrt{n}} \binom{n}{\sqrt{n}}
+\qquad \mbox{or} \qquad
+|B| \le 2^{-\delta \sqrt{n}} \binom{n}{\sqrt{n}}.
+\]
+\end{proposition}
+
+\begin{proof}
+\replacethistext{Enter your proof here, if you complete it.}
+\end{proof}
+
+Use the claim to complete the lower bound on the communication complexity of the set disjointness function.
+
+\begin{theorem}
+Let $\mu$ be the uniform distribution on pairs $(S,T) \in 2^{[n]} \times 2^{[n]}$ that satisfy $|S| = |T| = \sqrt{n}$. Then
+\[
+D_\epsilon^{\mu}(\textsc{Disj}) \ge \Omega(\sqrt{n}).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+
+\end{document}
