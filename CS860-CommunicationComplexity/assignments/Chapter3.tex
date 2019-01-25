@@ -299,7 +299,7 @@ for every $\epsilon \le \frac38$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+I'm not really sure what the right distribution to take is, but intuitively I want to distribute the probability mass evenly between $(x,y)$ pairs with $x\neq y$ and pairs with $x=y$ so Alice and Bob have to exchange some bits to do better than guessing. From the matrix of this function I want half the probability mass uniformly distributed on the diagonal, and half uniformly distributed on all off-diagonal entries.
 \end{proof}
 
 
@@ -350,7 +350,9 @@ Now we claim that
 $$\alpha + \mu(f^{-1}(1)) -1 \geq \alpha\cdot \mu(f^{-1}(1)) -\epsilon.$$
 This claim is equivalent to
 $$1-\epsilon \leq \alpha(\mu(f^{-1}(0))) +\mu(f^{-1}(1)).$$
-This holds since $1-\epsilon$ is the probability of success \replacethistext{(I didn't have time to formalize)}.
+Since 
+$$\alpha(\mu(f^{-1}(0))) +\mu(f^{-1}(1)) = 1-(1-\alpha) \mu(f^{-1}(0))$$
+the claim holds since the probability of failure is at least $(1-\alpha)f^{-1}(0)$ \replacethistext{(I didn't have time to formalize)}.
 \end{proof}
 
 
@@ -360,7 +362,7 @@ This holds since $1-\epsilon$ is the probability of success \replacethistext{(I 
 The corruption bound can be used to prove a strong lower bound on the distributional communication complexity of the set disjointness function. The key claim that is used to obtain this result is the following combinatorial statement.
 
 \begin{proposition}[\textsc{Bonus}]
-Every rectangle $R = A \times B \subseteq 2^{[n]} \times 2^{[n]}$
+For every $\alpha >0$ there exists $\delta>0$ such that every rectangle $R = A \times B \subseteq 2^{[n]} \times 2^{[n]}$
 that satisfies 
 \[
 \Pr_{(S,T) \in R}[ S \cap T = \emptyset ] \ge 1-\alpha
