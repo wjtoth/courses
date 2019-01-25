@@ -145,7 +145,7 @@ D_\epsilon^{\mathrm{unif}}(f) \ge \log_2 \left( \frac{1-2\epsilon}{\discu(f)} \r
 \begin{proof}
 Let $\pi$ be the protocol attaining $D_\epsilon^{\mathrm{unif}}(f)$. Since $\Pr[\pi(x,y) \neq f(x,y)] \leq \epsilon$ and $\Pr[\pi(x,y) = f(x,y)] \geq 1-\epsilon$,
 $$1-2\epsilon \leq \Pr[\pi(x,y) = f(x,y)] - \Pr[\pi(x,y) \neq f(x,y)].$$
-Let $\{R_1, \dots, R_t\}$ be set of $f$-monochromatic rectangles corresponding to the path from the root of $\pi$ to each respective leaf. Then
+Let $\{R_1, \dots, R_t\}$ be set of nearly $f$-monochromatic rectangles corresponding to the path from the root of $\pi$ to each respective leaf. Then
 $$\Pr[\pi(x,y) = f(x,y)] = \sum_{i=1}^t \Pr((x,y) \in R_i)\Pr(\pi(x,y) = f(x,y) \mid(x,y) \in R_i) = \sum_{i=1}^t \frac{|R_i|}{|\calX||\calY|}\frac{|R_i\cap f^{-1}(\pi(x,y))|}{|R_i|}.$$
 Symmetrically
 $$\Pr[\pi(x,y) \neq f(x,y)] = \frac{1}{|\calX||\calY|} \sum_{i=1}^t|R_i \cap f^{-1}(\pi(x,y)\oplus 1)|.$$
@@ -269,7 +269,7 @@ D_\epsilon^{\mu}(f) \ge \log_2 \left( \frac{1-2\epsilon}{\disc_\mu(f)} \right).
 \begin{proof}
 Let $\pi$ be the protocol attaining $D_\epsilon^{\mu}(f)$. Since $\Pr[\pi(x,y) \neq f(x,y)] \leq \epsilon$ and $\Pr[\pi(x,y) = f(x,y)] \geq 1-\epsilon$,
 $$1-2\epsilon \leq \Pr[\pi(x,y) = f(x,y)] - \Pr[\pi(x,y) \neq f(x,y)].$$
-Let $\{R_1, \dots, R_t\}$ be set of $f$-monochromatic rectangles corresponding to the path from the root of $\pi$ to each respective leaf. Then
+Let $\{R_1, \dots, R_t\}$ be set of nearly $f$-monochromatic rectangles corresponding to the path from the root of $\pi$ to each respective leaf. Then
 $$\Pr[\pi(x,y) = f(x,y)] = \sum_{i=1}^t \Pr[(x,y) \in R_i \text{ and }\pi(x,y) = f(x,y) ] = \sum_{i=1}^t \mu(R_i \cap f^{-1}(\pi(x,y))).$$
 Symmetrically
 $$\Pr[\pi(x,y) \neq f(x,y)] = \sum_{i=1}^t\mu(R_i \cap f^{-1}(\pi(x,y)\oplus 1)).$$
@@ -340,7 +340,17 @@ D^\mu_\epsilon(f) \ge \log\left( \frac{\alpha \cdot \mu(f^{-1}(1)) - \epsilon}{\
 \end{lemma}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be the protocol attaining $D_\epsilon^{\mu}(f)$.
+Let $\{R_1, \dots, R_t\}$ be set of nearly $f$-monochromatic rectangles corresponding to the path from the root of $\pi$ to each respective leaf.
+
+$$1= \sum_{i=1}^t \mu(R_i) = \sum_{i=1}^t \mu(R_i \cap f^{-1}(0)) + \mu(R_i\cap f^{-1}(1)) \geq \alpha - t \beta +\mu(f^{-1}(1))$$
+Thus
+$$t \geq \frac{\alpha + \mu(f^{-1}(1)) -1}{\beta}.$$
+Now we claim that 
+$$\alpha + \mu(f^{-1}(1)) -1 \geq \alpha\cdot \mu(f^{-1}(1)) -\epsilon.$$
+This claim is equivalent to
+$$1-\epsilon \leq \alpha(\mu(f^{-1}(0))) +\mu(f^{-1}(1)).$$
+This holds since $1-\epsilon$ is the probability of success \replacethistext{(I didn't have time to formalize)}.
 \end{proof}
 
 
@@ -377,8 +387,13 @@ D_\epsilon^{\mu}(\textsc{Disj}) \ge \Omega(\sqrt{n}).
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
-\end{proof}
+From Proposition $1$, if $R = A\times B \subseteq 2^{[n]}\times 2^{[n]}$ is rectangle such that
+$$\mu(R) \geq 2^{-\delta\sqrt{n}}$$ then
+$$\mu(R\cap \Disj^{-1}(0)) > \alpha \mu(R).$$	
+Thus any rectangle $R$ satisfies
+$$\mu(R\cap \Disj^{-1}(0)) > \alpha \mu(R) - 2^{-\delta\sqrt{n}}.$$
+So by the corruption bound with $\alpha$ and $\beta = 2^{-\delta\sqrt{n}}$ we obtain
+$$D^{\mu}_\epsilon(\Disj) \geq \log(\frac{\alpha\cdot \mu(f^{-1}(1)) - \epsilon}{2^{-\delta\sqrt{n}}}) \geq \Omega(\sqrt{n}).$$\end{proof}
 
 
 
