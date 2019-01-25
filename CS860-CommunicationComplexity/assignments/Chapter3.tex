@@ -84,7 +84,9 @@ For any $\epsilon \ge \frac1{2^n}$, $D_\epsilon^{\mathrm{unif}}(\textsc{Equality
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Consider the trivial protocol which just outputs $1$ on every pair of inputs. Then $\Pr[\pi(x,y)\neq \Eq(x,y)]$ is precisely the probability that $x=y$. Hence
+$$\Pr[\pi(x,y)\neq \Eq(x,y)] = \Pr[x=y] = (\frac{1}{2})^n$$
+since each bit of $x$ and $y$ is chosen independently and uniformly at random.
 \end{proof}
 
 
@@ -118,7 +120,14 @@ and so $D(f) \ge \log_2 \frac1{\discu(f)}$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+$\chi(f) \geq \discu(f)^{-1}$ if and only if
+$$\chi(f)\max_{A \subseteq \calX, B \subseteq \calY}\left| \sum_{x \in A, y \in B} \big(M^{\pm}_f\big)_{x,y} \right| \geq |\calX||\calY|.$$
+
+Consider a partition of the input space into $f$-monochromatic rectangles, $\mathcal R$, such that $|\mathcal R| = \chi(f)$. Then
+$$\chi(f)\max_{A \subseteq \calX, B \subseteq \calY}\left| \sum_{x \in A, y \in B} \big(M^{\pm}_f\big)_{x,y} \right|  = \sum_{R\in \mathcal R} \max_{A \subseteq \calX, B \subseteq \calY}\left| \sum_{x \in A, y \in B} \big(M^{\pm}_f\big)_{x,y} \right| \geq\sum_{R \in \mathcal{R}} \left| \sum_{(x,y) \in R} \big(M^{\pm}_f\big)_{x,y} \right|= \sum_{R \in \mathcal R} |R|$$
+using that each $R$ is $f$-monochromatic to obtain the last equality. Since $\mathcal R$ partitions the input space,
+$$\sum_{R \in \mathcal R} |R| = |\calX||\calY|$$
+and hence the result holds.
 \end{proof}
 
 
@@ -134,7 +143,18 @@ D_\epsilon^{\mathrm{unif}}(f) \ge \log_2 \left( \frac{1-2\epsilon}{\discu(f)} \r
 \end{lemma}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be the protocol attaining $D_\epsilon^{\mathrm{unif}}(f)$. Since $\Pr[\pi(x,y) \neq f(x,y)] \leq \epsilon$ and $\Pr[\pi(x,y) = f(x,y)] \geq 1-\epsilon$,
+$$1-2\epsilon \leq \Pr[\pi(x,y) = f(x,y)] - \Pr[\pi(x,y) \neq f(x,y)].$$
+Let $\{R_1, \dots, R_t\}$ be set of $f$-monochromatic rectangles corresponding to the path from the root of $\pi$ to each respective leaf. Then
+$$\Pr[\pi(x,y) = f(x,y)] = \sum_{i=1}^t \Pr((x,y) \in R_i)\Pr(\pi(x,y) = f(x,y) \mid(x,y) \in R_i) = \sum_{i=1}^t \frac{|R_i|}{|\calX||\calY|}\frac{|R_i\cap f^{-1}(\pi(x,y))|}{|R_i|}.$$
+Symmetrically
+$$\Pr[\pi(x,y) \neq f(x,y)] = \frac{1}{|\calX||\calY|} \sum_{i=1}^t|R_i \cap f^{-1}(\pi(x,y)\oplus 1)|.$$
+Thus we have
+\begin{align*}1-2\epsilon &= \Pr[\pi(x,y) = f(x,y)] - \Pr[\pi(x,y) \neq f(x,y)] \\
+&= \frac{1}{|\calX||\calY|} \sum_{i=1}^t|R_i\cap f^{-1}(\pi(x,y))| -|R_i \cap f^{-1}(\pi(x,y)\oplus 1)| \\
+&\leq \frac{1}{|\calX||\calY|} \sum_{i=1}^t  \left| \sum_{(x,y) \in R_i} \big(M^{\pm}_f\big)_{x,y} \right|\\
+&\leq t\cdot\discu(f).\end{align*}
+Since $\log_2(t) = D_\epsilon^{\mathrm{unif}}(f)$ this completes the proof.
 \end{proof}
 
 
@@ -147,7 +167,27 @@ $\discu(\IP) \le 2^{-n/2}$ and, as a result, $D_\epsilon^{\mathrm{unif}}(\IP) \g
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+For convenience, define $M:= M^{\pm}_\IP$ and let $\mathbf{1}_S$ denote characteristic vector of a set $S\subseteq [n]$. Now consider an entry $x,y$ of $M^TM$:
+$$M^TM_{x,y} = \sum_{z\in\{0,1\}^n} (-1)^{x\cdot z}(-1)^{y\cdot z} = \sum_{z \in \{0,1\}^n}(-1)^z\cdot(x+y) = \begin{cases}
+(-1)2^{n-1} + (1)2^{n-1}, &\text{if $x\neq y$} \\
+\sum_{z \in \{0,1\}^n}1, &\text{otherwise}.
+\end{cases}$$
+Hence $$M^TM_{x,y} = \begin{cases}
+0, &\text{if $x\neq y$} \\
+2^n, &\text{otherwise}
+\end{cases}$$
+i.e. $M^TM = 2^nI$.
+
+Consider a rectangle $R = A\times B$. Then we have
+\begin{align*}
+\left| \sum_{x \in A, y \in B} \big(M^{\pm}_f\big)_{x,y} \right|  &= \left| \mathbf{1}_A^T M \mathbf{1}_B\right | \\
+&\leq ||\mathbf{1}_A|| \cdot || M\mathbf{1}_B|| &\text{by Cauchy-Schwarz} \\
+&= \sqrt{|A|}\cdot\sqrt{\mathbf{1}^T_BM^TM\mathbf{1}_B} \\
+&= 2^{n/2}\sqrt{|A|}\sqrt{\mathbf{1}^T_B\mathbf{1}_B} \\
+&=2^{n/2}\sqrt{|A|}\sqrt{|B|}.
+\end{align*}
+Therefore
+$$\discu(\IP) \leq \frac{1}{2^n2^n}\max_{A \subseteq \calX, B \subseteq \calY} 2^{n/2}\sqrt{|A|}\sqrt{|B|} \leq 2^{-2n}2^n2^\frac{n}{2} = 2^{-n/2}.$$
 \end{proof}
 
 
@@ -188,7 +228,20 @@ and so $D(f) \ge \log_2 \frac1{\disc_\mu(f)}$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+	
+$\chi(f) \geq \disc_\mu(f)^{-1}$ if and only if
+$$\chi(f)\max_{A \subseteq \calX, B \subseteq \calY}\left|\mu((A\times B)\cap f^{-1}(0) -\mu((A\times B)\cap f^{-1}(1)) \right| \geq 1.$$
+
+Consider a partition of the input space into $f$-monochromatic rectangles, $\mathcal R$, such that $|\mathcal R| = \chi(f)$. Then
+\begin{align*}
+&\chi(f)\max_{A \subseteq \calX, B \subseteq \calY}\left|\mu((A\times B)\cap f^{-1}(0) -\mu((A\times B)\cap f^{-1}(1)) \right| \\
+& = \sum_{R\in \mathcal R}\max_{A \subseteq \calX, B \subseteq \calY}\left|\mu((A\times B)\cap f^{-1}(0) -\mu((A\times B)\cap f^{-1}(1)) \right|\\ 
+&\geq \sum_{R \in \mathcal{R}}\left|\mu(R)\cap f^{-1}(0) -\mu(R\cap f^{-1}(1)) \right|\\ 
+&= \sum_{R \in \mathcal{R}} \mu(R)
+\end{align*}
+using that each $R$ is $f$-monochromatic to obtain the last equality. Since $\mathcal R$ partitions the input space,
+$$\sum_{R \in \mathcal R} \mu(R)=1$$
+and hence the result holds.
 \end{proof}
 
 \exercises
@@ -214,7 +267,18 @@ D_\epsilon^{\mu}(f) \ge \log_2 \left( \frac{1-2\epsilon}{\disc_\mu(f)} \right).
 \end{lemma}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be the protocol attaining $D_\epsilon^{\mu}(f)$. Since $\Pr[\pi(x,y) \neq f(x,y)] \leq \epsilon$ and $\Pr[\pi(x,y) = f(x,y)] \geq 1-\epsilon$,
+$$1-2\epsilon \leq \Pr[\pi(x,y) = f(x,y)] - \Pr[\pi(x,y) \neq f(x,y)].$$
+Let $\{R_1, \dots, R_t\}$ be set of $f$-monochromatic rectangles corresponding to the path from the root of $\pi$ to each respective leaf. Then
+$$\Pr[\pi(x,y) = f(x,y)] = \sum_{i=1}^t \Pr[(x,y) \in R_i \text{ and }\pi(x,y) = f(x,y) ] = \sum_{i=1}^t \mu(R_i \cap f^{-1}(\pi(x,y))).$$
+Symmetrically
+$$\Pr[\pi(x,y) \neq f(x,y)] = \sum_{i=1}^t\mu(R_i \cap f^{-1}(\pi(x,y)\oplus 1)).$$
+Thus we have
+\begin{align*}1-2\epsilon &= \Pr[\pi(x,y) = f(x,y)] - \Pr[\pi(x,y) \neq f(x,y)] \\
+&=\sum_{i=1}^t|\mu(R_i\cap f^{-1}(\pi(x,y))) -\mu(R_i \cap f^{-1}(\pi(x,y)\oplus 1))| \\
+&\leq \sum_{i=1}^t \disc_\mu(f)\\
+&= t\cdot\disc_\mu(f).\end{align*}
+Since $\log_2(t) = D_\epsilon^{\mu}(f)$ this completes the proof.
 \end{proof}
 
 
@@ -225,7 +289,7 @@ Using the discrepancy bound, we can show that there are distributions for which 
 \begin{theorem}
 There exists a distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$ for which 
 $
-\disc_\mu(\Eq) \ge \frac18
+\disc_\mu(\Eq) \leq \frac18 \frac{2^n}{(2^n-1)}.
 $
 and so
 \[
@@ -245,7 +309,7 @@ for every $\epsilon \le \frac38$.
 Show that the bound in the last section is essentially tight in that the distributional communication complexity of the equality function is constant when $\epsilon$ is a positive constant.
 
 \begin{theorem}
-For every distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$ and every constant $\epsilon > 0$,
+For every distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$,
 \[
 D^\mu_{1/4}(\Eq) = O(1).
 \]
