@@ -1,0 +1,341 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{fullpage}
+\usepackage[usenames]{xcolor}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{exercise}{Exercise}
+\newtheorem{remark}{Remark}
+\newtheorem{problem}{Problem}
+\newtheorem{challenge}{Challenge Problem}
+\newtheorem{open}{Open Problem}
+\theoremstyle{plain}
+
+\newcommand{\argmin}{\mathrm{argmin}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+\newcommand{\cost}{\mathrm{cost}}
+\newcommand{\disc}{\mathrm{disc}}
+\newcommand{\discu}{\mathrm{disc_u}}
+\newcommand{\Disj}{\textsc{Disj}}
+\newcommand{\Eq}{\textsc{Eq}}
+\newcommand{\GT}{\textsc{GT}}
+\newcommand{\HD}{\textsc{HD}}
+\newcommand{\IP}{\textsc{IP}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Rpriv}{R^{\mathrm{priv}}}
+\newcommand{\replacethistext}[1]{\textcolor{red}{#1}}
+
+\newcommand{\exercises}{\bigskip \noindent\rule{8cm}{0.4pt} \medskip}
+
+
+
+\title{Communication complexity: Chapter 4 \\ Randomized communication complexity}
+\author{Eric Blais and Justin Toth}
+
+
+\begin{document}
+
+\maketitle
+
+Until now, we have been focused on deterministic communication protocols. In this chapter, we study \emph{randomized} communication protocols. We first focus on what is known as the \emph{public-randomness model} of communication. 
+
+\begin{definition}[Randomized protocol]
+A \emph{randomized communication protocol} $\Pi$ is a distribution over deterministic communication protocols. The \emph{(worst-case) cost} of $\Pi$ is the maximum cost of any protocol in its support. The randomized protocol $\Pi$ \emph{computes} $f : \calX \times \calY \to \{0,1\}$ with error at most $\epsilon$ if for every $(x,y) \in \calX \times \calY$,
+\[
+\Pr_{\pi \sim \Pi}[ \pi(x,y) \neq f(x,y) ] \le \epsilon.
+\]
+\end{definition}
+
+
+\begin{definition}[Randomized communication complexity]
+For $0 < \epsilon < \frac12$, the \emph{randomized communication complexity} of $f : \calX \times \calY \to \{0,1\}$ at error $\epsilon$ is
+\[
+R_\epsilon(f) := \min_{\Pi} \cost(\Pi)
+\]
+where the minimum is taken over all randomized communication protocols that compute $f$ with error at most $\epsilon$.
+\end{definition}
+
+\begin{remark}
+The notation for randomized communication complexity can vary. In Kushilevitz and Nisan, for instance, the randomized communication complexity defined above is written as $R^{\mathrm{pub}}_\epsilon$ and our symbol $R_\epsilon$ is reserved for another model of randomized communication (namely: the private randomness model we will see at the end of the chapter).
+\end{remark}
+
+\exercises
+
+\begin{exercise}
+Another way to define randomized communication protocols is to consider a model where Alice and Bob have access to their respective inputs \emph{and} to a common sequence of coins that are flipped at random. Show that this model is equivalent to the one described above.
+\end{exercise}
+
+\begin{exercise}
+Show that with the definition above, $R_0(f) = D(f)$ always holds. For this reason, $R_0(f)$ is usually reserved to the randomized model of communication where the cost of $\Pi$ on input $(x,y)$ is defined to be the \emph{average} cost of the protocols in the support of $\Pi$.
+\end{exercise}
+
+
+\newpage 
+\section{Randomized and distributional complexity}
+
+Lower bounds in randomized communication complexity are often (usually?) obtained by establishing the lower bounds in the distributional communication complexity model instead. This approach is justified by the following relation, which is sometimes referred to as \emph{(the easy direction of) Yao's minimax principle}.
+
+\begin{theorem}
+For every $0 \le \epsilon \le \frac12$, every function $f : \calX \times \calY \to \{0,1\}$, and every distribution $\mu$ over $\calX \times \calY$,
+\[
+R_\epsilon(f) \ge D_\epsilon^\mu(f).
+\]
+\end{theorem}
+
+\begin{proof}
+Let $\Pi$ be a distribution over deterministic communication protocols computing $f$ such that $R_\epsilon(f) = \cost(\Pi)$. Let $\mu$ be a distribution over $\calX\times\calY$. Since $\Pr_{\pi \sim \Pi}[\pi(x,y)\neq f(x,y)]\leq \epsilon$ for all $(x,y) \in \calX \times \calY$ we have
+$$\Pr_{(x,y)\sim \mu ;\pi\sim \Pi}[\pi(x,y)\neq f(x,y)]] \leq \epsilon.$$
+Hence there exists deterministic protocol $\pi$ such that 
+$$\Pr_{(x,y)\sim \mu}[\pi(x,y) \neq f(x,y)] \leq \epsilon.$$
+\end{proof}
+
+
+\newpage 
+\section{Yao's minimax principle (Bonus)}
+
+Yao's minimax principle says something quite a bit stronger than the bound seen in the last chapter: it says that the randomized communication complexity of a function is \emph{equal} to the maximum distributional complexity of the function over any distributions on its domain.
+
+\begin{theorem}
+For every $0 \le \epsilon \le \frac12$ and every function $f : \calX \times \calY \to \{0,1\}$, 
+\[
+R_\epsilon(f) = \max_{\mu} D_\epsilon^\mu(f)
+\]
+where the maximum is taken over all distributions on $\calX \times \calY$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here, if you complete it.}
+\end{proof}
+
+
+\newpage 
+\section{Error reduction}
+
+The randomized communication complexity functions is usually studied in the setting where $\epsilon = \frac13$. In fact, this is so common that shorthand notation is used for that case.
+
+\begin{definition}
+The \emph{(two-sided error) randomized communication complexity} of $f : \calX \times \calY \to \{0,1\}$ is
+\[
+R(f) = R_{1/3}(f).
+\]
+\end{definition}
+
+The reason most of the work focuses on this particular choice of $\epsilon$ is that a general transformation can be used to bound $R_\epsilon(f)$ for any $\epsilon > 0$ as a function of $R(f)$. This result is sometimes known as the \emph{(majority) confidence amplification} trick.
+
+\begin{theorem}
+For every function $f : \calX \times \calY \to \{0,1\}$ and every $0 < \epsilon < \frac12$, 
+\[
+R_\epsilon(f) = O\left( R(f) \cdot \log \tfrac1\epsilon \right).
+\]
+\end{theorem}
+
+\begin{proof}
+Let $\Pi$ be a distribution over deterministic communication protocols computing $f$ such that $R(f) = \cost(\Pi)$. Consider the following random construction of a protocol: for some $t$ to be chosen later, sample independently $t$ protocols according to $\Pi$: $\pi_1,\dots, \pi_t$. Protocol $\pi$ will run $\pi_i$ on its input obtaining output $b_i \in\{0,1\}$, for each $i = 1,\dots, t$. Then $\pi$ will output the median of $b_1, \dots, b_t$ (suppose without loss they are ordered non-decreasingly). Call the distribution on protocols obtained by this random construction $\Pi'$.
+
+A protocol chosen according to $\Pi'$ fails only if at least half of its constituent $t$ protocols chosen according $\Pi$ fail. Hence for any $(x,y) \in \calX\times \calY$,
+$$\Pr_{\pi \sim \Pi'}[\pi(x,y)\neq f(x,y)] \leq \prod_{i=1}^{t/2} \Pr[\pi_i(x,y) \neq f(x,y)] \leq (\frac{1}{3})^{\frac{t}{2}}.$$
+Thus if we chose $t = 2\log_3(\frac{1}{\epsilon})$ then $\Pr_{\pi \sim \Pi'}[\pi(x,y)\neq f(x,y)] \leq \epsilon$. Hence $t = O(\log\frac{1}{\epsilon})$. The cost of $\Pi'$ is the cost of $\Pi$ repeated $t$ times, so $\cost(\Pi') = O(R(f)\cdot \log\frac{1}{\epsilon})$ as desired.
+\end{proof}
+
+\exercises
+
+\begin{exercise}
+Extend the result in the theorem to show that for every $\delta > 0$, we also have
+\[
+R_\epsilon(f) = O\left( R_{\frac12 - \delta}(f) \cdot \phi(\epsilon,\delta) \right)
+\]
+for some appropriate function $\phi$ on $\epsilon$ and $\delta$.
+\end{exercise}
+
+
+\newpage 
+\section{Equality VI}
+
+
+\begin{theorem}
+For every $0 < \epsilon < \frac12$,
+\[
+R_\epsilon(\Eq) = O\left(\log \tfrac1\epsilon \right).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage 
+\section{Greater than II}
+
+Recall that the function $\GT : [2^n] \times [2^n] \to \{0,1\}$ is defined by
+\[
+\GT(x,y) = \begin{cases}
+1 & \mbox{if } x > y \\
+0 & \mbox{otherwise.}
+\end{cases}
+\]
+We saw in Chapter 2 that the deterministic communication complexity of this function is $\Theta(n)$. Its randomized communication complexity is much smaller.
+
+\begin{theorem}
+The randomized communication complexity of $\GT : [2^n] \times [2^n] \to \{0,1\}$ is bounded above by
+\[
+R(\GT) = O\left(\log^2 n \right).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\exercises
+
+\begin{exercise}
+Improve the upper bound to show $R(\GT) = O\left(\log n \log \log n \right)$.
+\end{exercise}
+
+\begin{exercise}
+Prove that $R(\GT) = \Theta\left(\log n \right)$.
+\end{exercise}
+
+
+\newpage 
+\section{Hamming distance}
+
+The \emph{$k$-Hamming distance} function $\HD_k : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ is defined by
+\[
+\HD_k(x,y) = \begin{cases}
+1 & \mbox{if } |\{i \in [n] : x_i \neq y_i\}| \le k \\
+0 & \mbox{otherwise.}
+\end{cases}
+\]
+
+\begin{theorem}
+For every $1 \le k \le \frac n2$,
+\[
+R(\HD_k) = O( k \log k).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage 
+\section{Private randomness}
+
+In the beginning of the chapter, we saw that the (public-coin) randomized communication model corresponds to the model where some coins are flipped and both Alice and Bob see the outcome of those coin flips. It is natural to study the alternative model where Alice and Bob both have access to coins they can flip (or, more abstractly, to some sources of randomness), but they each only see the outcome of their own coin flips. This model of communication corresponds to the \emph{private-coin randomized communication} model.
+
+\begin{definition}
+A \emph{private-coin randomized communication protocol} $\pi$ is equivalent to a deterministic communication protocol with the two additions: 
+\begin{enumerate}
+\item Each of Alice's internal node $v$ is labelled with a function $h_v : \calX \times R_A \to \{0,1\}$ and each of Bob's internal node $w$ is labelled with a function $h_v : \calY \times R_B \to \{0,1\}$; 
+\item Alice has a distribution $\mu_A$ over $R_A$ and Bob has a distribution $\mu_B$ over $R_B$.
+\end{enumerate}
+The \emph{(worst-case) cost} of $\Pi$ is the maximum cost of any protocol in its support. The randomized protocol $\Pi$ \emph{computes} $f : \calX \times \calY \to \{0,1\}$ with error at most $\epsilon$ if for every $(x,y) \in \calX \times \calY$,
+\[
+\Pr_{r_a \sim \mu_A, r_b \sim \mu_B}[ \pi(x,y) \neq f(x,y) ] \le \epsilon.
+\]
+\end{definition}
+
+
+\begin{definition}[Private-coin randomized communication complexity]
+For $0 < \epsilon < \frac12$, the \emph{private coin randomized communication complexity} of $f : \calX \times \calY \to \{0,1\}$ at error $\epsilon$ is
+\[
+\Rpriv_\epsilon(f) := \min_{\Pi} \cost(\Pi)
+\]
+where the minimum is taken over all private-coin randomized communication protocols that compute $f$ with error at most $\epsilon$.
+\end{definition}
+
+\begin{remark}
+As in the public-coin setting, we write $\Rpriv(f) := \Rpriv_{1/3}(f)$.
+\end{remark}
+\exercises
+
+\begin{exercise}
+Show that for every function $f$ and every parameter $\epsilon > 0$, 
+$R_\epsilon(f) \le \Rpriv_\epsilon(f)$.
+\end{exercise}
+
+\begin{exercise}
+Show that error amplification also holds in the private coin model: for every $\epsilon > 0$, $\Rpriv_\epsilon(f) = O(\Rpriv(f) \log \frac1\epsilon)$.
+\end{exercise}
+
+
+\newpage 
+\section{Newman's theorem (Bonus)}
+
+The gap between the public-coin and private-coin randomized communication complexities of a function cannot be arbitrarily large. 
+
+\begin{theorem}
+For every distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$ and every constant $\epsilon > 0$,
+\[
+\Rpriv_{2\epsilon}(f) \le R_\epsilon(f) + O\left(\log \frac{n}{\epsilon^2}\right).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here, if you complete it.}
+\end{proof}
+
+\bigskip
+\begin{remark}
+\emph{Hint.} First consider what happens when you run a public-coin randomized protocol on $t = n/\epsilon^2$ random strings drawn independently at random. Then Chernoff bounds and the probabilistic method may be useful in completing the proof.
+\end{remark}
+
+
+\newpage 
+\section{Private-coin randomness and determinism}
+
+Interestingly (and unlike in the public-coin model), the gap between the private-coin randomized and deterministic communication complexities of a function also cannot be arbitrarily large. 
+
+\begin{theorem}
+For every function $f : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$,
+\[
+\Rpriv(f) = \Omega( \log D(f)).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\bigskip
+\begin{remark}
+\emph{Hint.} It might be easiest to first consider a communication setting where Alice and Bob can send real numbers with cost $O(1)$ and show that in this setting there is a deterministic protocol that computes $f$ with cost $O(2^{\Rpriv(f)})$.
+\end{remark}
+
+\newpage 
+\section{Equality VII}
+
+We can use the results obtained in the previous sections to obtain tight bounds on the private-coin randomized communication complexity of the equality function.
+
+\begin{theorem}
+The private-coin randomized communication complexity of the $\Eq : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ function is
+\[
+\Rpriv(\Eq) = \Theta( \log n).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\exercises
+
+\begin{exercise}
+Prove the upper bound $\Rpriv(\Eq) = O( \log n)$ directly without using Newman's theorem.
+\end{exercise}
+
+
+
+\end{document}
