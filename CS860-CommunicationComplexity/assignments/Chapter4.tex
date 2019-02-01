@@ -169,7 +169,9 @@ R_\epsilon(\Eq) = O\left(\log \tfrac1\epsilon \right).
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+By the previous Theorem it suffices to show that $R(\Eq) = O(1)$. Let $x \in \{0,1\}^n$ be Alice's input and let $y \in \{0,1\}^n$ be Bob's. They generate two random vectors $r_1, r_2  \in \{0,1\}^n$ uniformly and independently at random. Then Alice computes $a_1 = x\cdot r_1$ (inner product mod $2$) and $a_2 = x\cdot r_2$ and send the two bits to Bob. Bob computes $b_1 = y\cdot r_1$ and $b_2 = y \cdot r_2$ and sends those two bits to Alice. They output $1$ if and only if $a_1 = b_1$ and $a_2 = b_2$.
+
+When $x = y$ they will always output $1$, thus we can bound the failure rate by the false positive rate. Suppose $x \neq y$. Then the probability that $a_1 = b_1$ is $\frac{1}{2}$ and the probability that $a_2 = b_2$ is $\frac{1}{2}$. Hence the total failure probability can be bounded by  $\frac{1}{2}\frac{1}{2} = \frac{1}{4} \leq \frac{1}{3}$. Thus $R(f) = O(1)$, as desired.
 \end{proof}
 
 
@@ -193,7 +195,10 @@ R(\GT) = O\left(\log^2 n \right).
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+We will solve Exercise $4$ instead. Let $\epsilon = \frac{1}{3\log n}$. The protocol proceeds by a binary search, using the Equality oracle we created in the previous problem. Let $x, y \in [2^n]$ be Alice and Bob's inputs respectively. At the start of the binary search the interval in question is $[1,n]$. At any arbitrary iteration of the binary search with interval $(\ell, u)$ (with $\ell < u$), Alice and Bob run their protocol for $\Eq$ on their substrings from $\ell$ to $\lfloor (\ell+u)/2 \rfloor$ with error $\epsilon$ costing $O(\log \frac{1}{\epsilon}) = O(\log\log n)$ communication. If the equality test passes then the next interval will be $[\lfloor (\ell+u)/2 \rfloor + 1, u]$, otherwise the next interval will be $[\ell, \lfloor (\ell+u)/2 \rfloor]$. On intervals with $\ell = u$, Alice and Bob send $x_\ell$ and $y_\ell$ to each other. If $x_\ell > y_\ell$ they return $1$, otherwise they return $0$.
+
+The protocol works since $\GT(x,y) = 1$ if and only $x_i > y_i$ where $i$ is the first bit on which $x$ and $y$ differ (if such a bit exists, otherwise $x=y$). Provided no $\Eq$ tests error, the binary search will successfully identify this bit $i$. Hence the probability of failure is bounded by the probability of an $\Eq$ test failing. Any one test will fail with probability $\epsilon$. There will be at most $\log(n)$ test (rounds of binary search), and thus the probability of failure is at most
+$$\log(n) \epsilon = \frac{1}{3}.$$
 \end{proof}
 
 \exercises
@@ -226,7 +231,24 @@ R(\HD_k) = O( k \log k).
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Consider the following random protocol. Alice and Bob generate random vectors $r_1, \dots, r_t \in \{0,1\}^n.$ Alice computes $x\cdot r_1, \dots, x\cdot r_t$ (the inner product mod $2$), and Bob computes $y\cdot r_1, \dots, y \cdot r_t$, and they send the results to each other.
+
+Alice and Bob now each independently search for a vector $z \in \{0,1\}^n$ which satisfies for every $i\in[t]$,
+$$x\cdot r_i = y\cdot r_i \oplus z \cdot r_i$$
+and that $z$ has at most $k$ non-zero entries.
+
+When $|\{i \in [n]: x_i \neq y_i\}| \leq k$, they always output $1$ since 
+$$x\cdot r_i = (y \oplus (x\oplus y)) \cdot r_i = y\cdot r_i \oplus((x\oplus y) \cdot r_i) $$ 
+(i.e. they can both find $z= x\oplus y$). Thus we can bound the failure rate by the false positive rate.
+
+Let $z \in \{0,1\}^n$ such that $|z| \leq k$. Observe that when $x \neq y \oplus z$ the probability that 
+$$x\cdot r_i = y\cdot r_i \oplus z\cdot r_i$$
+for all $i \in [t]$ is at most $2^{-t}$. There's $O(n^k)$ ways to choose $z$, so by union bound the failure probability is at most
+$$O(n^k)2^{-t}.$$
+For any $\epsilon \in (0,1)$ if we want this failure to be at most $\epsilon$, so we can choose
+$$t = O(k \log n).$$
+
+If $n = \text{poly}\log(k)$ then this protocol with give the desired bound of $O(k \log k)$. Let $d = \text{poly}\log(k)$ chosen large enough (\emph{sorry I didn't make this part formal}). Alice and Bob can randomly partition their input indices, $[n]$, into $d$ subsets $S_1, \dots, S_d\subseteq [n]$. Then they can compute $x'=\{x\cdot \bold{1}_{S_d},\dots, x\cdot \bold{1}_{S_d}\}$ and $y'=\{y\cdot \bold{1}_{S_d},\dots, y\cdot \bold{1}_{S_d}\}$ and re-run the protocol above as if their inputs were $x'$ and $y'$. With high probability (\emph{not quite sure how to show this, but I think it might work}) the Hamming distance of $x$ from $y$ agrees with the Hamming distance of $x'$ from $y'$, and so the result holds.
 \end{proof}
 
 
@@ -306,7 +328,7 @@ For every function $f : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$,
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a private coin randomized protocol attaining cost $\Rpriv(f)$. In the model given by the Hint, Alice and Bob can exchange their probabilities of ending up at each leaf of the protocol tree for $\pi$ at a communication cost of $O(2^{\Rpriv(f)})$. Once they known the leaves associated with an input pair $(x,y)$, they can output in their deterministic protocol the bit which is output on the majority of such leaves.
 \end{proof}
 
 \bigskip
@@ -327,7 +349,9 @@ The private-coin randomized communication complexity of the $\Eq : \{0,1\}^n \ti
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+To see that $\Rpriv(\Eq) = O(\log n)$ we apply Newman's Theorem to our previous result that $R(\Eq) = O(1)$.
+
+To see that $\Rpriv(\Eq) = \Omega(\log n)$ we apply Theorem 8 of this Chapter with Theorem $1$ of Chapter $2$ which said that $D(\Eq) = \Omega(n)$.
 \end{proof}
 
 \exercises
