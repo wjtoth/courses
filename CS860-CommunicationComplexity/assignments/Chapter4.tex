@@ -306,7 +306,16 @@ For every distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$ and every constan
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here, if you complete it.}
+Consider a public-coin randomized protocol $\pi$ attaining cost $R_\epsilon(f)$. Let $t = 2n/\epsilon^2$ and consider $\pi$ run on $t$ random strings $r_1, \dots, r_t$ drawn independently at random. Fix an input $(x,y) \in \calX \times \calY$. For any $i \in [t]$, the probability that $\pi$ fails when run on $r_i$ is at most $\epsilon$.
+Hence the probability that $(1-2\epsilon)t$ strings amongst $r_1, \dots, r_t$ fail when $\pi$ runs using that string is at most
+$$2^{-\Omega(\epsilon^2t)} = 2^{-\Omega(2n)}$$
+by Chernoff Bounds. 
+
+Now, by the union bound, for any input in $\calX\times \calY$ the probability that greater than $2\epsilon t$ strings fail when $\pi$ runs them is strictly less than $1$. Thus, by the probabilistic method there exist strings $R = \{r_1^*, \dots, r_t^*\}$ with the property that for any input pair at most $2\epsilon t$ strings in $R$ fail when $\pi$ runs using that string.
+
+Our private coin protocol is as follows. Alice samples a string $r_i^* \in R$ uniformly at random, and sends its index $i$ to Bob. This costs $O(\log\frac{n}{\epsilon^2})$ communication. Now they can use $r_i^*$ as a source of shared randomness to run $\pi$ at additional communication cost $R_\epsilon(f)$. Since at most $2\epsilon t$ string in $R$ fail, the probability of failure for this protocol is at most
+$$2\epsilon t/t = 2\epsilon$$
+as desired.
 \end{proof}
 
 \bigskip
