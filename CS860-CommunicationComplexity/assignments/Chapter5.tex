@@ -1,0 +1,357 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{fullpage}
+\usepackage[usenames]{xcolor}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{exercise}{Exercise}
+\newtheorem{remark}{Remark}
+\newtheorem{problem}{Problem}
+\newtheorem{challenge}{Challenge Problem}
+\newtheorem{open}{Open Problem}
+\theoremstyle{plain}
+
+\newcommand{\argmin}{\mathrm{argmin}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+\newcommand{\cost}{\mathrm{cost}}
+\newcommand{\disc}{\mathrm{disc}}
+\newcommand{\discu}{\mathrm{disc_u}}
+\newcommand{\Disj}{\textsc{Disj}}
+\newcommand{\Eq}{\textsc{Eq}}
+\newcommand{\GT}{\textsc{GT}}
+\newcommand{\HD}{\textsc{HD}}
+\newcommand{\ICext}{\mathrm{IC}^{\mathrm{ext}}}
+\newcommand{\ICint}{\mathrm{IC}^{\mathrm{int}}}
+\newcommand{\icostext}{\mathrm{icost}^{\mathrm{ext}}}
+\newcommand{\icostint}{\mathrm{icost}^{\mathrm{int}}}
+\newcommand{\IP}{\textsc{IP}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Rpriv}{R^{\mathrm{priv}}}
+\newcommand{\replacethistext}[1]{\textcolor{red}{#1}}
+
+\newcommand{\exercises}{\bigskip \noindent\rule{8cm}{0.4pt} \medskip}
+\DeclareMathOperator{\height}{height}
+
+\DeclareMathOperator*{\E}{\mathbb{E}}
+
+\title{Communication complexity: Chapter 5 \\ Information complexity}
+\author{Eric Blais and Justin Toth}
+
+
+\begin{document}
+
+\maketitle
+
+Communication complexity is concerned mostly with the \emph{minimum number of bits} that Alice and Bob need to exchange in order to compute some function on
+their joint inputs. Information complexity, on the other hand, is concerned with
+the \emph{minimum amount of information} contained in the bits that Alice and
+Bob exchange to compute that function. Our first task is to formally define this notion of information. To do so, we will use standard definitions from information theory.
+
+\begin{definition}[Entropy]
+The \emph{entropy} of a random variable $Z$ drawn from the probability distribution $\mu$ over a finite set $\calZ$ is
+\[
+H(Z) = - \sum_{z \in \calZ} \mu(z) \log_2 \mu(z).
+\]
+The entropy of a sequence of random variables $Z_1,Z_2,\ldots,Z_k$, denoted $H(Z_1\,Z_2\cdots Z_k)$ is the entropy of the random variable $Z = (Z_1,Z_2,\ldots,Z_k)$.
+\end{definition}
+
+\begin{definition}[Conditional entropy]
+The \emph{conditional} entropy of $Z$ given another random variable $Z'$ is
+\[
+H(Z \mid Z') = H(Z\,Z') - H(Z').
+\]
+\end{definition}
+
+\begin{definition}[Mutual information]
+The \emph{mutual information} of two random variables $Z$ and $Z'$ is
+\[
+I( Z ; Z' ) = H(Z) - H(Z \mid Z').
+\]
+The \emph{conditional mutual information} of $Z$ and $Z'$ given $W$ is
+\[
+I( Z ; Z' \mid W) = H(Z \mid W) - H(Z \mid Z'\, W).
+\]
+\end{definition}
+
+We use the following basic properties of entropy and mutual information.
+
+\begin{theorem}
+Entropy satisfies the following properties:
+\begin{description}
+\item[Boundedness] For every $Z$ over a finite set $\calZ$, $0 \le H(Z) \le \log_2 |\calZ|$.
+\item[Chain rule] $H(Z_1\,Z_2\cdots Z_k) = H(Z_1) + H(Z_2 \mid Z_1) + \cdots + H(Z_k \mid Z_1\cdots Z_{k-1})$.
+\item[Subadditivity] $H(Z \mid Z') \le H(Z)$ and $H(Z\,Z') \le H(Z) + H(Z')$.
+\end{description}
+Mutual information satisfies the following properties:
+\begin{description}
+\item[Boundedness] $0 \le I(Z ; Z') \le \min\{ H(Z), H(Z') \}$.
+\item[Chain rule] $I(Z_1\,Z_2 ; W) = I(Z_1 ; W) + H(Z_2 ; W \mid Z_1)$.
+\item[Data processing inequality] Whenever $Z' = f(Z)$ is determined by $Z$, $I(Z' ; W) \le I(Z ; W)$.
+\end{description}
+
+\end{theorem}
+
+
+
+\newpage 
+\section{External information complexity}
+
+Throughout this chapter, we will consider randomized protocols $\Pi$ that have access to both public- and private-coin randomness. 
+
+\begin{definition}[Transcript]
+The \emph{transcript} of a protocol $\Pi$ on some input $(x,y) \in \calX \times \calY$, which we will denote by
+\[
+\Gamma_{x,y}^\Pi
+\]
+is a bit string that includes (i) the public-coin random string $R$ used by Alice and Bob and (ii) the sequence of bits that they exchange. 
+\end{definition}
+
+The first natural notion of information of a protocol that we will study is the amount of information that an external observer learns about Alice and Bob's input $(x,y)$ by seeing the transcript $\Gamma_{x,y}^\Pi$ of their communication protocol.
+
+\begin{definition}[External information cost]
+The \emph{external information cost} of a randomized protocol $\Pi$ over the distribution $\mu$ on $\calX \times \calY$ is
+\[
+\icostext_\mu(\Pi) = I\big( X\,Y ; \Gamma_{X,Y}^\Pi \big)
+\]
+where $(X,Y) \sim \mu$.
+\end{definition}
+
+\begin{definition}[External information complexity]
+The \emph{$\epsilon$-error external information complexity} of the function $f : \calX \times \calY \to \{0,1\}$ with respect to the distribution $\mu$ is
+\[
+\ICext_{\mu,\epsilon}(f) = \inf_{\pi} \icostext_\mu(\pi)
+\]
+with the infimum taken over all randomized protocols that compute $f$ with error at most $\epsilon$.\footnote{Note that the error of a randomized protocol is still defined to be its maximum error probability over \emph{any} input in $\calX \times \calY$; it is \emph{not} the expected error over an input drawn from $\mu$.}
+\end{definition}
+
+The external information complexity of a function gives a lower bound on its randomized communication complexity.
+
+\begin{theorem}
+For every function $f : \calX \times \calY \to \{0,1\}$ and every distribution $\mu$ on $\calX \times \calY$,
+\[
+\ICext_{\mu,\epsilon}(f) \le R_\epsilon(f).
+\]
+\end{theorem}
+
+
+\begin{proof}
+
+Let $\Pi$ be a distribution on protocols such that $\cost(\Pi) = R_\epsilon(f)$. That is,
+$$R_\epsilon(f) = \max_{(x,y) \in \calX\times\calY}\max_{\pi \sim \Pi}\height(\pi(x,y))$$ 
+where $\height(\pi(x,y))$ denotes the length of the path from the root to leaf of the protocol tree $\pi$ dictated by inputs $(x,y)$. We use $\height(\pi)$ to denote $\max_{(x,y) \in \calX\times\calY}\height(\pi(x,y))$. Let $\pi^*$ be the protocol tree achieving cost $\R_\epsilon(f)$. Thus we have
+$$R_\epsilon(f) = \height(\pi^*) \geq \E_{(x,y) \sim \mu} [\height(\pi^*(x,y))].$$
+Let $\Gamma^{\pi^*}_{X,Y}(r)$ denote the shared random string part of $\Gamma^{\pi^*}_{X,Y}$, and let $\Gamma^{\pi^*}_{X,Y}(c)$ denote the communication between Alice and Bob of the transcript. We claim that
+$$\E_{(x,y) \sim \mu} [\height(\pi^*(x,y))] \geq H(\Gamma^{\pi^*}_{X,Y}(c)).$$
+To see this claim is sufficient, observe that it implies 
+\begin{align*}
+R_\epsilon(f) &\geq H(\Gamma^{\pi^*}_{X,Y}(c)) \\
+&\geq I(XY; \Gamma^{\pi^*}_{X,Y}(c) \mid \Gamma^{\pi^*}_{X,Y}(r)) \\
+&= I(XY;\Gamma^{\pi^*}_{X,Y}(c) \mid \Gamma^{\pi^*}_{X,Y}(r)) + I(XY;\Gamma^{\pi^*}_{X,Y}(r))\\
+&= I(\Gamma^{\pi^*}_{X,Y}; XY) \\
+&= \icostext_\mu(\Gamma^{\pi^*}_{X,Y})\\
+&\geq \ICext_{\mu,\epsilon}(f).
+\end{align*}
+
+Now we proceed to prove the claim. For ease of notation we will shorten $\height(\pi^*(x,y))$ to $h_{x,y}$. We have
+\begin{align*}
+\E_{(x,y)\sim \mu}[h_{x,y}] &=\sum_{(x,y)\in \calX\times\calY} \mu(x,y) h_{x,y} \\
+&=\sum_{(x,y)\in \calX\times\calY} \mu(x,y)\left(\log(\frac{1}{\mu(x,y)})-\log(\frac{1}{\mu(x,y)}) +\log(2^{h_{x,y}})\right)\\
+&=\sum_{(x,y)\in \calX\times\calY} \mu(x,y)\left(\log(\frac{1}{\mu(x,y)})-\log(\frac{2^{-h_{x,y}}}{\mu(x,y)}))\right) \\
+&=H(\Gamma^{\pi^*}_{X,Y}(c)) - \sum_{(x,y)\in\calX\times\calY}\mu(x,y)\log(\frac{2^{-h_{x,y}}}{\mu(x,y)}) \\
+&\geq H(\Gamma^{\pi^*}_{X,Y}(c)) - \log(\sum_{(x,y)\in\calX\times\calY} 2^{-h_{x,y}})
+\end{align*}
+where the last line follows by applying the convexity of $\log$. The sum inside the logarithm, $\sum_{(x,y)\in\calX\times\calY} 2^{-h_{x,y}}$ is at most $1$, completing the proof. This is a basic fact about binary trees. We'll give a brief proof for completeness.
+Proceed by induction on $|\calX \times \calY|$. If $|\calX\times\calY| = 1$, the result is immediate. For induction suppose the result holds for binary trees smaller that $\pi^*$. Let $r$ be the root of $\pi^*$. Split $\pi^*$ into two subtrees $T_1$ and $T_2$ by deleting $r$. Now observe that
+$$\sum_{(x,y)\in \calX\times\calY} 2^{-h{x,y}} = \frac{1}{2}\sum_{(x,y) \in \calX\times\calY \cap T_1} + \frac{1}{2}\sum_{(x,y) \in \calX\times\calY \cap T_2} \leq \frac{1}{2}+\frac{1}{2} = 1.$$
+With the first equality following since joining $T_1$ and $T_2$ by root $r$, adds $1$ to length of the path to each leaf, and the inequality follows by induction.
+\end{proof}
+
+
+\newpage 
+\section{Public randomness can be eliminated}
+
+When designing protocols to obtain upper bounds on the information complexity of functions, it is convenient to work in the framework where Alice and Bob can use both public- and private-coin randomness. For lower bounds, however, it is useful to note that without loss of generality we can consider protocols that use only private randomness.
+
+\begin{theorem}
+For every function $f : \calX \times \calY \to \{0,1\}$, every distribution $\mu$ over $\calX \times \calY$, and every $0 \le \epsilon \le \frac12$,
+\[
+\ICext_{\mu,\epsilon}(f) = \inf_{\pi} \icostext_\mu(\pi)
+\]
+even when the infimum is taken only over private-coin randomized protocols that compute $f$ with error at most $\epsilon$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage 
+\section{Equality VIII}
+
+External information complexity can be used to give a simple proof of the $\Omega(n)$ lower bound for the $0$-error randomized communication complexity of the equality function.
+
+\begin{theorem}
+Let $\mu$ be the uniform distribution on the set $\{(x,x) : x \in \{0,1\}^n\}$. The $0$-error information complexity of $\Eq : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ with respect to $\mu$ is
+\[
+\ICext_{\mu,0}(\Eq) = n.
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\newpage 
+\section{And}
+
+Let $\textsc{And} : \{0,1\} \times \{0,1\} \to \{0,1\}$ be the and function $\textsc{And}(x,y) = x \wedge y$ that takes the value $1$ if and only if $x = y = 1$.
+
+\begin{theorem}
+For every distribution $\mu$ on $\{0,1\} \times \{0,1\}$,
+\[
+\ICext_{\mu,0}(\textsc{And}) \le \log_2 3.
+\]
+Furthermore, this bound is tight when $\mu(0,1) = \mu(1,0) = \mu(1,1) = \frac13$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage 
+\section{Internal information complexity}
+
+Another natural notion of information of a protocol is the amount of information that Alice and Bob learn about each other's inputs by running their communication protocol.
+
+\begin{definition}[Internal information cost]
+The \emph{internal information cost} of a randomized protocol $\Pi$ over the distribution $\mu$ on $\calX \times \calY$ is
+\[
+\icostint_\mu(\Pi) = I\big( X ; \Gamma_{X,Y}^\Pi \, Y\big) + I\big( Y ; \Gamma_{X,Y}^\Pi \, X\big).
+\]
+where $(X,Y) \sim \mu$.
+\end{definition}
+
+\begin{definition}[Internal information complexity]
+The \emph{$\epsilon$-error internal information complexity} of the function $f : \calX \times \calY \to \{0,1\}$ with respect to the distribution $\mu$ is
+\[
+\ICint_{\mu,\epsilon}(f) = \inf_{\pi} \icostint_\mu(\pi)
+\]
+with the infimum taken over all randomized protocols that compute $f$ with error at most $\epsilon$.
+\end{definition}
+
+The internal information complexity of a function gives a lower bound on its external information complexity (and therefore on its randomized communication complexity as well).
+
+\begin{theorem}
+For every function $f : \calX \times \calY \to \{0,1\}$, every distribution $\mu$ on $\calX \times \calY$, and every $0 \le \epsilon \le \frac12$,
+\[
+\ICint_{\mu,\epsilon}(f) \le \ICext_{\mu,\epsilon}(f).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage 
+\section{Equality VIII}
+
+The internal information complexity of a function can be much smaller than its external information complexity, as the following example shows.
+
+\begin{theorem}
+For every distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$, the $0$-error information complexity of $\Eq : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ is 
+\[
+\ICint_{\mu,0}(\Eq) = O(1).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\bigskip
+\noindent \emph{Hint.} Consider a protocol where Alice and Bob use their public randomness to select $n$ linearly independent vectors $r_1,\ldots,r_n \in \{0,1\}^n$.
+
+
+\newpage 
+\section{Direct sum (Bonus)}
+
+Given a function $f : \calX \times \calY \to \{0,1\}$, define $f^k : \calX^k \times \calY^k \to \{0,1\}^n$ to be the function where
+\[
+f^n(x^{(1)},\ldots,x^{(k)},y^{(1)},\ldots,y^{(k)}) = \big( f(x^{(1)},y^{(1)}), \ldots f(x^{(k)}, y^{(k)})\big).
+\]
+This corresponds to the setting where Alice and Bob must compute the value of $f$ on $n$ different pairs of inputs instead of just $1$.
+
+It might seem obvious that the complexity of computing $f^k$ is always $k$ times the complexity of computing $f$, but this is false in general! One counter-example is given by the equality function. Since $R_\epsilon(\Eq) = O(\log \frac1\epsilon)$, we have that $R_{2^{-\sqrt{k}}}(\Eq) = \sqrt{k}$ and so we might expect that $R_{2^{-\sqrt{k}}}(\Eq^k) = k^{3/2}$. In fact, the true randomized complexity of this function is much smaller.
+
+\begin{theorem}
+$R_{2^{-\sqrt{k}}}(\Eq^k) = O(k)$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here, if you complete it.}
+\end{proof}
+
+
+\newpage 
+\section{Direct sum for information complexity}
+
+One of the main advantages of working with internal information complexity is that in this setting every function \emph{does} satisfy the intuition that computing $k$ copies of a function is exactly $k$ times harder than computing a single copy of it.
+\begin{theorem}
+For every function $f : \calX \times \calY \to \{0,1\}$ and every $k \ge 1$,
+\[
+\ICint_{\mu,0}(f^k) = k \cdot \ICint_{\mu,0}(f).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\bigskip
+\noindent \emph{Hint.} See Piazza for a hint on this question (and feel free to start a discussion thread there as well if you have some ideas but only a partial proof).
+
+
+\newpage 
+\section{Set disjointness III}
+
+It is possible to obtain tight bounds on the internal information complexity of the \textsc{And} function. These tight bounds have been used to obtain \emph{exact} bounds on the communication complexity of the set disjointness function. To establish the tight asymptotic bound on its randomized communication complexity, however, all we need is the following result.
+
+\begin{lemma}
+Let $\mu$ be the distribution on $\{0,1\} \times \{0,1\}$ defined by $\mu(0,0) = \mu(0,1) = \mu(1,0) = \frac13$.
+For every $\epsilon > 0$, there is a constant $c_\epsilon > 0$ for which
+\[
+\ICint_{\mu,\epsilon}(\textsc{And}) = c_\epsilon.
+\]
+\end{lemma}
+
+This result and (extensions of) the direct sum property of internal information complexity can be used to bound the randomized communication complexity of the set disjointness function.
+
+\begin{theorem}
+For every (small enough) $\epsilon \ge 0$, 
+\[
+\R_\epsilon(\Disj) = \Omega(n).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\bigskip
+\noindent \emph{Hint.} The ideas for the proof of the theorem in the last section might be helpful. Refer to Piazza for discussions, questions, or additional hints.
+
+
+
+
+\end{document}
