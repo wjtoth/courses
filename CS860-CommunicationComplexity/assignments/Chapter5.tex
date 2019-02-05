@@ -161,17 +161,19 @@ R_\epsilon(f) &\geq H(\Gamma^{\pi^*}_{X,Y}(c)) \\
 &\geq \ICext_{\mu,\epsilon}(f).
 \end{align*}
 
-Now we proceed to prove the claim. For ease of notation we will shorten $\height(\pi^*(x,y))$ to $h_{x,y}$. We have
+Now we proceed to prove the claim. Let $L$ be the set of leaves of the protocol tree $\pi^*$. We define a distribution $\mu'$ on $L$ as follows: for each $\ell \in L$, we let
+ $$\mu'(\ell = \sum_{(x,y) \in \calX\times\calY : (x,y)\text{ induces a path to } \ell} \mu(x,y).$$ 
+ Let $h_\ell = \height(x,y)$ where $(x,y)$ induces a path to $\ell$. i.e. $h_\ell$ is the lenght of the path from the root of $\pi^*$ to $\ell$ (this path is taken on input $(x,y)$). We have
 \begin{align*}
-\E_{(x,y)\sim \mu}[h_{x,y}] &=\sum_{(x,y)\in \calX\times\calY} \mu(x,y) h_{x,y} \\
-&=\sum_{(x,y)\in \calX\times\calY} \mu(x,y)\left(\log(\frac{1}{\mu(x,y)})-\log(\frac{1}{\mu(x,y)}) +\log(2^{h_{x,y}})\right)\\
-&=\sum_{(x,y)\in \calX\times\calY} \mu(x,y)\left(\log(\frac{1}{\mu(x,y)})-\log(\frac{2^{-h_{x,y}}}{\mu(x,y)}))\right) \\
-&=H(\Gamma^{\pi^*}_{X,Y}(c)) - \sum_{(x,y)\in\calX\times\calY}\mu(x,y)\log(\frac{2^{-h_{x,y}}}{\mu(x,y)}) \\
-&\geq H(\Gamma^{\pi^*}_{X,Y}(c)) - \log(\sum_{(x,y)\in\calX\times\calY} 2^{-h_{x,y}})
+\E_{(x,y)\sim \mu}[h_{x,y}] &=\sum_{\ell \in L} \mu'(\ell) h_\ell \\
+&=\sum_{\ell \in L} \mu'(\ell)\left(\log(\frac{1}{\mu'(\ell)})-\log(\frac{1}{\mu'(\ell)}) +\log(2^{h_\ell})\right)\\
+&=\sum_{\ell\in L} \mu'(\ell)\left(\log(\frac{1}{\mu'(\ell)})-\log(\frac{2^{-h_\ell}}{\mu'(\ell)}))\right) \\
+&=H(\Gamma^{\pi^*}_{X,Y}(c)) - \sum_{\ell\in L}\mu'(\ell)\log(\frac{2^{-h_\ell}}{\mu'(\ell)}) \\
+&\geq H(\Gamma^{\pi^*}_{X,Y}(c)) - \log(\sum_{\ell\in L} 2^{-h_\ell})
 \end{align*}
-where the last line follows by applying the convexity of $\log$. The sum inside the logarithm, $\sum_{(x,y)\in\calX\times\calY} 2^{-h_{x,y}}$ is at most $1$, completing the proof. This is a basic fact about binary trees. We'll give a brief proof for completeness.
-Proceed by induction on $|\calX \times \calY|$. If $|\calX\times\calY| = 1$, the result is immediate. For induction suppose the result holds for binary trees smaller that $\pi^*$. Let $r$ be the root of $\pi^*$. Split $\pi^*$ into two subtrees $T_1$ and $T_2$ by deleting $r$. Now observe that
-$$\sum_{(x,y)\in \calX\times\calY} 2^{-h{x,y}} = \frac{1}{2}\sum_{(x,y) \in \calX\times\calY \cap T_1} + \frac{1}{2}\sum_{(x,y) \in \calX\times\calY \cap T_2} \leq \frac{1}{2}+\frac{1}{2} = 1.$$
+where the last line follows by applying the convexity of $\log$. The sum inside the logarithm, $\sum_{\ell \in L} 2^{-h_\ell}$ is at most $1$, completing the proof. This is a basic fact about binary trees. We'll give a brief proof for completeness.
+Proceed by induction on $|L|$. If $|L| = 1$, the result is immediate. For induction suppose the result holds for binary trees smaller that $\pi^*$. Let $r$ be the root of $\pi^*$. Split $\pi^*$ into two subtrees $T_1$ and $T_2$ by deleting $r$. Now observe that
+$$\sum_{\ell \in L} 2^{-h_\ell} = \frac{1}{2}\sum_{\ell \in L \cap T_1} + \frac{1}{2}\sum_{\ell \in L \cap T_2} \leq \frac{1}{2}+\frac{1}{2} = 1.$$
 With the first equality following since joining $T_1$ and $T_2$ by root $r$, adds $1$ to length of the path to each leaf, and the inequality follows by induction.
 \end{proof}
 
