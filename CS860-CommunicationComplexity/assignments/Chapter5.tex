@@ -191,7 +191,15 @@ even when the infimum is taken only over private-coin randomized protocols that 
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Since infimum is taken over only private-coin randomized protocols, as opposed to all randomized protocols, it is immediate that
+$$\ICext_{\mu,\epsilon}(f) \leq \inf_{\pi} \icostext_\mu(\pi).$$
+To complete the proof, consider any randomized protocol $\pi$ which computes $f$ with error at most $\epsilon$. We will show the existence of $\pi'$, a private coin randomized protocol, which computes $f$ with error at most $\epsilon$ and satisfying
+$$\icostext_\mu(\pi) = \icostext_\mu(\pi').$$
+Let $\chi$ be the distribution on shared random bit strings used by $\pi$. The protocol $\pi'$ operates as follows. First  Alice draws a random string $R$ according to $\chi$, and communicates that string to Bob. Then Alice and Bob simulate $\pi$ using $R$ as their shared randomness.
+
+Since protocol transcripts do not record private random bits, to the external observer the transcripts for $\pi$ and $\pi'$ are indistinguishable. In fact, $\Gamma_{X,Y}^\pi$ and $\Gamma_{X,Y}^{\pi'}$ are identically distributed when $X,Y \sim \mu$ and $R\sim \chi$. Therefore
+$$\icostext_\mu(\pi) = I(XY;\Gamma^{pi}_{XY}) = I(XY;\Gamma^{\pi'}_{XY}) = \icostext_\mu(\pi')$$
+as desired.
 \end{proof}
 
 
@@ -208,7 +216,15 @@ Let $\mu$ be the uniform distribution on the set $\{(x,x) : x \in \{0,1\}^n\}$. 
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a private coin randomized protocol computing $\Eq$ with error $0$. Using the previous result, it suffices to prove
+$$\icostext_\mu(\pi) = n.$$
+We have,
+$$\icostext_\mu(\pi) = I(XY, \Gamma_{X,Y}^\pi) = H(XY) - H(XY \mid \Gamma_{X,Y}^\pi).$$
+Since $XY$ are uniformly distributed over $2^n$ elements,
+$$H(XY)= \log(2^n) = n.$$
+Now we just need to show $H(XY \mid \Gamma_{X,Y}^\pi) = 0.$ Indeed, this holds since we claim each transcript uniquely identifies the input pair $XY$. In other words, $\Pr[XY\mid \Gamma_{X,Y}^\pi = \gamma]$ is either $0$ or $1$, and thus
+$$H(XY\mid \Gamma_{X,Y}^\pi) = 0.$$
+To see the claim, suppose that there is a transcript of $\pi$ which is identical for distinct inputs $(x,x)$ and $(x',x')$ drawn from $\mu$, when Alice and Bob have the same random private strings $R_A$ and $R_B$ respectively. Since $\pi$, makes $0$ errors, it outputs $1$ on inputs $(x,x)$ and $(x',x')$. But the transcript would also be identical for input $(x,x')$ on random strings $R_A, R_B$, and so $\pi$ would still output $1$ on this input. This contradicts that $\pi$ makes $0$ errors.
 \end{proof}
 
 \newpage 
@@ -225,7 +241,17 @@ Furthermore, this bound is tight when $\mu(0,1) = \mu(1,0) = \mu(1,1) = \frac13$
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Consider the protocol $\pi$, where Alice sends Bob the bit, $x$, she receives, and Bob sends Alice the bit he receives if and only if $x=1$. If $x=0$ the protocol $\pi$ outputs $0$, and otherwise they exchanged bits, so the protocol can output $x\wedge y$. Clearly this is a $0$-error protocol for $\textsc{And}$.
+
+Since 
+$$\icostext_\mu(\pi) = I(XY; \Gamma^\pi_{X,Y}) \leq H(\Gamma^\pi_{X,Y}) \leq \log_2(3)$$
+the result holds. The last inequality follows since there are precisely three different transcripts: $0$, $10$, and $11$ which can occur as a result of running $\pi$.
+
+Now fix $\mu$ so $\mu(0,1) = \mu(1,0) = \mu(1,1) = \frac{1}{3}$. Let $\pi$ be any random protocol with computes $\textsc{And}$ without error. Then, at the end of communication, for any input $(x,y)$, Alice knows $x$ and $x\wedge y$. Since $\mu(00) = 0$, Alice can uniquely recover $y$ from this information. Symmetrically, Bob also knows $x$ at the end of communication. In other words, knowing the transcript suffices to learn both $x$ and $y$ under this distribution $\mu$. Hence
+$$H(XY \mid \Gamma^\pi_{X,Y}) = 0.$$
+Thus
+$$\icostext_\mu(\pi) = I(XY;\Gamma^{\pi}_{X,Y}) = H(XY) =\log_2(3)$$
+with the last equality following since $XY\sim \mu$ is a uniform distribution on $3$ elements.
 \end{proof}
 
 
