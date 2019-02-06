@@ -155,15 +155,14 @@ To see this claim is sufficient, observe that it implies
 \begin{align*}
 R_\epsilon(f) &\geq H(\Gamma^{\pi^*}_{X,Y}(c)) \\
 &\geq I(XY; \Gamma^{\pi^*}_{X,Y}(c) \mid \Gamma^{\pi^*}_{X,Y}(r)) \\
-&= I(XY;\Gamma^{\pi^*}_{X,Y}(c) \mid \Gamma^{\pi^*}_{X,Y}(r)) + I(XY;\Gamma^{\pi^*}_{X,Y}(r))\\
-&= I(\Gamma^{\pi^*}_{X,Y}; XY) \\
+&= I(XY ;\Gamma^{\pi^*}_{X,Y}) \\
 &= \icostext_\mu(\Gamma^{\pi^*}_{X,Y})\\
 &\geq \ICext_{\mu,\epsilon}(f).
 \end{align*}
 
 Now we proceed to prove the claim. Let $L$ be the set of leaves of the protocol tree $\pi^*$. We define a distribution $\mu'$ on $L$ as follows: for each $\ell \in L$, we let
- $$\mu'(\ell = \sum_{(x,y) \in \calX\times\calY : (x,y)\text{ induces a path to } \ell} \mu(x,y).$$ 
- Let $h_\ell = \height(x,y)$ where $(x,y)$ induces a path to $\ell$. i.e. $h_\ell$ is the lenght of the path from the root of $\pi^*$ to $\ell$ (this path is taken on input $(x,y)$). We have
+ $$\mu'(\ell) = \sum_{(x,y) \in \calX\times\calY : (x,y)\text{ induces a path to } \ell} \mu(x,y).$$ 
+ Let $h_\ell = \height(x,y)$ where $(x,y)$ induces a path to $\ell$. i.e. $h_\ell$ is the length of the path from the root of $\pi^*$ to $\ell$ (this path is taken on input $(x,y)$). We have
 \begin{align*}
 \E_{(x,y)\sim \mu}[h_{x,y}] &=\sum_{\ell \in L} \mu'(\ell) h_\ell \\
 &=\sum_{\ell \in L} \mu'(\ell)\left(\log(\frac{1}{\mu'(\ell)})-\log(\frac{1}{\mu'(\ell)}) +\log(2^{h_\ell})\right)\\
