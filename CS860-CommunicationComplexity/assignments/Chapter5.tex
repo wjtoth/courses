@@ -378,7 +378,25 @@ For every function $f : \calX \times \calY \to \{0,1\}$ and every $k \ge 1$,
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Clearly $\ICint_{\mu,0}(f^k) \leq k \cdot \ICint_{\mu,0}(f)$ since we can simply run any protocol for $f$ on each coordinate of input for $f^k$, and the information cost will $k$ times that of the protocol.
+
+Let $\pi$ be a $0$-error protocol for $f^k$. We want to construct a $0$-error protocol $\pi'$ for $f$ with
+$$\icostint_{\mu,0}(\pi') = \frac{1}{k}\icostint_{\mu,0}(\pi).$$
+Protocol $\pi'$ operates as follows. Let $x$ be Alice's input, and $y$ be Bob's input. Alice and Bob use shared randomness to choose $i \in [k]$ uniformly at random. They set $(x^i,y^i) = (x,y)$. Let $\mu_\calX$ be the marginal distribution over $\calX$ from $\mu$, and define $\mu_\calY$ analogously. Alice and Bob use public randomness to sample $x^1,\dots,x^{i-1}$ according to $\mu_\calX$, and $y^{i+1},\dots, y^k$ according to $\mu_\calY$. Now Alice uses private randomness to sample $x^{i+1}, \dots, x^{k}$ according to $\mu$ conditioned on $y^{i+1},\dots, y^k$ respectively (so we get valid input pairs). Similarly Bob uses private randomness to sample $y^{1}, \dots, y^{i-1}$ according to $\mu$ conditioned on $x^{1},\dots, x^{i-1}$ respectively. Now Alice and Bob run protocol $\pi$ on inputs $(x^1,\dots, x^k)$ and $(y^1,\dots, y^k)$. The protocol outputs $f(x^i,y^i)$.
+
+We've taken care to make sure the input to $\pi$ is distributed according to $\mu$ when we call it, and furthermore since $\pi$ is $0$-error for $f^k$, $\pi'$ is $0$-error for $f$. Let $X,Y$ be the random variables for inputs to $\pi'$. Let $I$ be a random variable for the random index in $[k]$ that $\pi'$ chooses. Let $X_1,\dots, X_n$ be random variables for $x$ coordinates, and $Y_1,\dots, Y_n$ be random variables for $y$ coordinates for $\pi$'s black-box call to $\pi'$. Use shorthand $\bar{X} = (X_1,\dots, X_k)$ and $\bar{Y} = (Y_1,\dots, Y_k)$. We now compute the mutual information from Alice's perspective:
+\begin{align*}
+I(Y;\Gamma^{\pi'}_{X,Y}\mid X) &= I(Y_I;\Gamma^\pi_{\bar{X},\bar{Y}} \mid I, \bar{X}, Y_{I+1} \dots Y_{k}) \\
+&= \frac{1}{k}\sum_{i=1}^kI(Y_i; \Gamma^\pi_{\bar{X},\bar{Y}}\mid I=i, \bar{X}, Y_{i+1}\dots Y_{k}) \\
+&= \frac{1}{k}\sum_{i=1}^k \left(I(Y_i,Y_{i+1}; \Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{X}, Y_{i+2}\dots Y_{k}) - I(Y_{i+1}; \Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{X}, Y_{i+2}\dots Y_k)\right) \\
+&= \frac{1}{k}I(Y_1\dots Y_k ; \Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{X}) \\
+&= \frac{1}{k}I(\bar{Y};\Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{X}).
+\end{align*}
+In first equality follows by conditioning on what Alice knows publicly. The second by expanding the expectation. The third by the chain rule, and the fourth by canceling terms. By a symmetric argument we can see that
+$$I(X;\Gamma^{\pi'}_{X,Y}\mid Y) = \frac{1}{k}I(\bar{X};\Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{Y}).$$
+Thus we have
+$$\icostint_{\mu,0}(\pi') = I(Y;\Gamma^{\pi'}_{X,Y}\mid X) + I(X;\Gamma^{\pi'}_{X,Y}\mid Y) = \frac{1}{k}(I(\bar{Y};\Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{X}) + I(\bar{X};\Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{Y})) =  \frac{1}{k}\icostint_{\mu,0}(\pi)$$
+as desired.
 \end{proof}
 
 \bigskip
@@ -403,7 +421,7 @@ This result and (extensions of) the direct sum property of internal information 
 \begin{theorem}
 For every (small enough) $\epsilon \ge 0$, 
 \[
-\R_\epsilon(\Disj) = \Omega(n).
+R_\epsilon(\Disj) = \Omega(n).
 \]
 \end{theorem}
 
