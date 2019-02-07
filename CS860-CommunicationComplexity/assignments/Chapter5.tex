@@ -286,9 +286,21 @@ For every function $f : \calX \times \calY \to \{0,1\}$, every distribution $\mu
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+We may assume that every protocol with computes $f$ always achieves its worst-case communication cost on every input and random string, by simply padding communication with $0$s on inputs where this is not the case. We will show that all randomized protocols, $\pi$, which compute $f$ with error at most $\epsilon$ satisfy
+$$\icostext_{\mu,\epsilon}(\pi) \geq \icostint_{\mu,\epsilon}(\pi).$$
+Let $k$ be the length of the transcript for $\pi$. Use $\Gamma^\pi_{X,Y}(i)$ to denote the $i$-th bit communicated in the transcript, for $i=1,\dots, k$ and $\Gamma^\pi_{X,Y}[i,j]$ to denote the subtranscript from the $i$-th bit to the $j$-th bit, inclusive. The $i$-th bit was communicated by one player to the other player. The player sending the bit learns nothing by doing so. Therefore we have either
+$$I(X;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], Y) = 0 \quad\text{or}\quad I(Y;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], X) = 0 $$
+for all $i\in[k]$.
+Now we commute
+\begin{align*}
+\icostext_{\mu,\epsilon}(\pi) &= \sum_{i=1}^k I(XY;\Gamma^\pi_{X,Y}(i) \mid \Gamma^\pi_{X,Y}[1,i-1]) \\
+&\geq \sum_{i=1}^k\max\{I(X;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], Y), I(Y;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], X)\}\\
+&=\sum_{i=1}^k I(X;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], Y)+ I(Y;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], X) \\
+&= I(X;\Gamma^\pi_{X,Y} \mid Y) + I(Y; \Gamma^\pi_{X,Y} \mid X) \\
+&= \icostint_{\mu,\epsilon}(\pi).
+\end{align*}
+The second inequality above follows by our observation that one of the terms in each max is $0$. Every other manipulation is repeated application of the chain rule.
 \end{proof}
-
 
 \newpage 
 \section{Equality VIII}
