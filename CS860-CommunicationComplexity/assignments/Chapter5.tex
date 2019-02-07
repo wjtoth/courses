@@ -135,7 +135,7 @@ with the infimum taken over all randomized protocols that compute $f$ with error
 
 The external information complexity of a function gives a lower bound on its randomized communication complexity.
 
-\begin{theorem}
+\begin{theorem}\label{th:2}
 For every function $f : \calX \times \calY \to \{0,1\}$ and every distribution $\mu$ on $\calX \times \calY$,
 \[
 \ICext_{\mu,\epsilon}(f) \le R_\epsilon(f).
@@ -315,7 +315,31 @@ For every distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$, the $0$-error in
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a protocol where Alice, with input $x$, and Bob, with input $y$, sample $n$ linearly independent vectors $r_1, \dots, r_n \in \{0,1\}^n$ uniformly at random using their shared randomness, and then do the following: for $i=1,\dots n$ do:
+\begin{enumerate}
+	\item Alice sends Bob $a_i:=x\cdot r_i$.
+	\item Bob sends Alice $b_i:=y\cdot r_i$.
+	\item If $a_i \neq b_i$ they stop immediately and output $0$.
+	\item Otherwise, if it is the last iteration they output $1$.
+\end{enumerate} 
+This protocol is $0$-error. Since $r_1,\dots, r_n$ are $n$ linearly independent vectors, they form a basis of $\{0,1\}^n$. Therefore $x\neq y$ if and only if there exists some $i\in[n]$ such that $x\cdot r_i \neq y\cdot r_i$. When $x=y$ they communicate $n$ bits, but it is interesting to see what happens when $x\neq y$. In this case, we want to find the expected number of bits communicated. In each round that occurs $2$ bits are sent. A round occurs with the following probability,
+$$\Pr[a_j = b_j, \forall j=1,\dots, i-1]=\sum_{i=1}^n\frac{2^{n-i+1}-1}{2^n-1}$$
+since is equivalent to saying that $x-y$ (with addition taken in $\mathbb{F}_2$) is in the $n-i+1$-dimensional subspace formed by the kernel of $r_1,\dots,r_{i-1}$. Since $x-y\neq 0$ there are $2^n-1$ choices for $x-y$, and there $2^{n-i+1}-1$ choices which lie in the kernel. Since our basis is chosen uniformly at random, this yields the desired probability. Hence we have that the expected number of bits communicated is
+$$\sum_{i=1}^n 2\cdot\Pr[a_j = b_j, \forall j=1,\cdots, i-1] = 2\sum_{i=1}^n\frac{2^{n-i+1}-1}{2^n-1}\leq 2\sum_{i=1}^n\frac{2^{n-i+1}}{2^n} \leq 2\cdot 2 = O(1).$$
+Let $\Delta$ be the random indicator variable for $X=Y$. We now compute $I(X;\Gamma^\pi_{X,Y}\mid Y)$,
+\begin{align*}
+I(X;\Gamma^\pi_{X,Y} \mid Y) &= I(X\Delta;\Gamma^\pi_{X,Y}\mid Y) &\text{(since $\Gamma^\pi_{X,Y}$ suffices to learn $\Delta$)} \\
+	&= I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta) + I(\Delta;\Gamma^\pi_{X,Y}\mid Y) \\
+	&\leq  I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta) + 1  &\text{(since $I(\Delta;\Gamma^\pi_{X,Y}\mid Y) \leq H(\Delta) = 1$)}\\
+	&\leq  I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta=1) +  I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta=0) + 1 \\
+	&=  I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta=0) + 1 \\
+	&= O(1).
+\end{align*}
+The second last equality follows since $I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta=1)=0$, as once we know $Y$ and that $X=Y$, we know everything. The last equality follows from two facts. Firstly our prior observation that the expected number of bits communicated by $\pi$ when $X\neq Y$ is $O(1)$, and the second that $ I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta=0) $ is at most that expected quantity. That second fact follows from our proof of Theorem \ref{th:2}, where be actually bound information cost by the expected communication length, as opposed to the worst-case length.
+
+By a symmetric argument $I(X;\Gamma^\pi_{X,Y} \mid Y) = O(1)$, and hence
+$$\icostint_{\mu,0}(\pi) = O(1) + O(1) = O(1)$$
+so $\ICint_{\mu,0}(\Eq) = O(1).$
 \end{proof}
 
 \bigskip
