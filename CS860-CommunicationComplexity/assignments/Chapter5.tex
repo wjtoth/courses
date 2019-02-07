@@ -94,7 +94,7 @@ Entropy satisfies the following properties:
 Mutual information satisfies the following properties:
 \begin{description}
 \item[Boundedness] $0 \le I(Z ; Z') \le \min\{ H(Z), H(Z') \}$.
-\item[Chain rule] $I(Z_1\,Z_2 ; W) = I(Z_1 ; W) + H(Z_2 ; W \mid Z_1)$.
+\item[Chain rule] $I(Z_1\,Z_2 ; W) = I(Z_1 ; W) + I(Z_2 ; W \mid Z_1)$.
 \item[Data processing inequality] Whenever $Z' = f(Z)$ is determined by $Z$, $I(Z' ; W) \le I(Z ; W)$.
 \end{description}
 
@@ -263,7 +263,7 @@ Another natural notion of information of a protocol is the amount of information
 \begin{definition}[Internal information cost]
 The \emph{internal information cost} of a randomized protocol $\Pi$ over the distribution $\mu$ on $\calX \times \calY$ is
 \[
-\icostint_\mu(\Pi) = I\big( X ; \Gamma_{X,Y}^\Pi \, Y\big) + I\big( Y ; \Gamma_{X,Y}^\Pi \, X\big).
+\icostint_\mu(\Pi) = I\big( X ; \Gamma_{X,Y}^\Pi\mid \, Y\big) + I\big( Y ; \Gamma_{X,Y}^\Pi \mid\, X\big).
 \]
 where $(X,Y) \sim \mu$.
 \end{definition}
@@ -278,7 +278,7 @@ with the infimum taken over all randomized protocols that compute $f$ with error
 
 The internal information complexity of a function gives a lower bound on its external information complexity (and therefore on its randomized communication complexity as well).
 
-\begin{theorem}
+\begin{theorem}\label{th:6}
 For every function $f : \calX \times \calY \to \{0,1\}$, every distribution $\mu$ on $\calX \times \calY$, and every $0 \le \epsilon \le \frac12$,
 \[
 \ICint_{\mu,\epsilon}(f) \le \ICext_{\mu,\epsilon}(f).
@@ -349,9 +349,9 @@ so $\ICint_{\mu,0}(\Eq) = O(1).$
 \newpage 
 \section{Direct sum (Bonus)}
 
-Given a function $f : \calX \times \calY \to \{0,1\}$, define $f^k : \calX^k \times \calY^k \to \{0,1\}^n$ to be the function where
+Given a function $f : \calX \times \calY \to \{0,1\}$, define $f^k : \calX^k \times \calY^k \to \{0,1\}^k$ to be the function where
 \[
-f^n(x^{(1)},\ldots,x^{(k)},y^{(1)},\ldots,y^{(k)}) = \big( f(x^{(1)},y^{(1)}), \ldots f(x^{(k)}, y^{(k)})\big).
+f^k(x^{(1)},\ldots,x^{(k)},y^{(1)},\ldots,y^{(k)}) = \big( f(x^{(1)},y^{(1)}), \ldots f(x^{(k)}, y^{(k)})\big).
 \]
 This corresponds to the setting where Alice and Bob must compute the value of $f$ on $n$ different pairs of inputs instead of just $1$.
 
@@ -370,7 +370,7 @@ $R_{2^{-\sqrt{k}}}(\Eq^k) = O(k)$.
 \section{Direct sum for information complexity}
 
 One of the main advantages of working with internal information complexity is that in this setting every function \emph{does} satisfy the intuition that computing $k$ copies of a function is exactly $k$ times harder than computing a single copy of it.
-\begin{theorem}
+\begin{theorem}\label{th:9}
 For every function $f : \calX \times \calY \to \{0,1\}$ and every $k \ge 1$,
 \[
 \ICint_{\mu,0}(f^k) = k \cdot \ICint_{\mu,0}(f).
@@ -408,7 +408,7 @@ as desired.
 
 It is possible to obtain tight bounds on the internal information complexity of the \textsc{And} function. These tight bounds have been used to obtain \emph{exact} bounds on the communication complexity of the set disjointness function. To establish the tight asymptotic bound on its randomized communication complexity, however, all we need is the following result.
 
-\begin{lemma}
+\begin{lemma}\label{lemma:1}
 Let $\mu$ be the distribution on $\{0,1\} \times \{0,1\}$ defined by $\mu(0,0) = \mu(0,1) = \mu(1,0) = \frac13$.
 For every $\epsilon > 0$, there is a constant $c_\epsilon > 0$ for which
 \[
@@ -426,7 +426,22 @@ R_\epsilon(\Disj) = \Omega(n).
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $n=k$. Let $\pi$ be a communication protocol which computes $\Disj$ with error at most $\epsilon$, and achieves information cost
+$$\ICint_{\mu,\epsilon}$$ . By Theorem \ref{th:2} and Theorem \ref{th:6},
+$$R_\epsilon(\Disj) \geq \ICint_{\mu,\epsilon}(\Disj) = \icostint_{\mu,\epsilon}(\pi).$$
+Notice that when we sample $(x^1,y^1), \dots, (x^k,y^k)$ according to $\mu$, then
+$$\textsc{AND}^k((x^1,\dots,x^k),(y^1,\dots,y^k)) = \textsc{AND}(x^i,y^i) = 0$$
+for any $i \in [k]$. Thus we can adapt any $\epsilon$-error protocol, $\rho$, for $\textsc{AND}^k$ to an $\epsilon$-error protocol, $\rho'$, for $\textsc{AND}$ in the same way that we did during the proof of Theorem \ref{th:9}, and consequently
+$$\icostint_{\mu,\epsilon}(\rho') = \frac{1}{k}\icostint_{\mu,\epsilon}(\rho).$$
+Actually our observation about $\textsc{AND}^k$ let's us say something stronger. We can use a protocol for $\Disj$ as a stand-in for a protocol for $\textsc{AND}^k$, since (when input is sampled according to $\mu$)
+$$\Disj((x^1,\dots, x^k),(y^1,\dots,y^k)) = (x^1\wedge y^1) \lor\dots\lor(x^k\wedge y^k) = x^i\wedge y^i = \textsc{AND}^k((x^1,\dots, x^k),(y^1,\dots,y^k))$$
+for any $i\in[k]$. Therefore we can adapt $\pi$ to a protocol for $\textsc{AND}$, $\pi'$ satisfying
+$$\icostint_{\mu,\epsilon}(\pi') = \frac{1}{k}\icostint_{\mu,\epsilon}(\pi).$$
+Thus using Lemma \ref{lemma:1},
+$$\icostint_{\mu,\epsilon}(\pi) = k\icostint_{\mu,\epsilon}(\pi')\geq k\ICint_{\mu,\epsilon}(\textsc{AND}) = kc_\epsilon = \Omega(k).$$
+Combining with our first observation we see that
+$$R_\epsilon(\Disj) = \Omega(k)$$
+as desired.
 \end{proof}
 
 \bigskip
