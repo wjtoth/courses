@@ -94,7 +94,7 @@ Entropy satisfies the following properties:
 Mutual information satisfies the following properties:
 \begin{description}
 \item[Boundedness] $0 \le I(Z ; Z') \le \min\{ H(Z), H(Z') \}$.
-\item[Chain rule] $I(Z_1\,Z_2 ; W) = I(Z_1 ; W) + H(Z_2 ; W \mid Z_1)$.
+\item[Chain rule] $I(Z_1\,Z_2 ; W) = I(Z_1 ; W) + I(Z_2 ; W \mid Z_1)$.
 \item[Data processing inequality] Whenever $Z' = f(Z)$ is determined by $Z$, $I(Z' ; W) \le I(Z ; W)$.
 \end{description}
 
@@ -135,7 +135,7 @@ with the infimum taken over all randomized protocols that compute $f$ with error
 
 The external information complexity of a function gives a lower bound on its randomized communication complexity.
 
-\begin{theorem}
+\begin{theorem}\label{th:2}
 For every function $f : \calX \times \calY \to \{0,1\}$ and every distribution $\mu$ on $\calX \times \calY$,
 \[
 \ICext_{\mu,\epsilon}(f) \le R_\epsilon(f).
@@ -155,15 +155,14 @@ To see this claim is sufficient, observe that it implies
 \begin{align*}
 R_\epsilon(f) &\geq H(\Gamma^{\pi^*}_{X,Y}(c)) \\
 &\geq I(XY; \Gamma^{\pi^*}_{X,Y}(c) \mid \Gamma^{\pi^*}_{X,Y}(r)) \\
-&= I(XY;\Gamma^{\pi^*}_{X,Y}(c) \mid \Gamma^{\pi^*}_{X,Y}(r)) + I(XY;\Gamma^{\pi^*}_{X,Y}(r))\\
-&= I(\Gamma^{\pi^*}_{X,Y}; XY) \\
+&= I(XY ;\Gamma^{\pi^*}_{X,Y}) \\
 &= \icostext_\mu(\Gamma^{\pi^*}_{X,Y})\\
 &\geq \ICext_{\mu,\epsilon}(f).
 \end{align*}
 
 Now we proceed to prove the claim. Let $L$ be the set of leaves of the protocol tree $\pi^*$. We define a distribution $\mu'$ on $L$ as follows: for each $\ell \in L$, we let
- $$\mu'(\ell = \sum_{(x,y) \in \calX\times\calY : (x,y)\text{ induces a path to } \ell} \mu(x,y).$$ 
- Let $h_\ell = \height(x,y)$ where $(x,y)$ induces a path to $\ell$. i.e. $h_\ell$ is the lenght of the path from the root of $\pi^*$ to $\ell$ (this path is taken on input $(x,y)$). We have
+ $$\mu'(\ell) = \sum_{(x,y) \in \calX\times\calY : (x,y)\text{ induces a path to } \ell} \mu(x,y).$$ 
+ Let $h_\ell = \height(x,y)$ where $(x,y)$ induces a path to $\ell$. i.e. $h_\ell$ is the length of the path from the root of $\pi^*$ to $\ell$ (this path is taken on input $(x,y)$). We have
 \begin{align*}
 \E_{(x,y)\sim \mu}[h_{x,y}] &=\sum_{\ell \in L} \mu'(\ell) h_\ell \\
 &=\sum_{\ell \in L} \mu'(\ell)\left(\log(\frac{1}{\mu'(\ell)})-\log(\frac{1}{\mu'(\ell)}) +\log(2^{h_\ell})\right)\\
@@ -192,7 +191,15 @@ even when the infimum is taken only over private-coin randomized protocols that 
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Since infimum is taken over only private-coin randomized protocols, as opposed to all randomized protocols, it is immediate that
+$$\ICext_{\mu,\epsilon}(f) \leq \inf_{\pi} \icostext_\mu(\pi).$$
+To complete the proof, consider any randomized protocol $\pi$ which computes $f$ with error at most $\epsilon$. We will show the existence of $\pi'$, a private coin randomized protocol, which computes $f$ with error at most $\epsilon$ and satisfying
+$$\icostext_\mu(\pi) = \icostext_\mu(\pi').$$
+Let $\chi$ be the distribution on shared random bit strings used by $\pi$. The protocol $\pi'$ operates as follows. First  Alice draws a random string $R$ according to $\chi$, and communicates that string to Bob. Then Alice and Bob simulate $\pi$ using $R$ as their shared randomness.
+
+Since protocol transcripts do not record private random bits, to the external observer the transcripts for $\pi$ and $\pi'$ are indistinguishable. In fact, $\Gamma_{X,Y}^\pi$ and $\Gamma_{X,Y}^{\pi'}$ are identically distributed when $X,Y \sim \mu$ and $R\sim \chi$. Therefore
+$$\icostext_\mu(\pi) = I(XY;\Gamma^{pi}_{XY}) = I(XY;\Gamma^{\pi'}_{XY}) = \icostext_\mu(\pi')$$
+as desired.
 \end{proof}
 
 
@@ -209,7 +216,15 @@ Let $\mu$ be the uniform distribution on the set $\{(x,x) : x \in \{0,1\}^n\}$. 
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a private coin randomized protocol computing $\Eq$ with error $0$. Using the previous result, it suffices to prove
+$$\icostext_\mu(\pi) = n.$$
+We have,
+$$\icostext_\mu(\pi) = I(XY, \Gamma_{X,Y}^\pi) = H(XY) - H(XY \mid \Gamma_{X,Y}^\pi).$$
+Since $XY$ are uniformly distributed over $2^n$ elements,
+$$H(XY)= \log(2^n) = n.$$
+Now we just need to show $H(XY \mid \Gamma_{X,Y}^\pi) = 0.$ Indeed, this holds since we claim each transcript uniquely identifies the input pair $XY$. In other words, $\Pr[XY\mid \Gamma_{X,Y}^\pi = \gamma]$ is either $0$ or $1$, and thus
+$$H(XY\mid \Gamma_{X,Y}^\pi) = 0.$$
+To see the claim, suppose that there is a transcript of $\pi$ which is identical for distinct inputs $(x,x)$ and $(x',x')$ drawn from $\mu$, when Alice and Bob have the same random private strings $R_A$ and $R_B$ respectively. Since $\pi$, makes $0$ errors, it outputs $1$ on inputs $(x,x)$ and $(x',x')$. But the transcript would also be identical for input $(x,x')$ on random strings $R_A, R_B$, and so $\pi$ would still output $1$ on this input. This contradicts that $\pi$ makes $0$ errors.
 \end{proof}
 
 \newpage 
@@ -226,7 +241,17 @@ Furthermore, this bound is tight when $\mu(0,1) = \mu(1,0) = \mu(1,1) = \frac13$
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Consider the protocol $\pi$, where Alice sends Bob the bit, $x$, she receives, and Bob sends Alice the bit he receives if and only if $x=1$. If $x=0$ the protocol $\pi$ outputs $0$, and otherwise they exchanged bits, so the protocol can output $x\wedge y$. Clearly this is a $0$-error protocol for $\textsc{And}$.
+
+Since 
+$$\icostext_\mu(\pi) = I(XY; \Gamma^\pi_{X,Y}) \leq H(\Gamma^\pi_{X,Y}) \leq \log_2(3)$$
+the result holds. The last inequality follows since there are precisely three different transcripts: $0$, $10$, and $11$ which can occur as a result of running $\pi$.
+
+Now fix $\mu$ so $\mu(0,1) = \mu(1,0) = \mu(1,1) = \frac{1}{3}$. Let $\pi$ be any random protocol with computes $\textsc{And}$ without error. Then, at the end of communication, for any input $(x,y)$, Alice knows $x$ and $x\wedge y$. Since $\mu(00) = 0$, Alice can uniquely recover $y$ from this information. Symmetrically, Bob also knows $x$ at the end of communication. In other words, knowing the transcript suffices to learn both $x$ and $y$ under this distribution $\mu$. Hence
+$$H(XY \mid \Gamma^\pi_{X,Y}) = 0.$$
+Thus
+$$\icostext_\mu(\pi) = I(XY;\Gamma^{\pi}_{X,Y}) = H(XY) =\log_2(3)$$
+with the last equality following since $XY\sim \mu$ is a uniform distribution on $3$ elements.
 \end{proof}
 
 
@@ -238,7 +263,7 @@ Another natural notion of information of a protocol is the amount of information
 \begin{definition}[Internal information cost]
 The \emph{internal information cost} of a randomized protocol $\Pi$ over the distribution $\mu$ on $\calX \times \calY$ is
 \[
-\icostint_\mu(\Pi) = I\big( X ; \Gamma_{X,Y}^\Pi \, Y\big) + I\big( Y ; \Gamma_{X,Y}^\Pi \, X\big).
+\icostint_\mu(\Pi) = I\big( X ; \Gamma_{X,Y}^\Pi\mid \, Y\big) + I\big( Y ; \Gamma_{X,Y}^\Pi \mid\, X\big).
 \]
 where $(X,Y) \sim \mu$.
 \end{definition}
@@ -253,7 +278,7 @@ with the infimum taken over all randomized protocols that compute $f$ with error
 
 The internal information complexity of a function gives a lower bound on its external information complexity (and therefore on its randomized communication complexity as well).
 
-\begin{theorem}
+\begin{theorem}\label{th:6}
 For every function $f : \calX \times \calY \to \{0,1\}$, every distribution $\mu$ on $\calX \times \calY$, and every $0 \le \epsilon \le \frac12$,
 \[
 \ICint_{\mu,\epsilon}(f) \le \ICext_{\mu,\epsilon}(f).
@@ -261,9 +286,21 @@ For every function $f : \calX \times \calY \to \{0,1\}$, every distribution $\mu
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+We may assume that every protocol with computes $f$ always achieves its worst-case communication cost on every input and random string, by simply padding communication with $0$s on inputs where this is not the case. We will show that all randomized protocols, $\pi$, which compute $f$ with error at most $\epsilon$ satisfy
+$$\icostext_{\mu,\epsilon}(\pi) \geq \icostint_{\mu,\epsilon}(\pi).$$
+Let $k$ be the length of the transcript for $\pi$. Use $\Gamma^\pi_{X,Y}(i)$ to denote the $i$-th bit communicated in the transcript, for $i=1,\dots, k$ and $\Gamma^\pi_{X,Y}[i,j]$ to denote the subtranscript from the $i$-th bit to the $j$-th bit, inclusive. The $i$-th bit was communicated by one player to the other player. The player sending the bit learns nothing by doing so. Therefore we have either
+$$I(X;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], Y) = 0 \quad\text{or}\quad I(Y;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], X) = 0 $$
+for all $i\in[k]$.
+Now we commute
+\begin{align*}
+\icostext_{\mu,\epsilon}(\pi) &= \sum_{i=1}^k I(XY;\Gamma^\pi_{X,Y}(i) \mid \Gamma^\pi_{X,Y}[1,i-1]) \\
+&\geq \sum_{i=1}^k\max\{I(X;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], Y), I(Y;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], X)\}\\
+&=\sum_{i=1}^k I(X;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], Y)+ I(Y;\Gamma^\pi_{X,Y}(i) \mid \Gamma^{\pi}_{X,Y}[1,i-1], X) \\
+&= I(X;\Gamma^\pi_{X,Y} \mid Y) + I(Y; \Gamma^\pi_{X,Y} \mid X) \\
+&= \icostint_{\mu,\epsilon}(\pi).
+\end{align*}
+The second inequality above follows by our observation that one of the terms in each max is $0$. Every other manipulation is repeated application of the chain rule.
 \end{proof}
-
 
 \newpage 
 \section{Equality VIII}
@@ -278,7 +315,31 @@ For every distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$, the $0$-error in
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a protocol where Alice, with input $x$, and Bob, with input $y$, sample $n$ linearly independent vectors $r_1, \dots, r_n \in \{0,1\}^n$ uniformly at random using their shared randomness, and then do the following: for $i=1,\dots n$ do:
+\begin{enumerate}
+	\item Alice sends Bob $a_i:=x\cdot r_i$.
+	\item Bob sends Alice $b_i:=y\cdot r_i$.
+	\item If $a_i \neq b_i$ they stop immediately and output $0$.
+	\item Otherwise, if it is the last iteration they output $1$.
+\end{enumerate} 
+This protocol is $0$-error. Since $r_1,\dots, r_n$ are $n$ linearly independent vectors, they form a basis of $\{0,1\}^n$. Therefore $x\neq y$ if and only if there exists some $i\in[n]$ such that $x\cdot r_i \neq y\cdot r_i$. When $x=y$ they communicate $n$ bits, but it is interesting to see what happens when $x\neq y$. In this case, we want to find the expected number of bits communicated. In each round that occurs $2$ bits are sent. A round occurs with the following probability,
+$$\Pr[a_j = b_j, \forall j=1,\dots, i-1]=\sum_{i=1}^n\frac{2^{n-i+1}-1}{2^n-1}$$
+since is equivalent to saying that $x-y$ (with addition taken in $\mathbb{F}_2$) is in the $n-i+1$-dimensional subspace formed by the kernel of $r_1,\dots,r_{i-1}$. Since $x-y\neq 0$ there are $2^n-1$ choices for $x-y$, and there $2^{n-i+1}-1$ choices which lie in the kernel. Since our basis is chosen uniformly at random, this yields the desired probability. Hence we have that the expected number of bits communicated is
+$$\sum_{i=1}^n 2\cdot\Pr[a_j = b_j, \forall j=1,\cdots, i-1] = 2\sum_{i=1}^n\frac{2^{n-i+1}-1}{2^n-1}\leq 2\sum_{i=1}^n\frac{2^{n-i+1}}{2^n} \leq 2\cdot 2 = O(1).$$
+Let $\Delta$ be the random indicator variable for $X=Y$. We now compute $I(X;\Gamma^\pi_{X,Y}\mid Y)$,
+\begin{align*}
+I(X;\Gamma^\pi_{X,Y} \mid Y) &= I(X\Delta;\Gamma^\pi_{X,Y}\mid Y) &\text{(since $\Gamma^\pi_{X,Y}$ suffices to learn $\Delta$)} \\
+	&= I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta) + I(\Delta;\Gamma^\pi_{X,Y}\mid Y) \\
+	&\leq  I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta) + 1  &\text{(since $I(\Delta;\Gamma^\pi_{X,Y}\mid Y) \leq H(\Delta) = 1$)}\\
+	&\leq  I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta=1) +  I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta=0) + 1 \\
+	&=  I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta=0) + 1 \\
+	&= O(1).
+\end{align*}
+The second last equality follows since $I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta=1)=0$, as once we know $Y$ and that $X=Y$, we know everything. The last equality follows from two facts. Firstly our prior observation that the expected number of bits communicated by $\pi$ when $X\neq Y$ is $O(1)$, and the second that $ I(X;\Gamma^\pi_{X,Y}\mid Y, \Delta=0) $ is at most that expected quantity. That second fact follows from our proof of Theorem \ref{th:2}, where be actually bound information cost by the expected communication length, as opposed to the worst-case length.
+
+By a symmetric argument $I(X;\Gamma^\pi_{X,Y} \mid Y) = O(1)$, and hence
+$$\icostint_{\mu,0}(\pi) = O(1) + O(1) = O(1)$$
+so $\ICint_{\mu,0}(\Eq) = O(1).$
 \end{proof}
 
 \bigskip
@@ -288,9 +349,9 @@ For every distribution $\mu$ over $\{0,1\}^n \times \{0,1\}^n$, the $0$-error in
 \newpage 
 \section{Direct sum (Bonus)}
 
-Given a function $f : \calX \times \calY \to \{0,1\}$, define $f^k : \calX^k \times \calY^k \to \{0,1\}^n$ to be the function where
+Given a function $f : \calX \times \calY \to \{0,1\}$, define $f^k : \calX^k \times \calY^k \to \{0,1\}^k$ to be the function where
 \[
-f^n(x^{(1)},\ldots,x^{(k)},y^{(1)},\ldots,y^{(k)}) = \big( f(x^{(1)},y^{(1)}), \ldots f(x^{(k)}, y^{(k)})\big).
+f^k(x^{(1)},\ldots,x^{(k)},y^{(1)},\ldots,y^{(k)}) = \big( f(x^{(1)},y^{(1)}), \ldots f(x^{(k)}, y^{(k)})\big).
 \]
 This corresponds to the setting where Alice and Bob must compute the value of $f$ on $n$ different pairs of inputs instead of just $1$.
 
@@ -309,7 +370,7 @@ $R_{2^{-\sqrt{k}}}(\Eq^k) = O(k)$.
 \section{Direct sum for information complexity}
 
 One of the main advantages of working with internal information complexity is that in this setting every function \emph{does} satisfy the intuition that computing $k$ copies of a function is exactly $k$ times harder than computing a single copy of it.
-\begin{theorem}
+\begin{theorem}\label{th:9}
 For every function $f : \calX \times \calY \to \{0,1\}$ and every $k \ge 1$,
 \[
 \ICint_{\mu,0}(f^k) = k \cdot \ICint_{\mu,0}(f).
@@ -317,7 +378,25 @@ For every function $f : \calX \times \calY \to \{0,1\}$ and every $k \ge 1$,
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Clearly $\ICint_{\mu,0}(f^k) \leq k \cdot \ICint_{\mu,0}(f)$ since we can simply run any protocol for $f$ on each coordinate of input for $f^k$, and the information cost will $k$ times that of the protocol.
+
+Let $\pi$ be a $0$-error protocol for $f^k$. We want to construct a $0$-error protocol $\pi'$ for $f$ with
+$$\icostint_{\mu,0}(\pi') = \frac{1}{k}\icostint_{\mu,0}(\pi).$$
+Protocol $\pi'$ operates as follows. Let $x$ be Alice's input, and $y$ be Bob's input. Alice and Bob use shared randomness to choose $i \in [k]$ uniformly at random. They set $(x^i,y^i) = (x,y)$. Let $\mu_\calX$ be the marginal distribution over $\calX$ from $\mu$, and define $\mu_\calY$ analogously. Alice and Bob use public randomness to sample $x^1,\dots,x^{i-1}$ according to $\mu_\calX$, and $y^{i+1},\dots, y^k$ according to $\mu_\calY$. Now Alice uses private randomness to sample $x^{i+1}, \dots, x^{k}$ according to $\mu$ conditioned on $y^{i+1},\dots, y^k$ respectively (so we get valid input pairs). Similarly Bob uses private randomness to sample $y^{1}, \dots, y^{i-1}$ according to $\mu$ conditioned on $x^{1},\dots, x^{i-1}$ respectively. Now Alice and Bob run protocol $\pi$ on inputs $(x^1,\dots, x^k)$ and $(y^1,\dots, y^k)$. The protocol outputs $f(x^i,y^i)$.
+
+We've taken care to make sure the input to $\pi$ is distributed according to $\mu$ when we call it, and furthermore since $\pi$ is $0$-error for $f^k$, $\pi'$ is $0$-error for $f$. Let $X,Y$ be the random variables for inputs to $\pi'$. Let $I$ be a random variable for the random index in $[k]$ that $\pi'$ chooses. Let $X_1,\dots, X_n$ be random variables for $x$ coordinates, and $Y_1,\dots, Y_n$ be random variables for $y$ coordinates for $\pi$'s black-box call to $\pi'$. Use shorthand $\bar{X} = (X_1,\dots, X_k)$ and $\bar{Y} = (Y_1,\dots, Y_k)$. We now compute the mutual information from Alice's perspective:
+\begin{align*}
+I(Y;\Gamma^{\pi'}_{X,Y}\mid X) &= I(Y_I;\Gamma^\pi_{\bar{X},\bar{Y}} \mid I, \bar{X}, Y_{I+1} \dots Y_{k}) \\
+&= \frac{1}{k}\sum_{i=1}^kI(Y_i; \Gamma^\pi_{\bar{X},\bar{Y}}\mid I=i, \bar{X}, Y_{i+1}\dots Y_{k}) \\
+&= \frac{1}{k}\sum_{i=1}^k \left(I(Y_i,Y_{i+1}; \Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{X}, Y_{i+2}\dots Y_{k}) - I(Y_{i+1}; \Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{X}, Y_{i+2}\dots Y_k)\right) \\
+&= \frac{1}{k}I(Y_1\dots Y_k ; \Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{X}) \\
+&= \frac{1}{k}I(\bar{Y};\Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{X}).
+\end{align*}
+In first equality follows by conditioning on what Alice knows publicly. The second by expanding the expectation. The third by the chain rule, and the fourth by canceling terms. By a symmetric argument we can see that
+$$I(X;\Gamma^{\pi'}_{X,Y}\mid Y) = \frac{1}{k}I(\bar{X};\Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{Y}).$$
+Thus we have
+$$\icostint_{\mu,0}(\pi') = I(Y;\Gamma^{\pi'}_{X,Y}\mid X) + I(X;\Gamma^{\pi'}_{X,Y}\mid Y) = \frac{1}{k}(I(\bar{Y};\Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{X}) + I(\bar{X};\Gamma^\pi_{\bar{X},\bar{Y}}\mid \bar{Y})) =  \frac{1}{k}\icostint_{\mu,0}(\pi)$$
+as desired.
 \end{proof}
 
 \bigskip
@@ -329,7 +408,7 @@ For every function $f : \calX \times \calY \to \{0,1\}$ and every $k \ge 1$,
 
 It is possible to obtain tight bounds on the internal information complexity of the \textsc{And} function. These tight bounds have been used to obtain \emph{exact} bounds on the communication complexity of the set disjointness function. To establish the tight asymptotic bound on its randomized communication complexity, however, all we need is the following result.
 
-\begin{lemma}
+\begin{lemma}\label{lemma:1}
 Let $\mu$ be the distribution on $\{0,1\} \times \{0,1\}$ defined by $\mu(0,0) = \mu(0,1) = \mu(1,0) = \frac13$.
 For every $\epsilon > 0$, there is a constant $c_\epsilon > 0$ for which
 \[
@@ -342,12 +421,27 @@ This result and (extensions of) the direct sum property of internal information 
 \begin{theorem}
 For every (small enough) $\epsilon \ge 0$, 
 \[
-\R_\epsilon(\Disj) = \Omega(n).
+R_\epsilon(\Disj) = \Omega(n).
 \]
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $n=k$. Let $\pi$ be a communication protocol which computes $\Disj$ with error at most $\epsilon$, and achieves information cost
+$$\ICint_{\mu,\epsilon}$$ . By Theorem \ref{th:2} and Theorem \ref{th:6},
+$$R_\epsilon(\Disj) \geq \ICint_{\mu,\epsilon}(\Disj) = \icostint_{\mu,\epsilon}(\pi).$$
+Notice that when we sample $(x^1,y^1), \dots, (x^k,y^k)$ according to $\mu$, then
+$$\textsc{AND}^k((x^1,\dots,x^k),(y^1,\dots,y^k)) = \textsc{AND}(x^i,y^i) = 0$$
+for any $i \in [k]$. Thus we can adapt any $\epsilon$-error protocol, $\rho$, for $\textsc{AND}^k$ to an $\epsilon$-error protocol, $\rho'$, for $\textsc{AND}$ in the same way that we did during the proof of Theorem \ref{th:9}, and consequently
+$$\icostint_{\mu,\epsilon}(\rho') = \frac{1}{k}\icostint_{\mu,\epsilon}(\rho).$$
+Actually our observation about $\textsc{AND}^k$ let's us say something stronger. We can use a protocol for $\Disj$ as a stand-in for a protocol for $\textsc{AND}^k$, since (when input is sampled according to $\mu$)
+$$\Disj((x^1,\dots, x^k),(y^1,\dots,y^k)) = (x^1\wedge y^1) \lor\dots\lor(x^k\wedge y^k) = x^i\wedge y^i = \textsc{AND}^k((x^1,\dots, x^k),(y^1,\dots,y^k))$$
+for any $i\in[k]$. Therefore we can adapt $\pi$ to a protocol for $\textsc{AND}$, $\pi'$ satisfying
+$$\icostint_{\mu,\epsilon}(\pi') = \frac{1}{k}\icostint_{\mu,\epsilon}(\pi).$$
+Thus using Lemma \ref{lemma:1},
+$$\icostint_{\mu,\epsilon}(\pi) = k\icostint_{\mu,\epsilon}(\pi')\geq k\ICint_{\mu,\epsilon}(\textsc{AND}) = kc_\epsilon = \Omega(k).$$
+Combining with our first observation we see that
+$$R_\epsilon(\Disj) = \Omega(k)$$
+as desired.
 \end{proof}
 
 \bigskip
