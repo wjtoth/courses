@@ -1,0 +1,266 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{fullpage}
+\usepackage[usenames]{xcolor}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{exercise}{Exercise}
+\newtheorem{remark}{Remark}
+\newtheorem{problem}{Problem}
+\newtheorem{challenge}{Challenge Problem}
+\newtheorem{open}{Open Problem}
+\theoremstyle{plain}
+
+\newcommand{\argmin}{\mathrm{argmin}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+\newcommand{\cost}{\mathrm{cost}}
+\newcommand{\dHam}{\mathrm{d}_{\mathrm{Ham}}}
+\newcommand{\disc}{\mathrm{disc}}
+\newcommand{\discu}{\mathrm{disc_u}}
+\newcommand{\Disj}{\textsc{Disj}}
+\newcommand{\Eq}{\textsc{Eq}}
+\newcommand{\GHD}{\textsc{GHD}}
+\newcommand{\GT}{\textsc{GT}}
+\newcommand{\HD}{\textsc{HD}}
+\newcommand{\ICext}{\mathrm{IC}^{\mathrm{ext}}}
+\newcommand{\ICint}{\mathrm{IC}^{\mathrm{int}}}
+\newcommand{\icostext}{\mathrm{icost}^{\mathrm{ext}}}
+\newcommand{\icostint}{\mathrm{icost}^{\mathrm{int}}}
+\newcommand{\IP}{\textsc{IP}}
+\newcommand{\Index}{\textsc{Index}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Rpriv}{R^{\mathrm{priv}}}
+\newcommand{\replacethistext}[1]{\textcolor{red}{#1}}
+
+\newcommand{\exercises}{\bigskip \noindent\rule{8cm}{0.4pt} \medskip}
+
+
+
+\title{Communication complexity: Chapter 6 \\ One-way communication and simultaneous message passing}
+\author{Eric Blais and Justin Toth}
+
+
+\begin{document}
+
+\maketitle
+
+Every communication complexity question we have studied so far in this course have been set in the model where there are two players, Alice and Bob, who exchange bits with each other to compute functions on their joint inputs. This is of course not the only model of communication that is of interest---other models where we change the number of parties or restrict how messages can be sent between them have also been studied extensively. In this chapter, we examine the communication complexity of functions when the communication between Alice and Bob is restricted.
+
+
+
+\newpage 
+\section{One-way communication complexity}
+
+The first modification to the standard communication complexity setting that we will consider is the \emph{one-way communication} model, where the only communication taking place during a protocol is from Alice to Bob; then Bob outputs the value of the function.
+
+\begin{definition}[One-way protocol]
+A communication protocol $\pi$ is a \emph{one-way protocol} if all the internal nodes except the ones right above the leaves in the rooted binary tree $T(\pi)$ are labelled with $A$.
+\end{definition}
+
+As in the standard two-way communication setting, we can consider deterministic, public-coin, and private-coin protocols.
+
+\begin{definition}[One-way communication complexity]
+The deterministic and (public-coin) randomized \emph{one-way communication complexities} of a function $f : \calX \times \calY \to \{0,1\}$, denoted
+\[
+D^{\rightarrow}(f) \qquad \mbox{and} \qquad R^{\rightarrow}(f)
+\]
+respectively, are the minimum cost of a deterministic one-way protocol that computes $f$ and of a public-coin randomized one-way protocol that computes $f$ with error at most $\frac13$, respectively.
+\end{definition}
+
+\begin{remark}
+We can also define one-way analogues of the other models of communication such as distributional complexity, private-coin randomized complexity, etc.
+\end{remark}
+
+The communication complexity of some functions remains identical in the one-way and two-way settings.
+
+\begin{theorem}
+The one-way communication complexity of $\Eq : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ satisfies
+\[
+D^\rightarrow(\Eq) = D(\Eq) = \Theta(n) \qquad \mbox{and} \qquad 
+R^\rightarrow(\Eq) = R(\Eq) = \Theta(1).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage 
+\section{Index function}
+
+In general, however, the one-way and two-way complexity of a function can differ greatly. A simple example that highlights this difference is the \emph{index function} $\Index : \{0,1\}^n \times [n] \to \{0,1\}$ defined by
+\[
+\Index(x,i) = x_i.
+\]
+
+\begin{theorem}
+The communication complexity of the $\Index : \{0,1\}^n \times [n] \to \{0,1\}$ function satisfies
+\[
+D(\Index) = O(\log n) \qquad \mbox{and} \qquad D^\rightarrow(\Index) = \Omega(n).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+
+\newpage 
+\section{One-way vs.~two-way communication complexity}
+
+The gap between the one-way and two-way communication complexity of the index function is the largest possible.
+
+\begin{theorem}
+For every function $f : \calX \times \calY \to \{0,1\}$,
+\[
+D^\rightarrow(f) \le 2^{D(f)}.
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+
+\newpage 
+\section{Index II}
+
+We can strengthen our lower bound on the one-way communication complexity of the index function to show that it holds in the public-coin randomness model as well.
+
+\begin{theorem}
+The one-way randomized communication complexity of the $\Index : \{0,1\}^n \times [n] \to \{0,1\}$ function is
+\[
+R^\rightarrow(\Index) = \Omega(n).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+
+\newpage 
+\section{Disjointness}
+
+The lower bound on the index function can be used to obtain a simple proof of the $\Omega(n)$ lower bound on the one-way randomized communication complexity of the disjointness function.
+
+\begin{theorem}
+The one-way randomized communication complexity of the $\Disj : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ function is
+\[
+R^\rightarrow(\Disj) = \Omega(n).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\begin{remark}
+Your proof should \emph{not} use our previous lower bounds on the two-way randomized communication complexity of the disjointness function; instead, you should be able to use the lower bound on the one-way communication complexity of the index function to get this result.
+\end{remark}
+
+
+
+\newpage 
+\section{Gap Hamming (Bonus)}
+
+Define the \emph{Hamming distance} between strings $x,y \in \{0,1\}^n$ to be $\dHam(x,y) = |\{i \in [n] : x_i \neq y_i\}|$.
+The \emph{gap Hamming function} $\GHD : \{0,1\}^n \times \{0,1\}^n \to \{0,1,*\}$ is the partial function defined by
+\[
+\GHD(x,y) = \begin{cases}
+1 & \mbox{if } \dHam(x,y) = \frac n2 \\
+0 & \mbox{if } |\dHam(x,y) - \frac n2| \ge \sqrt{n} \\
+* & \mbox{otherwise.}
+\end{cases}
+\] 
+(We assume throughout this section that $n$ is even.)
+
+\begin{definition}
+A randomized protocol \emph{computes} the partial function $f : \calX \times \calY \to \{0,1,*\}$ with error at most $\epsilon$ if for every input $(x,y) \in f^{-1}(0) \cup f^{-1}(1)$, it outputs the value $f(x,y)$ with probability at least $1-\epsilon$.\footnote{For the inputs in $f^{-1}(*)$, the protocol is free to output anything.}
+\end{definition}
+
+\begin{theorem}
+The one-way randomized communication complexity of the $\GHD : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ function is
+\[
+R^\rightarrow(\GHD) = \Omega(n).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here, if you complete it.}
+\end{proof}
+
+
+\bigskip
+\emph{Hint.} The lower bound for the one-way complexity of the \textsc{Index} function should be helpful for this proof as well, though the reduction is not (nearly) as straightforward as the one in the last section.
+
+
+\newpage 
+\section{Simultaneous message passing}
+
+In the \emph{simultaneous message passing (SMP)} model of communication, Alice and Bob both send messages to a third party that we will call the Referee, without seeing each other's transmissions. (We picture both Alice and Bob sending their communications to the referee simultaneously.) Note that the Referee does not see either Alice or Bob's inputs, and must then output the result of the protocol using only the messages received from both parties. In the private-coin model of SMP communication, Alice and Bob each have a private source of randomness that is not visible to any other party.
+
+\begin{definition}
+The \emph{SMP (private randomness) complexity} with error $\epsilon$ of a function $f : \calX \times \calY \to \{0,1\}$, denoted
+\[
+R^{\parallel,\mathrm{priv}}_\epsilon(f),
+\] 
+is the minimum (worst-case) communication cost of any private-coin SMP protocol that computes $f$ with error at most $\epsilon$ on any input $(x,y) \in \calX \times \calY$.
+\end{definition}
+
+As usual, we write $R^{\parallel,\mathrm{priv}}(f) = R^{\parallel,\mathrm{priv}}_{1/3}(f)$.
+
+\begin{theorem}
+The SMP complexity of every function $f : \calX \times \calY \to \{0,1\}$ satisfies
+\[
+R^{\parallel,\mathrm{priv}}(f) = \Omega(\sqrt{D(f)}).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\bigskip
+\noindent \emph{Hint.} The ideas from the proofs of Sections 8 and 9 in Chapter 4 might be helpful here as well. In particular, what can we say about the success probability of a protocol in which Alice and Bob send $t$ messages to the referee instead of $1$, when all $t$ messages are sent for the same input but with independent randomness?
+
+
+\newpage 
+\section{Equality X}
+
+\begin{theorem}
+The SMP complexity of the equality function $\Eq : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ is
+\[
+R^{\parallel,\mathrm{priv}}(\Eq) = \Theta(\sqrt{n}).
+\]
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\bigskip
+\noindent \emph{Hint.} By using (basic but still remarkable) results from error-correcting codes, it is sufficient to design a randomized protocol that computes the partial function $\Eq^* : \{0,1\}^n \times \{0,1\}^n \to \{0,1,*\}$ defined by
+\[
+\Eq^*(x,y) = \begin{cases}
+1 & \mbox{if } x = y \\
+0 & \mbox{if } \dHam(x,y) = \frac n2 \\
+* & \mbox{otherwise}
+\end{cases}
+\]
+with error at most $\frac13$.
+\end{document}
