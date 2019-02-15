@@ -254,7 +254,17 @@ R^{\parallel,\mathrm{priv}}(f) = \Omega(\sqrt{D(f)}).
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+	Let $\pi$ be a SMP protocol for $f$ of cost $R^{\parallel,\mathrm{priv}}(f)$. For each input $x\in\calX$ let $M_x$ be the set of messages Alice has non-zero probability of sending on input $x$. Similarly for each input $y\in\calY$ let $M_y$ be the set of messages Bob has non-zero probability of sending on input $y$.
+	
+	We want to show that for each $x \in \calX$ there exists a set of messages $S_x \subseteq M_x$ such that for any $y \in \calY$, and message $m_y \in M_y$, the protocol correctly outputs $f(x,y)$ on the majority of messages $S_x$ with $m_y$. Let $\tau(m_x,m_y)$ be the referees (deterministic) output on messages $(m_x,m_y)$ for protocol $\pi$. I.e.
+	$$\frac{2}{3} \leq \Pr(\pi(x,y) = f(x,y)) = \Pr_{m_x,m_y}(\tau(m_x,my) = f(x,y)).$$
+	Fix $y\in \calY$, and $m_y \in M_y$. Drawn a uniform random subset $S_x \subseteq M_x$  of size $t$. By a Chernoff Bound, the probability that $\tau(m_x,m_y) \neq f(x,y)$ for at least half of message pairs $m_x, m_y$ is at most
+	$$2^{-\Omega(t)}.$$
+	Since $\pi$ has cost $R^{\parallel,\mathrm{priv}}(f)$, over all $y$ there are at most $2^{R^{\parallel,\mathrm{priv}}(f)}$ messages the referee sees from Bob. So by union bound, the probability $\tau(m_x,m_y) \neq f(x,y)$ for some message $m_y$ is at most
+	$$2^{R^{\parallel,\mathrm{priv}}(f)}2^{-\Omega(t)}.$$
+	This probability is strictly less than one for $t = \Omega(R^{\parallel,\mathrm{priv}}(f))$. Thus by the probabilistic method the set $S_x$ exists. By a symmetric argument, the analogous set $S_y$ exists for each $y \in \calY$.
+	
+	Now our deterministic protocol for $f$ is as follows. Alice sends to Bob each message in $S_x$ for her input $x$. Since $|S_x| \leq R^{\parallel,\mathrm{priv}}(f)$ and each message in $S_x$ has size at most $R^{\parallel,\mathrm{priv}}(f)$, this has communication cost $R^{\parallel,\mathrm{priv}}(f)^2$. Bob sends to Alice each message $S_y$ for his input $y$, at communication cost $R^{\parallel,\mathrm{priv}}(f)^2$. They both can compute the majority referee decision on $S_x\times S_y$, and output that. By our choice of $S_x$ and $S_y$, this yields the correct answer. The cost of this protocol is $O(R^{\parallel,\mathrm{priv}}(f)^2)$, as desired.
 \end{proof}
 
 
