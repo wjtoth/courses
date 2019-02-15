@@ -91,7 +91,13 @@ R^\rightarrow(\Eq) = R(\Eq) = \Theta(1).
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+	
+First we consider the deterministic setting. Clearly $n$ bits suffice to send Alice's input. Thus $D^\rightarrow(\Eq) = O(n)$. For the lower bound consider a deterministic one-way protocol $\pi$ computing $\Eq$. Let $\pi'$ be the two-way protocol where Alice and Bob simulate $\pi$ and in $1$ bit Bob sends the result to Alice. Clearly $\pi'$ solves $\Eq$, and its cost is
+$$D^\rightarrow(\Eq) + 1.$$
+Since $D(\Eq) = \Omega(n)$ this implies $D^\rightarrow(\Eq) = \Omega(n)$ as desired.
+
+Now consider the randomized setting. $R^\rightarrow(\Eq) = \Omega(1)$ is immediate. For the upper bound, consider the following randomized protocol, which is entirely analogous to what we do in the two-way model. Alice and Bob generate $r_1, r_2 \in \{0,1\}^n$ independently and uniformly at random using their shared randomness. Alice computes $x\cdot r_1$ and $x\cdot r_2$ and sends the results to Bob. Bob computes $y\cdot r_1$ and $y\cdot r_2$ and outputs $1$ if and only if $x\cdot r_1 = y\cdot r_1$ and $x\cdot r_2 = y\cdot r_2$. The success probability of this protocol is $\frac{3}{4}$ following the same analysis as the two-way model.
+
 \end{proof}
 
 
@@ -111,7 +117,9 @@ D(\Index) = O(\log n) \qquad \mbox{and} \qquad D^\rightarrow(\Index) = \Omega(n)
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Trivially $D(\Index) = O(\log n)$: Bob sends his input $y$ using $\log n$ bits, and Alice sends $x_y$ using $1$ bit.
+
+To see that $D^\rightarrow(\Index) = \Omega(n)$, suppose for contradiction there is a one-way protocol $\pi$ which computes $\Index$, and Alice sends strictly less than $n$ bits. Let $m\in\{0,1\}^{|m|}$ be the message Alice sends to Bob. Our assumption says $|m| < n$. Since $\pi$ is deterministic, Bob's output is entirely a function of $m$ and his input $y$. Since $|m|<n$ there exist a pair of inputs $x^1$ and $x^2$ for Alice for which she sends the same message $m$. If $y$ is the index of a bit on which $x^1$ and $x^2$ differ, then $\pi$ will not be correct on both $(x^1,y)$ and $(x^2,y)$. On message $m$ and input $y$ Bob can output either $x^1_y$ or $x^2_y$. In either case, he is wrong on some input. Thus any determinsitc one-way protocol for $\Index$ must use at least $n$ bits of communication.
 \end{proof}
 
 
