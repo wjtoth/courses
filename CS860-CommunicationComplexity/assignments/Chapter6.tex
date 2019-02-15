@@ -137,7 +137,7 @@ D^\rightarrow(f) \le 2^{D(f)}.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a two-way deterministic protocol computing $f$, and achieving cost $D(f)$. We construct a one-way protocol $\pi'$ for $f$ as follows. Alice considers the sub-tree of the protocol tree $\pi$ corresponding to what she would send on her input, and all of Bob's possible replies. The size of this sub-tree is at most $2^{D(f)}$. After reading this sub-tree, Bob outputs the bit at the leaf to which his input with Alice's communication corresponding.
 \end{proof}
 
 
@@ -186,7 +186,9 @@ R^\rightarrow(\Disj) = \Omega(n).
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Consder any randomized one-way protocol $\pi$ which solves $\Disj$.. We will construct a protocol for $\Index$ of the same cost, and apply the lower bound from the previous section to obtain the result. Let $x \in \{0,1\}^n$ and let $y \in [n]$ be Alice and Bob's respective inputs to $\Index$. They run their $\Disj$ oracle $\pi$ as if Alice input were $x$ and Bob's was the standard basis vector $e_y\in\{0,1\}^n$, where only the $y$-th bit $e_y$ is $1$. Since
+$$\Disj(x,e_y) = \Index(x,y)$$ 
+this protocol solves $\Index$ using the same communication cost as $\pi$.
 \end{proof}
 
 \begin{remark}
