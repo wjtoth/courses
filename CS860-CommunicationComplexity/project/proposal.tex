@@ -123,16 +123,44 @@ Equivalently a non-negative factorization of $S$ of rank at most $r$ is a decomp
 \end{theorem}
 \paragraph{}
 Faenza, Fiorini, Grappe, and Tiwary~\cite{faenza2015extended} identified a model of communication which is intimately connected to non-negative rank (and thus to extension complexity). Let $\Pi$ be a communication protocol where Alice and Bob each have private randomness. Alice receives $i \in [n]$ and Bob receives $j \in [p]$. They exchange bits in the usual way according to a protocol tree and at the end \emph{either one} of the players outputs some non-negative number $\alpha$. We say $\Pi$ computes $S$ in expectation if for every $i \in [n]$, $j \in [p]$, the expected value of $\alpha$ is $S_{i,j}$. The cost of $\Pi$ is the maximum number of bits exchanged by Alice and Bob on any input pair, not counting the encoding size of $\alpha$. The expected communication complexity of $S$, denoted $R^\text{cc}_{\text{exp}}(S)$, is the minimum cost of a protocol computing $S$ in expectation.
-\begin{theorem}(Faenza et al.) Provided $\text{rk}_x(S) \neq 0$, $$R^\text{cc}_{\text{exp}}(S) = \log \text{rk}_x(S) + \Theta(1) = \log\text{xc}(P,Q) + \Theta(1).$$
+\begin{theorem}\label{th:communication}(Faenza et al.) Provided $\text{rk}_x(S) \neq 0$, $$R^\text{cc}_{\text{exp}}(S) = \log \text{rk}_x(S) + \Theta(1) = \log\text{xc}(P,Q) + \Theta(1).$$
 The second equality is a direct consequence of Yannakakis' Theorem. 
 \end{theorem}
-\subsection{The goal of this section is Faenza's 2015 result}
 \section{The Knapsack Cover Problem}
-\subsection{The goal here is to describe all the knapsack cover stuff that has been done in the natural space}
-\section{Extended Formulations for Knapsack Cover}
-\subsection{Here we discuss extended formulations for KC, and communication protocols}
-\section{Lower Bounds}
-\subsection{some ideas for lower bounding communication cost of KCI slack matrix}
+The min Knapsack (minK) problem is defined as follows. Given a ground set of items $E$, a non-negative integer demand $D$, a size $s_e$ and cost $c_e$ for each $e \in E$,  solve
+\begin{align*}
+    \min \sum_{e \in E} c_ex_e&\\
+    \text{s.t.} \sum_{e \in E} s_ex_e &\geq D \\
+    x&\in \{0,1\}^E
+\end{align*}
+Despite having a well-known PTAS, a comparable polyhedral description is known. Carr, Fleisher, Leung, and Phillips \cite{carr1999strengthening} gave a linear programming formulation with integrality gap $2$ via the Knapsack Cover Inequalities (KC). For each $U \subseteq E$, let $D(U) = D-s(U)$ and let $s_e(U) =\min\{s_e, D(U)\}$ for each $e \in E\backslash U$. The KC inequalities are
+$$ \sum_{e \in E\backslash U} s_e(U) x_e \geq D(U)\quad \forall U\subseteq E.$$
+One immediately notices that the KC inequalities are exponential in number. It is a natural question, and in fact it remains open, to find a linear relaxation of minK of constant integrality gap and polynomial number of constraints. Dudycz and Moldenhauer~\cite{dudycz2015approximated} ruled out such a formulation in the natural variable space. Hence we need to consider extended formulations.
+\begin{question}\label{question:big}
+Does the polyhedral pair $(P,Q)$ where $P$ is the min Knapsack polytope and $Q$ is linear relaxation of $P$ with the KC inequalities have polynomial extension complexity?
+\end{question}
+\section{Extended Complexity of Knapsack Cover via Communication Protocols}
+\paragraph{}
+Using Theorem \ref{th:communication} Bazzi, Fiorini, Huang, and Svensson~\cite{bazzi2017small} gave a quasi-polynomial size extended formulation for Knapsack Cover, by providing a randomized communication protocol which computes the slack matrix in expectation. An interesting consquence of their approach is that the procedure is not constructive (nevertheless they have an intersting cutting plane technique for optimizing over the extended formulation). In~\cite{fiorini2017strengthening} they give an iterative procedure which can construct the extended formulation of Bazzi et al. The procedure though, is a general black box, not specifically tailored to the minK problem. The authors in ~\cite{bazzi2017small} as if there is any combinatorial interpretation of their formulation.
+\begin{question}
+    Is there a combinatorial interpretation of the formulation given in \cite{bazzi2017small}?
+\end{question}
+
+One approach to resolving Question~\ref{question:big} would be to give a better communication protocol for computing $S$ in expectation. This would be an ambitious goal. Bazzi et al. identify a special case in which their protocol gives a polynomial size extended formulation: when the sizes $s_e$ are polynomial in $n$. Unfortunately, this special case is already known to have an exact formulation. It would be interesting to find a polynomial size extended formulation for less trivial classes of minK.
+\begin{question}
+Are there non-trivial special cases of minK which have a polynomially sized extended formulation, by the protocol in \cite{bazzi2017small} or otherwise?
+\end{question}
+
+Alternatively, we can start approaching Question \ref{question:big} from the other direction. Lower bounds on $R^\text{cc}_{\text{exp}}(S)$ would establish lower bounds on the extension complexity of Knapsack Cover. As far the writer is aware, no non-trivial lower bounds have been reported in the literature.
+\begin{question}
+    Can we lower bound $R^\text{cc}_{\text{exp}}(S)$ for the Knapsack Cover slack matrix?
+\end{question}
+Braun and Pokutta~\cite{braun2016common} developed an information-theoretic approach to lower bounding $R^\text{cc}_{\text{exp}}(S)$. Exploring this approach and seeing if it can be applied to Knapsack Cover would be an interesting concrete starting point.
+
+We conclude with a more modest question. In ~\cite{carnes2008primal}and~\cite{carr1999strengthening}, Knapsack Cover constraints are applied to a variety of capacitated covering problems. Can we adapt the protocol in \cite{bazzi2017small} to this setting?  When one family of KC inequalities is applied to the problem may be a bit too straightforward. But there is an interesting application of Knapsack Cover inequalities which is less straightforward. The best known approximation of scheduling with general job dependent cost functions~\cite{cheung2017primal} use a time-indexed linear programming relaxation which introduces a distinct family of knapsack cover inequalities at each time step.
+\begin{question}
+Can we give a (quasi)-polynomial extended formulation for scheduling with general costs via a randomized communication protocol which computes the slack matrix in expectation?
+\end{question}
 
 \bibliography{references.bib}
 \bibliographystyle{plain}
