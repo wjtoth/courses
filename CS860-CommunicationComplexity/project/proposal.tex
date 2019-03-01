@@ -104,15 +104,28 @@
 \section{Extended Formulations and Communication Complexity}
 \paragraph{}
 Consider a polytope $P\subseteq \R^n$ and a polyhedron $Q\subseteq \R^n$ containing $P$ (called a \emph{polyhedral pair}). For intuition, think of $P$ as the convex hull of the set of solutions to some NP-hard problem, for which we do not know a compact linear programming description, and think of $Q$ as a relaxation of $P$ for which are interested in finding a compact description of.
-\paragraph{}
+
 We say that a system 
 $$E^\leq x + F^\leq y \leq g^\leq, E^= x + F^= y = g^=$$
 in $\R^{n+k}$ is an \emph{extended formulation} of $(P,Q)$ if the polyhedron
 $$R:=\{x \in \R^n: \exists y \in \R^k: E^\leq x + F^\leq y \leq g^\leq, E^= x + F^= y = g^=\}$$
 contains $P$ and is contained in $Q$. The number of inequalities in the system determines the size of the extended formulations. The \emph{extension complexity} of $(P,Q)$, $xc(P,Q)$, is the minimum size of an extended formulation of $(P,Q)$.
-\paragraph{}
+
 Usually one studies the case $P=Q$, but for our purposes we are interested in the extension of complexity of a specific relaxation, and hence need the fully general definiton above. Yannakakis' seminal result \cite{yannakakis1991expressing} gives an algebraic expression of $xc(P,Q)$. To state the result we will need two more pieces of terminology.
 
+Let $P = \text{conv}(\{v_1,\dots,v_p\})$ and $Q = \{x\in \R^n: Ax\geq b\}$ where $A \in \R^{m \times n}$ and $b \in \R^m$. The \emph{slack matrix} $S$ of $(P,Q)$ is defined as follows. For $i \in[m]$ and $j \in [p]$,
+$$S_{i,j} = A_iv_j - b_i.$$
+Note that the slack matrix depends on the inner and outer descriptions of $P$ and $Q$ respectively. We say that $T\in \R^{m\times r}_{\geq 0}$, $U \in \R^{r\times n}_{\geq 0}$ is a \emph {rank $r$ non-negative factorization} of $S$ if $S = TU$. The \emph{non-negative rank of $S$} is 
+$$\text{rk}_x(S) L= \min\{r: S \text{ has a rank $r$ non-negative factorization}\}.$$ 
+Equivalently a non-negative factorization of $S$ of rank at most $r$ is a decomposition of $S$ into the sum of at most $r$ rank $1$ matrices.
+\begin{theorem}
+    (Yannakakis) For $P$ of dimension at least $1$, we have $\text{xc}(P,Q) \in \{\text{rk}_+(S), \text{rk}_+(S) - 1\}.$
+\end{theorem}
+\paragraph{}
+Faenza, Fiorini, Grappe, and Tiwary~\cite{faenza2015extended} identified a model of communication which is intimately connected to non-negative rank (and thus to extension complexity). Let $\Pi$ be a communication protocol where Alice and Bob each have private randomness. Alice receives $i \in [n]$ and Bob receives $j \in [p]$. They exchange bits in the usual way according to a protocol tree and at the end \emph{either one} of the players outputs some non-negative number $\alpha$. We say $\Pi$ computes $S$ in expectation if for every $i \in [n]$, $j \in [p]$, the expected value of $\alpha$ is $S_{i,j}$. The cost of $\Pi$ is the maximum number of bits exchanged by Alice and Bob on any input pair, not counting the encoding size of $\alpha$. The expected communication complexity of $S$, denoted $R^\text{cc}_{\text{exp}}(S)$, is the minimum cost of a protocol computing $S$ in expectation.
+\begin{theorem}(Faenza et al.) Provided $\text{rk}_x(S) \neq 0$, $$R^\text{cc}_{\text{exp}}(S) = \log \text{rk}_x(S) + \Theta(1) = \log\text{xc}(P,Q) + \Theta(1).$$
+The second equality is a direct consequence of Yannakakis' Theorem. 
+\end{theorem}
 \subsection{The goal of this section is Faenza's 2015 result}
 \section{The Knapsack Cover Problem}
 \subsection{The goal here is to describe all the knapsack cover stuff that has been done in the natural space}
