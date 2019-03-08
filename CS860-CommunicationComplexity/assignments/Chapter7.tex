@@ -1,0 +1,290 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{fullpage}
+\usepackage[usenames]{xcolor}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{exercise}{Exercise}
+\newtheorem{remark}{Remark}
+\newtheorem{problem}{Problem}
+\newtheorem{challenge}{Challenge Problem}
+\newtheorem{open}{Open Problem}
+\theoremstyle{plain}
+
+\newcommand{\argmin}{\mathrm{argmin}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+\newcommand{\cost}{\mathrm{cost}}
+\newcommand{\dHam}{\mathrm{d}_{\mathrm{Ham}}}
+\newcommand{\disc}{\mathrm{disc}}
+\newcommand{\discu}{\mathrm{disc_u}}
+\newcommand{\Disj}{\textsc{Disj}}
+\newcommand{\Eq}{\textsc{Eq}}
+\newcommand{\GHD}{\textsc{GHD}}
+\newcommand{\GIP}{\textsc{GIP}}
+\newcommand{\GT}{\textsc{GT}}
+\newcommand{\HD}{\textsc{HD}}
+\newcommand{\ICext}{\mathrm{IC}^{\mathrm{ext}}}
+\newcommand{\ICint}{\mathrm{IC}^{\mathrm{int}}}
+\newcommand{\icostext}{\mathrm{icost}^{\mathrm{ext}}}
+\newcommand{\icostint}{\mathrm{icost}^{\mathrm{int}}}
+\newcommand{\IP}{\textsc{IP}}
+\newcommand{\Index}{\textsc{Index}}
+\newcommand{\Maj}{\textsc{Maj}}
+\newcommand{\MIP}{\textsc{MIP}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Rpriv}{R^{\mathrm{priv}}}
+\newcommand{\SumIndex}{\textsc{SumIndex}}
+
+\newcommand{\exercises}{\bigskip \noindent\rule{8cm}{0.4pt} \medskip}
+\newcommand{\replacethistext}[1]{\textcolor{red}{#1}}
+
+
+
+
+\title{Communication complexity: Chapter 7 \\ Multiparty communication}
+\author{Eric Blais and (YOUR NAME HERE)}
+
+
+\begin{document}
+
+\maketitle
+
+In this chapter, we move beyond the two-party setting of communication complexity and consider the communication complexity of functions that need to be computed by 3 or more parties.
+
+There are two broad classes of models for multiparty communication complexity. In both of them, the input to the function is divided among the $k$ parties. In the \emph{number in hand} model, each party sees their own input and none of the other players' inputs. This model is a natural extension of our two-party communication model, and it is apparent that it only gets harder when there are more players involved. As a result, all the lower bounds that we have established in previous chapters apply to (natural variants of the functions we have seen for) this setting as well.
+
+In the \emph{number on the forehead} model, by contrast, every player sees \emph{all} the inputs except their own. In this model, adding new players now make the function easier to compute, not harder. The lower bounds we have developed no longer apply, and we need to develop new tools to understand which functions remain hard to compute in this setting.
+
+
+\newpage 
+\section{Number-on-the-forehead model}
+
+In the \emph{$k$-party number on the forehead} (NOF) model of communication complexity, $k$ players $P_1,\ldots,P_k$ aim to compute a function $f : \calX^k \to \calY$ for some finite sets $\calX$ and $\calY$. On input $x_1,\ldots,x_k$, each player $P_i$ sees \emph{all} the inputs \emph{except} $x_i$. A \emph{protocol} determines which player sends the next bit of communication; the bit sent by player $P_i$ depends on the inputs $x_1,\ldots,x_{i-1},x_{i+1},\ldots,x_k$ as well as the preivous messages. All messages communicated by a player are seen by \emph{all} other players. This is known as the \emph{blackboard} setting of communication.
+
+The \emph{cost} of a protocol is the maximum number of bits communicated before the protocol halts, where the maximum is taken over all possible inputs. A protocol \emph{computes} the function $f$ if all the players know $f(x)$ at the end of the protocol. As in the two-player setting, we can represent a protocol as a tree and define the function that it computes as the one determined by the value at each leaf.
+
+The \emph{deterministic communication complexity} of a function $f : \calX^k \to \calY$, which will again be denoted by $D(f)$, is the minimum cost of a $k$-party number-on-the-forehead communication protocol that computes $f$ in the blackboard model.
+
+\begin{theorem}
+Almost all functions $f : (\{0,1\}^{n})^k \to \{0,1\}$ have communication complexity $D(f) = \Omega(n)$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\exercises
+
+\begin{exercise}
+Show that every function $f : (\{0,1\}^{n})^k \to \{0,1\}$ has multiparty communication complexity $D(f) \le n+1$.
+\end{exercise}
+
+\begin{open}
+Identify any explicit function $f : (\{0,1\}^{n})^k \to \{0,1\}$ with $k \ge \log n$ that has communication complexity $\omega(1)$.
+\end{open}
+
+
+\newpage 
+\section{Equality XI}
+
+Some functions can be much easier in the multiparty communication complexity model. Consider for instance the extension of the equality function for $k$ players $\Eq_k : (\{0,1\}^n)^k \to \{0,1\}$ defined by
+\[
+\Eq^k(x_1,\ldots,x_k) = \begin{cases}
+1 & \mbox{if } x_1 = x_2 = \cdots = x_k \\
+0 & \mbox{otherwise.}
+\end{cases}
+\]
+\begin{theorem}
+For any $k \ge 3$, $D(\Eq^k) \le 2$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+
+\newpage 
+\section{Majority Inner Product}
+
+Other functions also have very efficient protocols in the multiparty communication complexity setting. 
+
+For three bits $a,b,c$, define the \emph{majority} function $\Maj : \{0,1\}^3 \to \{0,1\}$ to be $\Maj(a,b,c) = 1$ if $a+b+c \ge 2$ and $0$ otherwise. The \emph{Majority inner product} function $\MIP : (\{0,1\}^n)^3 \to \{0,1\}$ is defined by
+\[
+\MIP(x,y,z) = \bigoplus_{i \in [n]} \Maj(x_i,y_i,z_i).
+\]
+\begin{theorem}
+$D(\MIP) \le 3$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+\newpage 
+\section{Generalized Inner Product}
+
+Other functions become easier, but non-trivial, when the number of players is greater than 2 but less than $\log n$.
+
+The \emph{generalized inner product} function $\GIP^k : (\{0,1\}^n)^k \to \{0,1\}$ is defined by
+\[
+\GIP^k(x^{(1)},\ldots,x^{(k)}) = \bigoplus_{i \in [n]} x^{(1)}_i \wedge x^{(2)}_i \wedge \cdots \wedge x^{(k)}_i.
+\]
+When we view the input to the function as a $k \times n$ matrix, the function takes the value $1$ if and only if the number of all-one columns of this matrix is odd. 
+
+\begin{theorem}
+$D(\GIP^k) = O(\frac{n}{2^k})$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+
+\newpage 
+\section{Cylinder intersections}
+
+Rectangles have a natural generalization in the number-on-the-forehead model in the form of \emph{cylinder intersections}.
+
+\begin{definition}
+A \emph{cylinder} in $\calX^k$ \emph{in the $i$th direction} is a set $S \subseteq \calX^k$ such that whether an element $(x^{(1)},\ldots,x^{(k)}) \in S$ or not is independent of the value of $x^{(i)}$.
+\end{definition}
+
+\begin{definition}
+The set $S \subseteq \calX^k$ is a \emph{cylinder intersection} if $S = \cap_{i \in [n]} S_i$ where each $S_i$ is a cylinder in the $i$th direction.
+\end{definition}
+
+Cylinder intersections can be used to bound the multiparty communication complexity of functions via the following fundamental lemma.
+
+\begin{lemma}
+Every multiparty protocol that computes $f$ and has cost $c$ partitions the domain of $f$ into at most $2^c$ monochromatic cylinder intersections.
+\end{lemma}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+
+\newpage 
+\section{Discrepancy}
+
+Having generalized the notion of rectangles to the multiparty setting, we could hope that all the lower bound techniques also generalize. That unfortunately does not appear to be the case. The only technique that generalizes to this setting is discrepancy.
+
+\begin{definition}
+For any distribution $\mu$ on $\calX^k$, 
+the \emph{$\mu$-discrepancy} of $f : \calX^k \to \{0,1\}$ is
+\[
+\disc_\mu(f) = \max_{S} 
+\left| \mu\big( S \cap f^{-1}(0) \big) - \mu\big( S \cap f^{-1}(1)\big) \right|
+\]
+where the maximum is over all cylinder intersections $S \subseteq \calX^k$.
+\end{definition}
+
+
+\begin{lemma}
+For every function $f : \calX^k \to \{0,1\}$ and distribution $\mu$ on $\calX^k$,
+\[
+D(f) = \Omega\left( \log \frac{1}{\disc_\mu(f)}\right).
+\]
+\end{lemma}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\exercises
+
+\begin{exercise}
+We can also consider \emph{randomized} multiparty communication protocols. Show that for every function $f$, every distribution $\mu$, and every $\epsilon \le \frac12$, we also have
+\[
+R_\epsilon(f) \ge \log \frac{1-2\epsilon}{\disc_\mu(f)}.
+\]
+\end{exercise}
+
+
+\newpage 
+\section{Generalized inner product II}
+
+We can use the discrepancy bound to give a lower bound on the communication complexity of the generalized inner product function.
+
+\begin{theorem}
+$D(\GIP^k) = \Omega(\frac{n}{4^k})$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+
+
+\newpage 
+\section{Multiparty Simultaneous Message Passing}
+
+In the \emph{simultaneous message passing} (SMP) model of multiparty communication complexity, we again consider the number-on-the-forehead model with blackboard communication with one change: all the players now write their messages on the blackboard simultaneously. Or, equivalently, all the bits communicated by the protocol depend on the other players inputs but \emph{not} on the messages previously sent.
+
+The minimum cost of an SMP multiparty communication protocol that computes a function $f : \calX^k \to \{0,1\}$ is denoted by $D^\parallel(f)$.
+
+A particularly interesting function to study in the multiparty SMP model is the $k$-party generalization of the $\Index$ function where $\Index^k : \{0,1\}^{n^{k-1}} \times [n]^{k-1} \to \{0,1\}$ where player $P_1$'s input is a $(k-1)$-dimensional array of bits, the $k-1$ other players all receive an index in $[n]$, and
+\[
+\Index^k(A,i_2,\ldots,i_k) = A[i_2,\ldots,i_k].
+\]
+
+\begin{theorem}
+$D^\parallel(\Index^k) = \Omega(n/k)$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\exercises
+
+\begin{exercise}
+Show that $D(\Index^k) = \Theta(\log n)$.
+\end{exercise}
+
+
+\newpage 
+\section{Sum Index}
+
+Another interesting variant of the index function is the 3-party function $\SumIndex : \{0,1\}^n \times [n] \times [n]$ defined by
+\[
+\SumIndex(A,i,j) = A[ i \oplus j]
+\]
+with $i \oplus j$ being the bitwise OR operation. (It is useful to consider only the case where $n$ is a power of $2$ for simplicity.)
+
+\begin{theorem}
+$D^\parallel(\SumIndex) = \Omega(\sqrt{n})$.
+\end{theorem}
+
+\begin{proof}
+\replacethistext{Enter your proof here.}
+\end{proof}
+
+\exercises
+
+\begin{exercise}
+Prove that $D^\parallel(\SumIndex) = o(n)$.
+\end{exercise}
+
+\begin{open}
+The best bounds on the SMP complexity of the $\SumIndex$ function are
+\[
+\Omega(\sqrt{n}) \le D^\parallel(\SumIndex) \le O(n^{0.73}).
+\]
+Can you improve either the upper or the lower bound?
+\end{open}
+
+\end{document}
