@@ -1,0 +1,167 @@
+\documentclass[letterpaper,12pt,oneside,onecolumn]{article}
+\usepackage[margin=1in, bottom=1in, top=1in]{geometry} %1 inch margins
+\usepackage{amsmath, amssymb, amstext}
+\usepackage{fancyhdr}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{theorem}
+\usepackage{tikz}
+\usepackage{tkz-berge}
+\usepackage[colorlinks]{hyperref}
+\usepackage{bookmark}
+
+%Macros
+\newcommand{\A}{\mathbb{A}} \newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}} \newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}} \newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}} \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+ 
+ 
+\newcommand{\cA}{\mathcal{A}} \newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}} \newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}} \newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}} \newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}} \newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}} \newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}} \newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}} \newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}} \newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}} \newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}} \newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}} \newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}} \newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand{\tight}{tight}
+\newcommand{\Mtight}{\cM_{\tight}}
+\newcommand{\uni}{uni}
+\newcommand{\Muni}{\cM_{\uni}}
+\newcommand{\core}{\ensuremath{\mbox{core}}}
+\DeclareMathOperator{\suppOp}{supp}
+\newcommand{\supp}{\suppOp}
+
+\DeclareMathOperator{\convOp}{conv}
+\newcommand{\conv}{\convOp}
+
+\newcommand{\level}{\mathrm{lev}}
+\newcommand{\set}{\mathrm{set}}
+\newcommand{\fix}{\mathrm{Fix}}
+
+\DeclareMathOperator{\exOp}{excess}
+\newcommand{\ex}{\exOp}
+
+\DeclareMathOperator{\symOp}{diff}
+\newcommand{\sym}{\symOp}
+
+\DeclareMathOperator{\parent}{parent}
+\DeclareMathOperator{\optop}{top}
+\DeclareMathOperator{\excess}{excess}
+\DeclareMathOperator{\opspan}{span}
+
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\newenvironment{proof}{{\bf Proof:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofof}[1]{{\bf Proof of #1:  }}{\hfill\rule{2mm}{2mm}}
+\newenvironment{proofofnobox}[1]{{\bf#1:  }}{}\newenvironment{example}{{\bf Example:  }}{\hfill\rule{2mm}{2mm}}
+
+%\renewcommand{\thesection}{\lecnum.\arabic{section}}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+
+\newtheorem{fact}{Fact}[section]
+\newtheorem{lemma}[fact]{Lemma}
+\newtheorem{theorem}[fact]{Theorem}
+\newtheorem{definition}[fact]{Definition}
+\newtheorem{corollary}[fact]{Corollary}
+\newtheorem{proposition}[fact]{Proposition}
+\newtheorem{claim}[fact]{Claim}
+\newtheorem{exercise}[fact]{Exercise}
+\newtheorem{note}[fact]{Note}
+\newtheorem{conjecture}[fact]{Conjecture}
+\newtheorem{question}[fact]{Question}
+
+\newcommand{\size}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil#1\right\rceil}}
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor#1\right\rfloor}}
+
+%END MACROS
+%Page style
+\pagestyle{fancy}
+
+\listfiles
+
+\raggedbottom
+
+\lhead{CS860 Proposal}
+\rhead{W. Justin Toth} %
+\renewcommand{\headrulewidth}{1pt} %heading underlined
+%\renewcommand{\baselinestretch}{1.2} % 1.2 line spacing for legibility (optional)
+
+\begin{document}
+\section{Extended Formulations and Communication Complexity}
+\paragraph{}
+Consider a polytope $P\subseteq \R^n$ and a polyhedron $Q\subseteq \R^n$ containing $P$ (called a \emph{polyhedral pair}). For intuition, think of $P$ as the convex hull of the set of solutions to some NP-hard problem, for which we do not know a compact linear programming description, and think of $Q$ as a relaxation of $P$ for which are interested in finding a compact description of.
+
+We say that a system 
+$$E^\leq x + F^\leq y \leq g^\leq, E^= x + F^= y = g^=$$
+in $\R^{n+k}$ is an \emph{extended formulation} of $(P,Q)$ if the polyhedron
+$$R:=\{x \in \R^n: \exists y \in \R^k: E^\leq x + F^\leq y \leq g^\leq, E^= x + F^= y = g^=\}$$
+contains $P$ and is contained in $Q$. The number of inequalities in the system determines the size of the extended formulations. The \emph{extension complexity} of $(P,Q)$, $xc(P,Q)$, is the minimum size of an extended formulation of $(P,Q)$.
+
+Usually one studies the case $P=Q$, but for our purposes we are interested in the extension of complexity of a specific relaxation, and hence need the fully general definiton above. Yannakakis' seminal result \cite{yannakakis1991expressing} gives an algebraic expression of $xc(P,Q)$. To state the result we will need two more pieces of terminology.
+
+Let $P = \text{conv}(\{v_1,\dots,v_p\})$ and $Q = \{x\in \R^n: Ax\geq b\}$ where $A \in \R^{m \times n}$ and $b \in \R^m$. The \emph{slack matrix} $S$ of $(P,Q)$ is defined as follows. For $i \in[m]$ and $j \in [p]$,
+$$S_{i,j} = A_iv_j - b_i.$$
+Note that the slack matrix depends on the inner and outer descriptions of $P$ and $Q$ respectively. We say that $T\in \R^{m\times r}_{\geq 0}$, $U \in \R^{r\times n}_{\geq 0}$ is a \emph {rank $r$ non-negative factorization} of $S$ if $S = TU$. The \emph{non-negative rank of $S$} is 
+$$\text{rk}_x(S) L= \min\{r: S \text{ has a rank $r$ non-negative factorization}\}.$$ 
+Equivalently a non-negative factorization of $S$ of rank at most $r$ is a decomposition of $S$ into the sum of at most $r$ rank $1$ matrices.
+\begin{theorem}
+    (Yannakakis) For $P$ of dimension at least $1$, we have $\text{xc}(P,Q) \in \{\text{rk}_+(S), \text{rk}_+(S) - 1\}.$
+\end{theorem}
+\paragraph{}
+Faenza, Fiorini, Grappe, and Tiwary~\cite{faenza2015extended} identified a model of communication which is intimately connected to non-negative rank (and thus to extension complexity). Let $\Pi$ be a communication protocol where Alice and Bob each have private randomness. Alice receives $i \in [n]$ and Bob receives $j \in [p]$. They exchange bits in the usual way according to a protocol tree and at the end \emph{either one} of the players outputs some non-negative number $\alpha$. We say $\Pi$ computes $S$ in expectation if for every $i \in [n]$, $j \in [p]$, the expected value of $\alpha$ is $S_{i,j}$. The cost of $\Pi$ is the maximum number of bits exchanged by Alice and Bob on any input pair, not counting the encoding size of $\alpha$. The expected communication complexity of $S$, denoted $R^\text{cc}_{\text{exp}}(S)$, is the minimum cost of a protocol computing $S$ in expectation.
+\begin{theorem}\label{th:communication}(Faenza et al.) Provided $\text{rk}_x(S) \neq 0$, $$R^\text{cc}_{\text{exp}}(S) = \log \text{rk}_x(S) + \Theta(1) = \log\text{xc}(P,Q) + \Theta(1).$$
+The second equality is a direct consequence of Yannakakis' Theorem. 
+\end{theorem}
+\section{The Knapsack Cover Problem}
+The min Knapsack (minK) problem is defined as follows. Given a ground set of items $E$, a non-negative integer demand $D$, a size $s_e$ and cost $c_e$ for each $e \in E$,  solve
+\begin{align*}
+    \min \sum_{e \in E} c_ex_e&\\
+    \text{s.t.} \sum_{e \in E} s_ex_e &\geq D \\
+    x&\in \{0,1\}^E
+\end{align*}
+Despite having a well-known PTAS, a comparable polyhedral description is known. Carr, Fleisher, Leung, and Phillips \cite{carr1999strengthening} gave a linear programming formulation with integrality gap $2$ via the Knapsack Cover Inequalities (KC). For each $U \subseteq E$, let $D(U) = D-s(U)$ and let $s_e(U) =\min\{s_e, D(U)\}$ for each $e \in E\backslash U$. The KC inequalities are
+$$ \sum_{e \in E\backslash U} s_e(U) x_e \geq D(U)\quad \forall U\subseteq E.$$
+One immediately notices that the KC inequalities are exponential in number. It is a natural question, and in fact it remains open, to find a linear relaxation of minK of constant integrality gap and polynomial number of constraints. Dudycz and Moldenhauer~\cite{dudycz2015approximated} ruled out such a formulation in the natural variable space. Hence we need to consider extended formulations.
+\begin{question}\label{question:big}
+Does the polyhedral pair $(P,Q)$ where $P$ is the min Knapsack polytope and $Q$ is linear relaxation of $P$ with the KC inequalities have polynomial extension complexity?
+\end{question}
+\section{Extended Complexity of Knapsack Cover via Communication Protocols}
+\paragraph{}
+Using Theorem \ref{th:communication} Bazzi, Fiorini, Huang, and Svensson~\cite{bazzi2017small} gave a quasi-polynomial size extended formulation for Knapsack Cover, by providing a randomized communication protocol which computes the slack matrix in expectation. An interesting consquence of their approach is that the procedure is not constructive (nevertheless they have an intersting cutting plane technique for optimizing over the extended formulation). In~\cite{fiorini2017strengthening} they give an iterative procedure which can construct the extended formulation of Bazzi et al. The procedure though, is a general black box, not specifically tailored to the minK problem. The authors in ~\cite{bazzi2017small} as if there is any combinatorial interpretation of their formulation.
+\begin{question}
+    Is there a combinatorial interpretation of the formulation given in \cite{bazzi2017small}?
+\end{question}
+
+One approach to resolving Question~\ref{question:big} would be to give a better communication protocol for computing $S$ in expectation. This would be an ambitious goal. Bazzi et al. identify a special case in which their protocol gives a polynomial size extended formulation: when the sizes $s_e$ are polynomial in $n$. Unfortunately, this special case is already known to have an exact formulation. It would be interesting to find a polynomial size extended formulation for less trivial classes of minK.
+\begin{question}
+Are there non-trivial special cases of minK which have a polynomially sized extended formulation, by the protocol in \cite{bazzi2017small} or otherwise?
+\end{question}
+
+Alternatively, we can start approaching Question \ref{question:big} from the other direction. Lower bounds on $R^\text{cc}_{\text{exp}}(S)$ would establish lower bounds on the extension complexity of Knapsack Cover. As far the writer is aware, no non-trivial lower bounds have been reported in the literature.
+\begin{question}
+    Can we lower bound $R^\text{cc}_{\text{exp}}(S)$ for the Knapsack Cover slack matrix?
+\end{question}
+Braun and Pokutta~\cite{braun2016common} developed an information-theoretic approach to lower bounding $R^\text{cc}_{\text{exp}}(S)$. Exploring this approach and seeing if it can be applied to Knapsack Cover would be an interesting concrete starting point.
+
+We conclude with a more modest question. In ~\cite{carnes2008primal}and~\cite{carr1999strengthening}, Knapsack Cover constraints are applied to a variety of capacitated covering problems. Can we adapt the protocol in \cite{bazzi2017small} to this setting?  When one family of KC inequalities is applied to the problem may be a bit too straightforward. But there is an interesting application of Knapsack Cover inequalities which is less straightforward. The best known approximation of scheduling with general job dependent cost functions~\cite{cheung2017primal} use a time-indexed linear programming relaxation which introduces a distinct family of knapsack cover inequalities at each time step.
+\begin{question}
+Can we give a (quasi)-polynomial extended formulation for scheduling with general costs via a randomized communication protocol which computes the slack matrix in expectation?
+\end{question}
+
+\bibliography{references.bib}
+\bibliographystyle{plain}
+\end{document}
