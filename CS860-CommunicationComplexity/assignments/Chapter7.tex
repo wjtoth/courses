@@ -116,7 +116,7 @@ For any $k \ge 3$, $D(\Eq^k) \le 2$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Consider the protocol where player $1$ outputs $1$ if $x_2 = x_3 = \dots x_k$ and outputs $0$ otherwise. The protocol terminates with output $0$ in the latter case. In the former, player $2$ outputs $1$ if $x_1 = x_3$ and outputs $0$ otherwise, and these outputs correspond to the decision of the protocol in their respective cases.
 \end{proof}
 
 
@@ -135,7 +135,11 @@ $D(\MIP) \le 3$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+We use the following identity which can be verified by case analysis
+$$\Maj(x_i,y_i,z_i) = x_iy_i + y_iz_i + x_iz_i \mod 2.$$
+Using this identity we see that
+$$\MIP(x,y,z) = \bigoplus_{i\in[n]}\Maj(x_i,y_i,z_i) = \left(\bigoplus_{i\in [n]} x_iy_i\right)\oplus\left(\bigoplus_{i\in [n]} y_iz_i\right)\oplus\left(\bigoplus_{i\in [n]} x_iz_i\right).$$
+On the right hand side, the first term can be computed by player $3$ and output, the second by player $1$, and the third by player $2$. With all $3$ bits anyone can then compute $\MIP(x,y,z)$.
 \end{proof}
 
 
@@ -155,7 +159,7 @@ $D(\GIP^k) = O(\frac{nk}{2^k})$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+
 \end{proof}
 
 
