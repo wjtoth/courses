@@ -159,7 +159,13 @@ $D(\GIP^k) = O(\frac{nk}{2^k})$.
 \end{theorem}
 
 \begin{proof}
+Let $M$ be the corresponding $k\times n$ matrix to the input, where each player cannot see a particular row. Our protocol is as follows.
 
+We first partition the columns into blocks into floor of $\frac{n}{2^{k-1}-1}$ blocks. We will give a $k$ cost protocol for each block, and summing the parities of the blocks mod $2$ will yield the parity of the number of all-ones columns in $M$, within the desired communication cost bound.
+
+Consider block $B$ of $M$. By the pigeonhole principle, since $B$ has fewer than $2^{k-1}$ columns, there is a $k-1$-bit string $s$ which does not appear in $B$ delete row $1$. Player $1$ communicates $s$ at a cost of $O(\log(n))$. By permuting the rows, we may assume that $0s$, which does not appear in the columns of $B$, is of the form $0^\ell 1^{k-\ell}$ for some $\ell$.
+
+Let $c_i$ denote the number of columns of $B$ of the form $0^i1^i$. Observe that player $i$ can compute $c_{i-1} + c_i$, but not $c_{i-1}$ and $c_i$ since they do not know the bit in the $i$th position. Our protocol proceeds as follows: for each player $i$ from $1$ to $\ell-1$: player $i$ outputs the parity of $c_{i-1} + c_i$. Then player $\ell$ outputs the parity of  $c_{\ell - 1}$ (since we knows $c_\ell = 0$). By back-substitution, any player can now compute the parity of $c_0$, as desired. Since $\ell \leq k$, this protocol uses at most $k$ bits.
 \end{proof}
 
 
@@ -184,7 +190,19 @@ Every multiparty protocol that computes $f$ and has cost $c$ partitions the doma
 \end{lemma}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a protocol which computes $f$ at cost $c$. Let $\ell$ be a leaf of $\pi$. Let $S(\ell)$ be the set of inputs in $\calX^k$ for which $\pi$ outputs $\ell$. Clearly $\{S(\ell)\}_\ell$ is a partition of the domain of $f$, since $\pi$ is deterministic.
+
+Since there are $2^c$ such $S(\ell)$, it only remains to verify that $S(\ell)$ is a cylindrical intersection. We define
+$$S_i(\ell):=\{x \in \calX^k: \exists y^i s.t. x^1\dots x^{i-1}y^ix^{i+1}\dots x^k \in S(\ell)\}.$$
+Since containment in $S_i(\ell)$ is independent of $x^i$, $S_i(\ell)$ is a cylinder. Thus we need to show
+$$S(\ell) = \bigcap_{i\in[k]} S_i(\ell).$$
+On the one hand for $x\in S(\ell)$, we have $x\in S_i(\ell)$ immediately (by taking $y^i = x^i$) for all $i$. 
+
+On the other hand, let $x \in \bigcap_{i\in [k]} S_i(\ell).$ Fix $i\in[k]$. We have for some $y^i$ that
+$$x^1\dots x^{i-1}y^ix^{i+1}\dots x^k \in S(\ell).$$
+We also have for some $y^1$ that
+$$y^1x^2\dots x^i\dots x^k\in S(\ell).$$
+But then in the first case, player $i$ can switch their input to $x^i$ without the protocol tree reaching a different leaf. So $x \in S(\ell)$ as desired.
 \end{proof}
 
 
@@ -213,7 +231,19 @@ D(f) = \Omega\left( \log \frac{1}{\disc_\mu(f)}\right).
 \end{lemma}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a protocol computing $f$ at cost $D(f)$. Let $\mu$ be a distribution over $\calX^k$. Since $\pi$ is deterministic,
+$$1 = \Pr_{x\sim \mu}(\pi(x) = f(x)).$$
+Let $t = 2^{D(f)}$ and consider a partition of the domain of $f$ into $t$ cylindrical intersections $S_1, \dots, S_t$.
+
+Then we have
+\begin{align*}
+1 &=\Pr(\pi(x) = f(x))\\
+&=\sum_{i=1}^t\Pr(\pi(x) = f(x)\text{ and } x\in S_i) \\
+&= \sum_{i=1}^t\Pr(\pi(x) = f(x)\text{ and } x\in S_i) - \Pr(\pi(x) \neq f(x)\text{ and } x\in S_i)\\
+&\leq \sum_{i=1}^t|\mu(S\cap f^{-1}(0)) - \mu(S\cap f^{-1}(1))|\\
+&= t\cdot \disc{_\mu}(f).
+\end{align*}
+Rearraning we obtain the desired inequality.
 \end{proof}
 
 \exercises
