@@ -293,7 +293,7 @@ Let $\pi$ be a multiparty SMP protocol for $\Index^k$ with communication cost $c
 It remains to give the promised protocol. For each player $j \in \{2, \dots, k\}$ Alice enumerates the possible input $k-2$-tuples $t$ that $j$ would see the other players in $\{2,\dots, k\}$ holding, and for each such possiblity Alice sends to Bob the message $j$ would send in $\pi$ seeing $A$ and $t$. For each player this total communication cost is $cn^{k-2}$. Thus Alice sends strictly less than
 $$ckn^{n-2} < n^{k-1}$$
 bits it total.
-Using the bits Alice sent, Bob can determine the messages that all players would sent in $\pi$ under input $A,i_2,\dots, i_k$, and can output the referees decision, computing $\Index^k$.`'
+Using the bits Alice sent, Bob can determine the messages that all players would sent in $\pi$ under input $A,i_2,\dots, i_k$, and can output the referees decision, computing $\Index^k$.
 \end{proof}
 
 \exercises
@@ -317,7 +317,7 @@ $D^\parallel(\SumIndex) = \Omega(\sqrt{n})$.
 \end{theorem}
 
 \begin{proof}
-Enter a proof
+Suppose for a contradiction there exists a simultaneous message passing protocol $\pi$ for $\SumIndex$ using $c = o(\sqrt{n})$ bits. We may assume that players $2$ and $3$ announce their $j$ and $i$ respectively in their messages at a cost of $\log(n)$ bits. This is without loss of generality since $c + \log(n) = o(\sqrt{n})$. Now since the referee learns from players $2$ and $3$ everything that player $1$ sees, player $1$ does not need to send anything in $\pi$. So we assume player $1$'s message is empty.
 
 \end{proof}
 
