@@ -81,6 +81,13 @@ Almost all functions $f : (\{0,1\}^{n})^k \to \{0,1\}$ have communication comple
 \begin{proof}
 The number of possible functions $f$ is counted by the number of binary strings of length $|(\{0,1\}^n)^k|$. Hence the number of possible functions $f$ is 
 $$2^{2^{kn}}.$$
+For a protocol tree of height $h$, there are at most $2^{h+1}$ nodes in the protocol tree. Each node belongs to one of $k$ players, and is associated with a function whose output is binary and whose input domain is the space of all other players inputs. There are 
+$$2^{2^{(k-1)n}}$$ 
+such functions. Thus in total there are at most
+$$(k\cdot 2^{2^{(k-1)n}})^{2^{h+1}} = k^{2^{h+1}}2^{2^{(k-1)n + h + 1}}$$
+possible protocol using $h$ bits of communication. Since we require protocols to be deterministic, the ratio of functions computable with $h$ bits of the total possible functions is 
+$$ 2^{2^{h+1}\log(k) - 2^{kn}}2^{2^{(k-1)n +h + 1 -kn}}.$$
+If $h = o(n)$ the limit of this ratio as $n$ approaches infinity is $0$. Thus the theorem holds.
 \end{proof}
 
 \exercises
