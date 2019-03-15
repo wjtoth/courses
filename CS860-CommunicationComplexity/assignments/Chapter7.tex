@@ -266,7 +266,16 @@ $D(\GIP^k) = \Omega(\frac{n}{4^k})$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+We seek to upper bound $\disc_\mu(\GIP^k)$ by $2^{\frac{-n}{4^k}}$. Using the previous Theorem this yields the result. We proceed by induction on $k$. The base case, $k=2$, is satisfied by our bound on Chapter $3$ on $\IP$. So suppose $k>3$ and the  desired bound holds for smaller $k$. For function $f$, and cylindrical intersection $S\subseteq \calX^k$ we use $\disc_\mu^S(f)$ to denote the discrepancy of $S$:
+$$\disc_\mu^S(f) = |\mu(S\cap f^{-1}(0)) - \mu(S\cap f^{-1}(1)))|.$$
+Let $\mu^k$ be the uniform distribution over $\calX^k = (\{0,1\}^n)^k$. Let $S = S_1\times \dots \times S_k\subseteq \calX^k$ be a cylindrical intersection.
+$$\disc_{\mu^k}^S(\GIP^k) = \sum_{i=1}^k\sum_{x^i \in S_i} \frac{1}{2^{nk}}(-1)^{\GIP^k(x^1\dots x^k)}.$$
+
+Let $\text{proj}_{k-1}^{x^k}(x^1\dots x^k) = y^1\dots y^k$ where $y^j_i = x^j_i \wedge x^k_i$. Then
+$$\GIP^k(x^1\dots x^k) = \GIP^{k-1}(\text{proj}_{k-1}^{x^k}(x^1\dots x^k)).$$
+So we have
+$$\disc_{\mu^k}^S(\GIP^k) = \sum_{x^k\in S_k}\frac{1}{2^n}\sum_{i=1}^{k-1}\sum_{x^i \in S_i}\frac{1}{2^{n(k-1)}}(-1)^{\GIP^{k-1}(\text{proj}_{k-1}^{x^k}(x^1\dots x^k))} = \sum_{x^k \in S_k}\frac{1}{2^n}\disc^{\text{proj}_{k-1}^{x^k}(S)}_{\mu^{k-1}}(\GIP^{k-1}). $$
+We apply Cauchy-Schwarz and our inductive hypothesis obtaining...
 \end{proof}
 
 
@@ -319,6 +328,7 @@ $D^\parallel(\SumIndex) = \Omega(\sqrt{n})$.
 \begin{proof}
 Suppose for a contradiction there exists a simultaneous message passing protocol $\pi$ for $\SumIndex$ using $c = o(\sqrt{n})$ bits. We may assume that players $2$ and $3$ announce their $j$ and $i$ respectively in their messages at a cost of $\log(n)$ bits. This is without loss of generality since $c + \log(n) = o(\sqrt{n})$. Now since the referee learns from players $2$ and $3$ everything that player $1$ sees, player $1$ does not need to send anything in $\pi$. So we assume player $1$'s message is empty.
 
+Using this simplified protocol $\pi$ we...
 \end{proof}
 
 \exercises
