@@ -79,7 +79,15 @@ Almost all functions $f : (\{0,1\}^{n})^k \to \{0,1\}$ have communication comple
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+The number of possible functions $f$ is counted by the number of binary strings of length $|(\{0,1\}^n)^k|$. Hence the number of possible functions $f$ is 
+$$2^{2^{kn}}.$$
+For a protocol tree of height $h$, there are at most $2^{h+1}$ nodes in the protocol tree. Each node belongs to one of $k$ players, and is associated with a function whose output is binary and whose input domain is the space of all other players inputs. There are 
+$$2^{2^{(k-1)n}}$$ 
+such functions. Thus in total there are at most
+$$(k\cdot 2^{2^{(k-1)n}})^{2^{h+1}} = k^{2^{h+1}}2^{2^{(k-1)n + h + 1}}$$
+possible protocol using $h$ bits of communication. Since we require protocols to be deterministic, the ratio of functions computable with $h$ bits of the total possible functions is 
+$$ 2^{2^{h+1}\log(k) - 2^{kn}}2^{2^{(k-1)n +h + 1 -kn}}.$$
+If $h = o(n)$ the limit of this ratio as $n$ approaches infinity is $0$. Thus the theorem holds.
 \end{proof}
 
 \exercises
@@ -108,7 +116,7 @@ For any $k \ge 3$, $D(\Eq^k) \le 2$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Consider the protocol where player $1$ outputs $1$ if $x_2 = x_3 = \dots x_k$ and outputs $0$ otherwise. The protocol terminates with output $0$ in the latter case. In the former, player $2$ outputs $1$ if $x_1 = x_3$ and outputs $0$ otherwise, and these outputs correspond to the decision of the protocol in their respective cases.
 \end{proof}
 
 
@@ -127,7 +135,11 @@ $D(\MIP) \le 3$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+We use the following identity which can be verified by case analysis
+$$\Maj(x_i,y_i,z_i) = x_iy_i + y_iz_i + x_iz_i \mod 2.$$
+Using this identity we see that
+$$\MIP(x,y,z) = \bigoplus_{i\in[n]}\Maj(x_i,y_i,z_i) = \left(\bigoplus_{i\in [n]} x_iy_i\right)\oplus\left(\bigoplus_{i\in [n]} y_iz_i\right)\oplus\left(\bigoplus_{i\in [n]} x_iz_i\right).$$
+On the right hand side, the first term can be computed by player $3$ and output, the second by player $1$, and the third by player $2$. With all $3$ bits anyone can then compute $\MIP(x,y,z)$.
 \end{proof}
 
 
@@ -143,11 +155,17 @@ The \emph{generalized inner product} function $\GIP^k : (\{0,1\}^n)^k \to \{0,1\
 When we view the input to the function as a $k \times n$ matrix, the function takes the value $1$ if and only if the number of all-one columns of this matrix is odd. 
 
 \begin{theorem}
-$D(\GIP^k) = O(\frac{n}{2^k})$.
+$D(\GIP^k) = O(\frac{nk}{2^k})$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $M$ be the corresponding $k\times n$ matrix to the input, where each player cannot see a particular row. Our protocol is as follows.
+
+We first partition the columns into blocks into floor of $\frac{n}{2^{k-1}-1}$ blocks. We will give a $k$ cost protocol for each block, and summing the parities of the blocks mod $2$ will yield the parity of the number of all-ones columns in $M$, within the desired communication cost bound.
+
+Consider block $B$ of $M$. By the pigeonhole principle, since $B$ has fewer than $2^{k-1}$ columns, there is a $k-1$-bit string $s$ which does not appear in $B$ delete row $1$. Player $1$ communicates $s$ at a cost of $O(\log(n))$. By permuting the rows, we may assume that $0s$, which does not appear in the columns of $B$, is of the form $0^\ell 1^{k-\ell}$ for some $\ell$.
+
+Let $c_i$ denote the number of columns of $B$ of the form $0^i1^i$. Observe that player $i$ can compute $c_{i-1} + c_i$, but not $c_{i-1}$ and $c_i$ since they do not know the bit in the $i$th position. Our protocol proceeds as follows: for each player $i$ from $1$ to $\ell-1$: player $i$ outputs the parity of $c_{i-1} + c_i$. Then player $\ell$ outputs the parity of  $c_{\ell - 1}$ (since we knows $c_\ell = 0$). By back-substitution, any player can now compute the parity of $c_0$, as desired. Since $\ell \leq k$, this protocol uses at most $k$ bits.
 \end{proof}
 
 
@@ -172,7 +190,19 @@ Every multiparty protocol that computes $f$ and has cost $c$ partitions the doma
 \end{lemma}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a protocol which computes $f$ at cost $c$. Let $\ell$ be a leaf of $\pi$. Let $S(\ell)$ be the set of inputs in $\calX^k$ for which $\pi$ outputs $\ell$. Clearly $\{S(\ell)\}_\ell$ is a partition of the domain of $f$, since $\pi$ is deterministic.
+
+Since there are $2^c$ such $S(\ell)$, it only remains to verify that $S(\ell)$ is a cylindrical intersection. We define
+$$S_i(\ell):=\{x \in \calX^k: \exists y^i s.t. x^1\dots x^{i-1}y^ix^{i+1}\dots x^k \in S(\ell)\}.$$
+Since containment in $S_i(\ell)$ is independent of $x^i$, $S_i(\ell)$ is a cylinder. Thus we need to show
+$$S(\ell) = \bigcap_{i\in[k]} S_i(\ell).$$
+On the one hand for $x\in S(\ell)$, we have $x\in S_i(\ell)$ immediately (by taking $y^i = x^i$) for all $i$. 
+
+On the other hand, let $x \in \bigcap_{i\in [k]} S_i(\ell).$ Fix $i\in[k]$. We have for some $y^i$ that
+$$x^1\dots x^{i-1}y^ix^{i+1}\dots x^k \in S(\ell).$$
+We also have for some $y^1$ that
+$$y^1x^2\dots x^i\dots x^k\in S(\ell).$$
+But then in the first case, player $i$ can switch their input to $x^i$ without the protocol tree reaching a different leaf. So $x \in S(\ell)$ as desired.
 \end{proof}
 
 
@@ -201,7 +231,19 @@ D(f) = \Omega\left( \log \frac{1}{\disc_\mu(f)}\right).
 \end{lemma}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a protocol computing $f$ at cost $D(f)$. Let $\mu$ be a distribution over $\calX^k$. Since $\pi$ is deterministic,
+$$1 = \Pr_{x\sim \mu}(\pi(x) = f(x)).$$
+Let $t = 2^{D(f)}$ and consider a partition of the domain of $f$ into $t$ cylindrical intersections $S_1, \dots, S_t$.
+
+Then we have
+\begin{align*}
+1 &=\Pr(\pi(x) = f(x))\\
+&=\sum_{i=1}^t\Pr(\pi(x) = f(x)\text{ and } x\in S_i) \\
+&= \sum_{i=1}^t\Pr(\pi(x) = f(x)\text{ and } x\in S_i) - \Pr(\pi(x) \neq f(x)\text{ and } x\in S_i)\\
+&\leq \sum_{i=1}^t|\mu(S\cap f^{-1}(0)) - \mu(S\cap f^{-1}(1))|\\
+&= t\cdot \disc{_\mu}(f).
+\end{align*}
+Rearraning we obtain the desired inequality.
 \end{proof}
 
 \exercises
@@ -224,7 +266,16 @@ $D(\GIP^k) = \Omega(\frac{n}{4^k})$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+We seek to upper bound $\disc_\mu(\GIP^k)$ by $2^{\frac{-n}{4^k}}$. Using the previous Theorem this yields the result. We proceed by induction on $k$. The base case, $k=2$, is satisfied by our bound on Chapter $3$ on $\IP$. So suppose $k>3$ and the  desired bound holds for smaller $k$. For function $f$, and cylindrical intersection $S\subseteq \calX^k$ we use $\disc_\mu^S(f)$ to denote the discrepancy of $S$:
+$$\disc_\mu^S(f) = |\mu(S\cap f^{-1}(0)) - \mu(S\cap f^{-1}(1)))|.$$
+Let $\mu^k$ be the uniform distribution over $\calX^k = (\{0,1\}^n)^k$. Let $S = S_1\times \dots \times S_k\subseteq \calX^k$ be a cylindrical intersection.
+$$\disc_{\mu^k}^S(\GIP^k) = \sum_{i=1}^k\sum_{x^i \in S_i} \frac{1}{2^{nk}}(-1)^{\GIP^k(x^1\dots x^k)}.$$
+
+Let $\text{proj}_{k-1}^{x^k}(x^1\dots x^k) = y^1\dots y^k$ where $y^j_i = x^j_i \wedge x^k_i$. Then
+$$\GIP^k(x^1\dots x^k) = \GIP^{k-1}(\text{proj}_{k-1}^{x^k}(x^1\dots x^k)).$$
+So we have
+$$\disc_{\mu^k}^S(\GIP^k) = \sum_{x^k\in S_k}\frac{1}{2^n}\sum_{i=1}^{k-1}\sum_{x^i \in S_i}\frac{1}{2^{n(k-1)}}(-1)^{\GIP^{k-1}(\text{proj}_{k-1}^{x^k}(x^1\dots x^k))} = \sum_{x^k \in S_k}\frac{1}{2^n}\disc^{\text{proj}_{k-1}^{x^k}(S)}_{\mu^{k-1}}(\GIP^{k-1}). $$
+We apply Cauchy-Schwarz and our inductive hypothesis obtaining...
 \end{proof}
 
 
@@ -246,7 +297,12 @@ $D^\parallel(\Index^k) = \Omega(n/k)$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Let $\pi$ be a multiparty SMP protocol for $\Index^k$ with communication cost $c$. Suppose for a contradiction that $c < \frac{n}{k}$. Consider the following communication problem: Alice receives $A \in \{0,1\}^{n^{k-1}}$ and Bob receives $i_2,\dots, i_k$ and they need to compute $A[i_2,\dots, i_k]$. We will present a \emph{one-way} deterministic protocol for this problem using $\pi$ with cost less than $n^{k-1}$. Using the same argument as we did in Chapter $6$ for the one-way deterministic communication cost of $\Index$, we can show that this problem was one-way deterministic communication complexity at least $n^{{k-1}})$. Hence we will have reached a contradiction.
+
+It remains to give the promised protocol. For each player $j \in \{2, \dots, k\}$ Alice enumerates the possible input $k-2$-tuples $t$ that $j$ would see the other players in $\{2,\dots, k\}$ holding, and for each such possiblity Alice sends to Bob the message $j$ would send in $\pi$ seeing $A$ and $t$. For each player this total communication cost is $cn^{k-2}$. Thus Alice sends strictly less than
+$$ckn^{n-2} < n^{k-1}$$
+bits it total.
+Using the bits Alice sent, Bob can determine the messages that all players would sent in $\pi$ under input $A,i_2,\dots, i_k$, and can output the referees decision, computing $\Index^k$.
 \end{proof}
 
 \exercises
@@ -270,7 +326,9 @@ $D^\parallel(\SumIndex) = \Omega(\sqrt{n})$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+Suppose for a contradiction there exists a simultaneous message passing protocol $\pi$ for $\SumIndex$ using $c = o(\sqrt{n})$ bits. We may assume that players $2$ and $3$ announce their $j$ and $i$ respectively in their messages at a cost of $\log(n)$ bits. This is without loss of generality since $c + \log(n) = o(\sqrt{n})$. Now since the referee learns from players $2$ and $3$ everything that player $1$ sees, player $1$ does not need to send anything in $\pi$. So we assume player $1$'s message is empty.
+
+Using this simplified protocol $\pi$ we...
 \end{proof}
 
 \exercises
