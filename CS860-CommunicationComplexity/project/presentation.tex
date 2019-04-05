@@ -77,41 +77,64 @@
 \maketitle
 
 \begin{frame}{The Min Knapsack Problem}
-Given $n$ items with individual sizes, $s_i$, and costs, $c_i$, for $i \in [n]$.
+Given $n$ \alert{items} with individual \alert{sizes}, $s_i$, and \alert{costs}, $c_i$, for $i \in [n]$.
 \vfill
-Also given a demand $D$. Want to compute the \alert{Min Knapsack}
+Also given a \alert{demand} $D$. \onslide<2->{Want to compute the \alert{Min Knapsack}
 
 \begin{align*}
 \min\ &\sum_{i\in [n]} c_i x_i \\
 \text{s.t.} &\sum_{i \in [n]} s_i x_i \geq D \\
 &x \in \{0,1\}^n.
-\end{align*}
-\vfill
-Standard Linear Programming relaxation has an unbounded integrality gap.
+\end{align*}}
+\vfill\onslide<3->{
+Standard Linear Programming relaxation has an \alert{unbounded integrality gap.}}
 \end{frame}
+
 \begin{frame}{Knapsack Cover Inequalities}
-LP relaxation can be strengthened to an integrality gap of $2$ via all Knapsack Cover Inequalities.
-\vfill
-Knapsack Cover Inequality for $B\subseteq [n]$ is the inequality of the form 
+LP relaxation can be \alert{strengthened} to an integrality gap of $2$ by adding all \alert{Knapsack Cover Inequalities}.
+\vfill\onslide<2->{
+\textbf{Knapsack Cover Inequality:} for $B\subseteq [n]$, the inequality of the form 
 $$\sum_{i \in [n]\backslash B} s_i(B) x_i \geq D(B),$$
-where $D(B) = \max\{D-\sum_{i\in B} s_i, 0\}$ and $s_i(B) = \min\{s_i, D(B)\}.$
-\vfill
-\textbf{Big Open Question:} Is there a polynomial size formulation for Knapsack Cover LP?
+where $D(B) = \max\{D-\sum_{i\in B} s_i, 0\}$ and $s_i(B) = \min\{s_i, D(B)\}.$}
+\vfill\onslide<3->{
+\textbf{Big Open Question:} Is there a \alert{polynomial size formulation} for Knapsack Cover LP?}
 \end{frame}
 \begin{frame}{Extended Formulations}
     \begin{columns}
-        \begin{column}{0.5\textwidth}
+        \begin{column}{0.4\textwidth}
     \begin{figure}
         \includegraphics[scale=0.075]{std_ex.png}
     \end{figure}
 \end{column}
-\begin{column}{0.5\textwidth}
-\textbf{Extension Complexity:} Min number of facets to describe a polytope as the projection of a higher dimensional polyhedron.
+\begin{column}{0.6\textwidth}\onslide<2->{
+\textbf{Extension Complexity:} $xc(P) :=$ Min \alert{number of facets} to describe polytope $P $ as the projection of a \alert{higher dimensional polyhedron.}}
+\vfill\onslide<3->{
+\textbf{Theorem:} (Yannakakis) $xc(P) = \Theta(\text{rk}_+(S))$ where $S$ is a \alert{slack matrix} of $P$, and $\text{rk}_+$ denotes non-negative rank.}
 \end{column}
 \end{columns}
+\vfill\onslide<4->{
+\alert{Knapsack Cover:} the slack matrix has entries 
+$$ S_{A,B} = \sum_{i \in A\backslash B} s_i(B) - D(B)$$
+for knapsack solution $A$, and $B\subseteq [n]$.}
 \end{frame}
 \begin{frame}{Communication Protocols for the Slack Matrix}
+Consider communication problem for $S : \{\text{Knapsacks}\}\times [n] \rightarrow \Z_{\geq 0}$.
+\vfill\onslide<2->{
+We say \alert{private random} communication protocol $\pi$ computes $S$ in \alert{expectation} if
+$$\mathbb{E}[\pi(A,B)] = S_{A,B}$$
+for all $(A,B) \in \text{domain}(S)$.}
+\vfill\onslide<3->{
+\textbf{Theorem:} (Faenza, Fiorini, Grappe, Tiwary) $$\min_\pi(\text{cost}(\pi)) = \log(\text{rk}_x(S)) + \Theta(1) = \log(xc(P)) + \Theta(1)$$}
 \end{frame}
 \begin{frame}{Results}
+\textbf{Theorem:} (Bazzi, Fiorini, Huang, Svensson) There is a protocol which computes $S$ in expectation with cost $O(\log^2(n))$.
+\vfill
+\hrule
+\vfill\onslide<2->{
+\textbf{Goal:} Provide \alert{non-trivial lower bounds} on communication protocols computing $S$ in expectation.}
+\vfill\onslide<3->{
+\textbf{Lemma:} (T.) If protocol $\pi$ uses \alert{$O(1)$ bits of randomness} to compute $S$ in expectation then $\text{cost}(\pi) = \Omega(n)$.}
+\vfill\onslide<4->{
+\textbf{Lemma:} (T.)  Let $R$ be the set of \alert{one-way} protocols where \alert{only Alice} has private randomness, which compute $S$ in expectation. Then $$\min_{\pi\in R}(\text{cost}(\pi)) = \log(\text{rk}_x(S)) + \Theta(1).$$}
 \end{frame}
 \end{document}
