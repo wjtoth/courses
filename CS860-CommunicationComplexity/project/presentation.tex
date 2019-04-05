@@ -13,8 +13,8 @@
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
 
 \usepackage{tikz}
-\title{Communication Complexity of Knapsack Cover}
-\subtitle{CCFest}
+\title{Can Communication Protocols Find Small LPs?}
+\subtitle{Knapsack Cover, Extended Formulations, and Communication Complexity}
 % \date{\today}
 \date{}
 \author{By W. Justin Toth}
@@ -73,9 +73,45 @@
 
 
 \begin{document}
-
+\setbeamercolor{background canvas}{bg=white}
 \maketitle
 
-\begin{frame}{A First Slide}
+\begin{frame}{The Min Knapsack Problem}
+Given $n$ items with individual sizes, $s_i$, and costs, $c_i$, for $i \in [n]$.
+\vfill
+Also given a demand $D$. Want to compute the \alert{Min Knapsack}
+
+\begin{align*}
+\min\ &\sum_{i\in [n]} c_i x_i \\
+\text{s.t.} &\sum_{i \in [n]} s_i x_i \geq D \\
+&x \in \{0,1\}^n.
+\end{align*}
+\vfill
+Standard Linear Programming relaxation has an unbounded integrality gap.
+\end{frame}
+\begin{frame}{Knapsack Cover Inequalities}
+LP relaxation can be strengthened to an integrality gap of $2$ via all Knapsack Cover Inequalities.
+\vfill
+Knapsack Cover Inequality for $B\subseteq [n]$ is the inequality of the form 
+$$\sum_{i \in [n]\backslash B} s_i(B) x_i \geq D(B),$$
+where $D(B) = \max\{D-\sum_{i\in B} s_i, 0\}$ and $s_i(B) = \min\{s_i, D(B)\}.$
+\vfill
+\textbf{Big Open Question:} Is there a polynomial size formulation for Knapsack Cover LP?
+\end{frame}
+\begin{frame}{Extended Formulations}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+    \begin{figure}
+        \includegraphics[scale=0.075]{std_ex.png}
+    \end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+\textbf{Extension Complexity:} Min number of facets to describe a polytope as the projection of a higher dimensional polyhedron.
+\end{column}
+\end{columns}
+\end{frame}
+\begin{frame}{Communication Protocols for the Slack Matrix}
+\end{frame}
+\begin{frame}{Results}
 \end{frame}
 \end{document}
