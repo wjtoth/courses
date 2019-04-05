@@ -115,7 +115,7 @@ where $D(B) = \max\{D-\sum_{i\in B} s_i, 0\}$ and $s_i(B) = \min\{s_i, D(B)\}.$}
 \vfill\onslide<4->{
 \alert{Knapsack Cover:} the slack matrix has entries 
 $$ S_{A,B} = \sum_{i \in A\backslash B} s_i(B) - D(B)$$
-for knapsack solution $A$, and $B\subseteq [n]$.}
+for any knapsack solution $A$, and $B\subseteq [n]$.}
 \end{frame}
 \begin{frame}{Communication Protocols for the Slack Matrix}
 Consider communication problem for $S : \{\text{Knapsacks}\}\times [n] \rightarrow \Z_{\geq 0}$.
@@ -124,7 +124,7 @@ We say \alert{private random} communication protocol $\pi$ computes $S$ in \aler
 $$\mathbb{E}[\pi(A,B)] = S_{A,B}$$
 for all $(A,B) \in \text{domain}(S)$.}
 \vfill\onslide<3->{
-\textbf{Theorem:} (Faenza, Fiorini, Grappe, Tiwary) $$\min_\pi(\text{cost}(\pi)) = \log(\text{rk}_x(S)) + \Theta(1) = \log(xc(P)) + \Theta(1)$$}
+\textbf{Theorem:} (Faenza, Fiorini, Grappe, Tiwary) $$\min_\pi(\text{cost}(\pi)) = \log(\text{rk}_+(S)) + \Theta(1) = \log(xc(P)) + \Theta(1)$$}
 \end{frame}
 \begin{frame}{Results}
 \textbf{Theorem:} (Bazzi, Fiorini, Huang, Svensson) There is a protocol which computes $S$ in expectation with cost $O(\log^2(n))$.
@@ -135,6 +135,6 @@ for all $(A,B) \in \text{domain}(S)$.}
 \vfill\onslide<3->{
 \textbf{Lemma:} (T.) If protocol $\pi$ uses \alert{$O(1)$ bits of randomness} to compute $S$ in expectation then $\text{cost}(\pi) = \Omega(n)$.}
 \vfill\onslide<4->{
-\textbf{Lemma:} (T.)  Let $R$ be the set of \alert{one-way} protocols where \alert{only Alice} has private randomness, which compute $S$ in expectation. Then $$\min_{\pi\in R}(\text{cost}(\pi)) = \log(\text{rk}_x(S)) + \Theta(1).$$}
+\textbf{Lemma:} (T.)  Let $R$ be the set of \alert{one-way} protocols where \alert{only Alice} has private randomness, which compute $S$ in expectation. Then $$\min_{\pi\in R}(\text{cost}(\pi)) = \log(\text{rk}_+(S)) + \Theta(1).$$}
 \end{frame}
 \end{document}
