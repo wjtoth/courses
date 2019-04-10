@@ -191,7 +191,7 @@ $m(IP) \le 2^{n}$ and so $D(IP) = \Theta(n)$.
 \end{theorem}
 
 \begin{proof}
-Consider an $\IP$-monochromatic rectangle $R = A\times B$. Let $(x,y) \in R$, and let $X, Y \in 2^{[n]}$ be the sets indicated by $x$ and $y$ respectively. We can think of $\IP(x,y)$ as the parity of $|X\cap Y|$. Let $b = \IP(x,y) = |X\cap Y|$. Half of all sets in $2^{[n]}$ have odd intersection with $X$ and half of all sets in $2^{[n]}$ have even intersection with $X$. This yields a bound on $|B|$ of $2^{n/2}$. Symmetrically $|A| \leq 2^{n/2}$. Therefore
+Consider an $\IP$-monochromatic rectangle $R = A\times B$. Let $(x,y) \in R$, and let $X, Y \in 2^{[n]}$ be the sets indicated by $x$ and $y$ respectively. We can think of $\IP(x,y)$ as the parity of $|X\cap Y|$. Let $$b = \IP(x,y) = |X\cap Y| \mod 2.$$ Half of all sets in $2^{[n]}$ have odd intersection with $X$ and half of all sets in $2^{[n]}$ have even intersection with $X$. This yields a bound on $|B|$ of $2^{n/2}$. Symmetrically $|A| \leq 2^{n/2}$. Therefore
 $|R| \leq 2^{n/2}\cdot 2^{n/2} = 2^n$. Thus
 $$m(\IP) \leq 2^n.$$
 \end{proof}
@@ -280,7 +280,7 @@ D(f) \ge \log_2 \rank(f).
 \end{lemma}
 
 \begin{proof}
-Consider a protocol tree for $f$. Let $L$ be the set of leaves of this tree. As observed in the previous lecture when discussing the partition bound, each leaf corresponds to an $f$-monochromatic rectangle. Let $L'\subseteq L$ be the leaves at which $1$ is output. For each leaf $\ell \in L'$, let $R^\ell$ be the $1$-monochromatic rectangle defined by the path to $\ell$, and define a matrix $M^\ell$ as follows
+Consider a protocol tree for $f$. Let $L$ be the set of leaves of this tree. As observed in the previous chapter when discussing the partition bound, each leaf corresponds to an $f$-monochromatic rectangle. Let $L'\subseteq L$ be the leaves at which $1$ is output. For each leaf $\ell \in L'$, let $R^\ell$ be the $1$-monochromatic rectangle defined by the path to $\ell$, and define a matrix $M^\ell$ as follows
 $$M^\ell_{x,y} = \begin{cases}
 1, &\text{if } (x,y) \in R^\ell \\
 0, &\text{otherwise}
@@ -288,7 +288,7 @@ $$M^\ell_{x,y} = \begin{cases}
 Now we have that
 $$M_f = \sum_{\ell \in L'} M^\ell$$
 and thus
-$$\rank(M_f) \leq \sum_{\ell \in L'} M^\ell \leq |L'| \leq |L| = 2^{D(f)}.$$
+$$\rank(M_f) \leq \sum_{\ell \in L'} \rank(M^\ell) \leq |L'| \leq |L| = 2^{D(f)}.$$
 In the above inequality we used that $\rank(M^\ell) = 1$ for all $\ell \in L'$. This follows since there exist $A \subseteq \mathcal{X}$ and $B \subseteq \mathcal{Y}$ such that $R^\ell = A\times B$, and if use $\chi(A), \chi(B)$ to denote the characteristic vectors of $A$ and $B$ then $M^\ell = \chi(A)\chi(B)^T$.
 \end{proof}
 
@@ -318,7 +318,12 @@ $D(\GT) = \Theta(n)$.
 \end{theorem}
 
 \begin{proof}
-	Observe that $(M_\GT)_{i,j} = 1 $ iff $i >j$ ($(M_\GT)_{i,j} = 0$ otherwise). Thus $M_\GT$ is entirely ones below the diagonal, and entirely zeroes on the diagonal and above. Therefore $\rank(M_\GT) = 2^n-2$. Combining with the general upper bound we see that $D(\GT) = \Theta(n)$.
+	Observe that 
+	$$(M_\GT)_{i,j} = \begin{cases}
+		1, &\text{if } i>j \\
+		0, &\text{otherwise}
+	\end{cases}.$$
+	Thus $M_\GT$ is entirely ones below the diagonal, and entirely zeroes on the diagonal and above. Therefore $\rank(M_\GT) = 2^n-2$. Combining with the general upper bound we see that $D(\GT) = \Theta(n)$.
 \end{proof}
 
 
@@ -332,7 +337,7 @@ For every $f : \calX \times \calY \to \{0,1\}$, $D(f) \le \rank(f) + 1$.
 \end{theorem}
 
 \begin{proof}
-Here we use two facts of linear algebra. The first is that the rank of a $0$-$1$ matrix over $\mathbb{R}$ is at least its rank over $\mathbb{F}_2$. In symbols $$\rank_\mathbb{R}(f) \geq \rank_{\mathbb{F}_2}(f).$$
+Here we use two facts of linear algebra. The first is that the rank of a $0$-$1$ matrix over $\mathbb{R}$ is at least its rank over $\mathbb{F}_2$. In symbols $$\rank(f) \geq \rank_{\mathbb{F}_2}(f).$$
 This follows since a set of linearly independent columns over $\mathbb{F}_2$ remains independent over $\mathbb{R}$.
 The second is that the number of distinct columns (and rows) of $M_f$ is at most $$2^{\rank_{\mathbb{F}_2}(f)} \leq 2^{\rank(f)}.$$
 This follows since there are at most $2^{\rank(f)}$ ways to linearly combine $\rank(f)$ columns over $\mathbb{F}_2$.
