@@ -258,7 +258,7 @@ R^{\parallel,\mathrm{priv}}(f) = \Omega(\sqrt{D(f)}).
 	
 	We want to show that for each $x \in \calX$ there exists a set of messages $S_x \subseteq M_x$ such that for any $y \in \calY$, and message $m_y \in M_y$, the protocol correctly outputs $f(x,y)$ on the majority of messages $S_x$ with $m_y$. Let $\tau(m_x,m_y)$ be the referees (deterministic) output on messages $(m_x,m_y)$ for protocol $\pi$. I.e.
 	$$\frac{2}{3} \leq \Pr(\pi(x,y) = f(x,y)) = \Pr_{m_x,m_y}(\tau(m_x,my) = f(x,y)).$$
-	Fix $y\in \calY$, and $m_y \in M_y$. Drawn a uniform random subset $S_x \subseteq M_x$  of size $t$. By a Chernoff Bound, the probability that $\tau(m_x,m_y) \neq f(x,y)$ for at least half of message pairs $m_x, m_y$ is at most
+	Fix $y\in \calY$, and $m_y \in M_y$. Draw a uniform random subset $S_x \subseteq M_x$  of size $t$. By a Chernoff Bound, the probability that $\tau(m_x,m_y) \neq f(x,y)$ for at least half of message pairs $m_x, m_y$ is at most
 	$$2^{-\Omega(t)}.$$
 	Since $\pi$ has cost $R^{\parallel,\mathrm{priv}}(f)$, over all $y$ there are at most $2^{R^{\parallel,\mathrm{priv}}(f)}$ messages the referee sees from Bob. So by union bound, the probability $\tau(m_x,m_y) \neq f(x,y)$ for some message $m_y$ is at most
 	$$2^{R^{\parallel,\mathrm{priv}}(f)}2^{-\Omega(t)}.$$
