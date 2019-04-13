@@ -369,7 +369,7 @@ Consider a uniformly random $r \in \{0,1\}$. If $x=y$ then $\pi_r(x,y) = 1$. If 
 $$\mathbb{E}_r[X_r(x,y)] \leq \frac{1}{4}.$$
 Thus we have
 $$\mathbb{E}_{(x,y)\sim \mu}\mathbb{E}_r[X_r(x,y)] \leq \frac{1}{4}.$$
-Rearranning order of expectation yields
+Rearranging order of expectation yields
 $$\mathbb{E}_{r}\mathbb{E}_{(x,y)\sim \mu}[X_r(x,y)] \leq \frac{1}{4}.$$
 And thus there exists an $r \in \{0,1\}$ such that
 $$\Pr_\mu(\pi_r \text{ fails}) \leq \mathbb{E}_{(x,y)\sim \mu}[X_r(x,y)] \leq \frac{1}{4}.$$
@@ -384,7 +384,7 @@ The \emph{corruption bound} is another powerful technique for proving lower boun
 \begin{lemma}
 Fix a function $f : \calX \times \calY \to \{0,1\}$ and a distribution
 $\mu$ on $\calX \times \calY$.
-If there exist parameters $\alpha, \beta > 0$ for which
+If there exist parameters $\alpha, \beta \in (0,1)$ for which
 every rectangle $R \subseteq \calX \times \calY$ satisfies 
 \[
 \mu(R \cap f^{-1}(0)) \ge \alpha \cdot \mu(R) - \beta
@@ -397,18 +397,19 @@ D^\mu_\epsilon(f) \ge \log\left( \frac{\alpha \cdot \mu(f^{-1}(1)) - \epsilon}{\
 
 \begin{proof}
 Let $\pi$ be the protocol attaining $D_\epsilon^{\mu}(f)$.
-Let $\{R_1, \dots, R_t\}$ be set of nearly $f$-monochromatic rectangles corresponding to the path from the root of $\pi$ to each respective leaf.
+Let $\mathcal{R}$ be the set of rectangles corresponding to the path from the root of $\pi$ to each respective leaf. For $b \in \{0,1\}$ let $\mathcal{R}_b \subseteq \mathcal{R}$ be the set of rectangles such that the protocol outputs $b$ at the corresponding leaf.
 
-$$1= \sum_{i=1}^t \mu(R_i) = \sum_{i=1}^t \mu(R_i \cap f^{-1}(0)) + \mu(R_i\cap f^{-1}(1)) \geq \alpha - t \beta +\mu(f^{-1}(1))$$
-Thus
-$$t \geq \frac{\alpha + \mu(f^{-1}(1)) -1}{\beta}.$$
-Now we claim that 
-$$\alpha + \mu(f^{-1}(1)) -1 \geq \alpha\cdot \mu(f^{-1}(1)) -\epsilon.$$
-This claim is equivalent to
-$$1-\epsilon \leq \alpha(\mu(f^{-1}(0))) +\mu(f^{-1}(1)).$$
-Since 
-$$\alpha(\mu(f^{-1}(0))) +\mu(f^{-1}(1)) = 1-(1-\alpha) \mu(f^{-1}(0))$$
-the claim holds since the probability of failure is at least $(1-\alpha)f^{-1}(0)$ \replacethistext{(I didn't have time to formalize)}.
+Since $\pi$ has success probability at least $1-\epsilon$,
+$$\sum_{R \in \mathcal{R}_0} \mu(R\cap f^{-1}(1)) + \sum_{R \in \mathcal{R}_1} \mu(R\cap f^{-1}(0)) \leq \epsilon.$$
+By the lemma hypothesis,
+$$\sum_{R \in \mathcal{R}_1}\mu(R\cap f^{-1}(0)) \geq \alpha\sum_{R \in \mathcal{R}_1}\mu(R) -\beta\left|\mathcal{R}_1\right|.$$
+Rearranging and combining the two inequalities above yields
+\begin{align*}
+    \beta|\mathcal{R}_1| &\geq \alpha\sum_{R \in \mathcal{R}_1}\mu(R) - \epsilon + \sum_{R \in \mathcal{R}_0}\mu(R\cap f^{-1}(1))\\
+    &=\alpha \mu(f^{-1}(1)) - \epsilon + (1-\alpha)\sum_{R \in \mathcal{R}_0}\mu(R\cap f^{-1}(1))+\alpha \sum_{R \in \mathcal{R}_1}\mu(R\cap f^{-1}(0))\\
+    &\geq \alpha \mu(f^{-1}(1)) - \epsilon
+\end{align*}
+The last inequality above follows since $\alpha, 1-\alpha$ are non-negative and $\mu$ is a probability distribution. Since $|\mathcal{R}_1| \leq |\mathcal{R}| = 2^{D^\mu_\epsilon(f)}$ we have the desired result.
 \end{proof}
 
 
