@@ -433,7 +433,21 @@ has size bounded by
 \end{proposition}
 
 \begin{proof}
-\replacethistext{Enter your proof here, if you complete it.}
+Suppose $|A| > 2^{-\delta\sqrt{n}}{n\choose\sqrt{n}}.$ Let $M \in \R^{A\times B}$ be the matrix where
+$$M_{S,T} = \Disj(S,T).$$
+By the hypothesis of the proposition, at most $\alpha$ fraction of the entries of $M$ are such that $S\cap T \neq \emptyset$. We may assume without loss of generality that for every $S\in A$,
+$$\Pr_{T \in B}[S\cap T \neq \emptyset] \leq 2\alpha.$$
+If this assumption does not hold, we can remove the rows in $M$ for which this fails from $A$, reducing the size of $A$ by factor of at most $2$ (a factor we may compensate for in our choice of $\delta$).
+
+Choose sets $S_1,\dots, S_{\sqrt{n}/3} \in A$ such that
+$$|S_i\backslash (S_1\cup\dots\cup S_{i-1})| \geq \frac{\sqrt{n}}{2}$$
+for all $i$. For small enough $\delta$, such $S_i$ exist by the lower bound on the size of $A$.
+
+At least half of the sets $T \in B$ satisfy 
+$$\Pr_{i \in [\sqrt{n}/3]}[ S_i\cap T \neq \emptyset] \leq 4\alpha,$$
+since each row of $M$ has at most $2\alpha$ fraction of its entries $0$. But by our choice of $S_1,\dots, S_{\sqrt{n}/3}$ the number of such sets $T \in B$ is at most
+$${\sqrt{n}/3\choose 4\alpha\sqrt{n}/3}{n-(1-4\alpha)n/6\choose \sqrt{n}}.$$
+For $\delta>0$ small enough, this yields the desired bound on $|B|$.
 \end{proof}
 
 Use the claim to complete the lower bound on the communication complexity of the set disjointness function.
