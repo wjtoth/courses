@@ -92,8 +92,12 @@ R_\epsilon(f) \ge D_\epsilon^\mu(f).
 \end{theorem}
 
 \begin{proof}
-Let $\Pi$ be a distribution over deterministic communication protocols computing $f$ such that $R_\epsilon(f) = \cost(\Pi)$. Let $\mu$ be a distribution over $\calX\times\calY$. Since $\Pr_{\pi \sim \Pi}[\pi(x,y)\neq f(x,y)]\leq \epsilon$ for all $(x,y) \in \calX \times \calY$ we have
+Let $\Pi$ be a distribution over deterministic communication protocols computing $f$ such that $R_\epsilon(f) = \cost(\Pi)$. Let $\mu$ be a distribution over $\calX\times\calY$. 
 $$\Pr_{(x,y)\sim \mu ;\pi\sim \Pi}[\pi(x,y)\neq f(x,y)]] \leq \epsilon.$$
+Let $I^\pi_{x,y}$ be the indicator random variable for the event $\pi(x,y)\neq f(x,y)$. Since $\Pr_{\pi \sim \Pi}[\pi(x,y)\neq f(x,y)]\leq \epsilon$ for all $(x,y) \in \calX \times \calY$ we have
+$$ \epsilon \geq \mathbb{E}_{ (x,y) \sim \mu} \Pr_{\pi\sim \Pi}(\pi(x,y)\neq f(x,y)) = \mathbb{E}_{ (x,y) \sim \mu} \mathbb{E}_{\pi\sim \Pi}[I^\pi_{x,y}].$$ 
+Rearraning the order of expectation we see that
+$$ \mathbb{E}_{ \pi\sim \Pi} \mathbb{E}_{(x,y) \sim \mu}[I^\pi_{x,y}] \leq \epsilon.$$
 Hence there exists deterministic protocol $\pi$ such that 
 $$\Pr_{(x,y)\sim \mu}[\pi(x,y) \neq f(x,y)] \leq \epsilon.$$
 \end{proof}
@@ -113,7 +117,27 @@ where the maximum is taken over all distributions on $\calX \times \calY$.
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here, if you complete it.}
+We will use the following result by Von Neumann,
+$$\min_{x\in X}\max_{y\in Y} f(x,y) = \max_{y \in Y} \min_{x \in X} f(x,y)$$
+for compact convex sets $X,Y$ and continuous function $f: X\times Y \rightarrow \R$ such that 
+\begin{itemize}
+    \item for any $x \in X$, $f(x,\cdot): Y\rightarrow \R$ is concave, and
+    \item for any $y \in Y$, $f(\cdot, y): X\rightarrow \R$ is convex.
+\end{itemize}
+Let $P_t$ be the set of deterministic protocols on inputs $\calX \times \calY$ such of cost of at most $t$. Let $A^t$ be the $P_t \times (\calX\times\calY)$ matrix where 
+$$A^t_{\pi, (x,y)} = \begin{cases}
+1, &\text{ if } \pi(x,y) \neq f(x,y) \\
+0, &\text{ otherwise.}
+\end{cases}$$
+Let $\Delta_t = \{x \in \R^t_{\geq 0} : \mathbf{1}^Tx = 1\}$. Let $t_R = R_\epsilon(f)$ and let $t_D = \max_\mu D^\mu_\epsilon(f).$ Then
+$$\epsilon \geq \min_{x \in \Delta_{t_R}} \max_{y \in \Delta_{|\calX\times\calY|}}x^TAy =\max_{y \in \Delta_{|\calX\times\calY|}} \min_{x \in \Delta_{t_R}} x^TAy.$$
+The inequality above follows since $t_R = R_\epsilon (f)$, and hence there is a distribution $x$ on protocols of cost at  most $t_R$ such that for any distribution on inputs $y$, the error $x^TAy$ is at most $\epsilon$. The equality above follows by Von Neumann's Theorem. Observe that $\Delta_{t_R}$ is a polytope and hence it has an extreme point minimizer for linear objective $x^TAy$ for any fixed $y$. Hence there is a deterministic protocol $\pi$ of cost at most $t_R$ such that for any $\mu \in \Delta_{|\calX\times \calY|}$, the error of $\pi$ with respect to $\mu$ is at most $\epsilon$. Therefore
+$$\max_{\mu} D^\mu_{\epsilon}(f) \leq t_R = R_\epsilon(f).$$ 
+On the other hand, similarly,
+$$\epsilon \geq \max_{y \in \Delta_{|\calX\times\calY|}} \min_{x \in \Delta_{t_D}} x^TAy  =  \min_{x \in \Delta_{t_D}} \max_{y \in \Delta_{|\calX\times\calY|}}x^TAy.$$
+Thus there is a distribution $\Pi$ on protocols of cost at most $t_D$ with worst-case error on any distribution of inputs at most $\epsilon$. Thus
+$$R_\epsilon(f) \leq t_D = \max_\mu D^\mu_\epsilon(f).$$
+Combining inequalities yields the desired result.
 \end{proof}
 
 
