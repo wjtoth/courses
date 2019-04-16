@@ -195,7 +195,7 @@ R_\epsilon(\Eq) = O\left(\log \tfrac1\epsilon \right).
 \begin{proof}
 By the previous Theorem it suffices to show that $R(\Eq) = O(1)$. Let $x \in \{0,1\}^n$ be Alice's input and let $y \in \{0,1\}^n$ be Bob's. They generate two random vectors $r_1, r_2  \in \{0,1\}^n$ uniformly and independently at random. Then Alice computes $a_1 = x\cdot r_1$ (inner product mod $2$) and $a_2 = x\cdot r_2$ and send the two bits to Bob. Bob computes $b_1 = y\cdot r_1$ and $b_2 = y \cdot r_2$ and sends those two bits to Alice. They output $1$ if and only if $a_1 = b_1$ and $a_2 = b_2$.
 
-When $x = y$ they will always output $1$, thus we can bound the failure rate by the false positive rate. Suppose $x \neq y$. Then the probability that $a_1 = b_1$ is $\frac{1}{2}$ and the probability that $a_2 = b_2$ is $\frac{1}{2}$. Hence the total failure probability can be bounded by  $\frac{1}{2}\frac{1}{2} = \frac{1}{4} \leq \frac{1}{3}$. Thus $R(f) = O(1)$, as desired.
+When $x = y$ they will always output $1$, thus we can bound the failure rate by the false positive rate. Suppose $x \neq y$. Then the probability that $a_1 = b_1$ is $\frac{1}{2}$ and the probability that $a_2 = b_2$ is $\frac{1}{2}$. Hence the total failure probability can be bounded by  $\frac{1}{2}\frac{1}{2} = \frac{1}{4} \leq \frac{1}{3}$. Thus $R(\Eq) = O(1)$, as desired.
 \end{proof}
 
 
@@ -272,7 +272,12 @@ $$O(n^k)2^{-t}.$$
 For any $\epsilon \in (0,1)$ if we want this failure to be at most $\epsilon$, so we can choose
 $$t = O(k \log n).$$
 
-If $n = \text{poly}\log(k)$ then this protocol with give the desired bound of $O(k \log k)$. Let $d = \text{poly}\log(k)$ chosen large enough (\emph{sorry I didn't make this part formal}). Alice and Bob can randomly partition their input indices, $[n]$, into $d$ subsets $S_1, \dots, S_d\subseteq [n]$. Then they can compute $x'=\{x\cdot \bold{1}_{S_d},\dots, x\cdot \bold{1}_{S_d}\}$ and $y'=\{y\cdot \bold{1}_{S_d},\dots, y\cdot \bold{1}_{S_d}\}$ and re-run the protocol above as if their inputs were $x'$ and $y'$. With high probability (\emph{not quite sure how to show this, but I think it might work}) the Hamming distance of $x$ from $y$ agrees with the Hamming distance of $x'$ from $y'$, and so the result holds.
+If $n = \text{poly}(k)$ then this protocol with give the desired bound of $O(k \log k)$. Let $d = 10k^2$. Alice and Bob can randomly partition their input indices, $[n]$, into $d$ subsets $S_1, \dots, S_d\subseteq [n]$. Then they can compute $x'=\{x\cdot \mathbf{1}_{S_d},\dots, x\cdot \mathbf{1}_{S_d}\}$ and $y'=\{y\cdot \mathbf{1}_{S_d},\dots, y\cdot \mathbf{1}_{S_d}\}$ and re-run the protocol above as if their inputs were $x'$ and $y'$. 
+
+With probability at most $$\frac{k^2}{d} = \frac{1}{10}$$
+two coordinates on which $x$ and $y$ different lie in the same subset $S_i$. Hence the probability of failure in this partitioning step is at most $\frac{1}{10}$. Thus our total probability of failure is at most 
+$$\frac{1}{10} + O(n^k)2^{-t} \leq \frac{1}{3}$$
+for appropriate choice of $t = O(k\log d) = O(k\log k).$
 \end{proof}
 
 
@@ -361,7 +366,9 @@ For every function $f : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$,
 \end{theorem}
 
 \begin{proof}
-Let $\pi$ be a private coin randomized protocol attaining cost $\Rpriv(f)$. In the model given by the Hint, Alice and Bob can exchange their probabilities of ending up at each leaf of the protocol tree for $\pi$ at a communication cost of $O(2^{\Rpriv(f)})$. Once they known the leaves associated with an input pair $(x,y)$, they can output in their deterministic protocol the bit which is output on the majority of such leaves.
+Let $\pi$ be a private coin randomized protocol attaining cost $\Rpriv(f)$. Modify $\pi$ obtaining protocol $\pi'$ by truncating the branching probability of each node of the protocol tree $\pi$ to $10\cdot 2^{\Rpriv(f)}$ decimal positions. This incurs an additional probability of failure of at most $\frac{1}{10\cdot 2^{\Rpriv(f)}}$ at each node. In total this incurs at additional probability of failure of at most $\frac{1}{10\cdot 2^{\Rpriv(f)}}2^{\Rpriv(f)} = \frac{1}{10}$. Since the original failure probability was at most $\frac{1}{3}$ the faillure probability of $\pi'$ is strictly smaller than $\frac{1}{2}$.
+
+To simulate $\pi'$ deterministically, Alice and Bob can exchange their branching probabilities at each  node in accordance with their input, at a total communication cost of $O(2^{\Rpriv(f)})$. Once they known the probabilities of all leaves associated with an input pair $(x,y)$, they can output in their deterministic protocol the bit which is output on the majority of such leaves. Since the failure probability of $\pi'$ is strictly less than $\frac{1}{2}$, this is always the correct bit to output.
 \end{proof}
 
 \bigskip
