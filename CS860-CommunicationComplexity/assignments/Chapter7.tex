@@ -297,7 +297,7 @@ $D^\parallel(\Index^k) = \Omega(n/k)$.
 \end{theorem}
 
 \begin{proof}
-Let $\pi$ be a multiparty SMP protocol for $\Index^k$ with communication cost $c$. Suppose for a contradiction that $c < \frac{n}{k}$. Consider the following communication problem: Alice receives $A \in \{0,1\}^{n^{k-1}}$ and Bob receives $i_2,\dots, i_k$ and they need to compute $A[i_2,\dots, i_k]$. We will present a \emph{one-way} deterministic protocol for this problem using $\pi$ with cost less than $n^{k-1}$. Using the same argument as we did in Chapter $6$ for the one-way deterministic communication cost of $\Index$, we can show that this problem was one-way deterministic communication complexity at least $n^{{k-1}})$. Hence we will have reached a contradiction.
+Let $\pi$ be a multiparty SMP protocol for $\Index^k$ with communication cost $c$. Suppose for a contradiction that $c < \frac{n}{k}$. Consider the following communication problem: Alice receives $A \in \{0,1\}^{n^{k-1}}$ and Bob receives $i_2,\dots, i_k$ and they need to compute $A[i_2,\dots, i_k]$. We will present a \emph{one-way} deterministic protocol for this problem using $\pi$ with cost less than $n^{k-1}$. Using the same argument as we did in Chapter $6$ for the one-way deterministic communication cost of $\Index$, we can show that this problem was one-way deterministic communication complexity at least $n^{{k-1}}$. Hence we will have reached a contradiction.
 
 It remains to give the promised protocol. For each player $j \in \{2, \dots, k\}$ Alice enumerates the possible input $k-2$-tuples $t$ that $j$ would see the other players in $\{2,\dots, k\}$ holding, and for each such possiblity Alice sends to Bob the message $j$ would send in $\pi$ seeing $A$ and $t$. For each player this total communication cost is $cn^{k-2}$. Thus Alice sends strictly less than
 $$ckn^{n-2} < n^{k-1}$$
@@ -326,9 +326,11 @@ $D^\parallel(\SumIndex) = \Omega(\sqrt{n})$.
 \end{theorem}
 
 \begin{proof}
-Suppose for a contradiction there exists a simultaneous message passing protocol $\pi$ for $\SumIndex$ using $c = o(\sqrt{n})$ bits. We may assume that players $2$ and $3$ announce their $j$ and $i$ respectively in their messages at a cost of $\log(n)$ bits. This is without loss of generality since $c + \log(n) = o(\sqrt{n})$. Now since the referee learns from players $2$ and $3$ everything that player $1$ sees, player $1$ does not need to send anything in $\pi$. So we assume player $1$'s message is empty.
-
-Using this simplified protocol $\pi$ we...
+Suppose there is a simultaneous message passing protocol $\pi$ for $\SumIndex$ using $c$ bits of communication. We will present a \emph{one-way} deterministic protocol for for $\Index$ using $\pi$. Let $A \in \{0,1\}$ be Alice's input to $\Index$, and let $k$ be Bob's input to $\Index$. Let $B_k \in \{0,1\}^{\log n}$ be the binary representation of $k$. Let $L_k\in \{0,1\}^{\log n}$ be the vector where the first half of its bits correspond to $B_k$'s and the latter half are all $0$. Let $R_k = B_k \oplus L_k$. Let $i, j$ be the base-$10$ numbers represented by $L_k$ and $R_k$ respectively. Observe that
+$$\Index(A,k) = \SumIndex(A,i,j).$$
+Further observe that there are $2^{\frac{1}{2}\log(n)} = \sqrt{n}$ possible values of $i$, and the same for $j$. Alice can simulate player $2$ in $\pi$ by enumerating all possible values of $j$, and sending the message player $2$ would send in $\pi$ on that seeing $A$ and that value to Bob. This costs $c\sqrt{n}$ bits of communication. She can do similarly for player $3$. In total this costs
+$$2c\sqrt{n}$$
+bits of communication. Bob knows $i$ and $j$, and so can determine player $1$'s message $m_1$ in $\pi$. Further he can select the appropriate messages $m_2$ and $m_3$ for players $2$ and $3$ from the messages Alice sent. Altogether he can now simulate the referee in $\pi$ on $(m_1,m_2,m_3)$ to compute $\SumIndex(A,i,j) = \Index(A,k).$ Since $\Index$ has a one-way communication lower bound, this implies that $c = \Omega(\sqrt{n})$.
 \end{proof}
 
 \exercises
