@@ -167,7 +167,13 @@ Consider a one-way randomized communication protocol for $\Index$ with success p
 We claim $H(X_i\mid M)\leq \frac{2}{3}$. With this claim in hand, we see that
 $$|M| \geq n-\frac{2}{3}n =\Omega(n).$$
 To see the claim, we use that the protocol succeeds with probability $\frac{2}{3}$. We expand the conditional entropy as an expectation and compute
-$$H(X_i\mid M) = \sum_{m\in M} H(X_i\mid M=m)\cdot \Pr(M=m) = \sum_{m\in M}(\frac{2}{3}\log(\frac{3}{2}) + \frac{1}{3}\log(3))\Pr(M=m) \leq \frac{2}{3}.$$
+\begin{align*}
+	H(X_i\mid M) &= \sum_{m \in M} \Pr(M=m)\mathbb{E}[-\log(\Pr(X_i\mid M=m))]\\
+	&\leq \mathbb{E}[-\log(\Pr(X_i\mid M=m)\Pr(M=m)] &\text{ via Jensen's inequality}\\
+	&= \mathbb{E}[H(X_i\mid E[M])]\\
+	&\leq \frac{2}{3}\log\left(\frac{3}{2}\right) + \frac{1}{3}\log(3)\\
+	&\leq \frac{2}{3}.
+\end{align*}
 The second inequality follows by the success probability of the protocol. The probability that the protocol say $X_i$ is the correct bit is $\frac{2}{3}$, and the probability that $X_i$ is the wrong bit is $\frac{1}{3}$.
 \end{proof}
 
@@ -275,6 +281,33 @@ R^{\parallel,\mathrm{priv}}(f) = \Omega(\sqrt{D(f)}).
 \newpage 
 \section{Equality X}
 
+\begin{definition}
+	A set $M \subseteq \{0,1\}^n$ is called a $(n,k,d)$-code if
+	\begin{itemize}
+		\item $|M| = 2^k$, and 
+		\item For every pair $x\neq y \in M$, the Hamming distance between $x$ and $y$ is at least $d$.
+	\end{itemize}
+\end{definition}
+
+\begin{lemma}\label{lemma:code}
+There exists a $(3m,m,m/2)$-code for any $m$.
+\end{lemma}
+
+\begin{proof}
+We construct the code, greedily. Begin with $M= \emptyset$ and at each iteration choose $x\in \{0,1\}^{3m}\backslash M$ such that the Hamming distance from $x$ to every codeword $y \in M$ is at least $m/2$. Add $x$ to $M$. Terminate when there are no more $x$ possible to add.
+
+We claim that $|M| \geq 2^m$ upon termination of the above procedure. To see this, we bound the number of strings in $\{0,1\}^{3m}$ that any $x \in \{0,1\}^{3m}$ prevents from being chosen in future iterations, i.e. we bound the number of $y \in \{0,1\}^{3m}$ at Hamming distance at most $\frac{m}{2}-1$ from $x$.
+
+There are at most 
+$$\sum_{i=1}^{n/2 - 1} {3m \choose i} \leq {3m \choose m/2}$$
+ways to choose the bits of $x$ to flip to obtain $y$ of Hamming distance at most $\frac{m}{2} - 1$. By the entropy bound,
+$${3m\choose m/2} \leq 2^{3m H(1/6)} \leq 2^{3m\frac{2}{3}} = 2^{2m}.$$
+Hence 
+$$|M| \geq \frac{2^{3m}}{2^{2m}} =2^m$$
+as desired.
+\end{proof}
+
+
 \begin{theorem}
 The SMP complexity of the equality function $\Eq : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ is
 \[
@@ -283,7 +316,21 @@ R^{\parallel,\mathrm{priv}}(\Eq) = \Theta(\sqrt{n}).
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here.}
+The lowerbound follows from the previous Theorem. It remains to give a protocol attaining the upperbound.
+
+Let $m \in Z$ be the least integer satisfying $(6m)^2 \geq 3n$. By Lemma \ref{lemma:code} there exists a $((6m)^2, (6m)^2/3, (6m)^2/6)$-code $M'$. Choose $2^n$ elements of this code to obtain a $((6m)^2,n, (6m)^2/6))$-code $M$. Establish a bijection $\phi$ between $\{0,1\}^n$ and $M$.
+
+Let $x \in\{0,1\}^n$ be Alice's input, and let $y \in \{0,1\}^n$ be Bob's input. Alice reinterprets $\phi(x)$ as a $6m\times 6m$ matrix, $A$, where the first row of $A$ corresponds to the first $6m$ entries of $\phi(x)$, the second row corresponds to next $6m$ entries o $\phi(x)$, etc. Alice chooses $i \in [6m]$ uniformly at random and sends $i$ and the $i$-th row of $A$, $a$ to the referee.
+
+Analogously, Bob reinterprets $\phi(y)$ as a $6m\times 6m$ matrix $B$. Bob chooses a column $j$ of $B$ uniformly at random and send $j$ and the $j$-th row of $B$, $b$ to the referee.
+
+The total communication cost of the protocol is thus $O(m) = O(\sqrt{n})$. The referee compares $a_j$ and $b_i$. If $a_j \neq b_i$ the referee outputs $0$. If $a_j = b_i$ then the referee outputs $1$ with probability $6/11$ and otherwise outputs $0$.
+
+We now analyze the success probability of the algorithm. First observe that $a_j$ is $(i,j)$-th entry of $A$, and $b_i$ is the $(i,j)$-th entry of $B$. If $x=y$ then $A=B$ and the referee always enters the second case, outputting the correct answer with probability $6/11$. Consider the case where $x\neq y$. Then $A\neq B$. Since $A$ and $B$ are drawn from code $M$, they differ in at least $(6m)^2/6$ entries. Let $p$ be the probability that $A$ and $B$ differ on entry $(i,j)$. Since $(i,j)$ are chosen independently and uniformly at random, and at least $1/6$ of the total entries differ, 
+$$p\geq \frac{1}{6}.$$
+So the referee will output the correct answer with probability
+$$p + \frac{5}{11}(1-p) \geq \frac{5}{11} + \frac{6}{11}\frac{1}{6} = \frac{6}{11}.$$
+This protocol thus obtains a success probability slightly better than $1/2$, which can be boosted with a constant increase in communication cost to a protocol with success probability at least $\frac{2}{3}$
 \end{proof}
 
 \bigskip
