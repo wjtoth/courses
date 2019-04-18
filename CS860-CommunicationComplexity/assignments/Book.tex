@@ -1,0 +1,116 @@
+\documentclass[11pt]{amsbook}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage[usenames]{xcolor}
+\usepackage{url}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}{Exercise}[chapter]
+\newtheorem*{remark}{Remark}
+\newtheorem{problem}{Problem}[chapter]
+\newtheorem{challenge}{Challenge Problem}[chapter]
+\newtheorem{open}{Open Problem}
+\theoremstyle{plain}
+
+\newcommand{\argmin}{\mathrm{argmin}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+\newcommand{\cost}{\mathrm{cost}}
+\newcommand{\dHam}{\mathrm{d}_{\mathrm{Ham}}}
+\newcommand{\disc}{\mathrm{disc}}
+\newcommand{\discu}{\mathrm{disc_u}}
+\newcommand{\Disj}{\textsc{Disj}}
+\DeclareMathOperator*{\E}{\mathrm{E}}
+\newcommand{\Eq}{\textsc{Eq}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\GHD}{\textsc{GHD}}
+\newcommand{\GIP}{\textsc{GIP}}
+\newcommand{\GT}{\textsc{GT}}
+\newcommand{\HD}{\textsc{HD}}
+\newcommand{\ICext}{\mathrm{IC}^{\mathrm{ext}}}
+\newcommand{\ICint}{\mathrm{IC}^{\mathrm{int}}}
+\newcommand{\icostext}{\mathrm{icost}^{\mathrm{ext}}}
+\newcommand{\icostint}{\mathrm{icost}^{\mathrm{int}}}
+\newcommand{\Index}{\textsc{Index}}
+\newcommand{\IP}{\textsc{IP}}
+\newcommand{\Maj}{\textsc{Maj}}
+\newcommand{\MIP}{\textsc{MIP}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\Rpriv}{R^{\mathrm{priv}}}
+\newcommand{\SumIndex}{\textsc{SumIndex}}
+
+\newcommand{\exercises}{\bigskip \noindent\rule{8cm}{0.4pt} \medskip}
+\newcommand{\replacethistext}[1]{\textcolor{red}{#1}}
+
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\scshape
+\vspace*{\baselineskip}
+
+\rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
+\rule{\textwidth}{0.4pt}
+
+\vspace{0.75\baselineskip}
+    {\LARGE COMMUNICATION COMPLEXITY\\}
+\vspace{0.75\baselineskip}
+
+\rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
+\rule{\textwidth}{1.6pt}
+
+\vspace{2\baselineskip}
+
+{\scshape\Large Eric Blais \\
+ \replacethistext{Your Name Here} \\}
+\vspace{\baselineskip}
+\textit{University of Waterloo}
+	
+\vfill
+
+\copyright\,2019
+\end{titlepage}
+
+
+\frontmatter
+
+\tableofcontents
+
+\mainmatter
+
+% Deterministic complexity
+\include{Book-Ch1}
+
+% More lower bounds
+\include{Book-Ch2}
+
+% Distributional complexity
+\include{Book-Ch3}
+
+% Randomized complexity
+\include{Book-Ch4}
+
+% Information complexity
+\include{Book-Ch5}
+
+% One-way and SMP complexity
+\include{Book-Ch6}
+
+% Multiparty communication
+\include{Book-Ch7}
+
+% Notes and references
+\include{Book-Notes}
+
+\bibliographystyle{alphaurl}
+\bibliography{communication}
+
+\end{document}

@@ -1,0 +1,68 @@
+\chapter{Notes}
+
+This chapter collects some of the references for the results presented in this book and for further reading. This chapter is not meant to be a complete bibliography for communication complexity, but it hopefully presents at least one good starting point for further research in each of the topics covered in the book.
+
+\section{General references}
+
+\subsection*{Textbooks.}
+There are a few excellent textbooks on communication complexity. The standard reference for the fundamentals of communication complexity is the textbook of Kushilevitz and Nisan~\cite{KushilevitzN97}. Rao and Yehudayoff~\cite{RaoYehudayoff18} have also written a textbook on communication complexity to appear soon.
+
+\subsection*{Other books.}
+There are also a number of books that deal with specific aspects of communication complexity. Lee and Shraibman have written a book on lower bound techniques in communication complexity~\cite{LeeS09}. Roughgarden has written a book aimed at introducing communication complexity for algorithm designers~\cite{Roughgarden16}. 
+
+Jukna's book on the complexity of Boolean functions~\cite{Jukna12} includes a part dedicated to communication complexity. Arora and Barak's textbook on computational complexity~\cite{AroraB09} also dedicates a chapter to communication complexity. And Lokam's book on uses of linear algebra for establishing complexity lower bounds~\cite{Lokam09} discusses communication complexity extensively.
+
+\subsection*{Lecture notes.}
+Lecture notes are other great sources for expositions of various topics in communication complexity. See for instance the lecture notes for the courses of Pitassi~\cite{Pitassi14}, Raz~\cite{Raz00}, Hatami~\cite{Hatami16}, and Sherstov~\cite{Sherstov12}.
+
+\subsection*{Surveys.}
+Finally, a number of surveys are also great general references. See for example the introductory survey of Lov{\'a}sz~\cite{Lovasz89}, the surveys on the set disjointness problem of Chattopadhyay and Pitassi~\cite{ChattopadhyayP10} and of Sherstov~\cite{Sherstov14}, and the survey on information complexity of Jayram~\cite{Jayram10}. 
+
+There are also surveys on quantum communication complexity (which we do not discuss in this textbook) by de Wolf~\cite{deWolf02}, Klauck~\cite{Klauck00}, and Brassard~\cite{Brassard04}.
+
+
+\section{Deterministic communication complexity}
+
+The notion of communication complexity as introduced in this chapter was first defined by Yao~\cite{Yao79}, who also introduced the notions of rectangles and covers. The upper bound on the communication complexity of the \textsc{Median} function was established by Karchmer (see~\cite[\S 1.5]{KushilevitzN97}).
+Fooling sets first appeared explicitly in the work of Lipton and Sedgewick~\cite{LiptonS81}.
+The log rank bound was introduced by Mehlhorn and Schmidt~\cite{MehlhornS82}.
+
+
+\section{Distributional and randomized communication complexity}
+
+Randomized communication complexity was also introduced in Yao's original paper~\cite{Yao79}. The connection between distributional and randomized communication complexity (as well as a similar connection in other models of computation) was also established by Yao~\cite{Yao83}. 
+
+The lower bound on the distributional complexity of the inner product function is due to Chor and Goldreich~\cite{ChorG85}.
+
+The $\Omega(\sqrt{n})$ lower bound on the distributional complexity of the set disjointness function is due to Babai, Frankl, and Simon~\cite{BabaiFS86}. The optimal $\Omega(n)$ lower bound on the randomized communication complexity of the same function was first established by Kalyanasundaram and Schnitger~\cite{KalyanasundaramS92}.
+
+Newman's theorem regarding the public- and private-coin randomized communication complexity of functions was established in~\cite{Newman91}.
+
+
+\section{Information complexity}
+
+The first work to explicitly consider information complexity and its relation to communication complexity is that of Chakrabarti, Shi, Wirth, and Yao~\cite{ChakrabartiSWY01} in the context of simultaneous message passing and that of Bar-Yossef, Jayram, Kumar, and Sivakumar~\cite{BarYossefJKS04} in more general two-player communication settings.
+
+A good general reference to information theory for this chapter is the textbook of Cover and Thomas~\cite{CoverT06}.
+
+There are too many great papers that discuss the topics introduced in this textbook and extensions of the results presented here to list here. Let us just mention a few. Braverman~\cite{Braverman15} introduced the study of \emph{distribution-independent} notions of the information complexity of functions.
+Braverman, Garg, Pankratov, and Weinstein~\cite{Braverman13} showed how to compute the exact information complexity of the \textsc{And} function. 
+
+We have seen that information complexity can be used to give strong lower bounds on the communication complexity of natural functions. It's natural to ask whether it gives good lower bounds for \emph{all} functions. It does not: Ganor, Kol, and Raz~\cite{GanorKR16} showed that there can be an exponential separation between information and communication complexity for some functions. However, Kerenidis, Laplante, Lerays, Roland, and Xiao~\cite{Kerenidis15} showed that many of the lower bound techniques for communication complexity also give matching lower bounds for information complexity as well.
+
+
+\section{One-way communication and simultaneous message passing}
+
+The one-way communication model (and more generally the communication model where Alice and Bob are limited to $k$ rounds of interaction) was first studied by Papadimitriou and Sipser~\cite{PapadimitriouS84}. See also the papers of Nisan and Wigderson~\cite{NisanW93}, Kremer, Nisan, and Ron~\cite{KremerNR99}, and Newman and Szegedy~\cite{NewmanS96} for the early foundational results in this model.
+
+The simultaneous message passing model was initially presented in Yao's original paper~\cite{Yao79}. The lower bound on the randomized SMP complexity of functions in terms of their deterministic communication complexity was obtained by Babai and Kimmel~\cite{BabaiK97}; see the same paper for an alternative proof obtained in parallel work by Bourgain and Wigderson.
+
+The Gap Hamming Distance function considered in this chapter was first introduced by Indyk and Woodruff~\cite{IndykW03} to prove lower bounds on the distinct elements problem in the streaming algorithms model. Chakrabarti and Regev~\cite{ChakrabartiR12} obtained an optimal $\Omega(n)$ lower bound on the communication complexity of this function in the (standard) two-way communication complexity model; Vidick~\cite{Vidick13} and Sherstov~\cite{Sherstov12ghd} have since obtained alternative (and simpler) proofs of this lower bound.
+
+\section{Multiparty communication}
+
+Multiparty communication complexity was first considered by Chandra, Furst, and Lipton~\cite{ChandraFL83b}. Cylinder intersections were introduced by Babai, Nisan, and Szegedy~\cite{BabaiNS92}, who also obtained the nearly optimal lower bound on the generalized inner product function. The upper bound for that function is due to Grolmusz~\cite{Grolmusz94}.
+
+The study simultaneous message passing model of multiparty communication complexity was initiated by Babai, Kimmel, and Lokam~\cite{BabaiKL95} who also established the first results on the \textsc{SumIndex} function.
+
+A great source for more on discrepancy, with applications in communication complexity and in many other areas as well, see the textbook of Chazelle~\cite{Chazelle01}.
