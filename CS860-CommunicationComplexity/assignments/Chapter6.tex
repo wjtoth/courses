@@ -206,8 +206,8 @@ Your proof should \emph{not} use our previous lower bounds on the two-way random
 \newpage 
 \section{Gap Hamming (Bonus)}
 
-Define the \emph{Hamming distance} between strings $x,y \in \{0,1\}^n$ to be $\dHam(x,y) = |\{i \in [n] : x_i \neq y_i\}|$.
-The \emph{gap Hamming function} $\GHD : \{0,1\}^n \times \{0,1\}^n \to \{0,1,*\}$ is the partial function defined by
+Define the \emph{Hamming distance} between strings (we move to $\pm 1$ form for strings for convenience in the proof) $x,y \in \{-1,1\}^n$ to be $\dHam(x,y) = |\{i \in [n] : x_i \neq y_i\}|$.
+The \emph{gap Hamming function} $\GHD : \{-1,1\}^n \times \{-1,1\}^n \to \{0,1,*\}$ is the partial function defined by
 \[
 \GHD(x,y) = \begin{cases}
 1 & \mbox{if } \dHam(x,y) = \frac n2 \\
@@ -222,16 +222,38 @@ A randomized protocol \emph{computes} the partial function $f : \calX \times \ca
 \end{definition}
 
 \begin{theorem}
-The one-way randomized communication complexity of the $\GHD : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ function is
+The one-way randomized communication complexity of the $\GHD : \{-1,1\}^n \times \{-1,1\}^n \to \{0,1\}$ function is
 \[
 R^\rightarrow(\GHD) = \Omega(n).
 \]
 \end{theorem}
 
 \begin{proof}
-\replacethistext{Enter your proof here, if you complete it.}
-\end{proof}
+We will show how to use $\GHD$ to solve $\Index$. Let $A\in \{0,1\}^n$ be Alice's input to $\Index$ and $i \in [n]$ be Bob's. Let $u \in \{-1,1\}^n$ be the vector defined by $u_j = -1$ if $A_j = 1$, and $u_j = 1$ otherwise. Let $e_i \in \{0,1\}$ be the standard $i$-th basis vector.
 
+Fix integer $N$ to be specified later. Pick $N$ independent identically distributed vectors $r^1,r^2,\dots, r^N \in \R^n$ according to distribution $\mu$ (to be specified later) at random. Let $x, y\in\{-1,1\}^N$ be vectors such that for all $k \in [N]$,
+$$x_k := \text{sign}(u^Tr^k)\quad\text{and}\quad y_k := \text{sign}(e_i^Tr^k) = r^k_i.$$
+Observe that
+$$\dHam(x,y)= |\{k:\text{sign}(u^T,r^k)\neq r^k_i\}|.$$
+We will choose the distribution $\mu$ so that for any $r\sim \mu$,
+\begin{equation}\label{eq:prob}\Pr[\text{sign}(u^Tr)\neq r_i] \begin{cases}
+\geq \frac{1}{2} + \frac{c}{\sqrt{n}}, &\text{if }u_i=-1 \\
+\leq \frac{1}{2}-\frac{c}{\sqrt{n}}, &\text{if }u_i=1.
+\end{cases}\end{equation}
+for some constant $c>0$. By Chernoff's bound, with $N =\frac{4n}{c^2}$ and $\epsilon = \frac{1}{\sqrt{N}}$, with probability at least $\frac{2}{3}$ we have 
+$$H(x,y) \begin{cases}
+\frac{N}{2} + \sqrt{N}, &\text{if } u_i = -1 \\
+\frac{N}{2} - \sqrt{N}, &\text{if } u_i = 1.
+\end{cases}$$
+Thus we can use a protocol for $\GHD$ to compute $u_i$, and hence determine $A_i$.
+
+It remains to show (\ref{eq:prob}). Let $\mu$ be the uniform distribution over unit vectors in $\R^n$. Let $r' = \text{proj}_{\text{span}(\{u,e_i\})}r.$
+Let $\hat{u}$ be the normalization of $u$. Now we have that
+$$\Pr[\text{sign}(u^Tr)\neq r_i] = \frac{\arccos(\hat{u}^Te_i)}{\pi} = \frac{1}{\pi}\arccos(\frac{u_i}{\sqrt{n}}).$$
+Observe that for any $v \in [-1,1]$, $\arccos(v) = \frac{\pi}{2} - \arcsin(v)$. Since $\sin(v) \leq v$, for $v\geq 0$, we have $\arcsin(v) \geq v$ for $v \in [0,1]$. Substituting this into the about equation we obtain the bound (\ref{eq:prob}) as desired.
+
+\emph{Note:} This proof is adapted from ``The One-Way Communication Complexity of Hamming Distance" by Jayram, Kumar, and Sivakumar.
+\end{proof}
 
 \bigskip
 \emph{Hint.} The lower bound for the one-way complexity of the \textsc{Index} function should be helpful for this proof as well, though the reduction is not (nearly) as straightforward as the one in the last section.
