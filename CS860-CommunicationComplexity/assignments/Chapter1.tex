@@ -1,0 +1,189 @@
+\chapter[Deterministic complexity]{Deterministic communication complexity}
+
+In communication complexity, two players named \emph{Alice} and \emph{Bob} each receive some input that the other player cannot see and seek to compute some function on their joint input. We wish to determine the minimum number of bits that they must exchange to compute this function. As a result, the main object we will study will not be algorithms, but rather \emph{communication protocols}. 
+
+\begin{definition}[Protocol]
+A \emph{(communication) protocol} $\pi$ is a rooted binary tree $T(\pi)$ with the following additional information:
+\begin{itemize}
+\item Every internal node of the tree is labelled with $A$ or $B$, determining whether Alice or Bob sends the next bit.
+\item Every internal node $v$ labelled with $A$ also has a corresponding function $h_v : \calX \to \{0,1\}$ which determines the next bit that Alice sends.
+\item Similarly, every internal node $v$ labelled with $B$ also has a corresponding function $h_v : \calY \to \{0,1\}$ which determines the next bit that Bob sends.
+\item The two edges leaving an internal node $v$ are labelled with $0$ and $1$, respectively.
+\item Each leaf node is labelled with $0$ or $1$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Function computed by a protocol]
+A protocol $\pi$ \emph{computes} the function $f : \calX \times \calY \to \{0,1\}$ if for every input $(x,y) \in \calX \times \calY$, the path in $\pi$ obtained by following the edge labelled with $h_v(x)$ at each internal node labelled by $A$ and $h_v(y)$ at each internal node labelled by $B$ leads to a leaf with the label $f(x,y)$.
+\end{definition}
+
+Following the standard computer science approach, we measure the communication cost of protocols in the worst-case sense.
+
+\begin{definition}[Communication cost]
+The \emph{communication cost} of a protocol $\pi$ is 
+\[
+\cost(\pi) = \mathrm{height}(T(\pi)),
+\]
+the height of the tree for $\pi$ or, in other words, the length of the longest path between the root of $T(\pi)$ and any of the leaves in the tree.
+It corresponds to the maximum number of bits that Alice and Bob exchange when executing the protocol over any of their inputs.
+\end{definition}
+
+
+\begin{definition}[Deterministic communication complexity]
+The \emph{deterministic communication complexity} of the function $f : \mathcal{X} \times \mathcal{Y} \to \{0,1\}$ is
+\[
+D(f) = \min_{\pi \mbox{ computes } f} \cost(\pi)
+\]
+is the minimum communication cost of a protocol that computes $f$.
+\end{definition}
+
+In the rest of this chapter, we will aim to determine the deterministic communication complexity for some fundamental functions.
+
+\exercises
+
+\begin{exercise} %[Easy]
+Do there exist functions $f : \mathcal{X} \times \mathcal{Y} \to \{0,1\}$ with  communication complexity $D(f) = 0$?
+\end{exercise}
+
+
+\newpage \section{Equality}
+We begin by considering the simplest (but also perhaps the most important) function: equality. The function $\Eq : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ is defined by
+\[
+\Eq(x,y) = \begin{cases}
+1 & \mbox{if } x = y \\
+0 & \mbox{if } x \neq y
+\end{cases}
+\]
+so that the value of the function is 1 if and only if Alice and Bob's inputs are identical.
+
+\begin{theorem}
+$D(\Eq) \le n + 1$.
+\end{theorem}
+
+\begin{proof}
+There is a very simple protocol $\pi$ with cost $n+1$ that computes the function $\Eq$: Alice sends the $n$ bits of her input to Bob, then Bob sends the value $1$ if and only if his input $y$ is equal to the input $x$ that he has received. The value of each leaf is set to be the same as the value of the edge that leads to it.
+\end{proof}
+
+
+\newpage \section{General upper bound}
+The trivial protocol we used to bound the deterministic communication complexity of the \textsc{Equality} function can also be modified slightly to establish a much more general result.
+
+\begin{theorem}
+For every function $f : \mathcal{X} \times \mathcal{Y} \to \{0,1\}$, 
+\[
+D(f) \le \min\{\lceil \log_2 |\mathcal{X}| \rceil, \lceil \log_2 |\mathcal{Y}| \rceil\} + 1.
+\]
+\end{theorem}
+
+\begin{proof}
+We can encode each element in $\calX$ with $\lceil \log_2 |\mathcal{X}| \rceil$ bits. We can use such an encoding to design a protocol $\pi$ with cost $\lceil \log_2 |\mathcal{X}| \rceil + 1$: Alice sends $\lceil \log_2 |\mathcal{X}| \rceil$ bits to communicate the encoding of her input $x$ to Bob, and Bob replies with the value $f(x,y)$. (Note that Bob now knows both $x$ and $y$ so that he can compute this value.)
+
+Similarly, we can design a protocol $\pi'$ with cost $\lceil \log_2 |\mathcal{Y}| \rceil$ by taking an encoding of the elements in $\calY$ and having Bob send the encoding of his input $y$ to Alice and then having Alice respond with the value $f(x,y)$. (Now Alice is the one who knows both $x$ and $y$.)
+
+Combining the two protocols above, we obtain that
+\[
+D(f) \le \min\{ \cost(\pi), \cost(\pi') \} = \min\{\lceil \log_2 |\mathcal{X}| \rceil + 1, \lceil \log_2 |\mathcal{Y}| \rceil + 1\},
+\]
+as we wanted to show.
+\end{proof}
+
+
+\newpage \section{Parity}
+The general upper bound we established in the last section is far from tight in some cases. Consider for example the $\textsc{Parity} : \{0,1\}^n \times \{0,1\}^n \to \{0,1\}$ function defined by
+\[
+\textsc{Parity}(x,y) = \bigoplus_{i=1}^n (x_i \oplus y_i) 
+\]
+where $\bigoplus_{i=1}^n z_i = \sum_{i=1}^n z_i \pmod{2}$ is the parity of the sum and, similarly, $a \oplus b$ is defined to be $a+b \pmod{2}$.
+
+\begin{theorem}
+$D(\textsc{Parity}) \le 2$.
+\end{theorem}
+
+\begin{proof}
+Consider the protocol $\pi$ where Alice sends the value $\bigoplus_{i=1}^n x_i$ to Bob, Bob sends the value $\bigoplus_{i=1}^n y_i$, and the leaf at the end of the path labelled with $a$ and $b$ takes the value $a \oplus b$. This protocol has cost 2, since Alice and Bob each send a single bit. And we can verify that $\pi$ correctly computes the \textsc{Parity} function since on any input $(x,y) \in \{0,1\}^n \times \{0,1\}^n$, the protocol leads to the leaf labelled with
+\[
+\left( \bigoplus_{i=1}^n x_i \right) \oplus 
+\left( \bigoplus_{i=1}^n y_i \right) 
+=  \bigoplus_{i=1}^n \left(x_i \oplus y_i \right) \\
+= \textsc{Parity}(x,y). \qedhere
+\]
+\end{proof}
+
+
+\newpage \section{Median}
+Define $[n] = \{1,2,\ldots,n\}$ and $2^{[n]}$ to be the set of subsets of $[n]$. The $\textsc{Median} : 2^{[n]} \times 2^{[n]} \to [n]$ function is defined by
+\[
+\textsc{Median}(S,T) = \mathrm{median}(S \cup T);
+\]
+it is the median element of the multiset obtained by taking the union of Alice and Bob's sets. 
+
+\begin{theorem}
+$D(\textsc{Median}) = O(\log^2 n)$.
+\end{theorem}
+
+\begin{proof}
+Here is a simple protocol that computes the \textsc{Median} function. Alice and Bob start by exchanging the total number of elements in $S$ and in $T$. Define $k = \lfloor \frac{|S| + |T|}2 \rfloor$. Alice and Bob now need to identify the $k$-th smallest element in the multiset $S \cup T$. They can do so using a binary search approach. In the first step of this search, Alice and Bob exchange the number of elements in $S \cap [n/2]$ and $T \cap [n/2]$, respectively. If that number $m$ is $m \ge k$, then we continue the binary search in the range $\{1,2,\ldots,n/2\}$. Otherwise, we update $k' = k - m$ and search for the $k'$-th smallest element in $(S \cup T) \cap \{n/2+1,\ldots,n\}$.
+
+This binary search process will end at the median element. The search itself requires $O( \log n)$ rounds, and at each round Alice and Bob exchange a number in the range $1,2,\ldots,n$, which they can do with $O(\log n)$ bits of communication.
+\end{proof}
+
+\exercises
+
+\begin{exercise} %[Easy]
+Prove that $D(\textsc{Min}) = O(\log n)$ and $D(\textsc{Max}) = O(\log n)$.
+\end{exercise}
+
+\begin{exercise}
+Consider the \textsc{Median'} function where we take the median of the simple set (i.e., deleting duplicates) obtained by taking the union $S \cup T$. 
+Prove that $D(\textsc{Median'}) = O(\log^2 n)$.
+\end{exercise}
+
+\begin{exercise} %[Hard]
+Prove that $D(\textsc{Median}) = O(\log n)$.
+\end{exercise}
+
+
+\newpage \section{Rectangles and partition number}
+
+As we have seen in the last sections, we can give upper bounds on the deterministic communication complexity of a given function by designing a communication protocol that computes the function. Our main goal, however, will generally be to prove lower bounds on the communication complexity of various functions. We can do so by analyzing \emph{combinatorial rectangles}.
+
+\begin{definition}[Rectangle]
+A \emph{(combinatorial) rectangle} over the finite set $\calX \times \calY$ is a set $S \subseteq \calX \times \calY$ defined by $S = A \times B$ for some sets $A \subseteq \calX$ and $B \subseteq \calY$.
+\end{definition}
+
+\begin{definition}[$f$-monochromatism]
+Given a function $f : \calX \times \calY \to \{0,1\}$, a rectangle $R \subseteq \calX \times \calY$ is \emph{$f$-monochromatic} if $f(x,y)$ takes the same value for all $(x,y) \in R$.
+\end{definition}
+
+\begin{definition}[$\chi$]
+The \emph{partition number} of a function $f : \calX \times \calY \to \{0,1\}$, denoted
+\[
+\chi(f),
+\]
+is the minimum number of $f$-monochromatic rectangles required to partition $\calX \times \calY$.
+\end{definition}
+
+
+\newpage \section{Partition bound}
+
+\begin{lemma}
+For every function $f : \mathcal{X} \times \mathcal{Y} \to \{0,1\}$, 
+\[
+D(f) \ge \log_2 \chi(f).
+\]
+\end{lemma}
+
+\begin{proof}
+Let $\pi$ be any protocol that computes $f$ and has cost $\cost(\pi) = D(f)$. Each leaf in the tree for $\pi$ corresponds to an $f$-monochromatic rectangle and the rectangles corresponding to each leaf in the tree partition $\mathcal{X} \times \mathcal{Y}$. Since a binary tree of depth $d$ can have at most $2^d$ leaves, this means that $\chi(f) \le 2^{\cost(\pi)} = 2^{D(f)}$. 
+\end{proof}
+
+\exercises
+
+\begin{exercise} %[Hard]
+Show that $D(f) \le (\log_2 \chi(f) + 1)^2$.
+\end{exercise}
+
+\begin{open}
+Find a function $f$ for which $D(f) \ge 4 \log_2 \chi(f)$.
+\end{open}
+
