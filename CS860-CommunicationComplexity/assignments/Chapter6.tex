@@ -1,58 +1,4 @@
-\documentclass[11pt]{amsart}
-\usepackage{amsmath,amsthm,amsfonts,amssymb}
-\usepackage{fullpage}
-\usepackage[usenames]{xcolor}
-
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{corollary}{Corollary}
-\newtheorem{proposition}{Proposition}
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}
-\newtheorem{exercise}{Exercise}
-\newtheorem{remark}{Remark}
-\newtheorem{problem}{Problem}
-\newtheorem{challenge}{Challenge Problem}
-\newtheorem{open}{Open Problem}
-\theoremstyle{plain}
-
-\newcommand{\argmin}{\mathrm{argmin}}
-\newcommand{\calX}{\mathcal{X}}
-\newcommand{\calY}{\mathcal{Y}}
-\newcommand{\calZ}{\mathcal{Z}}
-\newcommand{\cost}{\mathrm{cost}}
-\newcommand{\dHam}{\mathrm{d}_{\mathrm{Ham}}}
-\newcommand{\disc}{\mathrm{disc}}
-\newcommand{\discu}{\mathrm{disc_u}}
-\newcommand{\Disj}{\textsc{Disj}}
-\newcommand{\Eq}{\textsc{Eq}}
-\newcommand{\GHD}{\textsc{GHD}}
-\newcommand{\GT}{\textsc{GT}}
-\newcommand{\HD}{\textsc{HD}}
-\newcommand{\ICext}{\mathrm{IC}^{\mathrm{ext}}}
-\newcommand{\ICint}{\mathrm{IC}^{\mathrm{int}}}
-\newcommand{\icostext}{\mathrm{icost}^{\mathrm{ext}}}
-\newcommand{\icostint}{\mathrm{icost}^{\mathrm{int}}}
-\newcommand{\IP}{\textsc{IP}}
-\newcommand{\Index}{\textsc{Index}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\rank}{\mathrm{rank}}
-\newcommand{\Rpriv}{R^{\mathrm{priv}}}
-\newcommand{\replacethistext}[1]{\textcolor{red}{#1}}
-
-\newcommand{\exercises}{\bigskip \noindent\rule{8cm}{0.4pt} \medskip}
-
-
-
-\title{Communication complexity: Chapter 6 \\ One-way communication and simultaneous message passing}
-\author{Eric Blais and Justin Toth}
-
-
-\begin{document}
-
-\maketitle
-
+\chapter[One-way Communication and SMP]{One-way Communication and Simultaneous Messsage Passing}
 Every communication complexity question we have studied so far in this course have been set in the model where there are two players, Alice and Bob, who exchange bits with each other to compute functions on their joint inputs. This is of course not the only model of communication that is of interest---other models where we change the number of parties or restrict how messages can be sent between them have also been studied extensively. In this chapter, we examine the communication complexity of functions when the communication between Alice and Bob is restricted.
 
 
@@ -365,4 +311,3 @@ This protocol thus obtains a success probability slightly better than $1/2$, whi
 \end{cases}
 \]
 with error at most $\frac13$.
-\end{document}

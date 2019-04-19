@@ -1,47 +1,5 @@
-\documentclass[11pt]{amsart}
-\usepackage{amsmath,amsthm,amsfonts,amssymb}
-\usepackage{fullpage}
-\usepackage[usenames]{xcolor}
 
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{corollary}{Corollary}
-\newtheorem{proposition}{Proposition}
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}
-\newtheorem{exercise}{Exercise}
-\newtheorem{problem}{Problem}
-\newtheorem{challenge}{Challenge Problem}
-\newtheorem{open}{Open Problem}
-\theoremstyle{plain}
-
-\newcommand{\argmin}{\mathrm{argmin}}
-\newcommand{\calX}{\mathcal{X}}
-\newcommand{\calY}{\mathcal{Y}}
-\newcommand{\calZ}{\mathcal{Z}}
-\newcommand{\cost}{\mathrm{cost}}
-\newcommand{\disc}{\mathrm{disc}}
-\newcommand{\discu}{\mathrm{disc_u}}
-\newcommand{\Disj}{\textsc{Disj}}
-\newcommand{\Eq}{\textsc{Eq}}
-\newcommand{\GT}{\textsc{GT}}
-\newcommand{\IP}{\textsc{IP}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\rank}{\mathrm{rank}}
-\newcommand{\replacethistext}[1]{\textcolor{red}{#1}}
-
-\newcommand{\exercises}{\bigskip \noindent\rule{8cm}{0.4pt} \medskip}
-
-
-
-\title{Communication complexity: Chapter 2 \\ More lower bound techniques}
-\author{Eric Blais and Justin Toth}
-
-\begin{document}
-
-\maketitle
-
+\chapter[Lower Bounds]{More Lower Bound Techniques}
 In the first chapter, we introduced the deterministic communication complexity 
 model and saw the general \emph{partition bound} method for proving communication complexity lower bounds. While the partition bound is quite strong, it is hard to work with directly. The goal of this chapter is to introduce other general methods for proving communication complexity lower bounds more easily: the \emph{fooling set bound}, the \emph{rectangle size bound}, and the \emph{log rank bound}.
 
@@ -359,5 +317,3 @@ D(f) = O( \log^c \rank(f)).
 \]
 \end{open}
 
-
-\end{document}

@@ -1,48 +1,4 @@
-\documentclass[11pt]{amsart}
-\usepackage{amsmath,amsthm,amsfonts,amssymb}
-\usepackage{fullpage}
-\usepackage[usenames]{xcolor}
-
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{corollary}{Corollary}
-\newtheorem{proposition}{Proposition}
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}
-\newtheorem{exercise}{Exercise}
-\newtheorem{problem}{Problem}
-\newtheorem{challenge}{Challenge Problem}
-\newtheorem{open}{Open Problem}
-\theoremstyle{plain}
-
-\newcommand{\argmin}{\mathrm{argmin}}
-\newcommand{\calX}{\mathcal{X}}
-\newcommand{\calY}{\mathcal{Y}}
-\newcommand{\calZ}{\mathcal{Z}}
-\newcommand{\cost}{\mathrm{cost}}
-\newcommand{\disc}{\mathrm{disc}}
-\newcommand{\discu}{\mathrm{disc_u}}
-\newcommand{\Disj}{\textsc{Disj}}
-\newcommand{\Eq}{\textsc{Eq}}
-\newcommand{\GT}{\textsc{GT}}
-\newcommand{\IP}{\textsc{IP}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\rank}{\mathrm{rank}}
-\newcommand{\replacethistext}[1]{\textcolor{red}{#1}}
-
-\newcommand{\exercises}{\bigskip \noindent\rule{8cm}{0.4pt} \medskip}
-
-
-
-\title{Communication complexity: Chapter 3 \\ Distributional communication complexity}
-\author{Eric Blais and Justin Toth}
-
-
-\begin{document}
-
-\maketitle
-
+\chapter[Distributional Complexity]{Distributional Communication Complexity}
 
 Functions can become much easier to compute in the communication complexity setting when we allow the protocols to make some errors. We can define this formally using the notion of \emph{distributional communication complexity}. We first explore this notion in its most natural setting, which corresponds to the uniform distribution.
 
@@ -468,6 +424,3 @@ $$\mu(R\cap \Disj^{-1}(0)) > \alpha \mu(R) - 2^{-\delta\sqrt{n}}.$$
 So by the corruption bound with $\alpha$ and $\beta = 2^{-\delta\sqrt{n}}$ we obtain
 $$D^{\mu}_\epsilon(\Disj) \geq \log(\frac{\alpha\cdot \mu(f^{-1}(1)) - \epsilon}{2^{-\delta\sqrt{n}}}) \geq \Omega(\sqrt{n}).$$\end{proof}
 
-
-
-\end{document}

@@ -3,6 +3,8 @@
 \usepackage[usenames]{xcolor}
 \usepackage{url}
 
+\usepackage[colorlinks]{hyperref}
+
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -49,6 +51,9 @@
 \newcommand{\exercises}{\bigskip \noindent\rule{8cm}{0.4pt} \medskip}
 \newcommand{\replacethistext}[1]{\textcolor{red}{#1}}
 
+\DeclareMathOperator{\height}{height}
+
+
 
 \begin{document}
 
@@ -70,7 +75,7 @@
 \vspace{2\baselineskip}
 
 {\scshape\Large Eric Blais \\
- \replacethistext{Your Name Here} \\}
+ \replacethistext{W. Justin Toth} \\}
 \vspace{\baselineskip}
 \textit{University of Waterloo}
 	
@@ -87,25 +92,25 @@
 \mainmatter
 
 % Deterministic complexity
-\include{Book-Ch1}
+\include{Chapter1}
 
 % More lower bounds
-\include{Book-Ch2}
+\include{Chapter2}
 
 % Distributional complexity
-\include{Book-Ch3}
+\include{Chapter3}
 
 % Randomized complexity
-\include{Book-Ch4}
+\include{Chapter4}
 
 % Information complexity
-\include{Book-Ch5}
+\include{Chapter5}
 
 % One-way and SMP complexity
-\include{Book-Ch6}
+\include{Chapter6}
 
 % Multiparty communication
-\include{Book-Ch7}
+\include{Chapter7}
 
 % Notes and references
 \include{Book-Notes}
